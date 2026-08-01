@@ -33,3 +33,11 @@ operator-controlled. No OS sandbox, authentication boundary, cloud inference, mo
 download, or production native worker is assumed in Gate A. These assumptions are
 explicit because they materially lower remote code-execution likelihood while
 leaving local supply-chain and denial-of-service risks relevant.
+
+## D6 - Resolve the mandatory-reference parameter conflict transparently
+
+Official metadata reports 2,274,069,824 total parameters for the multimodal
+`Qwen/Qwen3.5-2B` Phase 3 reference. It therefore exceeds Phase 4's explicit
+2,000,000,000 total-parameter cap. The exact artifact remains in the screening table
+as an ineligible historical control, but it cannot become a finalist. Eligible
+candidates are SmolLM2-360M-Instruct, Qwen3-0.6B, and Qwen2.5-1.5B-Instruct.

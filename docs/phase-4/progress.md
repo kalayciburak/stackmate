@@ -66,3 +66,31 @@ Status: completed on 2026-08-02
 
 Gate A passed. The runtime product and model contract are English-only; Turkish remains a
 complete documentation surface. Candidate research and the frozen V3 screen follow.
+
+## Gate B - Candidate research and corpus freeze
+
+Status: in progress on 2026-08-02
+
+### Completed work
+
+- Froze and committed the independent 20-case V3 screening corpus before model
+  execution; 10 cases are development, 10 are holdout, and 16 are real runtime or
+  integration captures.
+- Recorded manifest SHA-256
+  `e8f9fa194f0b53c78a35e2821ed6358195b0d535c86e82e4fc50a9b8f0085a78`.
+- Verified total parameters from pinned official repository metadata rather than
+  model names.
+- Rejected Qwen3-1.7B before download because its 2,031,739,904 parameters exceed the
+  hard cap.
+- Classified the mandatory Qwen3.5-2B reference as an ineligible historical control
+  because its multimodal total is 2,274,069,824.
+- Selected three eligible candidates: SmolLM2-360M-Instruct, Qwen3-0.6B, and
+  Qwen2.5-1.5B-Instruct.
+- Pinned official llama.cpp release `b10221` and the exact Windows archive digest for
+  isolated screening.
+
+### Next step
+
+Check disk capacity, download and verify only the three new pinned Q4_K_M research
+artifacts and the pinned runtime, then execute the frozen screen in ascending model
+size order.
