@@ -1,0 +1,4 @@
+[StackMate] STM-8183AB6A occurred again, count: 2.
+[StackMate] Reusing the previous diagnosis.
+
+Both requests returned HTTP 500 through the application's normal error path.

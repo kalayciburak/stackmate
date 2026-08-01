@@ -1,0 +1,5 @@
+Profile: e2e,disabled
+Request: GET /demo/null-pointer
+HTTP status: 500
+StackMate diagnosis blocks: 0
+Process exit after shutdown: 0

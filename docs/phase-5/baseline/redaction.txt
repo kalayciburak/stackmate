@@ -1,0 +1,5 @@
+Request: GET /demo/redaction
+Root message: password=[REDACTED], token=[REDACTED], email=[REDACTED]
+
+HTTP status: 500
+The original secret-like fixture values were absent from the StackMate block.

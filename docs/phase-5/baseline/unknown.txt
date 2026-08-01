@@ -1,0 +1,10 @@
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Category: UNKNOWN                                                                                |
+| Evidence: INSUFFICIENT                                                                           |
+| Summary: The available context is insufficient for a specific diagnosis.                         |
+| Source: Deterministic rules                                                                      |
++--------------------------------------------------------------------------------------------------+
+
+HTTP status: 500
+No solution, source location, or technical fact was invented.

@@ -1,0 +1,17 @@
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Incident: STM-0248D4FD                                                                           |
+| Category: DATABASE_CONSTRAINT                                                                    |
+| Evidence: HIGH                                                                                   |
+| Summary: A database unique constraint was violated                                               |
+| Root: java.sql.SQLException: duplicate key value violates unique constraint                      |
+| "uk_sample_reference"                                                                            |
+| First app location: SampleDatabaseException#create(SampleDatabaseException.java:47)              |
+| Details: The captured SQLState identifies a unique constraint violation.                         |
+| Request: GET /demo/database/duplicate                                                            |
+| Source: Deterministic rules                                                                      |
+| Runtime: Java 21.0.12 | Spring Boot 4.1.0 | Network disabled                                     |
++--------------------------------------------------------------------------------------------------+
+
+HTTP status: 500
+HTTP body: Spring Boot default JSON error response (body fields omitted from this sanitized capture).
