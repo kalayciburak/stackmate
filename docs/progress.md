@@ -300,6 +300,62 @@ The build duration is an observation on this machine, not a product latency benc
 Create the controlled 50-case corpus, deterministic evaluation harness, machine/human reports, and JMH benchmarks
 before adding production local inference.
 
+## Phase 5 - Benchmark corpus
+
+### Completed
+
+- Added the versioned `phase5-50-v1` corpus with exactly 50 controlled cases and the required
+  `8/8/9/11/4/5/5` domain distribution.
+- Added immutable ground-truth definitions for expected category, root type, evidence facts, cause IDs, check IDs,
+  and forbidden claims.
+- Added 29 real JDK/SQL/network/concurrency throwable scenarios and 21 optional-framework snapshot scenarios,
+  all with sanitized inputs and controlled application locations.
+- Added a deterministic Mode C evaluator with exact category/root/fact/cause/check and safety counters.
+- Added JSON and Markdown report generation under the ignored module `target` directory plus an English/Turkish
+  manual review worksheet.
+- Added JMH 1.37 suites for throwable capture, sanitization, frame selection, fingerprinting, deterministic diagnosis,
+  and console rendering. Fixture construction is outside measured methods.
+- Kept Modes A and B explicitly not executed because no local model is configured.
+
+### Commands and results
+
+```text
+.\mvnw.cmd -pl stackmate-benchmark -am verify  (Java 21)
+Result: BUILD SUCCESS in 7.354 s; 89 core, 42 Spring adapter, and 4 benchmark tests passed.
+
+git diff --check
+Result: clean.
+```
+
+### Actual controlled-corpus result
+
+- Cases: 50.
+- Category/root/fact-exact/cause/check accuracy: 50/50 (100%).
+- Evidence precision and recall: 61/61 (100%).
+- Fabricated source references: 0.
+- Unknown IDs: 0.
+- Forbidden claims: 0.
+- Controlled secret leakage: 0.
+- Prompt-injection sentinel leakage: 0.
+- Mode A raw-model benchmark: not executed; no model.
+- Mode B structured-model benchmark: not executed; no model.
+- JMH timing, model latency, and model memory: not measured.
+
+This is a supported-rule regression baseline over controlled ground truth, not a claim of 100% accuracy on arbitrary
+Spring applications.
+
+### Remaining risks
+
+- The framework snapshot cases do not replace real integration scenarios for every optional framework.
+- JMH suites have compiled but have not yet produced machine timing data.
+- Model comparison and all local-inference safety gates remain unverified until the inference adapter and a reviewed
+  local model are available.
+
+### Next phase
+
+Implement the stable inference contracts, validated structured-output boundary, managed JVM adapter, bounded async
+execution, and fake-engine integration tests. Run real model modes only when a licensed local model can be executed.
+
 ## Evidence sources
 
 - Spring Boot system requirements: https://docs.spring.io/spring-boot/system-requirements.html

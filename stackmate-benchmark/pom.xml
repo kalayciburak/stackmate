@@ -18,6 +18,10 @@
       <artifactId>stackmate-inference-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.github.kalayciburak</groupId>
+      <artifactId>stackmate-spring-boot-autoconfigure</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>

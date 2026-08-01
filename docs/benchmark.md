@@ -66,8 +66,24 @@ stackmate-benchmark/target/stackmate-benchmark-report.md
 
 A curated baseline may be committed later only with hardware/model/prompt provenance and without local paths.
 
-## Current status
+## Phase 5 controlled baseline
 
-No model benchmark has been executed yet. Engine and model capability statements in
-`docs/model-selection.md` come from primary sources, not StackMate measurements. Actual A/B/C numbers will be
-added only after the corpus, validator, and local model path are available.
+The versioned `phase5-50-v1` corpus contains exactly 50 cases: 8 general Java, 8 Spring dependency/configuration,
+9 MVC/validation/serialization, 11 JDBC/persistence, 4 security, 5 infrastructure, and 5 concurrency/timeout/resource
+cases. Twenty-nine cases construct JDK, SQL, network, or concurrency throwables; 21 use immutable snapshots for
+optional framework exception types so those frameworks remain absent from the deterministic runtime classpath.
+
+On the controlled corpus, Mode C matched all 50 expected categories, root types, cause IDs, and check IDs. It also
+matched all 61 expected evidence facts with 100% precision and recall. The validator counted zero fabricated source
+references, unknown IDs, forbidden claims, controlled secret leaks, and prompt-injection sentinel leaks. These are
+rule-coverage/regression results for a corpus designed around the supported analyzer contract, not evidence of
+general accuracy on arbitrary production incidents.
+
+Modes A and B remain `NOT_EXECUTED / NO_MODEL`. No local-model quality, latency, memory, or throughput number has
+been measured. Engine and model capability statements in `docs/model-selection.md` come from primary sources, not
+StackMate measurements.
+
+Six JMH suites cover throwable snapshots, sanitization, application-frame selection, fingerprinting, analyzer
+selection/diagnosis, and console rendering. Their committed configuration uses average-time measurement with five
+one-second warmups, five one-second measurement iterations, and two forks. The suites compile, but no JMH timing
+result is reported yet.
