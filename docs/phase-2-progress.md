@@ -169,3 +169,46 @@ all observed descendant processes were dead after graceful application shutdown.
 ### Next phase
 
 Freeze and commit benchmark corpus V2 before changing analyzer behavior or the inference contract.
+
+## Phase 3 - independent benchmark corpus V2 freeze
+
+Status: completed; deterministic evaluation is next
+
+### Completed work
+
+- Froze 80 independently authored cases at commit `7874415c64b1922fca7b8d54695601dba26744f8` with manifest SHA-256
+  `292B395F6024837A52878B38A6C0170A62CB29FDFCC89DF68B845CED7732F294`.
+- Fixed the split at 60 development and 20 holdout cases.
+- Classified 54 cases as real executable recipes and 26 as synthetic, giving 67.5% real runtime/integration coverage.
+- Covered the required eight domains with the planned 10/12/12/20/8/8/5/5 distribution.
+- Kept ground-truth category/cause/check identifiers independent of production analyzer constants and added explicit
+  unknown-error restraint cases.
+- Added strict manifest loading and executable Java, Spring, MVC, validation, H2, security, network/TLS, concurrency,
+  and adversarial recipes.
+- Recorded the design in ADR 0011 and `docs/benchmark-v2-corpus.md`. Historical V1 evidence remains in
+  `docs/benchmark.md`.
+
+### Verification
+
+| Command | Result |
+|---|---|
+| First full benchmark-module test | Failed compilation: Spring 7 placeholder helper signature and a checked sleep lambda required fixture corrections |
+| Second full benchmark-module test | Ran 54 real recipes; 8 failures exposed six wrapper/root ground-truth mistakes plus invalid H2-lock and HTTP fixtures |
+| First focused corpus test | 55/56 passed; H2 lock's deepest cause was `MVStoreException`, not its `JdbcSQLTimeoutException` wrapper |
+| Final focused corpus test | Success in 6.994 s; 56 tests, 0 failures/errors/skips |
+| `Get-FileHash -Algorithm SHA256 .../manifest.json` | `292B395F6024837A52878B38A6C0170A62CB29FDFCC89DF68B845CED7732F294` |
+
+The failed runs are recorded because they demonstrate that expected values were not generated from production output.
+No production analyzer or inference-contract code changed before the freeze commit.
+
+### Remaining risks
+
+- Real execution here means repeatable local framework/driver recipes, not a claim that all cases came from an external
+  production application.
+- H2 reproduces JDBC behavior but does not substitute for PostgreSQL/MySQL driver coverage.
+- Linux and macOS execution remains unverified until CI runs.
+
+### Next phase
+
+Evaluate the unchanged deterministic pipeline against frozen V2, report development and holdout results separately,
+then classify failures before changing any analyzer behavior.
