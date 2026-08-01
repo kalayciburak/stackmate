@@ -63,6 +63,17 @@ ONNX, ZIP, and a path to one weight file are not accepted by this adapter.
 
 StackMate never downloads or repairs a model directory. Confirm provenance and SHA-256 yourself before use.
 
+Phase 3 GGUF files are not accepted by the retained Jlama adapter. They were used
+only by an explicit Benchmark V2 llama.cpp lab and both candidates failed product
+readiness. There is no automatic model/runtime downloader, `AUTO` model profile,
+production llama.cpp worker, or provisioning cache to enable.
+
+To reproduce the Phase 3 lab, first review
+`docs/phase-3/model-runtime-research.md`, provision the exact ignored files yourself,
+and run the explicit `LlamaCppScreeningLab` test with its documented system
+properties. Normal `clean verify` deliberately does not execute native inference or
+download an artifact.
+
 ## The first local explanation is slow
 
 Model validation, child-JVM startup, weight loading, and the first inference are lazy by default. In the authoritative

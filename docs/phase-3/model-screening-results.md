@@ -63,6 +63,25 @@ Profiles were deliberately bounded:
 - `RECOMMENDED`: temperature 0.7, top-k 20, top-p 0.8, presence penalty 1.5,
   strict schema.
 
+The explicit Maven invocation shape was:
+
+```powershell
+.\mvnw.cmd --batch-mode --no-transfer-progress `
+  -pl stackmate-benchmark -am `
+  -Dtest=LlamaCppScreeningLab `
+  -Dsurefire.failIfNoSpecifiedTests=false `
+  -Dstackmate.llamacpp.executable=<absolute-llama-completion-path> `
+  -Dstackmate.llamacpp.model=<absolute-gguf-path> `
+  -Dstackmate.llamacpp.model.id=<candidate-id> `
+  -Dstackmate.llamacpp.model.size=<pinned-bytes> `
+  -Dstackmate.llamacpp.model.sha256=<pinned-sha256> `
+  -Dstackmate.llamacpp.output=<ignored-target-directory> `
+  test
+```
+
+The command was run once per candidate. Each JUnit execution generated 40 results:
+10 scenarios, two languages, and two profiles.
+
 ## Qwen3.5-2B screening
 
 | Profile / language | Valid | Cause exact | Check exact | Eval median / P95 | Process median / P95 |
@@ -163,4 +182,3 @@ unchanged; it must not be presented as proof of a nonexistent llama.cpp adapter.
 **Gate A: FAIL.** Gates B and C are therefore `NOT_RUN`. No production llama.cpp
 adapter, managed native worker, model catalog, downloader, cache, Spring setting, or
 automatic provisioning behavior was implemented.
-

@@ -21,4 +21,3 @@ Consequently:
 The conceptual requirements in the Phase 3 prompt remain future acceptance criteria,
 not implemented behavior. A later phase must begin with a new passing model
 hypothesis rather than reusing this failed Gate A decision.
-

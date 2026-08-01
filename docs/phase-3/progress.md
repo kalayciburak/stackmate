@@ -156,10 +156,43 @@ deterministic product remain unchanged.
 
 ## Final phase work
 
-Status: in progress
+Status: completed on 2026-08-01
 
-- Update public documentation, model selection, threat model, troubleshooting,
-  notices, and changelog.
-- Run the complete Java 21 Maven verification.
-- Confirm test counts, artifact contents, ignored model files, worker cleanup, and
-  clean Git state.
+### Completed work
+
+- Updated both READMEs, model selection, threat model, troubleshooting, third-party
+  notices, changelog, Gate A results, conditional provisioning decision, and console
+  gallery without changing production behavior.
+- Ran the complete Java 21 reactor verification. The first attempt stopped before
+  tests because Spotless found one extra blank line at EOF in four Phase 3 Markdown
+  files. Those exact lines were removed manually and the same command then passed.
+- Independently recounted test XML, recomputed coverage from JaCoCo CSV, inspected
+  all built JARs for model weights, checked Git tracking/ignore rules, and checked
+  running processes.
+
+### Final verification evidence
+
+| Measurement | Actual result |
+|---|---|
+| `mvnw clean verify` | Success; 11/11 reactor projects, Maven 58.042 s |
+| Surefire | 314 tests, 0 failures/errors/skips |
+| Failsafe | 12 tests, 0 failures/errors/skips |
+| Core line / branch | 96.46% / 87.14% |
+| Inference API line / branch | 91.25% / 75.27% |
+| Inference JVM line / branch | 80.40% / 63.71% |
+| Spring autoconfigure line / branch | 83.19% / 62.79% |
+| Built JAR inspection | 9 JARs; no GGUF, SafeTensors, ONNX, PT, or PTH entry |
+| Tracked model weights | None |
+| Ignored Phase 3 model/runtime inputs | Confirmed by `git check-ignore` |
+| Remaining llama/StackMate workers | None |
+
+The 0.10 percentage-point inference-JVM line-coverage difference from the Phase 3
+entry table is in the final JaCoCo recount (607/755 lines). No production source file
+changed relative to the Phase 2 commit and all configured coverage gates passed.
+
+### Final decision
+
+- Deterministic diagnostics: `READY`.
+- Local inference: `NOT_VIABLE`.
+- Provisioning: `NOT_IMPLEMENTED`.
+- Recommended next phase: public alpha hardening of the deterministic product.

@@ -161,6 +161,25 @@ infrastructure. No evaluated real model is recommended or enabled by default. Th
 - Apache-2.0 model licensing permits use and redistribution subject to license/notice/patent/trademark terms, but
   does not guarantee training-data, input, or output rights.
 
+## Phase 3 quantized Qwen3.5 result
+
+Phase 3 tested a materially different path: Qwen3.5-2B and Qwen3.5-4B Q4_K_M GGUF
+through official llama.cpp `b10219`, using strict JSON-schema decoding plus the
+unchanged Phase 2 semantic validator. Exact revisions, checksums, provenance limits,
+profiles, timing, memory, and manual language review are recorded in
+`phase-3/model-runtime-research.md` and `phase-3/model-screening-results.md`.
+
+The 2B greedy configuration achieved 10/10 English valid/cause/check results, but
+only 6/10 Turkish cause selection, 7/10 Turkish check selection, and 3/10 useful
+Turkish explanations. The 4B configurations produced 40/40 valid bilingual outputs,
+but exact cause/check selection peaked at 8/10. A supplied but wrong ID is still an
+unsafe prioritization result; grammar compliance does not satisfy that gate.
+
+Both candidates are **`NOT_VIABLE`**. Gate A failed, the full 80-case model benchmark
+was not run, and no production llama.cpp adapter or provisioning system was built.
+Jlama remains the only existing experimental adapter; it is not recommended or
+enabled by these results.
+
 ## Sources
 
 - Jlama repository and license: https://github.com/tjake/Jlama
@@ -174,3 +193,8 @@ infrastructure. No evaluated real model is recommended or enabled by default. Th
 - Qwen2.5-1.5B-Instruct: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct
 - Qwen3-0.6B: https://huggingface.co/Qwen/Qwen3-0.6B
 - mT0-small: https://huggingface.co/bigscience/mt0-small
+- Qwen3.5-2B: https://huggingface.co/Qwen/Qwen3.5-2B
+- Qwen3.5-4B: https://huggingface.co/Qwen/Qwen3.5-4B
+- llama.cpp: https://github.com/ggml-org/llama.cpp
+- llama.cpp advisories: https://github.com/ggml-org/llama.cpp/security/advisories
+- java-llama.cpp: https://github.com/kherud/java-llama.cpp

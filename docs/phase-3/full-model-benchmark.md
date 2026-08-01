@@ -17,4 +17,3 @@ stability.
 
 No historical report was overwritten. Screening inputs and actual results are in
 `model-runtime-research.md` and `model-screening-results.md`.
-

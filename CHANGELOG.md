@@ -34,6 +34,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   process-level startup measurement, request-path JMH, and an actual console gallery.
 - Completion-audit coverage for read-only/long/Unicode model paths, unexpected model artifacts, repeated redaction,
   child stdout contamination, partial responses, and a real-model packaged lifecycle that accepts safe fallback.
+- A test-scoped Phase 3 llama.cpp screening harness with immutable model/runtime inputs, strict per-request JSON
+  schemas, hidden-thinking rejection, unchanged semantic validation, and bilingual Qwen3.5 2B/4B measurements.
 
 ### Security
 
@@ -44,6 +46,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   and packaged orphan-process assertions.
 - Removed obsolete packaged prompts that still described model-authored source locations; only schema-v2 English and
   Turkish resources remain.
+- Verified SHA-256 and size for the two ignored feasibility GGUF files and the official llama.cpp Windows archive;
+  rejected java-llama.cpp's older embedded runtime and excluded llama.cpp RPC from the experiment.
 
 ### Known limitations
 
@@ -52,3 +56,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Phase 1 Qwen2.5-0.5B-Instruct/Jlama results remain a historical `EXPERIMENTAL` baseline. Under the reduced Phase 2
   contract, Qwen2.5-0.5B-Instruct and Qwen2.5-Coder-0.5B-Instruct are `NOT_VIABLE`: all four 10-case
   English/Turkish screens produced zero valid output and missed latency/memory targets.
+- Phase 3 Qwen3.5-2B and Qwen3.5-4B Q4_K_M configurations are also `NOT_VIABLE`. The 2B model failed Turkish
+  selection/usefulness; the 4B model failed the mandatory 85% cause/check selection gate. Gates B and C were not
+  run, so there is no production llama.cpp adapter or automatic provisioning.

@@ -57,4 +57,3 @@ These executions reproduce the deterministic product baseline only. They make no
   reduce supply-chain risk but do not provide an OS sandbox.
 - Existing ADR numbers 0009 through 0014 belong to Phase 2. Phase 3 decisions will use the next unused numbers instead
   of overwriting history.
-

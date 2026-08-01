@@ -10,8 +10,10 @@ handlers, and logging configuration remain owned by the application.
 The deterministic engine is the product core. A local model is an optional, untrusted explanation layer; it cannot
 add or override a category, root type, evidence item, or source location.
 
-Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. The local SPI remains for
-research and safe-fallback testing. StackMate is not presented as production-ready or published to Maven Central.
+Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 3 also screened
+quantized Qwen3.5 2B/4B through pinned llama.cpp and did not pass the mandatory bilingual ID-selection gates. The
+local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
+published to Maven Central.
 
 Turkish documentation: [README.tr.md](README.tr.md)
 
@@ -129,8 +131,9 @@ and then returns control to Spring's existing error handling.
 
 ## Local-model quickstart
 
-The evaluated local models are `NOT_VIABLE`; this quickstart is for explicit experimentation and integration testing,
-not a recommendation. Add the local starter instead of the base starter:
+The evaluated local models are `NOT_VIABLE`; this quickstart describes the retained Phase 2 Jlama experiment and
+integration testing, not a recommendation. Phase 3 GGUF/llama.cpp screening was not integrated. Add the local starter
+instead of the base starter:
 
 ```xml
 <dependency>
@@ -343,6 +346,13 @@ Under the explanation-only schema-v2 contract, both Qwen2.5-0.5B-Instruct and Qw
 worker peak was about 2.09 GiB. Invalid-output fallback succeeded and no invalid result was accepted, but containment
 does not establish usefulness. Local inference is therefore `NOT_VIABLE` for the evaluated configurations.
 
+Phase 3 tested pinned Qwen3.5 Q4_K_M feasibility artifacts using official llama.cpp `b10219`. The 2B greedy profile
+reached 10/10 English validity and selection, but only 6/10 Turkish cause and 7/10 Turkish check selection, with 3/10
+useful Turkish explanations. The 4B model produced valid bilingual JSON in all 40 profile/language cases, but its
+best exact cause/check result was 8/10—below the mandatory 85% gate. Gate A failed, so no llama.cpp production
+adapter, automatic model catalog, downloader, or provisioning cache was implemented. See the
+[Phase 3 screening report](docs/phase-3/model-screening-results.md).
+
 Run normal verification without a model:
 
 ```bash
@@ -378,6 +388,8 @@ CI and does not download weights.
 - The application may still expose sensitive text in its unchanged raw logs.
 - Optional framework recognition uses safe class-name/message inspection, not deep framework state.
 - Evaluated local inference is `NOT_VIABLE`; real-model runs exist only on Windows and no model is recommended.
+- Phase 3 llama.cpp/GGUF code is an explicit benchmark lab only; no automatic model or native-runtime provisioning
+  exists.
 - No OS-level network or model-process sandbox is installed.
 - `lazy-load=false` eagerly validates adapter metadata but Jlama weights are still loaded on first inference.
 
@@ -389,9 +401,9 @@ CI and does not download weights.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-See the [console gallery](docs/console-gallery.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md), and [Phase 2 progress](docs/phase-2-progress.md). Security reports should
-follow [SECURITY.md](SECURITY.md).
+See the [console gallery](docs/console-gallery.md), [Phase 3 screening gallery](docs/phase-3/console-gallery.md),
+[CONTRIBUTING.md](CONTRIBUTING.md), [troubleshooting.md](docs/troubleshooting.md), and
+[Phase 3 progress](docs/phase-3/progress.md). Security reports should follow [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 

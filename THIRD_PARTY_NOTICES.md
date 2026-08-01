@@ -41,6 +41,25 @@ The official BF16 SafeTensors weight was 988,097,824 bytes with SHA-256
 `F9523886352217DED3AEEEF552B381AF79D568C6D49A4B9E423288CEA56B0A44`. No evaluated model passed Phase 2 readiness
 screening and StackMate recommends neither model for product use.
 
+Phase 3 evaluated two additional Apache-2.0 upstream models through ignored,
+third-party Q4_K_M feasibility artifacts:
+
+| Upstream model and revision | Experimental GGUF source revision | Bytes | Verified SHA-256 |
+|---|---|---:|---|
+| `Qwen/Qwen3.5-2B` `15852e8c16360a2fea060d615a32b45270f8a8fc` | `bartowski/Qwen_Qwen3.5-2B-GGUF` `7d26695454df6de5fbcce2e58681e62dae06ce43` | 1,396,198,496 | `57a1085840f497d764a7fc5d346922dbde961efb54cc792ea81d694fd846a1d8` |
+| `Qwen/Qwen3.5-4B` `851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a` | `bartowski/Qwen_Qwen3.5-4B-GGUF` `4168f45a16a1290d65a4ec0fa312ae917a4c15d6` | 3,013,027,808 | `13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983` |
+
+The GGUF cards do not cryptographically prove the exact immutable official upstream
+revision used during conversion. These files are not production catalog artifacts,
+are not distributed or tracked by StackMate, and passed no product-readiness gate.
+
+The Phase 3 lab used the Apache-2.0 official llama.cpp release `b10219`, commit
+`c629da565c80b0b17fac6262acdca4d772e745d8`. The verified official Windows CPU x64
+archive SHA-256 was
+`5f3fc78e61d7402f7051c3580159c8a12ff6cb98912e42f4272932e1afb7f882`.
+The executable and its native libraries remain ignored research inputs; none is
+packaged or made a production dependency. The experiment did not use the RPC backend.
+
 ## Development and test dependencies
 
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the

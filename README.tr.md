@@ -10,8 +10,10 @@ handler'ları ve loglama yapılandırması uygulamanın denetiminde kalır.
 Ürünün çekirdeği deterministik motordur. Yerel model yalnızca isteğe bağlı ve güvenilmeyen bir açıklama katmanıdır;
 kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştiremez.
 
-Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Yerel SPI araştırma ve
-güvenli fallback testleri için korunur. StackMate production-ready olarak sunulmaz ve Maven Central'da yayımlanmaz.
+Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Phase 3'te pinned
+llama.cpp ile quantized Qwen3.5 2B/4B de tarandı; iki dilli ID seçimi için zorunlu eşikler geçilemedi. Yerel SPI
+araştırma ve güvenli fallback testleri için korunur. StackMate production-ready olarak sunulmaz ve Maven Central'da
+yayımlanmaz.
 
 İngilizce dokümantasyon: [README.md](README.md)
 
@@ -130,8 +132,9 @@ loglar ve denetimi Spring'in mevcut hata işleme akışına bırakır.
 
 ## Yerel model hızlı başlangıcı
 
-Değerlendirilen yerel modeller `NOT_VIABLE` sonucunu aldı. Bu hızlı başlangıç öneri değil, açık deney ve entegrasyon
-testi içindir. Base starter yerine local starter'ı ekleyin:
+Değerlendirilen yerel modeller `NOT_VIABLE` sonucunu aldı. Bu hızlı başlangıç korunan Phase 2 Jlama deneyi ve
+entegrasyon testi içindir, öneri değildir. Phase 3 GGUF/llama.cpp taraması ürüne entegre edilmedi. Base starter
+yerine local starter'ı ekleyin:
 
 ```xml
 <dependency>
@@ -346,6 +349,13 @@ Yalnız açıklama yapan schema-v2 sözleşmesinde hem Qwen2.5-0.5B-Instruct hem
 worker tepesi yaklaşık 2,09 GiB oldu. Geçersiz çıktı fallback'i çalıştı ve geçersiz hiçbir sonuç kabul edilmedi;
 ancak güvenli sınırlama model yararlılığını kanıtlamaz. Bu nedenle değerlendirilen yapılandırmalar `NOT_VIABLE`dır.
 
+Phase 3'te official llama.cpp `b10219` ile pinned Qwen3.5 Q4_K_M feasibility artifact'ları test edildi. 2B greedy
+profilinde İngilizce geçerlilik ve seçim 10/10 olurken Türkçe neden seçimi 6/10, kontrol seçimi 7/10 ve yararlı
+Türkçe açıklama 3/10 kaldı. 4B modeli 40 profil/dil vakasının tamamında geçerli JSON üretti; ancak en iyi exact
+neden/kontrol sonucu 8/10 ile zorunlu %85 eşiğinin altında kaldı. Gate A başarısız olduğu için llama.cpp production
+adapter'ı, otomatik model kataloğu, downloader veya provisioning cache'i uygulanmadı. Ayrıntılar
+[Phase 3 tarama raporundadır](docs/phase-3/model-screening-results.md).
+
 Modelsiz normal doğrulama:
 
 ```bash
@@ -381,6 +391,8 @@ ve model ağırlığı indirmez.
 - Uygulama, değiştirilmemiş ham loglarında hassas metni yine açığa çıkarabilir.
 - Opsiyonel framework tanıma, derin framework state yerine güvenli class-name/message incelemesi kullanır.
 - Değerlendirilen yerel inference `NOT_VIABLE`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
+- Phase 3 llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
+  provisioning yoktur.
 - İşletim sistemi düzeyinde ağ veya model-process sandbox'ı yoktur.
 - `lazy-load=false` adapter metadata'sını başlangıçta doğrular; Jlama ağırlıkları yine ilk inference'ta yükler.
 
@@ -392,9 +404,10 @@ ve model ağırlığı indirmez.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-[konsol galerisi](docs/console-gallery.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md) ve [Phase 2 ilerleme kaydı](docs/phase-2-progress.md) belgelerine bakın.
-Güvenlik bildirimleri [SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
+[konsol galerisi](docs/console-gallery.md), [Phase 3 tarama galerisi](docs/phase-3/console-gallery.md),
+[CONTRIBUTING.md](CONTRIBUTING.md), [troubleshooting.md](docs/troubleshooting.md) ve
+[Phase 3 ilerleme kaydı](docs/phase-3/progress.md) belgelerine bakın. Güvenlik bildirimleri
+[SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
 
 ## Yol haritası
 
