@@ -237,6 +237,18 @@ class DefaultSanitizerTest {
     }
 
     @Test
+    void keepsAlreadyRedactedAndRepeatedSanitizationStable() {
+        String input = "password=hunter2 Authorization: Bearer abc.def.ghi already=[REDACTED]";
+
+        String sanitized = sanitizer.sanitize("message", input);
+
+        assertThat(sanitized)
+                .contains("password=[REDACTED]", "Authorization: [REDACTED]", "already=[REDACTED]")
+                .doesNotContain("hunter2", "abc.def.ghi", "Bearer");
+        assertThat(sanitizer.sanitize("message", sanitized)).isEqualTo(sanitized);
+    }
+
+    @Test
     void rejectsEveryUnsafeReplacementControlRangeWithoutRejectingAdjacentCodePoints() {
         assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\uFEFF"))
                 .isInstanceOf(IllegalArgumentException.class);

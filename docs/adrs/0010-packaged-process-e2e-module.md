@@ -29,6 +29,17 @@ The fake child lives in the sample artifact because it must be loadable from the
 created by the `e2e-fake-child` profile and is not part of either StackMate starter. It speaks the production framed
 protocol but never loads model weights or contacts a service.
 
+The explicit real-model lifecycle profile is:
+
+```bash
+./mvnw -pl stackmate-e2e -am -Preal-model-e2e \
+  -Dstackmate.model.path=/absolute/path/to/local-model \
+  verify
+```
+
+It accepts either a validator-approved explanation or the bounded safe fallback. Requiring explanation success would
+turn a lifecycle/safety test into an unsupported model-quality claim.
+
 ## Consequences
 
 - Normal `verify` gains genuine packaged-process coverage and needs no model or network service.

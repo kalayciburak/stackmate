@@ -362,6 +362,18 @@ Açık araştırma amaçlı A/B/C model benchmark'ı:
 
 Makineye özgü raporlar `stackmate-benchmark/target/` altında kalır ve Git tarafından yok sayılır.
 
+Açıkça sağlanan bir modelle paketlenmiş gerçek-model lifecycle profilini çalıştırın:
+
+```bash
+./mvnw -pl stackmate-e2e -am -Preal-model-e2e \
+  -Dstackmate.model.path=/mutlak/yol/yerel-model \
+  verify
+```
+
+Profil, validator tarafından onaylanan yerel açıklamayı veya sınırlı deterministik fallback'i kabul eder. HTTP'nin
+inference'tan önce döndüğünü ve yönetilen child'ın shutdown sırasında kaldırıldığını doğrular. Normal CI'dan hariçtir
+ve model ağırlığı indirmez.
+
 ## Bilinen sınırlamalar
 
 - Yalnızca servlet filter zincirinden kaçan exception'lar görünür; çözülmüş handler ve sadece loglanan hatalar görünmez.

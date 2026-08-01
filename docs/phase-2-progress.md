@@ -464,3 +464,60 @@ Status: completed
   JDK may require explicit test-agent configuration.
 - Jlama/model-process native and third-party behavior is not an OS sandbox. The product makes no impossibility claim
   about network access or malicious model containment.
+
+## Phase 10 - completion audit
+
+Status: completed
+
+### Requirement-by-requirement findings
+
+- Revalidated the current branch rather than relying on the Phase 9 conclusion. Module boundaries, corpus freeze
+  order/hash, packaged Failsafe lifecycle, schema-v2 public contracts, inference trigger policy, prompt separation,
+  model-screening evidence, startup/JMH reports, CI configuration, documentation set, tracked artifacts, and Git state
+  remain consistent with the Phase 2 requirements.
+- Added direct adversarial evidence for repeated/already-redacted sanitizer input; missing, oversized, unexpected,
+  read-only, long, Unicode, and space-containing model artifacts; Unicode protocol data; child stdout logs before and
+  after framed output; and a child exiting during a partial response.
+- Removed four unused legacy prompt resources that still requested model-authored source locations. Runtime already
+  used only schema-v2; the packaged resource set now states the same contract unambiguously.
+- Corrected `real-model-e2e`: the earlier eight-second explanation-only expectation contradicted the measured model
+  latency and `NOT_VIABLE` output validity. The test now accepts validated explanation or sanitized fallback within a
+  45-second bound while retaining the two-second HTTP and orphan-cleanup assertions.
+- Reworked `docs/reviews/stackmate-threat-model.md` against the repository-grounded threat-model contract. It now has
+  explicit trust boundaries, assets, attacker capabilities/non-capabilities, entry points, prioritized abuse paths,
+  evidence anchors, residual risks, and runtime/build separation without stale schema-v2 language.
+- Documented the exact real-model E2E command in both READMEs and ADR 0010. Normal CI still excludes the profile and
+  downloads no model.
+
+### Verification so far
+
+- First affected test run found one over-specific assertion: the sanitizer correctly removed the `Bearer` label along
+  with the authorization value. The assertion was corrected to the stronger field-redaction contract.
+- `./mvnw.cmd -pl stackmate-core,stackmate-inference-jvm -am test` then passed: core 103, inference API 27, inference
+  JVM 34; 164 tests, no failures/errors/skips.
+- `./mvnw.cmd -pl stackmate-e2e -am -DskipTests spotless:check` passed for all nine affected reactor projects.
+- Normal `./mvnw.cmd -pl stackmate-e2e -am verify` passed in 47.316 seconds; all 12 model-free Failsafe tests passed.
+- The documented `real-model-e2e` Maven command, with the existing Qwen2.5-0.5B directory, passed in 47.335 seconds.
+  The real-model Failsafe test completed in 30.385 seconds, HTTP returned before inference, and shutdown left no
+  observed child alive.
+- `actionlint` is not installed, so workflow runner syntax was not independently executed. XML parsing succeeded for
+  all 11 Maven POMs; GitHub runner status remains explicitly unverified because nothing is pushed.
+
+### Final authoritative verification
+
+- `./mvnw.cmd --batch-mode --no-transfer-progress clean verify` passed for all 11 reactor projects. Maven reported
+  1:02; measured wall time was 63,508 ms.
+- Surefire XML reports contain 314 tests and Failsafe XML reports contain 12 normal packaged-process tests. Failures,
+  errors, and skips are zero. The separately enabled real-model Failsafe test also passed and is not included in the
+  normal-CI count.
+- Final normal test distribution: core 103, inference API 27, inference JVM 34, Spring autoconfiguration 71, sample 16,
+  benchmark 63, and packaged Failsafe 12.
+- Final line/branch coverage: core 96.46%/87.14%, inference API 91.25%/75.27%, inference JVM 80.50%/63.71%, Spring
+  autoconfiguration 83.19%/62.79%, benchmark 28.95%/15.25%, and sample 16.07%/0%. The sample's main verification is
+  the separately launched packaged JVM, which the unit-test JaCoCo agent does not instrument.
+- The rebuilt inference JAR contains exactly four prompt files under `prompts/schema-v2/en` and
+  `prompts/schema-v2/tr`. No built JAR contains SafeTensors, GGUF, ONNX, or other model weights. Auto-configuration
+  registration and generated configuration metadata are present.
+- A post-build runtime dependency tree reconfirmed: core has no dependency; inference API depends only on core; the
+  deterministic starter has Boot 4.1.0, Spring 7.0.8, SLF4J, autoconfiguration, and core but no inference runtime; only
+  the local starter opts into Jackson 2.21.4 and Jlama 0.8.4.

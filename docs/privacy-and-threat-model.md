@@ -112,3 +112,6 @@ model usefulness. Cross-platform real-model behavior remains unverified.
 5. Add sustained property-based fuzzing for the stdio decoder, sanitizer, and SafeTensors metadata beyond the current
    targeted adversarial suite.
 6. Keep real inference opt-in and `NOT_VIABLE` until a materially new model/runtime hypothesis passes screening.
+
+The repository-grounded boundary, attacker, abuse-path, and risk-priority review is maintained separately in
+`docs/reviews/stackmate-threat-model.md`.

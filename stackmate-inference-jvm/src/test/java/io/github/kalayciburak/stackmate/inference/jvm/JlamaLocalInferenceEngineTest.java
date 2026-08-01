@@ -13,6 +13,7 @@ import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -258,6 +259,92 @@ class JlamaLocalInferenceEngineTest {
         assertThat(failure(multiple.infer(request())).kind())
                 .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
         multiple.close();
+    }
+
+    @Test
+    void rejectsChildStdoutLogsBeforeAndAfterFramedResponses() throws Exception {
+        JlamaLocalInferenceEngine before =
+                engine(
+                        Duration.ofSeconds(1),
+                        command ->
+                                new ScriptedProcess(
+                                        (input, output) -> {
+                                            Protocol.readFrame(
+                                                    new DataInputStream(input),
+                                                    Protocol.Request.class,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_REQUEST_BYTES);
+                                            output.write(
+                                                    "worker log before response\n"
+                                                            .getBytes(StandardCharsets.UTF_8));
+                                            output.flush();
+                                            new CountDownLatch(1).await();
+                                        }));
+
+        assertThat(failure(before.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+        before.close();
+
+        JlamaLocalInferenceEngine after =
+                engine(
+                        Duration.ofSeconds(1),
+                        command ->
+                                new ScriptedProcess(
+                                        (input, output) -> {
+                                            DataInputStream dataInput = new DataInputStream(input);
+                                            Protocol.Request request =
+                                                    Protocol.readFrame(
+                                                            dataInput,
+                                                            Protocol.Request.class,
+                                                            mapper,
+                                                            Protocol.MAXIMUM_REQUEST_BYTES);
+                                            Protocol.writeFrame(
+                                                    new DataOutputStream(output),
+                                                    new Protocol.Response(
+                                                            Protocol.VERSION,
+                                                            request.requestId(),
+                                                            true,
+                                                            mapper.getNodeFactory()
+                                                                    .textNode(VALID_OUTPUT),
+                                                            ""),
+                                                    mapper,
+                                                    Protocol.MAXIMUM_RESPONSE_BYTES);
+                                            output.write(
+                                                    "worker log after response\n"
+                                                            .getBytes(StandardCharsets.UTF_8));
+                                            output.flush();
+                                            new CountDownLatch(1).await();
+                                        }));
+
+        assertThat(after.infer(request())).isInstanceOf(InferenceResult.Success.class);
+        assertThat(failure(after.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+        after.close();
+    }
+
+    @Test
+    void rejectsChildExitDuringPartialResponse() throws Exception {
+        JlamaLocalInferenceEngine engine =
+                engine(
+                        Duration.ofSeconds(1),
+                        command ->
+                                new ScriptedProcess(
+                                        (input, output) -> {
+                                            Protocol.readFrame(
+                                                    new DataInputStream(input),
+                                                    Protocol.Request.class,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_REQUEST_BYTES);
+                                            DataOutputStream dataOutput =
+                                                    new DataOutputStream(output);
+                                            dataOutput.writeInt(100);
+                                            dataOutput.writeByte('{');
+                                            dataOutput.flush();
+                                        }));
+
+        assertThat(failure(engine.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+        engine.close();
     }
 
     @Test

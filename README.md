@@ -359,6 +359,18 @@ Run the explicit research model benchmark (not part of normal verification):
 
 Generated machine-specific reports stay under `stackmate-benchmark/target/` and are ignored by Git.
 
+Run the packaged real-model lifecycle profile with an explicitly provisioned model:
+
+```bash
+./mvnw -pl stackmate-e2e -am -Preal-model-e2e \
+  -Dstackmate.model.path=/absolute/path/to/local-model \
+  verify
+```
+
+The profile accepts either a validator-approved local explanation or the bounded deterministic fallback. It verifies
+that HTTP returns before inference and that the managed child is removed during shutdown. It is excluded from normal
+CI and does not download weights.
+
 ## Known limitations
 
 - Only exceptions escaping the servlet filter chain are visible; resolved handlers and logged-only failures are not.

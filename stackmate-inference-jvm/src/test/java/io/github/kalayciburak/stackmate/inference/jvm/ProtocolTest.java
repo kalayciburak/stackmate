@@ -19,7 +19,11 @@ class ProtocolTest {
     void roundTripsBoundedFrame() throws Exception {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         Protocol.Request request =
-                new Protocol.Request(1, "health", "request-1", mapper.createObjectNode());
+                new Protocol.Request(
+                        1,
+                        "health",
+                        "request-1",
+                        mapper.createObjectNode().put("text", "Türkçe İstanbul 👩‍💻"));
 
         Protocol.writeFrame(new DataOutputStream(bytes), request, mapper, 1_024);
         Protocol.Request decoded =

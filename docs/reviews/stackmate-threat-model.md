@@ -5,160 +5,206 @@ Scope: deterministic capture/render/export pipeline and optional managed-JVM inf
 
 ## Executive summary
 
-StackMate runs inside a developer's Spring Boot process and observes attacker-influenced exception data. Its highest
-risk is not remote compromise by a StackMate network service—there is no such service—but accidental disclosure or
-resource exhaustion across the application, console, filesystem, and local child-JVM trust boundaries. Local model
-files and model output are untrusted. Deterministic evidence is the sole source of diagnostic facts.
-
-The Phase 2 controls prioritize: collect little; sanitize before every output boundary; frame and bound child IPC; keep
-inference off request threads; reject unknown IDs and invented identifiers; suppress duplicate work; and terminate the
-worker on timeout, protocol failure, or shutdown. StackMate does not provide an OS network sandbox or protect secrets
-already logged by the host application.
+StackMate is a library inside a developer's Spring Boot process, not an independently reachable network service. Its
+highest risks are disclosure of secrets carried by attacker-influenced exception data, resource exhaustion caused by
+exception storms or untrusted model files, and false advice crossing the child-JVM boundary. Phase 2 reduces those
+risks through minimal capture, repeated sanitization, deterministic ownership of facts, bounded IPC and queues,
+strict output validation, process isolation, and deterministic fallback. The child JVM is not an OS sandbox and the
+host application's original logging remains outside StackMate's control.
 
 ## Scope and assumptions
 
 In scope:
 
-- servlet exception capture and Spring runtime metadata;
-- deterministic analysis, fingerprinting, deduplication, console rendering, and optional export;
-- parent/child standard-input/output protocol;
-- local model directory validation and Jlama worker lifecycle;
-- untrusted model output validation and fallback.
+- servlet exception capture, runtime metadata, deterministic analysis, fingerprinting, deduplication, and rendering;
+- opt-in incident export;
+- local model-path validation, managed-child lifecycle, stdio framing, prompt construction, and output validation;
+- normal Maven/CI verification and dependency boundaries that affect shipped runtime artifacts.
 
 Out of scope:
 
-- host application log configuration and appenders;
-- repository/source inspection, cloud services, IDEs, agents, WebFlux, and startup failures;
-- compromise of the operating system or the Java runtime;
-- an OS-enforced network sandbox for the worker.
+- host logging appenders and already-emitted raw exceptions;
+- startup failures, WebFlux, log-only failures, repository inspection, agents, IDEs, and cloud providers;
+- compromise of the operating system, JDK, Maven repository, or a developer account;
+- an OS-enforced CPU, memory, filesystem, or network sandbox.
 
-Assumptions:
+The product requirements already establish the service context: intended use is local developer diagnostics; the
+host application may be network-exposed but StackMate creates no listener; host authentication and authorization
+remain application-owned; exception data can contain secrets or PII; and the optional worker runs as the same OS
+user. Risk would increase if `stackmate.safety.allow-in-production` were enabled broadly, model files came from an
+unverified source, or export directories were readable by other local users.
 
-- the developer controls StackMate configuration and local model installation;
-- exception messages, request paths, handler names, MDC values, optional analyzer output, and model output may be hostile;
-- a downloaded model may be malformed even when it has a plausible directory layout;
-- the child runs as the same OS user and therefore must not be treated as a security sandbox.
+Open deployment questions that do not block this developer-focused assessment:
 
-## System and trust boundaries
+- whether future adopters will explicitly enable StackMate in production profiles;
+- whether a future release will publish an approved model checksum and provenance policy;
+- which filesystem permissions are applied to model and export directories by each supported OS.
+
+## System model
+
+### Primary components
+
+- Servlet capture filter and handler copy bounded throwable/request/runtime facts and rethrow the original exception.
+  Evidence: `StackMateExceptionCaptureFilter`, `DefaultServletExceptionCaptureHandler`.
+- Core snapshot, sanitizer, analyzers, fingerprinter, and bounded deduplication store produce trusted facts without
+  Spring dependencies. Evidence: `ThrowableSnapshotter`, `DefaultSanitizer`, `DiagnosisAggregator`,
+  `IncidentFingerprinter`, `BoundedInMemoryDeduplicationStore`.
+- Spring output and export adapters render through SLF4J or publish a fixed four-file sanitized bundle. Evidence:
+  `DefaultConsoleRenderer`, `FileSystemIncidentExporter`.
+- The optional inference coordinator applies the evidence policy and submits bounded asynchronous work. Evidence:
+  `EvidenceAwareInferencePolicy`, `DefaultAsyncLocalInferenceCoordinator`.
+- The managed child validates local Qwen2 files, communicates through framed stdio, invokes Jlama, and returns
+  untrusted schema-v2 output. Evidence: `ModelDirectory`, `Protocol`, `JlamaLocalInferenceEngine`, `JlamaChildMain`.
+- The inference API validates known evidence/cause/check IDs and forbidden prose before rendering. Evidence:
+  `DefaultInferenceOutputValidator`.
+
+### Data flows and trust boundaries
+
+- HTTP client -> host Spring MVC application: attacker-controlled request data over the host's HTTP channel; host
+  authentication, authorization, validation, TLS, and rate limits remain application responsibilities.
+- Host application -> StackMate capture: escaping `Throwable` plus minimal method/path/handler/MDC/runtime metadata;
+  bounded snapshot traversal and sanitization occur before domain analysis.
+- Deterministic engine -> application logger: sanitized diagnosis text through one SLF4J event; terminal controls and
+  line widths are bounded, but the host logger separately retains ownership of the raw exception.
+- Deterministic engine -> export directory: sanitized fixed filenames through temporary-directory publication and an
+  atomic move; export is disabled by default and symlinked roots are rejected.
+- Parent JVM -> managed child: sanitized schema-v2 facts over versioned length-prefixed stdin/stdout; frame size,
+  JSON depth/duplicates, request IDs, time, queue size, and restarts are bounded.
+- Local model -> output validator: model prose is untrusted; only supplied IDs and evidence-backed candidate
+  selections survive, while category/root/source/strength always come from deterministic state.
+- Build/developer environment -> runtime classpath and model directory: Maven artifacts and explicitly provisioned
+  model files cross a supply-chain boundary; Maven Enforcer, pinned versions, size/shape checks, and documented
+  checksums reduce but do not remove this trust.
+
+#### Diagram
 
 ```mermaid
 flowchart LR
-    A[HTTP client / hostile input] --> B[Spring MVC application]
-    B -->|escaping throwable + minimal metadata| C[StackMate capture]
-    C --> D[Sanitizer]
-    D --> E[Deterministic evidence and diagnosis]
-    E --> F[SLF4J console]
-    E --> G[Bounded deduplication]
-    E -->|sanitized structured facts| H[Inference coordinator]
-    H -->|length-prefixed local pipe| I[Managed child JVM + local model]
-    I -->|untrusted bounded response| J[Schema and evidence validator]
-    J -->|validated explanation only| F
-    E -->|explicit opt-in| K[Atomic local incident export]
-
-    subgraph Host application trust boundary
-      B
-      C
-      D
-      E
-      F
-      G
-      H
-      J
-      K
-    end
-
-    subgraph Untrusted local inference boundary
-      I
-    end
+    Client["HTTP client"] --> App["Spring MVC application"]
+    App --> Capture["StackMate capture"]
+    Capture --> Core["Sanitized deterministic core"]
+    Core --> Log["Application logger"]
+    Core --> Export["Opt in local export"]
+    Core --> Coordinator["Inference coordinator"]
+    Coordinator --> Child["Managed child JVM"]
+    Child --> Validator["Schema and evidence validator"]
+    Validator --> Log
+    Model["Local model files"] --> Child
 ```
 
-Primary source anchors:
+## Assets and security objectives
 
-- capture: `stackmate-spring-boot-autoconfigure/.../StackMateExceptionCaptureFilter.java` and
-  `DefaultServletExceptionCaptureHandler.java`;
-- sanitizer: `stackmate-core/.../DefaultSanitizer.java`;
-- protocol/process: `stackmate-inference-jvm/.../Protocol.java`, `ManagedChild.java`, `ModelDirectory.java`;
-- validation: `stackmate-inference-api/.../DefaultInferenceOutputValidator.java`;
-- export: `stackmate-spring-boot-autoconfigure/.../FileSystemIncidentExporter.java`.
+| Asset | Why it matters | Security objective |
+|---|---|---|
+| Original exception and HTTP behavior | Diagnostics must never replace application behavior | Integrity, availability |
+| Runtime secrets and PII | Messages, MDC, paths, and model text may carry credentials or personal data | Confidentiality |
+| Deterministic evidence | Incorrect facts can misdirect debugging or conceal a real failure | Integrity |
+| Servlet request threads | Model latency must not degrade application request handling | Availability |
+| CPU, heap, disk, and process table | Exception storms and model files can exhaust developer resources | Availability |
+| Console output | Escape sequences or false authority can spoof trusted diagnostics | Integrity, confidentiality |
+| Model and inference protocol | Malformed files or frames cross into a complex parser/runtime | Integrity, availability |
+| Incident export | Local bundles may persist sensitive operational context | Confidentiality, integrity |
+| Build artifacts and dependency graph | A compromised dependency would execute in the host or worker JVM | Integrity, confidentiality |
 
-## Assets
+## Attacker model
 
-| Asset | Security property |
-|---|---|
-| Original application behavior | StackMate must not change exception propagation, status, or body |
-| Secrets and PII in runtime strings | Must not appear in StackMate console, IPC, model output, debug reason, or export |
-| Trusted deterministic evidence | Must not be overridden or extended by model prose |
-| Application request threads | Must not perform or wait for model inference |
-| CPU, heap, disk, and process table | Must remain bounded during exception storms and malformed model handling |
-| Incident export directory | Must resist traversal, symlink redirection, partial publication, and unsafe retention deletion |
-| Console integrity | Must reject control sequences and clearly distinguish deterministic from model output |
+### Capabilities
 
-## Attacker capabilities
+- A remote caller can trigger failing requests and influence paths, validation/database messages, and some exception
+  text through the host application.
+- A caller can generate repeated, concurrent, or high-cardinality failures.
+- Application code or a custom analyzer can supply hostile throwable, MDC, handler, or candidate strings.
+- A local attacker or careless developer can provide a malformed model directory or unsafe export target.
+- A compromised child/runtime can emit malformed, partial, delayed, oversized, or secret-bearing output.
 
-- send values that become request paths, validation messages, database errors, and exception text;
-- trigger repeated, concurrent, and distinct failing requests;
-- influence selected MDC values through application behavior;
-- supply prompt-injection text inside captured data;
-- if the developer installs an untrusted artifact, craft local model metadata and model responses;
-- modify export/model paths when the attacker already controls application configuration or the developer account.
+### Non-capabilities
 
-The remote HTTP attacker cannot directly configure StackMate, install a model, read local exports, or execute commands
-through any StackMate API.
+- A remote HTTP caller cannot configure StackMate, install model files, enable export, or read local bundles through a
+  StackMate endpoint because no such endpoint exists.
+- The model has no StackMate tool, source-repository, shell, or network API.
+- The child JVM is not privileged over the parent and does not become a sandbox merely because it is a process.
+- StackMate cannot suppress secrets independently emitted by the host application's unchanged raw logging.
 
-## Abuse cases and mitigations
+## Entry points and attack surfaces
 
-| ID | Abuse path | Impact | Controls | Residual risk |
+| Surface | How reached | Trust boundary | Notes | Evidence |
 |---|---|---|---|---|
-| TM-01 | Secret embedded in exception or MDC reaches output | Credential/PII disclosure | minimal collection; default redaction; per-value bounds; second sanitization after model; no request body/headers/query values | host application logger still sees original throwable |
-| TM-02 | Exception says “ignore instructions” or closes a prompt delimiter | fabricated advice / prompt disclosure | structured bounded facts; normalized controls/fences/delimiters; incident strings explicitly untrusted; schema/ID validation; deterministic fallback | small models may still output invalid prose, which must remain rejected |
-| TM-03 | Model emits `Unknown.java:42`, new class, property, constraint, or evidence ID | false source attribution | schema V2 selects supplied IDs only; identifier/source-reference validation; trusted renderer uses deterministic locations | linguistic false positives require careful validator tests |
-| TM-04 | Child writes secrets/ANSI/large logs to stderr | disclosure, console spoofing, memory pressure | stderr pipe, private 4 KiB ring tail, sanitizer, 400-char failure bound, no raw rendering | child can still consume CPU before termination |
-| TM-05 | Child sends oversized/truncated/duplicate/deep JSON | memory/CPU exhaustion or parser ambiguity | 65,536-byte request and 32,768-byte response frames; strict duplicate/depth/name/number constraints; version/request ID checks; destroy on protocol failure | Java/Jackson parser bugs remain supply-chain risk |
-| TM-06 | Malicious model dimensions or SafeTensors offsets reach Jlama | worker crash or resource exhaustion | real-path/no-symlink checks; allowlisted files; 1.5 GB total; bounded config/header/tokenizer; dimension/rank/count/element/offset validation; managed child isolation | semantic corruption and native/runtime bugs cannot be fully prevalidated |
-| TM-07 | Exception storm fills inference queue | request latency, CPU/memory denial of service | deterministic path first; bounded one-thread executor and queue; abort/fallback; circuit breaker; deduplication reservation; evidence-aware trigger policy | many unique fingerprints still consume deterministic analysis/log volume |
-| TM-08 | Timeout leaves queued inference or orphan worker | resource leak after fallback/shutdown | interruptible engine lock; task cancellation; child destroy/forcible destroy; stdin EOF on parent death; packaged orphan test | abrupt OS/JVM termination may delay OS process reaping |
-| TM-09 | Export path traverses or follows symlink | overwrite/disclosure outside configured directory | normalized absolute root; reject symbolic path components; no-follow checks; private temp directory; atomic move; safe fixed filenames; conservative retention | same-user attacker racing filesystem metadata needs continued testing |
-| TM-10 | Sanitizer throws or returns null | unsanitized fallback | fixed safe fallback values; boundary catches; never restore raw throwable type; export rejection instead of raw write | custom sanitizer is trusted extension code and can disable usefulness |
-| TM-11 | Fingerprint contains volatile or sensitive raw text | correlation leakage / duplicate bypass | sanitized normalized bounded patterns; SHA-256; volatile UUID/number/token normalization; bounded TTL store | hashes are pseudonymous, not encryption, and low-entropy inputs can be guessed |
-| TM-12 | Model/runtime library initiates network access | policy violation | no network API in StackMate; local files only; no startup download; child command has no URL/credential; dependency review | StackMate does not impose an OS network sandbox; compromised dependencies retain same-user capabilities |
-| TM-13 | Recursive StackMate failure is captured again | log/exception recursion DoS | per-thread recursion guard; fail-open boundary; severe JVM errors receive minimal handling | failures outside the guarded capture point can still be logged by host code |
+| Escaping servlet exception | Failing HTTP request | Host application -> capture | Original throwable is rethrown; only minimal request metadata is copied | `StackMateExceptionCaptureFilter#doFilterInternal` |
+| Throwable and runtime strings | Cause/frame/MDC/handler extraction | Untrusted runtime data -> core | Traversal, strings, frames, causes, and suppressed nodes are bounded | `ThrowableSnapshotter#capture`, `ServletContextExtractor` |
+| Custom extension beans | Application configuration | Application code -> StackMate SPI | Extensions are trusted code but failures must fail open | `StackMateAutoConfiguration` |
+| Model directory | Explicit property/environment/home path | Local filesystem -> worker | No runtime download; symlinks, sizes, dimensions, dtype, and tensor ranges are checked | `ModelDirectory#validate` |
+| Child stdin/stdout/stderr | Managed process | Parent JVM <-> child JVM | Length-prefixed protocol; stderr is private, bounded, and sanitized | `Protocol`, `ManagedChild` |
+| Model prose | Child response | Untrusted model -> validator | Schema v2 permits explanation and supplied-ID selection only | `DefaultInferenceOutputValidator#validate` |
+| Export directory | Explicit opt-in configuration | Deterministic engine -> filesystem | Fixed filenames, no source copy, atomic publication, conservative retention | `FileSystemIncidentExporter#export` |
+| Maven/CI dependencies | Build and verification | External artifact repository -> runtime | Pinned BOM/plugins, Enforcer, no normal-CI model download | `pom.xml`, `.github/workflows/ci.yml` |
 
-## Risk ranking
+## Top abuse paths
 
-| Risk | Likelihood | Impact | Current level |
-|---|---|---|---|
-| Untrusted local model/runtime resource exhaustion | Possible | High | High, reduced by child and metadata bounds |
-| Host application logs original secret-bearing exception | Possible | High | Medium residual; outside logging ownership |
-| Model hallucination accepted as a fact | Possible in Phase 1 | High | Medium pending schema V2; validator already rejects unknown IDs/sources |
-| Remote exception storm | Likely for exposed demo/failing endpoint | Medium | Medium, bounded inference but host log volume remains |
-| Export path attack | Unlikely without local/config access | High | Low after no-follow and atomic publication controls |
-| StackMate-initiated runtime network call | Unlikely in reviewed code | High policy impact | Low, but not OS-enforced |
+1. Secret disclosure: attacker-controlled value enters an exception -> host wraps it -> StackMate renders or exports
+   it -> credential appears in console/disk. Repeated field-aware sanitization and no-body/header collection interrupt
+   this path; the host raw logger remains a separate residual path.
+2. Prompt injection: exception contains fake instructions -> structured prompt reaches the child -> model attempts to
+   invent evidence or reveal instructions -> schema/ID/identifier validation rejects it -> deterministic fallback is
+   retained.
+3. Resource exhaustion: attacker creates many unique failures -> fingerprints bypass duplicate suppression -> bounded
+   inference queue rejects excess work, but deterministic analysis and host log volume still consume resources.
+4. Malicious model: developer installs crafted SafeTensors metadata -> validator misses a semantic/runtime hazard ->
+   Jlama child consumes excessive resources or crashes -> timeout/process termination protects the parent, without
+   providing hard OS resource isolation.
+5. Protocol confusion: compromised child writes logs, duplicate JSON fields, partial frames, or multiple responses ->
+   strict framing/request IDs reject the stream and destroy the child -> circuit breaker eventually disables inference.
+6. Export redirection: local/config attacker selects a symlinked path -> exporter attempts publication -> path-component
+   and target checks reject it; a same-user filesystem race remains possible without directory-handle APIs.
+7. False source attribution: model prints `Unknown.java:42` or a new property/constraint -> identifier validation finds
+   no supplied fact -> local explanation is discarded and never presented as trusted output.
+8. Supply-chain policy violation: compromised inference dependency initiates network or filesystem access -> it has the
+   same user's privileges -> StackMate's no-network code policy provides review evidence but not OS enforcement.
 
-## Security requirements and review gates
+## Threat model table
 
-1. Every captured/runtime/model string is untrusted and bounded before use.
-2. No raw child stderr or invalid model output is rendered by default.
-3. Category, root type, stack locations, framework facts, and strength come only from deterministic evidence.
-4. Protocol frames, JSON complexity, output characters, generation time, queue, restart count, and model files are bounded.
-5. Interrupt status is preserved; timeout and shutdown terminate inference and the child.
-6. Export remains disabled by default and uses only fixed filenames beneath a verified root.
-7. Normal CI runs fake child tests and never downloads a model.
-8. A READY inference verdict requires zero accepted fabricated sources, unknown IDs, leakage, injection success, request
-   blocking, and orphan processes.
+| Threat ID | Threat source | Prerequisites | Threat action | Impact | Impacted assets | Existing controls | Gaps | Recommended mitigations | Detection ideas | Likelihood | Impact severity | Priority |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| TM-001 | Remote caller or application data | Sensitive value reaches an exception/MDC/path | Cause StackMate output or export to contain the value | Credential or PII disclosure | Runtime secrets, console, export | Minimal collection; `DefaultSanitizer`; repeated output sanitization; bounded debug reasons | Novel secret formats and host raw logging | Maintain adversarial corpus; document host logging hygiene; add user patterns for domain secrets | In-memory redaction-failure counters and controlled leakage corpus | Medium | High | High |
+| TM-002 | Malformed local model or inference runtime | Developer provisions untrusted files | Trigger parser/runtime crash or excessive allocation in worker | Developer-machine DoS; possible same-user code/runtime compromise | CPU, memory, filesystem, process table | `ModelDirectory` exact size/shape/dtype/range checks; checksum guidance; managed child; timeout | No hard RSS/CPU/filesystem sandbox; Jlama remains complex third-party code | Publish approved provenance/checksum only after a viable model exists; document OS sandbox options | Worker exit/timeout counters; process RSS sampling in explicit benchmark | Low | High | High |
+| TM-003 | Remote caller | Host exposes repeatedly failing endpoints | Generate high-cardinality exception storm | CPU/log/process pressure and reduced availability | Request threads, CPU, logs | Bounded snapshot; SHA-256 dedup; inference reservation; one-thread bounded queue; trigger policy; circuit breaker | Unique failures still cause deterministic and logging cost | Add optional local rate metrics; document host endpoint rate limiting | Queue rejection, duplicate, category, and failure counters | Medium | Medium | Medium |
+| TM-004 | Exception content or model | Hybrid mode is explicitly enabled | Inject instructions or invent identifiers/facts | Misleading developer action | Deterministic evidence, console integrity | Separate EN/TR prompts; schema v2; known-ID and identifier validation; no tools; deterministic fallback | Semantically misleading prose using valid IDs remains possible | Keep inference `NOT_VIABLE`/opt-in; require new safety benchmark before status change | Validator issue counters and prompt-injection corpus | Medium | Medium | Medium |
+| TM-005 | Compromised or faulty child | Child process starts | Emit malformed/partial/oversized/multiple frames or secret-bearing stderr | Parser ambiguity, memory pressure, console leakage | Protocol, parent availability, secrets | `Protocol` length/version/request bounds; strict Jackson mapper; private sanitized stderr tail; child destruction/restart bound | OS/JDK pipe semantics vary; parser defects remain possible | Add sustained property fuzzing and cross-platform lifecycle execution | Protocol-kind counters; unexpected exit/restart counters | Low | High | Medium |
+| TM-006 | Local user or compromised configuration | Export is explicitly enabled | Redirect or race export path | Overwrite or disclosure outside intended directory | Exported incidents, filesystem | Fixed digest names; no-follow/symlink checks; create-new temporary directory; atomic move; conservative retention | Same-user TOCTOU race and inherited filesystem permissions | Document restrictive permissions; consider secure-directory handles if platform APIs improve | Export failures and rejected-path reason codes | Low | High | Low |
+| TM-007 | StackMate/custom extension failure | Capture is already processing an exception | Throw recursively or replace application failure | Changed HTTP behavior or recursive logging DoS | Original application behavior | Thread recursion guard; broad fail-open boundaries; exact rethrow tests; severe-error minimal path | Host logger can independently recurse; custom code is trusted | Preserve no-appender ownership; review custom analyzers before deployment | One-time internal failure warning without raw data | Low | High | Low |
+| TM-008 | Compromised dependency/model runtime | Supply-chain compromise or malicious local file | Initiate undeclared network/filesystem access | Offline-policy violation or local data exposure | Runtime data, developer filesystem | No StackMate HTTP client/server/download/API-key surface; stdio IPC; dependency review; local model only | No OS network/filesystem sandbox | Add SBOM/provenance and optional OS-deny guidance before public release | Explicit process-tree endpoint sampling in model benchmark | Low | High | Medium |
 
-## Detection and operational guidance
+## Criticality calibration
 
-- expose only sanitized in-memory failure counters and one-time warnings; do not log prompts or raw invalid outputs;
-- enable debug logging only for sanitized validation reason codes;
-- retain no incident by default;
-- verify model source, license, size, and SHA-256 before local provisioning;
-- use OS process/network controls when a stronger local-model sandbox is required;
-- never place passwords, bearer tokens, database URLs, or personal data in exception messages even when StackMate is
-  enabled.
+- Critical: a remotely reachable StackMate path directly executes code, bypasses host authorization, or silently
+  exfiltrates secrets without requiring local configuration. No such path was found.
+- High: same-user model/runtime compromise with broad filesystem impact; repeatable credential disclosure through a
+  StackMate-owned output; or mutation of the host application's exception/HTTP contract.
+- Medium: bounded exception-storm DoS, rejected prompt-injection attempts that cause model unavailability, protocol
+  crashes contained to the child, or an offline-policy violation requiring a compromised dependency.
+- Low: attacks requiring prior same-user configuration control and producing only a rejected export, noisy local
+  failure, or temporary optional-inference loss while deterministic diagnostics continue.
 
-## Remaining review focus
+## Focus paths for security review
 
-- packaged Failsafe tests must exercise protocol attacks and confirm descendant cleanup;
-- schema V2 validator needs adversarial English/Turkish identifier and prompt-injection cases;
-- model path tests must cover symlink, Unicode/space, partial directory, and read-only cases across available platforms;
-- real model/native behavior remains Windows-only until CI or reference hardware provides other platforms.
+| Path | Why it matters | Related threats |
+|---|---|---|
+| `stackmate-core/src/main/java/io/github/kalayciburak/stackmate/privacy/DefaultSanitizer.java` | Primary secret, PII, Unicode, and terminal boundary | TM-001, TM-004 |
+| `stackmate-core/src/main/java/io/github/kalayciburak/stackmate/throwable/ThrowableSnapshotter.java` | Copies hostile throwable state under strict limits | TM-001, TM-003, TM-007 |
+| `stackmate-inference-api/src/main/java/io/github/kalayciburak/stackmate/inference/DefaultInferenceOutputValidator.java` | Prevents model-authored facts and source references | TM-004 |
+| `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/ModelDirectory.java` | Pre-validates untrusted model metadata and paths | TM-002, TM-008 |
+| `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/Protocol.java` | Bounds and parses the local IPC trust boundary | TM-005 |
+| `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/JlamaLocalInferenceEngine.java` | Owns child reuse, timeout, repair, restart, and shutdown | TM-002, TM-005, TM-008 |
+| `stackmate-spring-boot-autoconfigure/src/main/java/io/github/kalayciburak/stackmate/capture/StackMateExceptionCaptureFilter.java` | Must preserve exact servlet behavior and prevent recursion | TM-003, TM-007 |
+| `stackmate-spring-boot-autoconfigure/src/main/java/io/github/kalayciburak/stackmate/inference/DefaultAsyncLocalInferenceCoordinator.java` | Queue, timeout, debug, circuit-breaker, and request-thread isolation boundary | TM-003, TM-004, TM-005 |
+| `stackmate-spring-boot-autoconfigure/src/main/java/io/github/kalayciburak/stackmate/export/FileSystemIncidentExporter.java` | Handles local persistence, atomicity, symlinks, and retention | TM-001, TM-006 |
+| `.github/workflows/ci.yml` | Establishes no-model normal CI and cross-platform verification intent | TM-008 |
+
+## Quality check
+
+- Covered every discovered runtime entry point: servlet capture, extension beans, model path, child streams, model
+  output, console, export, and build dependencies.
+- Represented each trust boundary in at least one abuse path and threat.
+- Separated runtime behavior from CI/build and sample/test behavior.
+- Used the deployment and privacy assumptions explicitly supplied in the product requirements; conditional production,
+  model-provenance, and filesystem-permission questions remain visible.
+- Distinguished implemented controls from remaining OS sandbox, host logging, supply-chain, and cross-platform risks.

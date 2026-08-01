@@ -32,6 +32,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   that skips exact and insufficient diagnoses by default.
 - Version-2 child protocol hardening, strict SafeTensors range/shape checks, adversarial sanitizer/path/lifecycle tests,
   process-level startup measurement, request-path JMH, and an actual console gallery.
+- Completion-audit coverage for read-only/long/Unicode model paths, unexpected model artifacts, repeated redaction,
+  child stdout contamination, partial responses, and a real-model packaged lifecycle that accepts safe fallback.
 
 ### Security
 
@@ -40,6 +42,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Model-free deterministic fallback when optional inference is absent, invalid, unavailable, or times out.
 - Sanitized bounded debug reasons, exact model metadata validation, symbolic-link rejection, strict protocol versioning,
   and packaged orphan-process assertions.
+- Removed obsolete packaged prompts that still described model-authored source locations; only schema-v2 English and
+  Turkish resources remain.
 
 ### Known limitations
 

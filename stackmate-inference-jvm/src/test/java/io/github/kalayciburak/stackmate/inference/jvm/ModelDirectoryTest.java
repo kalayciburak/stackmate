@@ -163,6 +163,53 @@ class ModelDirectoryTest {
                 .hasMessageContaining("byte size");
     }
 
+    @Test
+    void rejectsMissingOversizedAndUnexpectedModelArtifacts() throws Exception {
+        Path missing = temporaryDirectory.resolve("missing-model");
+        assertThatThrownBy(() -> ModelDirectory.validate(missing, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("not a directory");
+
+        Path oversized = TestModelDirectory.create(temporaryDirectory.resolve("oversized"));
+        Files.writeString(oversized.resolve("config.json"), " ".repeat(2 * 1024 * 1024 + 1));
+        assertThatThrownBy(() -> ModelDirectory.validate(oversized, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("suspicious size");
+
+        Path unexpected = TestModelDirectory.create(temporaryDirectory.resolve("unexpected"));
+        Files.delete(unexpected.resolve("model.safetensors"));
+        Files.writeString(unexpected.resolve("model.gguf"), "not a supported model weight");
+        assertThatThrownBy(() -> ModelDirectory.validate(unexpected, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no SafeTensors weights");
+    }
+
+    @Test
+    void validatesReadOnlyFilesInALongUnicodePath() throws Exception {
+        String directoryName = "model alanı with spaces-" + "x".repeat(112);
+        Path model = TestModelDirectory.create(temporaryDirectory.resolve(directoryName));
+        Path config = model.resolve("config.json");
+        Path tokenizer = model.resolve("tokenizer.json");
+        Path tokenizerConfig = model.resolve("tokenizer_config.json");
+        Path weights = model.resolve("model.safetensors");
+
+        assertThat(config.toFile().setReadOnly()).isTrue();
+        assertThat(tokenizer.toFile().setReadOnly()).isTrue();
+        assertThat(tokenizerConfig.toFile().setReadOnly()).isTrue();
+        assertThat(weights.toFile().setReadOnly()).isTrue();
+        try {
+            ModelDirectory validated = ModelDirectory.validate(model, Protocol.strictMapper());
+
+            assertThat(validated.path()).isEqualTo(model.toRealPath());
+            assertThat(validated.descriptor().id()).hasSize(128);
+        } finally {
+            assertThat(config.toFile().setWritable(true)).isTrue();
+            assertThat(tokenizer.toFile().setWritable(true)).isTrue();
+            assertThat(tokenizerConfig.toFile().setWritable(true)).isTrue();
+            assertThat(weights.toFile().setWritable(true)).isTrue();
+        }
+    }
+
     private void writeTensor(Path path, String metadata, byte[] data) throws Exception {
         byte[] header = metadata.getBytes(StandardCharsets.UTF_8);
         ByteBuffer tensor =

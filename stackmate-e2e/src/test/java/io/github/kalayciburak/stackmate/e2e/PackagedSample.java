@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -124,6 +125,19 @@ final class PackagedSample implements AutoCloseable {
                 () -> outputSince(mark).contains(expected),
                 OUTPUT_TIMEOUT,
                 "timed out waiting for new output: " + expected + "\n" + outputSince(mark));
+    }
+
+    void awaitAnyOutputSince(int mark, Duration timeout, String... expected)
+            throws InterruptedException {
+        await(
+                () ->
+                        Arrays.stream(expected)
+                                .anyMatch(candidate -> outputSince(mark).contains(candidate)),
+                timeout,
+                "timed out waiting for one of "
+                        + Arrays.toString(expected)
+                        + "\n"
+                        + outputSince(mark));
     }
 
     void awaitManagedChild() throws InterruptedException {

@@ -19,7 +19,7 @@ tests, and the clean baseline `verify`. Locations below are repository-relative.
 
 The deterministic architecture is sound: core remains Spring-independent, the starter boundaries are correct, MVC
 capture preserves the servlet response, and model output passes a separate validation boundary. The audit found no
-critical issue. Across the completed phase it confirmed five HIGH, nine MEDIUM, one LOW, and two informational/residual
+critical issue. Across the completed phase it confirmed five HIGH, ten MEDIUM, four LOW, and two informational/residual
 findings. Confirmed HIGH and practical MEDIUM findings were fixed. The schema-v2 pre-release inference API break is
 intentional and has an ADR/migration note; no unrelated API was changed for aesthetics.
 
@@ -245,6 +245,45 @@ intentional and has an ADR/migration note; no unrelated API was changed for aest
 - Actual risk: continuing to label the integration merely experimental could be read as an imminent product feature.
 - Fix status: **classified `NOT_VIABLE`** for evaluated configurations; deterministic mode remains the product path.
 
+### P2-AUD-018 — unused legacy prompt resources still described model-authored sources
+
+- Severity: **LOW / contract clarity**
+- Location: packaged `prompts/v1` and `prompts/v2` resources in `stackmate-inference-jvm`.
+- Evidence: runtime `PromptRenderer` loaded only `prompts/schema-v2`, while the unused resources still requested
+  `sourceLocationIds` and were packaged in the inference JAR.
+- Actual risk: a reviewer or future refactor could mistakenly treat the obsolete source-authoring prompt as supported.
+- Fix status: **fixed**. Only the separate English/Turkish schema-v2 prompt resources remain packaged.
+
+### P2-AUD-019 — real-model E2E required an explanation within an incompatible timeout
+
+- Severity: **MEDIUM / validation integrity**
+- Location: `PackagedRealModelIT`, `PackagedSample`.
+- Evidence: the profile allowed 30 seconds for inference but used the common eight-second console wait and required a
+  local-explanation block. Both screened models take more than eight seconds and produce rejected schema-v2 output.
+- Actual risk: the explicit profile could not validate the actual `NOT_VIABLE` configuration or safe fallback and
+  would fail for a reason unrelated to process safety.
+- Fix status: **fixed**. The profile now bounds the wait at 45 seconds, accepts either validator-approved explanation
+  or sanitized fallback, still requires HTTP completion within two seconds, and verifies child cleanup.
+- Verification: Qwen2.5-0.5B-Instruct packaged lifecycle passed in 30.385 seconds on Windows.
+
+### P2-AUD-020 — several named adversarial cases had only indirect coverage
+
+- Severity: **LOW / test evidence**
+- Location: sanitizer, model-directory, protocol, and engine tests.
+- Evidence: repeated/already-redacted text, missing/oversized/unexpected model artifacts, read-only long Unicode paths,
+  Unicode frames, stdout logs around responses, and exit during a partial response lacked direct assertions.
+- Actual risk: broad tests could pass while a named Phase 2 acceptance case regressed.
+- Fix status: **fixed** with focused tests; no production behavior change was required.
+
+### P2-AUD-021 — the detailed threat-model review retained Phase 1 pending language
+
+- Severity: **LOW / documentation integrity**
+- Location: `docs/reviews/stackmate-threat-model.md`.
+- Evidence: risk text still called schema v2 pending after the schema had shipped and did not fully separate runtime,
+  local model, export, and build trust boundaries.
+- Fix status: **fixed** using the repository-grounded threat-model contract with current evidence anchors, explicit
+  attacker capabilities/non-capabilities, prioritized abuse paths, and remaining OS-sandbox risks.
+
 ## Public API review
 
 - `stackmate-core` exposes immutable records and the intended analyzer, sanitizer, deduplication, export, renderer, and
@@ -379,4 +418,6 @@ and malformed-body errors resolved inside Spring MVC are not captured at the cur
 claim otherwise. The evaluated real-model path is labeled `NOT_VIABLE`, while deterministic diagnostics are the
 recommended product path.
 
-Final clean verification: 309 Surefire tests and 12 Failsafe tests passed with zero failures, errors, or skips.
+The completion-audit clean verification passed 314 Surefire tests and 12 normal-CI Failsafe tests with no failures,
+errors, or skips. The separately enabled real-model Failsafe test also passed. Exact module counts and coverage are
+recorded in `docs/phase-2-progress.md`.
