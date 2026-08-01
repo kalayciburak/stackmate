@@ -101,3 +101,65 @@ Get-PSDrive C
 
 Add an isolated Benchmark V2 llama.cpp screening harness that reuses the Phase 2 prompt, schema, sanitizer, and
 semantic output validator without changing Spring production behavior.
+
+## Phase 2 - Isolated llama.cpp screening harness
+
+Status: completed on 2026-08-01
+
+### Completed work
+
+- Added a test-scoped screening lab; no publishable module or Spring production code
+  was changed.
+- Reused Benchmark V2 cases, Phase 2 prompts, sanitizer, schema-v2 request, and
+  semantic validator.
+- Added per-request strict JSON schemas whose ID enums come only from supplied
+  candidates and evidence.
+- Rejected hidden thinking, oversized output, unsupported references, process
+  timeout, and nonzero exit as untrusted results.
+- Preserved invalid raw output only inside the process boundary; reports contain
+  validated prose or bounded issue codes.
+
+### Verification
+
+- `mvnw ... -pl stackmate-benchmark -am test`: passed.
+- `mvnw ... spotless:check`: passed.
+- Normal Surefire discovery does not execute the real-model lab; it requires an
+  explicit class selection and local paths.
+
+## Phase 3 - Gate A candidate screening
+
+Status: completed with **Gate A failed** on 2026-08-01
+
+### Actual result
+
+| Candidate | Strongest relevant result | Peak worker | Decision |
+|---|---|---:|---|
+| Qwen3.5-2B Q4_K_M | Greedy EN valid/cause/check 10/10; TR 10/10, 6/10, 7/10 | 2,041,524,224 bytes | `NOT_VIABLE` |
+| Qwen3.5-4B Q4_K_M | All outputs valid; best cause/check 8/10, 8/10 | 4,510,056,448 bytes | `NOT_VIABLE` |
+
+Across both candidates, accepted unknown IDs, fabricated source references, secret
+leakage, prompt-injection success, and hidden thinking were zero. Two 2B recommended
+outputs were rejected and quarantined for unsupported references. No timeout, crash,
+or orphan process occurred.
+
+The full 80-case model benchmark was not run because no candidate passed screening.
+See `model-screening-results.md` for profile timing, manual language review, and
+limitations.
+
+## Gates B and C
+
+Status: `NOT_RUN`
+
+Gate A did not authorize a production llama.cpp worker or provisioning system. The
+Maven module tree, public API, local starter behavior, runtime network policy, and
+deterministic product remain unchanged.
+
+## Final phase work
+
+Status: in progress
+
+- Update public documentation, model selection, threat model, troubleshooting,
+  notices, and changelog.
+- Run the complete Java 21 Maven verification.
+- Confirm test counts, artifact contents, ignored model files, worker cleanup, and
+  clean Git state.

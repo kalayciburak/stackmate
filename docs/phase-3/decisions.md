@@ -36,3 +36,18 @@ The Windows x86_64 CPU archive from release `b10219`, commit
 `c629da565c80b0b17fac6262acdca4d772e745d8`, passed local checksum and version verification. The published
 java-llama.cpp binding was rejected because it embeds llama.cpp `b4916`, predating Qwen3.5 support and relevant GGUF
 parser fixes.
+
+## D7 - Use one-shot llama-completion for screening
+
+`llama-cli` did not provide a clean one-shot grammar boundary with the official Qwen
+non-thinking template. The isolated lab therefore uses `llama-completion`, renders
+the pinned non-thinking chat prefix before generation, constrains generation with a
+per-request JSON schema, and applies the unchanged Phase 2 semantic validator. This
+is a screening mechanism, not a production worker protocol.
+
+## D8 - Gate A failed; stop before integration and provisioning
+
+Qwen3.5-2B failed Turkish selection and usefulness. Qwen3.5-4B produced valid
+bilingual structured output but no profile reached 85% exact cause and check
+selection. Both are `NOT_VIABLE`. Gates B and C are `NOT_RUN`; no production native
+adapter, catalog, downloader, cache, or automatic provisioning is implemented.
