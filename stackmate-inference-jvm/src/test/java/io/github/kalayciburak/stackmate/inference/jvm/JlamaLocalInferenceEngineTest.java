@@ -178,6 +178,89 @@ class JlamaLocalInferenceEngineTest {
     }
 
     @Test
+    void rejectsMismatchedAndMultipleProtocolResponses() throws Exception {
+        AtomicReference<ScriptedProcess> mismatchedProcess = new AtomicReference<>();
+        JlamaLocalInferenceEngine mismatched =
+                engine(
+                        Duration.ofSeconds(1),
+                        command -> {
+                            ScriptedProcess created =
+                                    new ScriptedProcess(
+                                            (input, output) -> {
+                                                Protocol.Request request =
+                                                        Protocol.readFrame(
+                                                                new DataInputStream(input),
+                                                                Protocol.Request.class,
+                                                                mapper,
+                                                                Protocol.MAXIMUM_REQUEST_BYTES);
+                                                Protocol.writeFrame(
+                                                        new DataOutputStream(output),
+                                                        new Protocol.Response(
+                                                                Protocol.VERSION + 1,
+                                                                request.requestId(),
+                                                                true,
+                                                                mapper.getNodeFactory()
+                                                                        .textNode(VALID_OUTPUT),
+                                                                ""),
+                                                        mapper,
+                                                        Protocol.MAXIMUM_RESPONSE_BYTES);
+                                            });
+                            mismatchedProcess.set(created);
+                            return created;
+                        });
+
+        assertThat(failure(mismatched.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+        assertThat(mismatchedProcess.get().isAlive()).isFalse();
+        mismatched.close();
+
+        JlamaLocalInferenceEngine multiple =
+                engine(
+                        Duration.ofSeconds(1),
+                        command ->
+                                new ScriptedProcess(
+                                        (input, output) -> {
+                                            DataInputStream dataInput = new DataInputStream(input);
+                                            DataOutputStream dataOutput =
+                                                    new DataOutputStream(output);
+                                            Protocol.Request first =
+                                                    Protocol.readFrame(
+                                                            dataInput,
+                                                            Protocol.Request.class,
+                                                            mapper,
+                                                            Protocol.MAXIMUM_REQUEST_BYTES);
+                                            Protocol.Response response =
+                                                    new Protocol.Response(
+                                                            Protocol.VERSION,
+                                                            first.requestId(),
+                                                            true,
+                                                            mapper.getNodeFactory()
+                                                                    .textNode(VALID_OUTPUT),
+                                                            "");
+                                            Protocol.writeFrame(
+                                                    dataOutput,
+                                                    response,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_RESPONSE_BYTES);
+                                            Protocol.writeFrame(
+                                                    dataOutput,
+                                                    response,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_RESPONSE_BYTES);
+                                            Protocol.readFrame(
+                                                    dataInput,
+                                                    Protocol.Request.class,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_REQUEST_BYTES);
+                                        }));
+
+        assertThat(multiple.infer(request())).isInstanceOf(InferenceResult.Success.class);
+        assertThat(failure(multiple.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+        multiple.close();
+    }
+
+    @Test
     void keepsHealthyChildAfterAControlledInferenceRejection() throws Exception {
         AtomicInteger launches = new AtomicInteger();
         AtomicInteger requests = new AtomicInteger();

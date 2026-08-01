@@ -89,6 +89,33 @@ class ProtocolTest {
     }
 
     @Test
+    void rejectsEmptyNegativeAndMissingFrames() throws Exception {
+        for (int length : new int[] {0, -1}) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            new DataOutputStream(bytes).writeInt(length);
+            assertThatThrownBy(
+                            () ->
+                                    Protocol.readFrame(
+                                            new DataInputStream(
+                                                    new ByteArrayInputStream(bytes.toByteArray())),
+                                            Protocol.Response.class,
+                                            mapper,
+                                            1_024))
+                    .isInstanceOf(Protocol.ProtocolException.class)
+                    .hasMessageContaining("length");
+        }
+        assertThatThrownBy(
+                        () ->
+                                Protocol.readFrame(
+                                        new DataInputStream(new ByteArrayInputStream(new byte[0])),
+                                        Protocol.Response.class,
+                                        mapper,
+                                        1_024))
+                .isInstanceOf(Protocol.ProtocolException.class)
+                .hasMessageContaining("ended");
+    }
+
+    @Test
     void rejectsDuplicateUnknownDeepAndInvalidUtf8Content() throws Exception {
         assertMalformed(
                 "{\"version\":1,\"version\":1,\"operation\":\"health\",\"requestId\":\"1\",\"payload\":{}}");

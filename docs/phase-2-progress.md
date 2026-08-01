@@ -314,3 +314,38 @@ Status: completed
 
 Harden the managed-child protocol, model paths, sanitizer, and process lifecycle with the remaining adversarial cases,
 then run the reduced-contract local-model lab.
+
+## Phase 5 - adversarial boundary hardening
+
+Status: completed
+
+### Completed work
+
+- Closed truncated-JWT and zero-width credential-key sanitizer bypasses without increasing untrusted input bounds.
+- Strengthened SafeTensors pre-validation with known dtype widths, exact shape-to-byte checks, non-overlap, no-gap, and
+  full-data indexing requirements.
+- Verified relative and Unicode model paths and rejected symbolic-link model roots on this Windows filesystem.
+- Added empty/negative/missing frame coverage and proved that mismatched protocol versions and unsolicited multiple
+  child responses fail closed and terminate the child.
+- Reused existing tests for malformed UTF-8, duplicate/deep/unknown JSON, truncated/oversized frames, timeout,
+  interruption, bounded restart, queue saturation, and packaged orphan cleanup rather than duplicating them.
+
+### Verification
+
+```text
+./mvnw.cmd -pl stackmate-inference-jvm -am spotless:apply test
+```
+
+Result: success in 8.361 s; core 102, inference API 27, inference JVM 30; 159 tests total, zero failures, errors, or
+skips. Symbolic-link creation and rejection executed successfully rather than being skipped.
+
+### Remaining risks
+
+- Model pre-validation reduces malformed metadata exposure but does not sandbox Jlama or limit child RSS at OS level.
+- Targeted adversarial cases are not a substitute for long-running property-based fuzzing.
+- Packaged fake-child E2E will run again in the final clean verification.
+
+### Next phase
+
+Run model Lab V2 using the schema-V2 explanation-only contract, beginning with the existing local Qwen model and
+screening no more than two documented candidates.

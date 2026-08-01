@@ -14,6 +14,8 @@ public final class DefaultSanitizer implements Sanitizer {
     private static final Pattern JWT =
             Pattern.compile(
                     "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}(?![A-Za-z0-9_-])");
+    private static final Pattern TRUNCATED_JWT_PREFIX =
+            Pattern.compile("(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,}(?:\\.[A-Za-z0-9_-]*){0,2}$");
     private static final Pattern SECRET_ASSIGNMENT =
             Pattern.compile(
                     "(?i)([\\\"]?(?:authorization|proxy[_-]?authorization|cookie|set[_-]?cookie|password|passwd|pwd|secret|client[_-]?secret|api[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|jwt|bearer|session|private[_-]?key|credential)[\\\"]?\\s*[:=]\\s*[\\\"]?)([^\\s,;&\\\"]+)");
@@ -84,6 +86,7 @@ public final class DefaultSanitizer implements Sanitizer {
         String replacement = Matcher.quoteReplacement(config.replacement());
         String sanitized = BEARER.matcher(value).replaceAll("Bearer " + replacement);
         sanitized = JWT.matcher(sanitized).replaceAll(replacement);
+        sanitized = TRUNCATED_JWT_PREFIX.matcher(sanitized).replaceAll(replacement);
         sanitized = SECRET_ASSIGNMENT.matcher(sanitized).replaceAll("$1" + replacement);
         sanitized =
                 JDBC_AUTHORITY
@@ -106,6 +109,9 @@ public final class DefaultSanitizer implements Sanitizer {
                 .codePoints()
                 .forEach(
                         codePoint -> {
+                            if (isZeroWidthControl(codePoint)) {
+                                return;
+                            }
                             if (codePoint >= Character.MIN_SURROGATE
                                     && codePoint <= Character.MAX_SURROGATE) {
                                 safe.append('\uFFFD');
@@ -179,9 +185,16 @@ public final class DefaultSanitizer implements Sanitizer {
     }
 
     private static boolean isUnsafeFormatControl(int codePoint) {
-        return codePoint == 0xFEFF
-                || (codePoint >= 0x202A && codePoint <= 0x202E)
+        return (codePoint >= 0x202A && codePoint <= 0x202E)
                 || (codePoint >= 0x2066 && codePoint <= 0x2069);
+    }
+
+    private static boolean isZeroWidthControl(int codePoint) {
+        return codePoint == 0x200B
+                || codePoint == 0x200C
+                || codePoint == 0x200D
+                || codePoint == 0x2060
+                || codePoint == 0xFEFF;
     }
 
     private static String truncateCodePoints(String value, int maxLength) {

@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,12 +20,12 @@ class ModelDirectoryTest {
     void validatesAndNormalizesExplicitQwen2Directory() throws Exception {
         Path supplied =
                 TestModelDirectory.create(
-                        temporaryDirectory.resolve("a").resolve("..").resolve("model"));
+                        temporaryDirectory.resolve("a").resolve("..").resolve("model alanı"));
 
         ModelDirectory model = ModelDirectory.validate(supplied, new ObjectMapper());
 
         assertThat(model.path()).isAbsolute().isEqualTo(supplied.toRealPath());
-        assertThat(model.descriptor().id()).isEqualTo("model");
+        assertThat(model.descriptor().id()).isEqualTo("model-alan");
         assertThat(model.descriptor().capabilities().english()).isTrue();
         assertThat(model.descriptor().capabilities().turkish()).isFalse();
     }
@@ -100,6 +101,66 @@ class ModelDirectoryTest {
         assertThatThrownBy(() -> ModelDirectory.validate(rank, Protocol.strictMapper()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("rank");
+    }
+
+    @Test
+    void acceptsAnExplicitRelativePathAndRejectsAPathSymlinkWhenSupported() throws Exception {
+        Path model = TestModelDirectory.create(temporaryDirectory.resolve("relative-model"));
+        Path relative = Path.of("").toAbsolutePath().relativize(model.toAbsolutePath());
+
+        assertThat(ModelDirectory.validate(relative, Protocol.strictMapper()).path())
+                .isEqualTo(model.toRealPath());
+
+        Path link = temporaryDirectory.resolve("linked-model");
+        try {
+            Files.createSymbolicLink(link, model);
+        } catch (UnsupportedOperationException | java.io.IOException exception) {
+            Assumptions.abort("symbolic links are unavailable: " + exception.getMessage());
+        }
+        assertThatThrownBy(() -> ModelDirectory.validate(link, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("symbolic links");
+    }
+
+    @Test
+    void rejectsTensorOverlapGapsUnsupportedDtypesAndByteSizeMismatch() throws Exception {
+        Path overlap = TestModelDirectory.create(temporaryDirectory.resolve("overlap"));
+        writeTensor(
+                overlap.resolve("model.safetensors"),
+                "{\"one\":{\"dtype\":\"U8\",\"shape\":[1],\"data_offsets\":[0,1]},"
+                        + "\"two\":{\"dtype\":\"U8\",\"shape\":[1],\"data_offsets\":[0,1]}}",
+                new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(overlap, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("overlap");
+
+        Path gap = TestModelDirectory.create(temporaryDirectory.resolve("gap"));
+        writeTensor(
+                gap.resolve("model.safetensors"),
+                "{\"one\":{\"dtype\":\"U8\",\"shape\":[1],\"data_offsets\":[0,1]},"
+                        + "\"two\":{\"dtype\":\"U8\",\"shape\":[1],\"data_offsets\":[2,3]}}",
+                new byte[] {0, 0, 0});
+        assertThatThrownBy(() -> ModelDirectory.validate(gap, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("gap");
+
+        Path dtype = TestModelDirectory.create(temporaryDirectory.resolve("dtype"));
+        writeTensor(
+                dtype.resolve("model.safetensors"),
+                "{\"weight\":{\"dtype\":\"Q0\",\"shape\":[1],\"data_offsets\":[0,1]}}",
+                new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(dtype, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("dtype");
+
+        Path size = TestModelDirectory.create(temporaryDirectory.resolve("byte-size"));
+        writeTensor(
+                size.resolve("model.safetensors"),
+                "{\"weight\":{\"dtype\":\"F32\",\"shape\":[1],\"data_offsets\":[0,1]}}",
+                new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(size, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("byte size");
     }
 
     private void writeTensor(Path path, String metadata, byte[] data) throws Exception {

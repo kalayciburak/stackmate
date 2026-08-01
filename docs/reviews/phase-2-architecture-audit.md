@@ -162,6 +162,34 @@ implemented fixes are intentionally narrow; no public API was broken and no low-
 - Test added: framework precedence, database-wrapped network cause, concrete index subclasses, both Jackson package
   generations, optimistic locking, DNS, TLS-message, and structured property/request evidence.
 
+### P2-AUD-011 — truncation and zero-width characters could weaken secret matching
+
+- Severity: **HIGH**
+- Location: `DefaultSanitizer`.
+- Evidence: sanitization truncated input before matching. A JWT prefix ending exactly at the configured maximum no
+  longer satisfied the complete JWT pattern. Zero-width characters could also split a sensitive key such as
+  `pass\u200Bword` before assignment matching.
+- Actual risk: a bounded JWT fragment or obfuscated credential could reach console, prompt, or export.
+- Reproduction: sanitize a JWT with a 16-character limit, or `pass\u200Bword=hunter2` with defaults.
+- Proposed fix: fail closed on a JWT prefix at the truncation boundary and remove zero-width join/space/BOM controls
+  before credential matching.
+- Fix status: **fixed**.
+- Test added: truncated JWT, zero-width credential key, repeated Unicode/control handling.
+
+### P2-AUD-012 — SafeTensors entries were individually bounded but not mutually consistent
+
+- Severity: **HIGH**
+- Location: `ModelDirectory` SafeTensors pre-validation.
+- Evidence: Phase 1 checked each tensor range against the file but did not prove that ranges were non-overlapping,
+  gap-free, fully indexed, or equal to `shape element count * dtype width`.
+- Actual risk: corrupt or malicious metadata could reach Jlama with ambiguous tensor buffers or mismatched allocation
+  assumptions.
+- Reproduction: two U8 tensors both reference `[0,1]`, or an F32 scalar references one byte.
+- Proposed fix: accept only known SafeTensors dtypes, verify exact tensor byte size, sort ranges, reject overlap/gaps,
+  and require the complete data region to be indexed.
+- Fix status: **fixed before child launch**.
+- Test added: overlap, gap, unsupported dtype, byte-size mismatch, relative/Unicode path, and path symlink coverage.
+
 ## Public API review
 
 - `stackmate-core` exposes immutable records and the intended analyzer, sanitizer, deduplication, export, renderer, and

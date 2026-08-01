@@ -50,7 +50,7 @@ class DefaultSanitizerTest {
     void removesTerminalAndControlInjectionWhilePreservingUnicode() {
         String value = "İstanbul 👩‍💻\u001B[31m Kırmızı\u001B[0m\nson\u0000\uD800";
 
-        assertThat(sanitizer.sanitize(value)).isEqualTo("İstanbul 👩‍💻 Kırmızı son �");
+        assertThat(sanitizer.sanitize(value)).isEqualTo("İstanbul 👩💻 Kırmızı son �");
     }
 
     @Test
@@ -218,8 +218,22 @@ class DefaultSanitizerTest {
                 new DefaultSanitizer(
                         new SanitizerConfig(3, "X", false, false, false, Set.of(), List.of()));
 
-        assertThat(sanitizer.sanitize("a\uFEFFb\u202Ac\u2066d")).isEqualTo("a b c d");
+        assertThat(sanitizer.sanitize("a\uFEFFb\u202Ac\u2066d")).isEqualTo("ab c d");
         assertThat(threeCodePoints.sanitize("🙂🙂")).isEqualTo("🙂🙂");
+    }
+
+    @Test
+    void removesZeroWidthRedactionBypassesAndRejectsTruncatedJwtPrefixes() {
+        DefaultSanitizer shortSanitizer =
+                new DefaultSanitizer(
+                        new SanitizerConfig(
+                                16, "[REDACTED]", true, true, true, Set.of(), List.of()));
+
+        assertThat(sanitizer.sanitize("pass\u200Bword=hunter2"))
+                .doesNotContain("hunter2")
+                .contains("[REDACTED]");
+        assertThat(shortSanitizer.sanitize("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.signature"))
+                .isEqualTo("[REDACTED]");
     }
 
     @Test

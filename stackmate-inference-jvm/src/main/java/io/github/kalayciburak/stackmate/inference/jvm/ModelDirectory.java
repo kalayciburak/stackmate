@@ -11,8 +11,12 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -27,6 +31,23 @@ final class ModelDirectory {
     private static final long MAXIMUM_TENSOR_ELEMENTS = 2_000_000_000L;
     private static final Pattern SAFE_WEIGHT_NAME =
             Pattern.compile("[A-Za-z0-9._-]+\\.safetensors");
+    private static final Map<String, Integer> DTYPE_BYTES =
+            Map.ofEntries(
+                    Map.entry("BOOL", 1),
+                    Map.entry("U8", 1),
+                    Map.entry("I8", 1),
+                    Map.entry("F8_E4M3", 1),
+                    Map.entry("F8_E5M2", 1),
+                    Map.entry("I16", 2),
+                    Map.entry("U16", 2),
+                    Map.entry("F16", 2),
+                    Map.entry("BF16", 2),
+                    Map.entry("I32", 4),
+                    Map.entry("U32", 4),
+                    Map.entry("F32", 4),
+                    Map.entry("I64", 8),
+                    Map.entry("U64", 8),
+                    Map.entry("F64", 8));
 
     private final Path path;
     private final ModelDescriptor descriptor;
@@ -215,6 +236,7 @@ final class ModelDirectory {
             throw new IllegalArgumentException("SafeTensors metadata contains too many tensors");
         }
         int tensorCount = 0;
+        List<TensorRange> ranges = new ArrayList<>();
         for (var entry : metadata.properties()) {
             if ("__metadata__".equals(entry.getKey())) {
                 if (!entry.getValue().isObject()) {
@@ -223,15 +245,27 @@ final class ModelDirectory {
                 }
                 continue;
             }
-            validateTensorEntry(entry.getValue(), dataBytes);
+            ranges.add(validateTensorEntry(entry.getValue(), dataBytes));
             tensorCount++;
         }
         if (tensorCount == 0) {
             throw new IllegalArgumentException("SafeTensors metadata contains no tensors");
         }
+        ranges.sort(Comparator.comparingLong(TensorRange::start));
+        long expectedStart = 0;
+        for (TensorRange range : ranges) {
+            if (range.start() != expectedStart) {
+                throw new IllegalArgumentException(
+                        "SafeTensors data offsets overlap or leave a gap");
+            }
+            expectedStart = range.end();
+        }
+        if (expectedStart != dataBytes) {
+            throw new IllegalArgumentException("SafeTensors data is not fully indexed");
+        }
     }
 
-    private static void validateTensorEntry(JsonNode tensor, long dataBytes) {
+    private static TensorRange validateTensorEntry(JsonNode tensor, long dataBytes) {
         if (!tensor.isObject()
                 || !tensor.path("dtype").isTextual()
                 || !tensor.path("shape").isArray()
@@ -261,8 +295,15 @@ final class ModelDirectory {
                 throw new IllegalArgumentException("SafeTensors tensor is too large");
             }
         }
+        Integer bytesPerElement = DTYPE_BYTES.get(tensor.path("dtype").textValue());
+        if (bytesPerElement == null) {
+            throw new IllegalArgumentException("SafeTensors tensor dtype is unsupported");
+        }
         JsonNode offsets = tensor.path("data_offsets");
-        if (!offsets.get(0).isIntegralNumber() || !offsets.get(1).isIntegralNumber()) {
+        if (!offsets.get(0).isIntegralNumber()
+                || !offsets.get(0).canConvertToLong()
+                || !offsets.get(1).isIntegralNumber()
+                || !offsets.get(1).canConvertToLong()) {
             throw new IllegalArgumentException("SafeTensors data offsets are invalid");
         }
         long start = offsets.get(0).longValue();
@@ -270,6 +311,17 @@ final class ModelDirectory {
         if (start < 0 || end < start || end > dataBytes) {
             throw new IllegalArgumentException("SafeTensors data offsets escape the file");
         }
+        final long expectedBytes;
+        try {
+            expectedBytes = Math.multiplyExact(elements, bytesPerElement.longValue());
+        } catch (ArithmeticException overflow) {
+            throw new IllegalArgumentException("SafeTensors tensor byte size overflows", overflow);
+        }
+        if (end - start != expectedBytes) {
+            throw new IllegalArgumentException(
+                    "SafeTensors tensor byte size does not match dtype and shape");
+        }
+        return new TensorRange(start, end);
     }
 
     private static Path requiredRegularFile(Path root, String name, long maximumBytes)
@@ -339,4 +391,6 @@ final class ModelDirectory {
         }
         return value.codePoints().noneMatch(Character::isISOControl);
     }
+
+    private record TensorRange(long start, long end) {}
 }
