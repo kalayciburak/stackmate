@@ -1,0 +1,13 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Category: GENERAL_JAVA                                                                           |
+| Evidence: HIGH                                                                                   |
+| Summary: An operation ran in an invalid state                                                    |
+| Root: java.lang.IllegalStateException: Controlled fake data: password=[REDACTED],                |
+| Authorization: [REDACTED] [REDACTED],                                                            |
+| jdbc:postgresql://demo.invalid:5432/sample?user=[REDACTED]&password=[REDACTED],                  |
+| email=[REDACTED], tcKimlikNo=[REDACTED]                                                          |
+| First app location: DemoFailureController#redaction(DemoFailureController.java:90)               |
+| Source: Deterministic rules                                                                      |
++--------------------------------------------------------------------------------------------------+

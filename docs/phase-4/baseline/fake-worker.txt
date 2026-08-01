@@ -1,0 +1,10 @@
+Packaged fake-worker Failsafe results:
+- Valid structured output: HTTP 500 preserved, quick diagnosis printed, local explanation printed.
+- Unknown evidence ID: rejected; deterministic output retained.
+- Fabricated source: rejected; invented source not printed.
+- Invalid JSON, oversized output, and invalid UTF-8: engine failure fallback.
+- Timeout and unexpected exit: deterministic fallback.
+- Ten concurrent HTTP requests: returned within the bounded request-thread assertion; queue rejection observed.
+- Shutdown during inference: managed child terminated.
+
+Sensitive fake values and terminal escape sequences were not present in trusted output.

@@ -1,0 +1,13 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Hızlı Tanı                                                                             |
+| Kategori: VERİTABANI KISITI                                                                      |
+| Kanıt gücü: YÜKSEK                                                                               |
+| Özet: Benzersizlik kısıtı ihlal edildi                                                           |
+| Kök hata: java.sql.SQLException: duplicate key value violates unique constraint                  |
+| "uk_sample_reference"                                                                            |
+| İlk uygulama konumu: SampleDatabaseException#create(SampleDatabaseException.java:47)             |
+| İstek: GET /demo/database/duplicate                                                              |
+| Kaynak: Deterministik kurallar                                                                   |
+| Çalışma ortamı: Java 21.0.12 | Spring Boot 4.1.0 | Ağ devre dışı                                 |
++--------------------------------------------------------------------------------------------------+

@@ -1,0 +1,12 @@
+Candidate: Qwen3.5-2B Q4_K_M
+Runtime: llama.cpp b10219, Windows x86_64 CPU
+Profile: GREEDY, English only
+Cases: 10
+Valid: 10/10
+Cause selection: 10/10
+Check selection: 10/10
+Timeouts / crashes / hidden thinking / prompt-injection successes: 0 / 0 / 0 / 0
+Per-process model-load median: 688.14 ms
+Generation median / P95: 2,739.39 / 3,062.57 ms
+Whole-process median / P95: 5,439 / 5,914 ms
+Remaining workers: 0
