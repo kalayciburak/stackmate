@@ -8,6 +8,12 @@
   </parent>
   <artifactId>stackmate-benchmark</artifactId>
   <name>StackMate Benchmark</name>
+  <properties>
+    <stackmate.benchmark.language>en</stackmate.benchmark.language>
+    <stackmate.benchmark.maximum-cases>50</stackmate.benchmark.maximum-cases>
+    <stackmate.benchmark.output-directory>${project.build.directory}</stackmate.benchmark.output-directory>
+    <stackmate.benchmark.timeout-seconds>30</stackmate.benchmark.timeout-seconds>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
@@ -16,6 +22,10 @@
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
       <artifactId>stackmate-inference-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.kalayciburak</groupId>
+      <artifactId>stackmate-inference-jvm</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
@@ -47,4 +57,40 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>model-benchmark</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.6.3</version>
+            <executions>
+              <execution>
+                <id>run-local-model-benchmark</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>verify</phase>
+                <configuration>
+                  <executable>${java.home}/bin/java</executable>
+                  <arguments>
+                    <argument>-Dstackmate.model.path=${stackmate.model.path}</argument>
+                    <argument>-Dstackmate.benchmark.timeout-seconds=${stackmate.benchmark.timeout-seconds}</argument>
+                    <argument>-Dstackmate.benchmark.language=${stackmate.benchmark.language}</argument>
+                    <argument>-Dstackmate.benchmark.maximum-cases=${stackmate.benchmark.maximum-cases}</argument>
+                    <argument>-classpath</argument>
+                    <classpath />
+                    <argument>io.github.kalayciburak.stackmate.benchmark.model.LocalModelBenchmarkMain</argument>
+                    <argument>${stackmate.benchmark.output-directory}</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
