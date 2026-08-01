@@ -2,7 +2,8 @@
 
 Last updated: 2026-08-01 (Europe/Istanbul)
 
-This is the live, evidence-oriented implementation log. Target values are not reported as measurements.
+This is the live, evidence-oriented implementation log. Target values are not reported as measurements. Phase
+entries are append-only snapshots: later entries supersede earlier `not implemented` or `not measured` statements.
 
 ## Phase 0 - Discovery and evidence
 
@@ -339,7 +340,11 @@ Result: clean.
 - Prompt-injection sentinel leakage: 0.
 - Mode A raw-model benchmark: not executed; no model.
 - Mode B structured-model benchmark: not executed; no model.
-- JMH timing, model latency, and model memory: not measured.
+- JMH average time on Ryzen 9 7950X / Corretto 21.0.12 / Windows 11: frame selection 1.30 us/op,
+  deterministic diagnosis 20.56 us/op, fingerprint 15.69 us/op, sanitizer 50.37 us/op,
+  throwable snapshot 114.56 us/op, and detailed rendering 149.60 us/op.
+- JMH used two forks with five one-second warmup and five one-second measurement iterations per benchmark.
+- Model latency and model memory: not measured.
 
 This is a supported-rule regression baseline over controlled ground truth, not a claim of 100% accuracy on arbitrary
 Spring applications.
@@ -347,7 +352,7 @@ Spring applications.
 ### Remaining risks
 
 - The framework snapshot cases do not replace real integration scenarios for every optional framework.
-- JMH suites have compiled but have not yet produced machine timing data.
+- JMH results are isolated algorithm timings and do not include servlet dispatch or logger I/O.
 - Model comparison and all local-inference safety gates remain unverified until the inference adapter and a reviewed
   local model are available.
 
@@ -365,3 +370,120 @@ execution, and fake-engine integration tests. Run real model modes only when a l
 - Maven Wrapper: https://maven.apache.org/tools/wrapper/index.html
 - Sonatype namespace registration: https://central.sonatype.org/register/namespace/
 - Existing unrelated Stackmate product: https://docs.stackmate.io/
+
+## Phases 6 and 7 - Local inference feasibility and integration
+
+### Completed
+
+- Compared Jlama, llama3.java, and ONNX Runtime GenAI from their primary repositories, published artifacts,
+  license files, platform notes, and model-format documentation.
+- Selected Jlama 0.8.4 for one experimental adapter and Qwen2.5-0.5B-Instruct for the first measured candidate.
+- Added engine-neutral inference records, availability/failure models, output validation, circuit breaking, and a
+  versioned prompt that treats all incident content as untrusted data.
+- Added a managed Java 21 worker using bounded framed stdin/stdout, lazy model loading, timeout, output limits,
+  dedicated single-thread bounded execution, graceful shutdown, and deterministic fallback.
+- Kept the deterministic starter free of inference/Jlama/Jackson dependencies and made hybrid mode explicit.
+- Executed the official SafeTensors model with no model download in runtime code and no weights in Git.
+
+### Commands and actual results
+
+```text
+.\mvnw.cmd --batch-mode --no-transfer-progress -pl stackmate-benchmark -am -Pmodel-benchmark
+  -DskipTests -Dstackmate.model.path=<local-model>
+  -Dstackmate.benchmark.timeout-seconds=60 -Dstackmate.benchmark.language=en
+  -Dstackmate.benchmark.maximum-cases=50 verify
+Result: BUILD SUCCESS in 18:52; prompt v2 evaluated 50/50 English cases.
+
+The same command with -Dstackmate.benchmark.language=tr and maximum-cases=5
+Result: BUILD SUCCESS in 2:24; prompt v2 evaluated a five-case Turkish sample.
+```
+
+English Mode A raw input produced 8/50 valid outputs, 1/50 correct categories, 38 engine failures, 4 invalid
+outputs, two generated-candidate leakage detections, 14,498 ms median latency, and 14,858 ms P95 latency. English
+Mode B structured input produced 36/50 valid outputs, 36/50 category/cause/check accuracy, 19/50 root-type text
+accuracy, five engine failures, nine invalid outputs, zero controlled leakage, 7,213 ms median latency, and
+18,933 ms P95 latency. All unknown-ID and fabricated-source outputs were rejected. Mode C remained 50/50 across
+category, root, exact facts, cause, and check. Structured input therefore clearly beats raw input but misses the
+quality target.
+
+The five-case Turkish sample produced zero valid model outputs in both raw and structured modes. Four structured
+outputs were rejected for English prose and one for invalid engine output. The selected descriptor now advertises
+English only; deterministic Turkish output remains supported.
+
+Peak sampled working set during the English corpus was 2,790.19 MiB for the worker and 2,972.36 MiB for parent plus
+worker. Sampled TCP/UDP endpoints remained zero. The official 988,097,824-byte `model.safetensors` SHA-256 was
+`FDF756FA7FCBE7404D5C60E26BFF1A0C8B8AA1F72CED49E7DD0210FE288FB7FE`. The result is `EXPERIMENTAL`.
+
+## Phases 8 and 9 - Hardening and incident export
+
+### Completed
+
+- Added duplicate inference reservation, bounded queue rejection, timeout/circuit-breaker fallback, one-time model
+  warnings, recursion protection, interrupt preservation, severe-JVM-error bypass, and worker session cleanup.
+- Added output validation for schema, lengths, language, evidence/cause/check/source allow-lists, control text,
+  forbidden claims, and secret leakage.
+- Added optional four-file sanitized incident bundles using fixed names, `CREATE_NEW`, a temporary sibling directory,
+  atomic publication, symlink rejection, safe retention, and no source copy or agent invocation.
+- Wrote and reviewed the privacy/threat model for leakage, prompt injection, model files, resource exhaustion,
+  recursive logging, filesystem races, process failures, and the zero-runtime-network policy.
+
+### Demonstrations and results
+
+- Deterministic sample: database duplicate, repeat, redaction, and prompt-injection endpoints all preserved Spring
+  Boot's HTTP 500 JSON response. StackMate printed one quick diagnosis and one concise duplicate message; controlled
+  secrets were absent from StackMate output. The application's unchanged raw log can still contain application
+  secrets and is documented as outside StackMate's logging boundary.
+- Turkish sample: the database-constraint diagnosis rendered localized headings, summary, details, and checks while
+  preserving the captured root message as evidence.
+- Disabled sample: HTTP 500 behavior remained and no StackMate output appeared.
+- Hybrid real-model sample: the first request returned HTTP 500 in 252 ms, the duplicate in 33 ms, and one validated
+  local explanation printed 9,331 ms later on `stackmate-local-inference-1`. Exactly one inference was executed;
+  the child had no sampled network endpoint and exited with its parent.
+
+## Phases 10 and 11 - Documentation, CI, and final review
+
+### Completed before final verification
+
+- Added full English and Turkish READMEs, architecture, benchmark, model selection, troubleshooting, privacy,
+  community, license/notice, changelog, and ADR documentation.
+- Added Linux/Windows verification, macOS smoke, dependency review, and manually triggered model-benchmark workflow
+  definitions. These workflows are configured but have not run on remote GitHub infrastructure.
+- Added Enforcer, dependency convergence, Java 21 enforcement, Spotless, Surefire/Failsafe, JaCoCo, compiler
+  warnings, reproducible-build metadata, and module-specific coverage gates.
+- Verified the deterministic starter runtime tree contains no inference, Jlama, or Jackson dependency. The local
+  starter contains the optional inference API/Jlama/Jackson stack as intended.
+- Verified the inference-JVM module at 75.31% line coverage after excluding only the separate child main from the
+  unit-test denominator; that child main is exercised by the explicit real-model managed-process benchmark.
+
+The final clean-reactor command, aggregate test counts, coverage summary, repository status, and explicit review
+findings are appended after the last verification pass.
+
+### Final verification and four reviews
+
+```text
+$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+.\mvnw.cmd --batch-mode --no-transfer-progress spotless:apply
+Result: BUILD SUCCESS in 1.361 s.
+
+.\mvnw.cmd --batch-mode --no-transfer-progress clean verify
+Result: BUILD SUCCESS in 25.448 s across all nine reactor modules.
+```
+
+- Tests: 226 run, 0 failures, 0 errors, 0 skipped. Module totals were core 91, inference API 26,
+  inference JVM 21, auto-configuration 67, sample 16, and benchmark 5.
+- Coverage: core 96.36% line / 87.58% branch; inference API 91.12% / 75.50%; inference JVM
+  75.44% / 61.36%; auto-configuration 82.25% / 60.81%; sample 93.10% line; benchmark tooling
+  30.20% / 13.53%. Enforced gates passed for core line/branch and all production API/adapter modules' line coverage.
+- Configuration metadata: 46 properties and 11 groups were generated.
+- Architecture review: core/API forbidden imports were absent; reactor convergence passed; deterministic starter
+  tree contained only core, Boot auto-configuration/Framework, and SLF4J; vendor inference types stayed isolated.
+- Security review: no runtime network-client import or tracked model weight was found; `git diff --check` passed;
+  custom application redaction patterns were additionally wired into model-output validation and regression tested.
+- Performance review: no inference call occurs on the request thread; bounded executor/queue, timeout, worker heap,
+  circuit breaker, dedup reservation, and shutdown behavior were inspected against the live hybrid run. Total model
+  memory and latency remain failed gates.
+- Developer-experience review: deterministic, Turkish, disabled, invalid/missing-model fallback, and packaged hybrid
+  modes were exercised. Original HTTP 500 behavior remained unchanged and the validated local result arrived later
+  in the same console.
+- Cross-platform status: Windows Java 21 was executed locally. Linux/Windows verification and macOS smoke workflows
+  are committed but were not run remotely because nothing was pushed.

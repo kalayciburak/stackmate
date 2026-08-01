@@ -32,6 +32,11 @@ a documented JSON-schema guarantee, so StackMate validates every result independ
 - Normal tests use a deterministic fake and never download a model.
 - Dependency/SBOM review is required because the published version predates later upstream dependency updates.
 - ONNX Runtime GenAI is the first reevaluation candidate when its Java artifact stabilizes.
+- The prompt-v2 corpus confirmed that structured evidence materially beats raw stack input: 36/50 versus 8/50
+  validator-approved English outputs and 72% versus 2% category accuracy.
+- The same run missed the product gates: 72% useful cause/check selection, 7.21-second median structured latency,
+  2,790 MiB peak worker working set, and 0/5 valid Turkish outputs. Jlama integration status is therefore
+  `EXPERIMENTAL`, not `READY`.
 
 ## Evidence
 

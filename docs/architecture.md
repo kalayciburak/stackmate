@@ -98,5 +98,7 @@ resolved `@ExceptionHandler` flows. See ADR 0009 for the explicit visibility con
 
 ## Startup failures
 
-Startup diagnostics are a separate optional Boot `FailureAnalyzer` integration registered through
-`META-INF/spring.factories`. Runtime MVC completion does not depend on it.
+Spring Boot's `FailureAnalyzer` mechanism was investigated, but a catch-all analyzer was intentionally not
+registered in this MVP. A broad analyzer would compete with Boot's specific built-in startup analyses and cannot
+reuse servlet runtime context safely. Runtime MVC completion does not depend on startup analysis; the related
+configuration switch is reserved and currently has no effect.

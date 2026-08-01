@@ -66,9 +66,38 @@ SafeTensors form. It fits the requested small-model range, has an Apache-2.0 lic
 remote code, and uses the Qwen2 architecture documented by Jlama. It is not declared READY until the A/B/C corpus,
 English/Turkish quality, invalid-output, leakage, latency, and RSS gates are actually measured.
 
-`Qwen2.5-1.5B-Instruct` is the quality-bound comparison if its local memory measurement stays within the product
-budget. Qwen3-0.6B is retained for a future ONNX/Jlama-support comparison because it has stronger explicit Turkish
-evidence.
+### Executed compatibility and corpus measurements
+
+The official Qwen2.5-0.5B-Instruct SafeTensors directory was supplied explicitly and loaded by Jlama 0.8.4 in the
+managed Java 21 worker on Windows 11. A five-call prompt-v1 compatibility run returned five validator-approved
+outputs with a 7,350 ms cold call and 5,576-5,723 ms warm calls. The later prompt-v2 corpus run is the authoritative
+quality measurement:
+
+| Measurement | Actual prompt-v2 result |
+|---|---:|
+| English structured valid outputs | 36/50 |
+| English structured category/cause/check accuracy | 36/50 (72%) |
+| English structured median / P95 latency | 7,213 / 18,933 ms |
+| English raw valid outputs | 8/50 |
+| English raw category accuracy | 1/50 (2%) |
+| Turkish structured valid outputs | 0/5 |
+| Peak worker working set | 2,790.19 MiB |
+| Peak parent + worker working set | 2,972.36 MiB |
+| Model directory size | 988,097,824 bytes |
+| Sampled process-tree network endpoints | 0 |
+
+Environment: AMD Ryzen 9 7950X (16 cores/32 threads), 63.16 GiB RAM, Windows 11 Pro, Amazon Corretto 21.0.12,
+Jlama 0.8.4. Working set was sampled and is not a cross-platform RSS guarantee. Jlama reported model type BF16,
+working memory F32, and quantized working memory BF16. The official unmodified `model.safetensors` checksum was
+`FDF756FA7FCBE7404D5C60E26BFF1A0C8B8AA1F72CED49E7DD0210FE288FB7FE` (SHA-256).
+
+The adapter is **EXPERIMENTAL**. Structured evidence clearly improves over raw traces and every invalid result is
+rejected, but the model misses the quality, under-five-second warm, under-1.5-GB memory, and Turkish-language gates.
+The selected model descriptor therefore advertises English support and does not advertise Turkish support. See
+`docs/benchmark.md` for complete A/B/C metrics and measurement limitations.
+
+`Qwen2.5-1.5B-Instruct` is not tested because the smaller 0.5B model already exceeds the memory target. Qwen3-0.6B
+is retained for a future ONNX/Jlama-support comparison because it has stronger explicit Turkish evidence.
 
 ## Model distribution and integrity
 

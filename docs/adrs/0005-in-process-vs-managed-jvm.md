@@ -33,6 +33,9 @@ model memory, GC pressure, and crash risk into the user's application. Those cos
 - The production worker uses no shell interpolation; paths and arguments are passed as discrete process arguments.
 - Packaged executable-JAR discovery/extraction must be treated as a security-sensitive compatibility surface and
   may limit the experimental adapter until verified.
+- During the prompt-v2 corpus run, the measured worker reached 2,790.19 MiB peak working set while the benchmark
+  parent peaked at 182.17 MiB. Keeping that footprint outside the application heap validates the isolation rationale
+  even though the 2,972.36 MiB combined footprint exceeds the initial memory target.
 
 ## Evidence
 
