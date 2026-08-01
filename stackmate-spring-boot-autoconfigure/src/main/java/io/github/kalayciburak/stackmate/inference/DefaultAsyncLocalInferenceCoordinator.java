@@ -6,6 +6,7 @@ import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.output.RenderLanguage;
 import io.github.kalayciburak.stackmate.output.RenderOptions;
 import io.github.kalayciburak.stackmate.output.RenderStyle;
+import io.github.kalayciburak.stackmate.privacy.Sanitizer;
 import io.github.kalayciburak.stackmate.runtime.AsyncLocalInferenceCoordinator;
 import java.time.Duration;
 import java.util.Objects;
@@ -39,6 +40,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
     private final LocalExplanationRenderer renderer;
     private final LocalInferenceMetrics metrics;
     private final StackMateProperties properties;
+    private final Sanitizer sanitizer;
     private final EvidenceAwareInferencePolicy triggerPolicy = new EvidenceAwareInferencePolicy();
     private final ThreadPoolExecutor executor;
     private final ScheduledThreadPoolExecutor timeoutExecutor;
@@ -52,7 +54,8 @@ public final class DefaultAsyncLocalInferenceCoordinator
             DeterministicInferenceRequestFactory requestFactory,
             LocalExplanationRenderer renderer,
             LocalInferenceMetrics metrics,
-            StackMateProperties properties) {
+            StackMateProperties properties,
+            Sanitizer sanitizer) {
         this.engineProvider = Objects.requireNonNull(engineProvider, "engineProvider");
         this.outputValidator = Objects.requireNonNull(outputValidator, "outputValidator");
         this.circuitBreaker = Objects.requireNonNull(circuitBreaker, "circuitBreaker");
@@ -60,6 +63,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
         this.renderer = Objects.requireNonNull(renderer, "renderer");
         this.metrics = Objects.requireNonNull(metrics, "metrics");
         this.properties = Objects.requireNonNull(properties, "properties");
+        this.sanitizer = Objects.requireNonNull(sanitizer, "sanitizer");
         InferenceProperties.ExecutorProperties executorProperties =
                 properties.getInference().getExecutor();
         this.executor =
@@ -188,13 +192,22 @@ public final class DefaultAsyncLocalInferenceCoordinator
             InferenceRequest request,
             InferenceCircuitBreaker.Permit permit) {
         if (result instanceof InferenceResult.Failed failed) {
-            fail(permit, classify(failed.failure().kind()));
+            LocalInferenceMetrics.FailureReason reason = classify(failed.failure().kind());
+            fail(permit, reason);
+            debug(reason.name() + ": " + sanitizeDebugReason(failed.failure().message()));
             return;
         }
         InferenceResult.Success success = (InferenceResult.Success) result;
         OutputValidationResult validation = outputValidator.validate(request, success.output());
-        if (validation instanceof OutputValidationResult.Invalid) {
+        if (validation instanceof OutputValidationResult.Invalid invalid) {
             fail(permit, LocalInferenceMetrics.FailureReason.INVALID_OUTPUT);
+            debug(
+                    "INVALID_OUTPUT: "
+                            + invalid.issues().stream()
+                                    .map(issue -> issue.code().name())
+                                    .distinct()
+                                    .sorted()
+                                    .toList());
             return;
         }
         circuitBreaker.recordSuccess(permit);
@@ -253,6 +266,14 @@ public final class DefaultAsyncLocalInferenceCoordinator
         }
     }
 
+    private String sanitizeDebugReason(String reason) {
+        String sanitized = sanitizer.sanitize("inferenceFailure", reason).strip();
+        if (sanitized.isBlank()) {
+            return "local inference failed";
+        }
+        return sanitized.substring(0, Math.min(sanitized.length(), 400));
+    }
+
     private RenderOptions renderOptions() {
         return new RenderOptions(
                 properties.getLanguage() == StackMateProperties.Language.TR
@@ -276,7 +297,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
     }
 
     private static int outputCharacters(int maximumOutputTokens) {
-        long characters = (long) maximumOutputTokens * 4L;
+        long characters = (long) maximumOutputTokens * 8L;
         return (int) Math.min(characters, InferenceRequest.MAXIMUM_OUTPUT_CHARACTERS);
     }
 

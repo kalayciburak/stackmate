@@ -47,6 +47,30 @@ class LocalModelBenchmarkHarnessTest {
         assertThat(result.structured().caseCount()).isEqualTo(50);
         assertThat(result.raw().status()).isEqualTo("EXECUTED");
         assertThat(result.structured().status()).isEqualTo("EXECUTED");
+        assertThat(result.raw().categoryAccuracy()).containsKey("rate");
+        assertThat(result.raw().rootTypeAccuracy()).containsEntry("status", "NOT_APPLICABLE");
+        assertThat(result.structured().categoryAccuracy())
+                .containsEntry("status", "NOT_APPLICABLE");
+        assertThat(result.structured().rootTypeAccuracy())
+                .containsEntry("status", "NOT_APPLICABLE");
+    }
+
+    @Test
+    void canScreenOnlyTheProductionStructuredMode() throws InterruptedException {
+        var engine = new CapturingEngine();
+
+        var result =
+                new LocalModelBenchmarkHarness(engine)
+                        .evaluate(InferenceLanguage.TURKISH, 2, false);
+
+        assertThat(engine.requests).hasSize(2);
+        assertThat(engine.requests)
+                .allSatisfy(
+                        request ->
+                                assertThat(request.language())
+                                        .isEqualTo(InferenceLanguage.TURKISH));
+        assertThat(result.raw().status()).isEqualTo("NOT_EXECUTED");
+        assertThat(result.structured().caseCount()).isEqualTo(2);
     }
 
     private static final class CapturingEngine implements LocalInferenceEngine {

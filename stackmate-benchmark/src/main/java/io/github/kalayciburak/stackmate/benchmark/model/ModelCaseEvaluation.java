@@ -22,10 +22,12 @@ public record ModelCaseEvaluation(
         int secretLeakageCount,
         int promptInjectionFailureCount,
         String validatedSummary,
+        String sanitizedFailureMessage,
         List<String> failureCodes) {
 
     public ModelCaseEvaluation {
         validatedSummary = validatedSummary == null ? "" : validatedSummary;
+        sanitizedFailureMessage = sanitizedFailureMessage == null ? "" : sanitizedFailureMessage;
         failureCodes = List.copyOf(failureCodes);
     }
 }

@@ -8,6 +8,7 @@ import com.github.tjake.jlama.model.functions.Generator;
 import com.github.tjake.jlama.safetensors.DType;
 import com.github.tjake.jlama.safetensors.prompt.PromptContext;
 import com.github.tjake.jlama.safetensors.prompt.PromptSupport;
+import io.github.kalayciburak.stackmate.inference.InferenceFailure;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -60,7 +61,11 @@ public final class JlamaChildMain {
                                 Protocol.MAXIMUM_REQUEST_BYTES);
                 Protocol.Response response;
                 if (request.version() != Protocol.VERSION) {
-                    response = failed(request, "unsupported protocol version");
+                    response =
+                            failed(
+                                    request,
+                                    InferenceFailure.Kind.REJECTED,
+                                    "unsupported protocol version");
                 } else if ("shutdown".equals(request.operation())) {
                     response = successful(request, mapper.createObjectNode().put("closed", true));
                     Protocol.writeFrame(output, response, mapper, Protocol.MAXIMUM_RESPONSE_BYTES);
@@ -81,10 +86,16 @@ public final class JlamaChildMain {
                                 mapper.treeToValue(request.payload(), InferenceRequest.class);
                         String generated = generate(model, inferenceRequest, mapper);
                         if (generated.length() > inferenceRequest.maximumOutputCharacters()) {
-                            throw new IllegalArgumentException(
-                                    "model output exceeds requested character limit");
+                            response =
+                                    failed(
+                                            request,
+                                            InferenceFailure.Kind.INVALID_OUTPUT,
+                                            "model output exceeds requested character limit");
+                        } else {
+                            response =
+                                    successful(
+                                            request, mapper.getNodeFactory().textNode(generated));
                         }
-                        response = successful(request, mapper.getNodeFactory().textNode(generated));
                     } catch (Exception failure) {
                         response = failed(request, Protocol.boundedError(failure));
                     }
@@ -100,15 +111,25 @@ public final class JlamaChildMain {
                         String generated =
                                 repair(model, repair.request(), repair.previousOutput(), mapper);
                         if (generated.length() > repair.request().maximumOutputCharacters()) {
-                            throw new IllegalArgumentException(
-                                    "repaired model output exceeds requested character limit");
+                            response =
+                                    failed(
+                                            request,
+                                            InferenceFailure.Kind.INVALID_OUTPUT,
+                                            "repaired model output exceeds requested character limit");
+                        } else {
+                            response =
+                                    successful(
+                                            request, mapper.getNodeFactory().textNode(generated));
                         }
-                        response = successful(request, mapper.getNodeFactory().textNode(generated));
                     } catch (Exception failure) {
                         response = failed(request, Protocol.boundedError(failure));
                     }
                 } else {
-                    response = failed(request, "unsupported operation");
+                    response =
+                            failed(
+                                    request,
+                                    InferenceFailure.Kind.REJECTED,
+                                    "unsupported operation");
                 }
                 Protocol.writeFrame(output, response, mapper, Protocol.MAXIMUM_RESPONSE_BYTES);
             }
@@ -134,10 +155,7 @@ public final class JlamaChildMain {
                         .addSystemMessage(renderer.systemPrompt(request.language()))
                         .addUserMessage(renderer.userPrompt(request))
                         .build();
-        int generatedTokens =
-                Math.min(
-                        MAXIMUM_GENERATED_TOKENS,
-                        Math.max(1, (request.maximumOutputCharacters() + 3) / 4));
+        int generatedTokens = maximumGeneratedTokens(request);
         int promptTokens = model.getTokenizer().encode(prompt.getPrompt()).length;
         try {
             Generator.Response response =
@@ -170,10 +188,7 @@ public final class JlamaChildMain {
                         .addSystemMessage(renderer.repairSystemPrompt(request.language()))
                         .addUserMessage(renderer.repairUserPrompt(request, previousOutput))
                         .build();
-        int generatedTokens =
-                Math.min(
-                        MAXIMUM_GENERATED_TOKENS,
-                        Math.max(1, (request.maximumOutputCharacters() + 3) / 4));
+        int generatedTokens = maximumGeneratedTokens(request);
         int promptTokens = model.getTokenizer().encode(prompt.getPrompt()).length;
         try {
             Generator.Response response =
@@ -189,10 +204,21 @@ public final class JlamaChildMain {
     }
 
     private static Protocol.Response successful(Protocol.Request request, JsonNode payload) {
-        return new Protocol.Response(Protocol.VERSION, request.requestId(), true, payload, "");
+        return new Protocol.Response(Protocol.VERSION, request.requestId(), true, payload, "", "");
     }
 
     private static Protocol.Response failed(Protocol.Request request, String error) {
-        return new Protocol.Response(Protocol.VERSION, request.requestId(), false, null, error);
+        return failed(request, InferenceFailure.Kind.ENGINE_ERROR, error);
+    }
+
+    private static Protocol.Response failed(
+            Protocol.Request request, InferenceFailure.Kind kind, String error) {
+        return new Protocol.Response(
+                Protocol.VERSION, request.requestId(), false, null, kind.name(), error);
+    }
+
+    private static int maximumGeneratedTokens(InferenceRequest request) {
+        return Math.min(
+                MAXIMUM_GENERATED_TOKENS, Math.max(1, (request.maximumOutputCharacters() + 5) / 6));
     }
 }

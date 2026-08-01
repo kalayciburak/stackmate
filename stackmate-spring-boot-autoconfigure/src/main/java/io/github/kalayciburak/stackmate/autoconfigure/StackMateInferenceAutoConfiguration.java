@@ -75,7 +75,8 @@ public class StackMateInferenceAutoConfiguration {
             DeterministicInferenceRequestFactory requestFactory,
             LocalExplanationRenderer renderer,
             LocalInferenceMetrics metrics,
-            StackMateProperties properties) {
+            StackMateProperties properties,
+            Sanitizer sanitizer) {
         return new DefaultAsyncLocalInferenceCoordinator(
                 engineProvider,
                 outputValidator,
@@ -83,6 +84,7 @@ public class StackMateInferenceAutoConfiguration {
                 requestFactory,
                 renderer,
                 metrics,
-                properties);
+                properties,
+                sanitizer);
     }
 }

@@ -35,6 +35,12 @@ does not grant rights in training data, user inputs, or generated outputs.
 Users are responsible for reviewing the license and provenance of any supplied model. StackMate never enables
 remote-code execution while loading a model.
 
+Phase 2 also evaluated, but did not distribute, `Qwen/Qwen2.5-Coder-0.5B-Instruct` revision
+`ea3f2471cf1b1f0db85067f1ef93848e38e88c25`, whose model card and included license declare Apache License 2.0.
+The official BF16 SafeTensors weight was 988,097,824 bytes with SHA-256
+`F9523886352217DED3AEEEF552B381AF79D568C6D49A4B9E423288CEA56B0A44`. No evaluated model passed Phase 2 readiness
+screening and StackMate recommends neither model for product use.
+
 ## Development and test dependencies
 
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the

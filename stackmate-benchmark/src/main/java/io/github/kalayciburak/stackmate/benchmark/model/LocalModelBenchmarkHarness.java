@@ -45,8 +45,8 @@ public final class LocalModelBenchmarkHarness {
     public static final String PROMPT_VERSION = InferenceRequest.PROMPT_VERSION;
 
     private static final int MAXIMUM_INPUT_CHARACTERS = 16_000;
-    private static final int MAXIMUM_RAW_OUTPUT_CHARACTERS = 1_024;
-    private static final int MAXIMUM_STRUCTURED_OUTPUT_CHARACTERS = 1_024;
+    private static final int MAXIMUM_RAW_OUTPUT_CHARACTERS = 2_048;
+    private static final int MAXIMUM_STRUCTURED_OUTPUT_CHARACTERS = 2_048;
     private static final String RAW_FACT_ID = "fact.raw-stack";
 
     private final LocalInferenceEngine engine;
@@ -74,6 +74,12 @@ public final class LocalModelBenchmarkHarness {
 
     public BenchmarkResult evaluate(InferenceLanguage language, int maximumCases)
             throws InterruptedException {
+        return evaluate(language, maximumCases, true);
+    }
+
+    public BenchmarkResult evaluate(
+            InferenceLanguage language, int maximumCases, boolean includeRaw)
+            throws InterruptedException {
         Objects.requireNonNull(language, "language");
         if (maximumCases < 1 || maximumCases > BenchmarkCorpus.cases().size()) {
             throw new IllegalArgumentException("maximumCases must be between 1 and 50");
@@ -86,15 +92,18 @@ public final class LocalModelBenchmarkHarness {
                     BenchmarkScenarioFactory.create(
                             groundTruth.scenarioFactoryKey(), groundTruth.caseId());
             DeterministicResult deterministic = deterministicEngine.analyze(incident);
-            rawCases.add(
-                    invoke(
-                            RAW_MODE,
-                            groundTruth,
-                            rawRequest(
-                                    incident,
-                                    "raw-case-" + String.format(Locale.ROOT, "%03d", caseIndex + 1),
-                                    language),
-                            false));
+            if (includeRaw) {
+                rawCases.add(
+                        invoke(
+                                RAW_MODE,
+                                groundTruth,
+                                rawRequest(
+                                        incident,
+                                        "raw-case-"
+                                                + String.format(Locale.ROOT, "%03d", caseIndex + 1),
+                                        language),
+                                false));
+            }
             structuredCases.add(
                     invoke(
                             STRUCTURED_MODE,
@@ -109,13 +118,41 @@ public final class LocalModelBenchmarkHarness {
                     "[StackMate benchmark] completed "
                             + groundTruth.caseId()
                             + " ("
-                            + rawCases.size()
+                            + structuredCases.size()
                             + "/"
                             + maximumCases
                             + ")");
         }
         return new BenchmarkResult(
-                language, summarize(rawCases, false), summarize(structuredCases, true));
+                language,
+                includeRaw ? summarize(rawCases, false) : notExecutedMode(),
+                summarize(structuredCases, true));
+    }
+
+    private ModelModeSummary notExecutedMode() {
+        Map<String, Object> notApplicable =
+                notApplicable("raw mode was disabled for structured-only candidate screening");
+        return new ModelModeSummary(
+                "NOT_EXECUTED",
+                PROMPT_VERSION,
+                0,
+                0,
+                0,
+                0,
+                notApplicable,
+                notApplicable,
+                notApplicable,
+                notApplicable,
+                notApplicable,
+                0,
+                0,
+                0,
+                0,
+                0,
+                Map.of("status", "NOT_APPLICABLE"),
+                0,
+                0,
+                List.of());
     }
 
     private ModelCaseEvaluation invoke(
@@ -155,6 +192,7 @@ public final class LocalModelBenchmarkHarness {
                     0,
                     0,
                     "",
+                    sanitizer.sanitize("inferenceFailure", failed.failure().message()),
                     List.of("ENGINE_" + failed.failure().kind().name()));
         }
 
@@ -212,6 +250,7 @@ public final class LocalModelBenchmarkHarness {
                         countIssues(issues, OutputValidationIssue.Code.SENSITIVE_VALUE)),
                 rendered.contains(BenchmarkScenarioFactory.INJECTION_SENTINEL) ? 1 : 0,
                 trusted ? output.summary() : "",
+                "",
                 issues.stream().map(issue -> issue.code().name()).distinct().toList());
     }
 
@@ -281,8 +320,10 @@ public final class LocalModelBenchmarkHarness {
                         item ->
                                 item.status().equals("ENGINE_FAILED")
                                         && item.invalidOutputCount() == 0),
-                score(cases, ModelCaseEvaluation::categoryMatched),
-                score(cases, ModelCaseEvaluation::rootTypeMatched),
+                selectionsApply
+                        ? notApplicable("diagnostic category is owned by the deterministic engine")
+                        : score(cases, ModelCaseEvaluation::categoryMatched),
+                notApplicable("root exception type is owned by the deterministic engine"),
                 notApplicable(
                         "the production model contract selects supplied evidence IDs; it does not extract new facts"),
                 selectionsApply

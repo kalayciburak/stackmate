@@ -2,6 +2,7 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.kalayciburak.stackmate.inference.InferenceFailure;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -105,6 +106,7 @@ final class ManagedChild implements AutoCloseable {
             }
             if (!response.successful()) {
                 throw new ChildFailureException(
+                        response.errorKind(),
                         response.error() == null || response.error().isBlank()
                                 ? "child rejected inference"
                                 : response.error());
@@ -272,9 +274,23 @@ final class ManagedChild implements AutoCloseable {
 
     static final class ChildFailureException extends IOException {
         private static final long serialVersionUID = 1L;
+        private final InferenceFailure.Kind kind;
 
-        ChildFailureException(String message) {
+        ChildFailureException(String kind, String message) {
             super(message);
+            this.kind = failureKind(kind);
+        }
+
+        InferenceFailure.Kind kind() {
+            return kind;
+        }
+
+        private static InferenceFailure.Kind failureKind(String value) {
+            try {
+                return InferenceFailure.Kind.valueOf(value);
+            } catch (IllegalArgumentException | NullPointerException ignored) {
+                return InferenceFailure.Kind.ENGINE_ERROR;
+            }
         }
     }
 }

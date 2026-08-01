@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.kalayciburak.stackmate.inference.InferenceFailure;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import java.io.DataInputStream;
@@ -14,7 +15,7 @@ import java.io.EOFException;
 import java.io.IOException;
 
 final class Protocol {
-    static final int VERSION = 1;
+    static final int VERSION = 2;
     static final int MAXIMUM_REQUEST_BYTES = 65_536;
     static final int MAXIMUM_RESPONSE_BYTES = 32_768;
 
@@ -91,7 +92,24 @@ final class Protocol {
     record Request(int version, String operation, String requestId, JsonNode payload) {}
 
     record Response(
-            int version, String requestId, boolean successful, JsonNode payload, String error) {}
+            int version,
+            String requestId,
+            boolean successful,
+            JsonNode payload,
+            String errorKind,
+            String error) {
+
+        Response(
+                int version, String requestId, boolean successful, JsonNode payload, String error) {
+            this(
+                    version,
+                    requestId,
+                    successful,
+                    payload,
+                    successful ? "" : InferenceFailure.Kind.ENGINE_ERROR.name(),
+                    error);
+        }
+    }
 
     record RepairPayload(InferenceRequest request, String previousOutput) {
         RepairPayload {

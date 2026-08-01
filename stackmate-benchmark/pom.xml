@@ -11,6 +11,7 @@
   <properties>
     <stackmate.benchmark.language>en</stackmate.benchmark.language>
     <stackmate.benchmark.maximum-cases>50</stackmate.benchmark.maximum-cases>
+    <stackmate.benchmark.include-raw>true</stackmate.benchmark.include-raw>
     <stackmate.benchmark.output-directory>${project.build.directory}</stackmate.benchmark.output-directory>
     <stackmate.benchmark.timeout-seconds>30</stackmate.benchmark.timeout-seconds>
   </properties>
@@ -96,6 +97,7 @@
                     <argument>-Dstackmate.benchmark.timeout-seconds=${stackmate.benchmark.timeout-seconds}</argument>
                     <argument>-Dstackmate.benchmark.language=${stackmate.benchmark.language}</argument>
                     <argument>-Dstackmate.benchmark.maximum-cases=${stackmate.benchmark.maximum-cases}</argument>
+                    <argument>-Dstackmate.benchmark.include-raw=${stackmate.benchmark.include-raw}</argument>
                     <argument>-classpath</argument>
                     <classpath />
                     <argument>io.github.kalayciburak.stackmate.benchmark.model.LocalModelBenchmarkMain</argument>

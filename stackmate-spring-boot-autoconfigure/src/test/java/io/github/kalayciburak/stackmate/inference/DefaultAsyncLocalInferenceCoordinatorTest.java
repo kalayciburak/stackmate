@@ -38,12 +38,14 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
     @Test
     void runs_engine_and_renderer_on_dedicated_worker_thread() throws Exception {
         AtomicReference<String> engineThread = new AtomicReference<>();
+        AtomicInteger outputCharacters = new AtomicInteger();
         CountDownLatch rendered = new CountDownLatch(1);
         RecordingRenderer renderer = new RecordingRenderer(rendered);
         LocalInferenceEngine engine =
                 engine(
                         request -> {
                             engineThread.set(Thread.currentThread().getName());
+                            outputCharacters.set(request.maximumOutputCharacters());
                             return success(request);
                         });
         DefaultAsyncLocalInferenceCoordinator coordinator =
@@ -55,6 +57,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
         assertThat(rendered.await(2, TimeUnit.SECONDS)).isTrue();
         assertThat(engineThread.get()).startsWith("stackmate-local-inference-");
         assertThat(engineThread.get()).isNotEqualTo(requestThread);
+        assertThat(outputCharacters).hasValue(2_048);
         assertThat(renderer.thread.get()).startsWith("stackmate-local-inference-");
     }
 
@@ -205,7 +208,8 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                         new DeterministicInferenceRequestFactory(DefaultSanitizer.defaults()),
                         renderer,
                         metrics,
-                        properties);
+                        properties,
+                        DefaultSanitizer.defaults());
         coordinatorMetrics.put(coordinator, metrics);
         coordinators.add(coordinator);
         return coordinator;

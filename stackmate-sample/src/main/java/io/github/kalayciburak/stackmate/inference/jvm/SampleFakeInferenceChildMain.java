@@ -11,6 +11,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -66,11 +67,7 @@ public final class SampleFakeInferenceChildMain {
     }
 
     private static StructuredInferenceOutput output(InferenceRequest request, String scenario) {
-        InferenceFact fact = request.facts().getFirst();
-        List<String> factIds =
-                scenario.contains("fakeunknownevidence")
-                        ? List.of("fact.unknown")
-                        : List.of(fact.id());
+        List<String> factIds = selectedEvidence(request, scenario);
         String summary =
                 scenario.contains("fakefabricatedsource")
                         ? "Inspect InventedSource.java:42 before continuing."
@@ -98,6 +95,24 @@ public final class SampleFakeInferenceChildMain {
                 checks,
                 factIds,
                 List.of());
+    }
+
+    private static List<String> selectedEvidence(InferenceRequest request, String scenario) {
+        if (scenario.contains("fakeunknownevidence")) {
+            return List.of("fact.unknown");
+        }
+        LinkedHashSet<String> evidence = new LinkedHashSet<>();
+        if (!request.candidateCauses().isEmpty()) {
+            evidence.addAll(request.candidateCauses().getFirst().evidenceIds());
+        }
+        if (!request.candidateChecks().isEmpty()) {
+            evidence.addAll(request.candidateChecks().getFirst().evidenceIds());
+        }
+        if (evidence.isEmpty()) {
+            InferenceFact fact = request.facts().getFirst();
+            evidence.add(fact.id());
+        }
+        return List.copyOf(evidence);
     }
 
     private static void write(

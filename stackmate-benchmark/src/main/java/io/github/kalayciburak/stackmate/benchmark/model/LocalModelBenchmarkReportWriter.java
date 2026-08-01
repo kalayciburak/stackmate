@@ -152,7 +152,10 @@ public final class LocalModelBenchmarkReportWriter {
         text.append("- Process-tree RSS was not measured by this portable Java harness.\n");
         text.append("- Mode A case-specific cause and check selection are intentionally N/A.\n");
         text.append(
-                "- Root-type accuracy is a strict string-presence check in validated model output.\n");
+                "- Category selection is retained only for the raw-stack research baseline; "
+                        + "structured mode receives a trusted deterministic category.\n");
+        text.append(
+                "- Root-type accuracy is N/A because root exception type is deterministic-owned.\n");
         text.append(
                 "- Content-level leakage counts cover parsed candidates; the production SPI "
                         + "intentionally discards rejected raw engine text.\n");
@@ -163,6 +166,10 @@ public final class LocalModelBenchmarkReportWriter {
     private void mode(
             StringBuilder text, String title, ModelModeSummary summary, boolean selectionsApply) {
         text.append("## ").append(title).append("\n\n");
+        if (!"EXECUTED".equals(summary.status())) {
+            text.append("- Status: NOT EXECUTED (disabled for structured-only screening)\n\n");
+            return;
+        }
         text.append("- Valid outputs: ")
                 .append(summary.validOutputCount())
                 .append('/')
@@ -170,8 +177,12 @@ public final class LocalModelBenchmarkReportWriter {
                 .append('\n');
         text.append("- Invalid outputs: ").append(summary.invalidOutputCount()).append('\n');
         text.append("- Engine failures: ").append(summary.engineFailureCount()).append('\n');
-        metric(text, "Category accuracy", rate(summary.categoryAccuracy()));
-        metric(text, "Root-type accuracy", rate(summary.rootTypeAccuracy()));
+        if (selectionsApply) {
+            text.append("- Category accuracy: N/A (deterministic-owned)\n");
+        } else {
+            metric(text, "Research category selection", rate(summary.categoryAccuracy()));
+        }
+        text.append("- Root-type accuracy: N/A (deterministic-owned)\n");
         text.append("- Fact extraction accuracy: N/A (the model selects supplied evidence IDs)\n");
         if (selectionsApply) {
             metric(text, "Cause selection accuracy", rate(summary.causeSelectionAccuracy()));

@@ -113,7 +113,7 @@ final class ModelDirectory {
                             id,
                             displayName,
                             version,
-                            new ModelCapabilities(true, true, false, 16_000, 8_192)));
+                            new ModelCapabilities(true, true, true, 16_000, 8_192)));
         } catch (IOException exception) {
             throw new IllegalArgumentException("cannot validate local model directory", exception);
         }

@@ -169,9 +169,9 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
                 return failed(InferenceFailure.Kind.TIMED_OUT, exception.getMessage(), true);
             } catch (ManagedChild.ChildFailureException exception) {
                 return failed(
-                        InferenceFailure.Kind.ENGINE_ERROR,
+                        exception.kind(),
                         "local model rejected inference: " + Protocol.boundedError(exception),
-                        true);
+                        exception.kind() == InferenceFailure.Kind.ENGINE_ERROR);
             } catch (JsonProcessingException exception) {
                 return failed(
                         InferenceFailure.Kind.INVALID_OUTPUT,

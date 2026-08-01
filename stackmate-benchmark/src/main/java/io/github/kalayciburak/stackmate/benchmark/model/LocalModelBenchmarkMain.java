@@ -24,13 +24,17 @@ public final class LocalModelBenchmarkMain {
         InferenceLanguage language = language();
         int maximumCases =
                 Integer.parseInt(System.getProperty("stackmate.benchmark.maximum-cases", "50"));
+        boolean includeRaw =
+                Boolean.parseBoolean(System.getProperty("stackmate.benchmark.include-raw", "true"));
         try (var engine = new JlamaLocalInferenceEngine(modelPath, timeout, 1)) {
             InferenceAvailability availability = engine.availability();
             if (availability.status() == InferenceAvailability.Status.UNAVAILABLE) {
                 throw new IllegalStateException(
                         "local model is unavailable: " + availability.detail());
             }
-            var result = new LocalModelBenchmarkHarness(engine).evaluate(language, maximumCases);
+            var result =
+                    new LocalModelBenchmarkHarness(engine)
+                            .evaluate(language, maximumCases, includeRaw);
             var reports =
                     new LocalModelBenchmarkReportWriter()
                             .write(outputDirectory, result, engine.model());

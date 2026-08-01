@@ -93,11 +93,62 @@ working memory F32, and quantized working memory BF16. The official unmodified `
 
 The adapter is **EXPERIMENTAL**. Structured evidence clearly improves over raw traces and every invalid result is
 rejected, but the model misses the quality, under-five-second warm, under-1.5-GB memory, and Turkish-language gates.
-The selected model descriptor therefore advertises English support and does not advertise Turkish support. See
-`docs/benchmark.md` for complete A/B/C metrics and measurement limitations.
+During Phase 1 the selected descriptor therefore advertised English support and did not advertise Turkish support.
+See `docs/benchmark.md` for complete A/B/C metrics and measurement limitations.
 
 `Qwen2.5-1.5B-Instruct` is not tested because the smaller 0.5B model already exceeds the memory target. Qwen3-0.6B
 is retained for a future ONNX/Jlama-support comparison because it has stronger explicit Turkish evidence.
+
+## Phase 2 model Lab V2 candidate record
+
+This record was written before downloading a new model. Phase 2 first reuses the existing user-provisioned
+Qwen2.5-0.5B-Instruct directory, then permits only one new candidate artifact. The Qwen2 family documentation
+explicitly includes Turkish among its multilingual training languages; the adapter can therefore execute the
+separate Turkish prompt for measurement. This is a protocol capability, not a claim that the 0.5B model passes
+StackMate's Turkish quality gates.
+
+| Candidate | Source revision | Weight format | File-level quantization | Weight bytes | Expected weight SHA-256 | License | Selection reason |
+|---|---|---|---|---:|---|---|---|
+| Qwen2.5-0.5B-Instruct | existing local official directory | SafeTensors BF16 | None | 988,097,824 | `FDF756FA7FCBE7404D5C60E26BFF1A0C8B8AA1F72CED49E7DD0210FE288FB7FE` | Apache-2.0 | Historical baseline, multilingual general model, JSON-oriented instruction tuning |
+| Qwen2.5-Coder-0.5B-Instruct | `ea3f2471cf1b1f0db85067f1ef93848e38e88c25` | SafeTensors BF16 | None | 988,097,824 | `F9523886352217DED3AEEEF552B381AF79D568C6D49A4B9E423288CEA56B0A44` | Apache-2.0 | Same supported Qwen2 architecture and size; tests whether technical/code specialization improves evidence selection |
+
+The production worker requests Jlama `DType.I8` quantized working memory while consuming the official BF16
+SafeTensors weights. This is runtime working-memory quantization, not a quantized model artifact and must not be
+reported as file-level INT8. Official GGUF/AWQ/GPTQ artifacts are not consumed by the selected SafeTensors adapter.
+Qwen3-0.6B remains source-reviewed but is not downloaded: its `qwen3` architecture is rejected by the deliberately
+bounded Jlama adapter, so it cannot provide a comparable result without an engine change.
+
+## Phase 2 screening result and decision
+
+The reduced schema-v2 contract did not make either screened 0.5B model reliable. Each cell below is an actual
+10-case structured run. A model response that could not be parsed and validated after the one allowed repair is
+counted as invalid, not as an engine crash.
+
+| Candidate / language | Valid | Invalid | Cause/check exact | Warm median | P95 | Unsupported claims accepted |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen2.5-0.5B-Instruct / English | 0/10 | 10/10 | 0/10 | 18,808 ms | 23,278 ms | 0 |
+| Qwen2.5-0.5B-Instruct / Turkish | 0/10 | 10/10 | 0/10 | 17,103 ms | 27,846 ms | 0 |
+| Qwen2.5-Coder-0.5B-Instruct / English | 0/10 | 10/10 | 0/10 | 20,032 ms | 21,779 ms | 0 |
+| Qwen2.5-Coder-0.5B-Instruct / Turkish | 0/10 | 10/10 | 0/10 | 21,999 ms | 23,016 ms | 0 |
+
+The general model raw-stack research baseline was also 0/10 valid, with a 30,653 ms median and 34,352 ms P95.
+Every structured failure was a bounded invalid-JSON result. Accepted unknown evidence IDs, fabricated source
+references, secrets, forbidden claims, and prompt-injection successes were all zero because no invalid output crossed
+the validator. These are containment results, not model-quality successes.
+
+The Coder English worker peaked at 2,243,895,296 bytes working set (about 2.09 GiB); sampled parent plus worker peak
+was 2,426,294,272 bytes (about 2.26 GiB). The process-tree sampler observed zero established network endpoints during
+that run. Working set and endpoint sampling are Windows observations, not universal OS guarantees.
+
+Neither candidate passed the screening gate, so the planned 50-case full structured benchmark was intentionally not
+run. A longer run would not turn 0% schema validity into a credible product claim. No third candidate and no second new
+artifact were downloaded. Jlama remains the single adapter because this evidence does not isolate the engine from the
+model/prompt combination well enough to justify a production-engine migration.
+
+Phase 2 local inference decision: **NOT_VIABLE** for the evaluated model/engine configurations. The engine-neutral SPI,
+managed-process safety boundary, fake-child E2E tests, and deterministic fallback remain useful experimental
+infrastructure. No evaluated real model is recommended or enabled by default. This decision supersedes the Phase 1
+`EXPERIMENTAL` product classification without rewriting the historical Phase 1 section above.
 
 ## Model distribution and integrity
 

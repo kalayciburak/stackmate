@@ -300,6 +300,11 @@ class JlamaLocalInferenceEngineTest {
                                                                                     .textNode(
                                                                                             VALID_OUTPUT),
                                                             rejected
+                                                                    ? InferenceFailure.Kind
+                                                                            .INVALID_OUTPUT
+                                                                            .name()
+                                                                    : "",
+                                                            rejected
                                                                     ? "controlled output rejection"
                                                                     : ""),
                                                     mapper,
@@ -312,7 +317,7 @@ class JlamaLocalInferenceEngineTest {
                         });
 
         assertThat(failure(engine.infer(request())).kind())
-                .isEqualTo(InferenceFailure.Kind.ENGINE_ERROR);
+                .isEqualTo(InferenceFailure.Kind.INVALID_OUTPUT);
         assertThat(engine.infer(request())).isInstanceOf(InferenceResult.Success.class);
         assertThat(launches).hasValue(1);
         engine.close();
