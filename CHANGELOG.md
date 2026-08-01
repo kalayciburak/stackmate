@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 4 makes StackMate-generated runtime diagnostics and model evaluation English-only while retaining the full
+  Turkish usage/development guide in `README.tr.md`.
+- Local-model readiness now requires the smallest eligible candidate to pass strict aggregate and holdout gates
+  under a hard limit of 2,000,000,000 total parameters; marketing names are not used as the parameter count.
 - StackMate-generated runtime diagnostics, inference prompts, model explanations, setup messages, and incident-export
   headings are now English only. `README.tr.md` remains the complete Turkish documentation.
 - The pre-release inference schema and rendering APIs no longer carry one-value language selectors.
@@ -21,6 +25,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- A frozen 20-case English V3 tournament corpus with a 10-case holdout split, 16 real runtime/integration captures,
+  independent ground truth, pinned candidate manifest, and unchanged schema-v2 semantic validation.
+- An isolated llama.cpp `b10221` tournament harness for SmolLM2-360M-Instruct, Qwen3-0.6B,
+  Qwen2.5-1.5B-Instruct, and an ineligible Qwen3.5-2B historical control. It records strict validity, aggregate and
+  holdout selections, manual usefulness, safety counters, generation latency, and sampled working set.
 - Java 21 multi-module Maven project with a Maven 3.9.16 wrapper and Apache License 2.0 metadata.
 - Spring-independent deterministic incident capture, sanitization, evidence, diagnosis, fingerprinting, and bounded
   duplicate tracking.
@@ -51,6 +60,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
+- English output validation now rejects letters outside the Unicode Latin script. A real non-English fragment from
+  the COMPACT screen was rejected, repaired once, and never exposed as trusted output.
+- Phase 4 model and official Windows llama.cpp artifacts were pinned by immutable revisions, expected sizes, and
+  SHA-256 before isolated execution. No GGUF/native artifact enters a production module or normal CI.
 - Redaction and output-boundary controls for common credentials, tokens, personal identifiers, terminal controls,
   and configured sensitive patterns.
 - Model-free deterministic fallback when optional inference is absent, invalid, unavailable, or times out.
@@ -63,6 +76,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Known limitations
 
+- No eligible Phase 4 sub-2B model passed every mandatory tournament gate. Gate C full benchmarking and persistent
+  worker validation were not run, and no production llama.cpp adapter or provisioning system was implemented.
 - `0.1.0-SNAPSHOT` is unreleased and under active development; APIs and behavior may change.
 - No general accuracy, production-readiness, platform-support, or support-SLA claim is made.
 - Phase 1 Qwen2.5-0.5B-Instruct/Jlama results remain a historical `EXPERIMENTAL` baseline. Under the reduced Phase 2

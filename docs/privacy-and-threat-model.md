@@ -1,7 +1,7 @@
 # Privacy and threat model
 
-Status: implemented controls and the Phase 3 research boundary reviewed against the
-0.1.0-SNAPSHOT architecture on 2026-08-01.
+Status: implemented controls and the Phase 4 research boundary reviewed against the
+0.1.0-SNAPSHOT architecture on 2026-08-02.
 
 ## Scope and security objectives
 
@@ -16,10 +16,10 @@ optional filesystem exporter. The application's own logging configuration is out
 StackMate intentionally preserves normal logging, the application's raw stack trace can still disclose a secret
 that the application placed in an exception message.
 
-Phase 3 assumes a local developer checkout on a machine where application request
+Phase 4 assumes a local developer checkout on a machine where application request
 data can influence exception text, while model/runtime paths and research commands
 remain operator-controlled. Its pinned llama.cpp binary and GGUF files are an
-ignored, explicit laboratory boundary only. Gate A failed, so no native runtime,
+ignored, explicit laboratory boundary only. Gate B failed, so no native runtime,
 GGUF parser, model catalog, downloader, cache, mirror, or background provisioning was
 added to the Spring product. The product data flow below therefore remains unchanged.
 
@@ -71,7 +71,7 @@ process command line is already inside the deployment trust boundary.
 | Threat | Abuse path and impact | Implemented controls | Residual risk |
 |---|---|---|---|
 | Secret or PII leakage | Exception/request/model text reaches console, prompt, fingerprint, or export | Minimal metadata collection; no bodies, headers, cookies, query values, environment values, or system-property dump; default credential/JWT/Base64/hex/JDBC redaction; zero-width/control normalization; fail-closed truncated-JWT handling; optional email, card, and Turkish identity redaction; sanitization at snapshot, prompt, model-output, console, and export boundaries | Novel secret formats may evade patterns; host application's unchanged raw logging remains capable of disclosure |
-| Prompt injection | Exception text tells the model to ignore rules, request files, invent evidence, or emit commands | One versioned English instruction labels incident strings untrusted; bounded facts/candidates with stable IDs; delimiter/control/fence normalization; no tool API; output may select only known evidence/cause/check IDs; invalid output falls back | A model may still produce persuasive but weak prose using valid IDs; evaluated inference is not viable |
+| Prompt injection | Exception text tells the model to ignore rules, request files, invent evidence, emit commands, or switch language | One versioned English instruction labels incident strings untrusted; bounded facts/candidates with stable IDs; delimiter/control/fence normalization; no tool API; output may select only known evidence/cause/check IDs; non-Latin letter detection; invalid output falls back | A model may still produce persuasive but weak English prose using valid IDs; evaluated inference is not viable |
 | Hallucinated facts or locations | Model invents class, method, file, line, constraint, or solution | Deterministic rules are authoritative; the public API exposes only structured output; validator rejects unknown IDs and source references; evidence strength is deterministic; invalid text is not rendered as advice | Natural-language semantic contradictions inside otherwise schema-valid prose are difficult to eliminate completely |
 | Terminal injection | ESC/control characters alter terminal display or logs | Snapshot and sanitizer strip control characters and terminal escape sequences; renderer and model output are sanitized again; ANSI is not sourced from incident data | Host logger/layout may add its own control sequences independently |
 | Exception storm / denial of service | Repeated failures exhaust request CPU, queue, memory, logs, or inference | Cause/suppressed/frame/message/input/output bounds; SHA-256 fingerprint normalization; bounded TTL duplicate store; atomic inference reservation; one-thread bounded executor; queue rejection and deterministic fallback; timeout, circuit breaker, one-time warning | Unique-fingerprint storms can still cause deterministic/logging cost up to configured bounds; OS-level CPU/memory limits are not imposed by StackMate |
@@ -79,7 +79,7 @@ process command line is already inside the deployment trust boundary.
 | Interrupted-thread corruption | Timeout or shutdown clears the caller's interrupt state | Inference never uses the request thread; interrupted waits restore the interrupt flag; shutdown is bounded | Third-party runtime code in the child controls its own interrupt handling |
 | Malicious or oversized model | Crafted metadata/weights cause traversal, excessive allocation, unsafe deserialization, or runtime crash | Explicit local path only; no download or remote code; normalized path and symbolic-link checks; required SafeTensors/tokenizer metadata; regular-file checks; bounded aggregate weight size; Qwen dimension bounds; known dtype and exact shape-byte validation; non-overlapping/gap-free/fully-indexed tensor ranges; managed child JVM isolates crashes; parent timeout/circuit breaker/fallback | Jlama parses complex attacker-supplied files and is not an adversarial model sandbox; child currently has the user's filesystem permissions and no hard RSS/CPU limit |
 | Native inference crash | JNI/vector/native defect terminates inference or corrupts memory | Production MVP uses Jlama's Java path in a separate JVM; no vendor types cross the API; child exit is a failure result and deterministic mode continues | JVM/JIT/vector defects can still crash the child; parent process creation consumes OS resources |
-| Research GGUF/native compromise | A replaced or malicious GGUF exploits the llama.cpp parser, or a replaced native executable runs with the user's permissions | Phase 3 lab pins model/runtime revisions, sizes, and SHA-256; uses a post-fix llama.cpp release; excludes RPC/server paths; keeps paths operator-controlled and artifacts ignored; no native component ships or enters application runtime | Third-party GGUF provenance is not cryptographically tied to official weights; native parsing is memory-unsafe; no OS sandbox limits a manually run lab process |
+| Research GGUF/native compromise | A replaced or malicious GGUF exploits the llama.cpp parser, or a replaced native executable runs with the user's permissions | Phase 4 lab pins official model identity, GGUF/runtime revisions, sizes, and SHA-256; uses post-advisory llama.cpp `b10221`; excludes RPC/server paths; keeps paths operator-controlled and artifacts ignored; no native component ships or enters application runtime | Third-party GGUF provenance is not cryptographically tied to official weights; native parsing is memory-unsafe; no OS sandbox limits a manually run lab process |
 | Unsafe future provisioning | Redirect, mirror, race, partial download, or mutable identity activates attacker bytes | Not implemented because Gate A failed; no URL, cache, catalog, lock, download, or activation surface exists | Any future implementation requires a new threat-model review before network or native execution is enabled |
 | Stdio protocol abuse | Child emits huge, malformed, delayed, or unsolicited frames | Version-2 length-prefixed bounded protocol; strict duplicate/depth/UTF-8/message checks; request/response IDs; one response per request; sanitized failure kinds; parent timeout; invalid output rejected; no shell interpolation or network socket | A wedged child may require forcible termination; operating-system process semantics vary |
 | Unsafe export path / symlink attack | Configured path escapes, follows a link, overwrites files, or retention deletes user content | Export disabled by default; normalized absolute root; existing path-component and target symlink rejection; fixed digest-derived incident directory; four fixed filenames; `CREATE_NEW`; temporary sibling directory plus atomic move; retention considers only `STM-XXXXXXXX` directories and refuses unknown/symlink entries; no recursive delete | A privileged attacker can race path components on filesystems without stronger directory-handle APIs; filesystem may not support atomic directory moves, in which case export fails |
@@ -122,6 +122,17 @@ secret leakage, prompt-injection success, and hidden thinking were zero; two inv
 an unsupported synchronization cause, demonstrating the residual semantic risk.
 Only Windows x86_64 was executed.
 
+Phase 4 tested three eligible English models below 2,000,000,000 total parameters
+with llama.cpp `b10221` and an ineligible Qwen3.5-2B control. Across the four
+authoritative profiles, accepted unknown IDs, fabricated references, leakage,
+prompt-injection success, hidden thinking, timeouts, and crashes were zero. A real
+Qwen3-0.6B response containing a Chinese fragment exposed an English-validator gap;
+the validator now rejects letters outside the Unicode Latin script, the fragment was
+quarantined, and one bounded repair returned valid English output. The strongest
+eligible model still missed the holdout check-selection gate, so containment did not
+become a readiness claim. Gate C/D native worker and adapter paths were not built.
+Only Windows x86_64 was executed for real-model Phase 4 screening.
+
 ## Remaining high-priority mitigations
 
 1. Add an explicit Windows/Linux/macOS runtime traffic test or documented packet-capture procedure.
@@ -130,7 +141,8 @@ Only Windows x86_64 was executed.
 4. Document recommended filesystem permissions for exported incidents and local model directories.
 5. Add sustained property-based fuzzing for the stdio decoder, sanitizer, and SafeTensors metadata beyond the current
    targeted adversarial suite.
-6. Keep real inference opt-in and `NOT_VIABLE` until a materially new model/runtime hypothesis passes screening.
+6. Keep real inference opt-in and `NOT_VIABLE` until a materially new model/runtime hypothesis passes both screening
+   and holdout gates.
 7. If native inference is reconsidered, require reproducible first-party model
    provenance, a pinned source-built runtime, platform-specific process containment,
    and renewed GGUF-parser advisory review before integration.

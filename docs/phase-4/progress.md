@@ -67,9 +67,9 @@ Status: completed on 2026-08-02
 Gate A passed. The runtime product and model contract are English-only; Turkish remains a
 complete documentation surface. Candidate research and the frozen V3 screen follow.
 
-## Gate B - Candidate research and corpus freeze
+## Gate B - Candidate research, corpus freeze, and tournament
 
-Status: in progress on 2026-08-02
+Status: failed on 2026-08-02
 
 ### Completed work
 
@@ -89,11 +89,10 @@ Status: in progress on 2026-08-02
 - Pinned official llama.cpp release `b10221` and the exact Windows archive digest for
   isolated screening.
 
-### Next step
+### Execution sequence
 
-Check disk capacity, download and verify only the three new pinned Q4_K_M research
-artifacts and the pinned runtime, then execute the frozen screen in ascending model
-size order.
+Disk capacity was checked before downloading only the three pinned Q4_K_M research
+artifacts and the pinned runtime. Screening then ran in ascending model-size order.
 
 ### Artifact and harness verification
 
@@ -118,3 +117,52 @@ size order.
   checks.
 - Spotless check: passed for all affected reactor modules without applying a
   formatter.
+
+### Tournament results
+
+- Executed the frozen 20-case screen for every candidate with both bounded
+  profiles: 160 case/profile results in total.
+- MICRO (`SmolLM2-360M-Instruct`) was fast and valid in greedy mode but produced
+  0/20 useful explanations and only 80%/80% holdout cause/check accuracy.
+- COMPACT (`Qwen3-0.6B`) produced 20/20 valid and 19/20 useful results in its
+  recommended profile, but holdout check accuracy was 8/10, below the required
+  85% threshold without rounding.
+- MID (`Qwen2.5-1.5B-Instruct`) produced 19/20 valid results and missed both
+  selection gates.
+- The Qwen3.5-2B control passed its English screen but its official total of
+  2,274,069,824 parameters violates the hard 2,000,000,000 cap.
+- Accepted unknown IDs, fabricated references, secret leakage, prompt-injection
+  success, hidden thinking, crashes, and timeouts were all zero. One COMPACT
+  language mismatch was rejected and repaired; no mismatched text was trusted.
+- All model processes exited; no worker remained after screening.
+
+### Gate decision
+
+No eligible candidate passed every mandatory gate. Gate B failed. Gate C full
+Benchmark V2 and persistent-worker validation were not run, and Gate D production
+adapter work was not authorized. No model, native runtime, downloader, catalog, or
+provisioning code was added to the product.
+
+## Phase 4 closeout
+
+Status: completed on 2026-08-02
+
+The product verdict is deterministic diagnostics `READY` and local inference
+`NOT_VIABLE`. The evidence-backed contract, English-only runtime, safe fallback,
+and two-billion-total-parameter cap remain unchanged. The recommended Phase 5
+direction is public-alpha hardening; it is not started here.
+
+### Final verification
+
+- `./mvnw.cmd --batch-mode --no-transfer-progress -DskipTests spotless:check`:
+  passed across all 11 reactor projects; no formatter apply command was used.
+- `./mvnw.cmd --batch-mode --no-transfer-progress clean verify`: passed across all
+  11 reactor projects in 58.229 seconds.
+- Surefire: 311; Failsafe: 11; failures/errors/skips: 0/0/0.
+- Core coverage: 96.46% line and 87.14% branch; every configured JaCoCo gate passed.
+- V3 corpus and candidate-manifest SHA-256 values revalidated exactly.
+- Built JARs contain no removed language classes, Turkish prompt, or Turkish sample
+  resource. Generated configuration metadata contains no `stackmate.language`.
+- Normal workflow files invoke Maven verification only; no model/native download,
+  remote model service, or secret is configured.
+- StackMate inference worker count after verification: zero.

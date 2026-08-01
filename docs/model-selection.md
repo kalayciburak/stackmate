@@ -180,6 +180,35 @@ was not run, and no production llama.cpp adapter or provisioning system was buil
 Jlama remains the only existing experimental adapter; it is not recommended or
 enabled by these results.
 
+## Phase 4 English sub-2B tournament
+
+Phase 4 changed the product/runtime language to English only and enforced a hard
+maximum of 2,000,000,000 **total** parameters. Official parameter indexes disqualified
+Qwen3-1.7B (2,031,739,904) before download and made the mandatory Qwen3.5-2B reference
+(2,274,069,824) an ineligible historical control rather than a finalist.
+
+The frozen 20-case screen used official llama.cpp `b10221` commit
+`815a2a5915f22ce6a760c676389c5dfe8535c08f`, Q4_K_M GGUFs, strict JSON schema,
+the unchanged evidence/candidate-ID validator, one bounded repair, and separate
+10-case development/holdout sets. Strongest profiles produced:
+
+| Eligible candidate | Valid | Cause/check | Holdout cause/check | Useful prose | Eval median/P95 | Peak working set | Result |
+|---|---:|---:|---:|---:|---:|---:|---|
+| SmolLM2-360M-Instruct greedy | 20/20 | 18/20 / 18/20 | 8/10 / 8/10 | 0/20 | 488 / 661 ms | 464,605,184 B | `ELIMINATED_QUALITY` |
+| Qwen3-0.6B recommended | 20/20 | 19/20 / 18/20 | 9/10 / 8/10 | 19/20 | 943 / 1,284 ms | 1,009,168,384 B | `ELIMINATED_QUALITY` |
+| Qwen2.5-1.5B-Instruct greedy | 19/20 | 16/20 / 15/20 | 7/10 / 6/10 | 2/20 | 1,573 / 1,923 ms | 1,865,826,304 B | `ELIMINATED_SAFETY` |
+
+The ineligible Qwen3.5-2B control reached 20/20 valid, cause, check, and useful
+results, confirming that the task is feasible at that size but not satisfying the
+product cap. Accepted unknown IDs, fabricated references, leakage, injection, hidden
+thinking, timeouts, and crashes were zero. Containment passed; no eligible candidate
+passed all quality gates. Phase 4 therefore selects **no model**, keeps local
+inference **`NOT_VIABLE`**, and does not authorize the full V2 model benchmark,
+persistent llama.cpp worker, production adapter, or provisioning.
+
+Detailed identities, hashes, manual review, and measurement caveats are in
+[`docs/phase-4/screening-results.md`](phase-4/screening-results.md).
+
 ## Sources
 
 - Jlama repository and license: https://github.com/tjake/Jlama

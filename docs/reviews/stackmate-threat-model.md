@@ -1,7 +1,8 @@
-# StackMate Phase 2 threat model
+# StackMate repository threat model
 
-Date: 2026-08-01
-Scope: deterministic capture/render/export pipeline and optional managed-JVM inference
+Date: 2026-08-02
+Scope: deterministic capture/render/export pipeline, optional managed-JVM inference,
+and the isolated Phase 4 native/GGUF research lab
 
 ## Executive summary
 
@@ -9,7 +10,8 @@ StackMate is a library inside a developer's Spring Boot process, not an independ
 highest risks are disclosure of secrets carried by attacker-influenced exception data, resource exhaustion caused by
 exception storms or untrusted model files, and false advice crossing the child-JVM boundary. Phase 2 reduces those
 risks through minimal capture, repeated sanitization, deterministic ownership of facts, bounded IPC and queues,
-strict output validation, process isolation, and deterministic fallback. The child JVM is not an OS sandbox and the
+strict output validation, process isolation, and deterministic fallback. Phase 4 additionally pins native/model
+research inputs and excludes server/RPC paths, but its manually executed native process is not an OS sandbox. The
 host application's original logging remains outside StackMate's control.
 
 ## Scope and assumptions
@@ -20,6 +22,7 @@ In scope:
 - opt-in incident export;
 - local model-path validation, managed-child lifecycle, stdio framing, prompt construction, and output validation;
 - normal Maven/CI verification and dependency boundaries that affect shipped runtime artifacts.
+- isolated Phase 4 llama.cpp/GGUF screening inputs and execution; no native artifact is shipped.
 
 Out of scope:
 
@@ -75,6 +78,9 @@ Open deployment questions that do not block this developer-focused assessment:
 - Build/developer environment -> runtime classpath and model directory: Maven artifacts and explicitly provisioned
   model files cross a supply-chain boundary; Maven Enforcer, pinned versions, size/shape checks, and documented
   checksums reduce but do not remove this trust.
+- Research operator -> ignored llama.cpp/GGUF lab: immutable source revisions, expected bytes, and SHA-256 are
+  checked before local execution, but third-party conversions are not cryptographic proof of upstream weight
+  identity and native GGUF parsing remains memory-unsafe.
 
 #### Diagram
 
@@ -159,15 +165,18 @@ flowchart LR
    no supplied fact -> local explanation is discarded and never presented as trusted output.
 8. Supply-chain policy violation: compromised inference dependency initiates network or filesystem access -> it has the
    same user's privileges -> StackMate's no-network code policy provides review evidence but not OS enforcement.
+9. Native research compromise: replaced GGUF/native binary reaches a memory-unsafe parser -> malicious code inherits
+   the operator's privileges -> immutable hashes and lab-only isolation reduce substitution/exposure but do not
+   provide containment.
 
 ## Threat model table
 
 | Threat ID | Threat source | Prerequisites | Threat action | Impact | Impacted assets | Existing controls | Gaps | Recommended mitigations | Detection ideas | Likelihood | Impact severity | Priority |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TM-001 | Remote caller or application data | Sensitive value reaches an exception/MDC/path | Cause StackMate output or export to contain the value | Credential or PII disclosure | Runtime secrets, console, export | Minimal collection; `DefaultSanitizer`; repeated output sanitization; bounded debug reasons | Novel secret formats and host raw logging | Maintain adversarial corpus; document host logging hygiene; add user patterns for domain secrets | In-memory redaction-failure counters and controlled leakage corpus | Medium | High | High |
-| TM-002 | Malformed local model or inference runtime | Developer provisions untrusted files | Trigger parser/runtime crash or excessive allocation in worker | Developer-machine DoS; possible same-user code/runtime compromise | CPU, memory, filesystem, process table | `ModelDirectory` exact size/shape/dtype/range checks; checksum guidance; managed child; timeout | No hard RSS/CPU/filesystem sandbox; Jlama remains complex third-party code | Publish approved provenance/checksum only after a viable model exists; document OS sandbox options | Worker exit/timeout counters; process RSS sampling in explicit benchmark | Low | High | High |
+| TM-002 | Malformed local model or inference runtime | Developer provisions untrusted files | Trigger parser/runtime crash or excessive allocation in worker | Developer-machine DoS; possible same-user code/runtime compromise | CPU, memory, filesystem, process table | Production `ModelDirectory` exact size/shape/dtype/range checks; managed Java child; Phase 4 lab pins GGUF/native revision, bytes, and SHA-256 and excludes RPC/server | No hard RSS/CPU/filesystem sandbox; Jlama and native GGUF parsers remain complex third-party code; third-party conversion lineage is incomplete | Publish approved provenance/checksum only after a viable model exists; document OS sandbox options | Worker exit/timeout counters; process RSS sampling in explicit benchmark | Low | High | High |
 | TM-003 | Remote caller | Host exposes repeatedly failing endpoints | Generate high-cardinality exception storm | CPU/log/process pressure and reduced availability | Request threads, CPU, logs | Bounded snapshot; SHA-256 dedup; inference reservation; one-thread bounded queue; trigger policy; circuit breaker | Unique failures still cause deterministic and logging cost | Add optional local rate metrics; document host endpoint rate limiting | Queue rejection, duplicate, category, and failure counters | Medium | Medium | Medium |
-| TM-004 | Exception content or model | Hybrid mode is explicitly enabled | Inject instructions or invent identifiers/facts | Misleading developer action | Deterministic evidence, console integrity | Separate EN/TR prompts; schema v2; known-ID and identifier validation; no tools; deterministic fallback | Semantically misleading prose using valid IDs remains possible | Keep inference `NOT_VIABLE`/opt-in; require new safety benchmark before status change | Validator issue counters and prompt-injection corpus | Medium | Medium | Medium |
+| TM-004 | Exception content or model | Hybrid mode is explicitly enabled | Inject instructions, switch language, or invent identifiers/facts | Misleading developer action | Deterministic evidence, console integrity | English prompt; schema v2; known-ID, identifier, and Latin-script validation; no tools; deterministic fallback | Semantically misleading English prose using valid IDs remains possible | Keep inference `NOT_VIABLE`/opt-in; require new safety and holdout benchmark before status change | Validator issue counters and prompt-injection corpus | Medium | Medium | Medium |
 | TM-005 | Compromised or faulty child | Child process starts | Emit malformed/partial/oversized/multiple frames or secret-bearing stderr | Parser ambiguity, memory pressure, console leakage | Protocol, parent availability, secrets | `Protocol` length/version/request bounds; strict Jackson mapper; private sanitized stderr tail; child destruction/restart bound | OS/JDK pipe semantics vary; parser defects remain possible | Add sustained property fuzzing and cross-platform lifecycle execution | Protocol-kind counters; unexpected exit/restart counters | Low | High | Medium |
 | TM-006 | Local user or compromised configuration | Export is explicitly enabled | Redirect or race export path | Overwrite or disclosure outside intended directory | Exported incidents, filesystem | Fixed digest names; no-follow/symlink checks; create-new temporary directory; atomic move; conservative retention | Same-user TOCTOU race and inherited filesystem permissions | Document restrictive permissions; consider secure-directory handles if platform APIs improve | Export failures and rejected-path reason codes | Low | High | Low |
 | TM-007 | StackMate/custom extension failure | Capture is already processing an exception | Throw recursively or replace application failure | Changed HTTP behavior or recursive logging DoS | Original application behavior | Thread recursion guard; broad fail-open boundaries; exact rethrow tests; severe-error minimal path | Host logger can independently recurse; custom code is trusted | Preserve no-appender ownership; review custom analyzers before deployment | One-time internal failure warning without raw data | Low | High | Low |
@@ -191,6 +200,7 @@ flowchart LR
 | `stackmate-core/src/main/java/io/github/kalayciburak/stackmate/privacy/DefaultSanitizer.java` | Primary secret, PII, Unicode, and terminal boundary | TM-001, TM-004 |
 | `stackmate-core/src/main/java/io/github/kalayciburak/stackmate/throwable/ThrowableSnapshotter.java` | Copies hostile throwable state under strict limits | TM-001, TM-003, TM-007 |
 | `stackmate-inference-api/src/main/java/io/github/kalayciburak/stackmate/inference/DefaultInferenceOutputValidator.java` | Prevents model-authored facts and source references | TM-004 |
+| `stackmate-benchmark/src/test/java/io/github/kalayciburak/stackmate/benchmark/LlamaCppScreeningLab.java` | Explicit native/GGUF research boundary; never normal CI or production runtime | TM-002, TM-004, TM-008 |
 | `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/ModelDirectory.java` | Pre-validates untrusted model metadata and paths | TM-002, TM-008 |
 | `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/Protocol.java` | Bounds and parses the local IPC trust boundary | TM-005 |
 | `stackmate-inference-jvm/src/main/java/io/github/kalayciburak/stackmate/inference/jvm/JlamaLocalInferenceEngine.java` | Owns child reuse, timeout, repair, restart, and shutdown | TM-002, TM-005, TM-008 |
@@ -208,3 +218,5 @@ flowchart LR
 - Used the deployment and privacy assumptions explicitly supplied in the product requirements; conditional production,
   model-provenance, and filesystem-permission questions remain visible.
 - Distinguished implemented controls from remaining OS sandbox, host logging, supply-chain, and cross-platform risks.
+- Re-reviewed the Phase 4 native/GGUF lab: official runtime archive and model artifacts are immutable-input research
+  evidence, not a production sandbox, approved model catalog, or trustworthy third-party conversion chain.

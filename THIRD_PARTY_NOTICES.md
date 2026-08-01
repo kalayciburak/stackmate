@@ -60,6 +60,26 @@ archive SHA-256 was
 The executable and its native libraries remain ignored research inputs; none is
 packaged or made a production dependency. The experiment did not use the RPC backend.
 
+## Phase 4 research artifacts
+
+Phase 4 evaluated three additional Apache-2.0 upstream models and reused the Phase 3
+Qwen3.5-2B control. No model or native file is distributed, tracked, or packaged:
+
+| Upstream model and revision | Experimental GGUF source revision | Bytes | Verified SHA-256 |
+|---|---|---:|---|
+| `HuggingFaceTB/SmolLM2-360M-Instruct` `a10cc1512eabd3dde888204e902eca88bddb4951` | `bartowski/SmolLM2-360M-Instruct-GGUF` `7be6f65f1db715fe5dc5a4634c0d459b4eed42ec` | 270,590,880 | `2fa3f013dcdd7b99f9b237717fa0b12d75bbb89984cc1274be1471a465bac9c2` |
+| `Qwen/Qwen3-0.6B` `c1899de289a04d12100db370d81485cdf75e47ca` | `bartowski/Qwen_Qwen3-0.6B-GGUF` `60b85c0e3d8fe0f6474f406922a26d12aca4550d` | 484,220,320 | `9acfc1e001311f34b4252001b626f2e466d592a42065f66571bff3790d4e1b14` |
+| `Qwen/Qwen2.5-1.5B-Instruct` `989aa7980e4cf806f80c7fef2b1adb7bc71aa306` | `Qwen/Qwen2.5-1.5B-Instruct-GGUF` `91cad51170dc346986eccefdc2dd33a9da36ead9` | 1,117,320,736 | `6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e` |
+
+The two Bartowski GGUFs are third-party feasibility artifacts and are not
+cryptographically proven conversions of the pinned official revisions. The official
+upstream licenses are Apache-2.0. Phase 4 used the Apache-2.0 official llama.cpp
+release `b10221`, commit `815a2a5915f22ce6a760c676389c5dfe8535c08f`.
+The verified official Windows CPU x64 archive was 18,352,727 bytes with SHA-256
+`61dd281e1c5be8a7ae0b403efd0feee9da126e40605c27df35f9d5bef49caaf9`.
+The lab excluded server and RPC paths. None of these artifacts passed into a
+production dependency or normal CI.
+
 ## Development and test dependencies
 
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the

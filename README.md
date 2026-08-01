@@ -13,10 +13,11 @@ add or override a category, root type, evidence item, or source location.
 StackMate currently generates runtime diagnostics in English. `README.tr.md` is complete Turkish documentation for
 Turkish-speaking developers; it does not imply Turkish runtime output.
 
-Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 3 also screened
-quantized Qwen3.5 2B/4B through pinned llama.cpp and did not pass the mandatory bilingual ID-selection gates. The
-local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
-published to Maven Central.
+Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 4 tested three
+eligible English instruction models below two billion total parameters through pinned llama.cpp. None passed every
+mandatory holdout, usefulness, and validity gate; the only passing control exceeded the hard parameter cap. No
+production llama.cpp adapter or automatic provisioning was built. The local SPI remains for research and
+safe-fallback testing. StackMate is not presented as production-ready or published to Maven Central.
 
 Turkish documentation: [README.tr.md](README.tr.md)
 
@@ -347,6 +348,13 @@ best exact cause/check result was 8/10—below the mandatory 85% gate. Gate A fa
 adapter, automatic model catalog, downloader, or provisioning cache was implemented. See the
 [Phase 3 screening report](docs/phase-3/model-screening-results.md).
 
+Phase 4 simplified the product to English-only runtime output and ran an independent frozen 20-case tournament
+with official llama.cpp `b10221`. SmolLM2-360M produced 0/20 useful explanations. Qwen3-0.6B produced 20/20 valid
+and 19/20 useful outputs but only 8/10 holdout check selections, below the mandatory 85% gate. Qwen2.5-1.5B
+produced 19/20 valid outputs and missed the selection gates. The Qwen3.5-2B control passed the screen but its
+official total is 2,274,069,824 parameters, above the hard cap. No eligible model advanced to the full V2 benchmark
+or persistent-worker work. See the [Phase 4 screening report](docs/phase-4/screening-results.md).
+
 Run normal verification without a model:
 
 ```bash
@@ -382,8 +390,8 @@ CI and does not download weights.
 - The application may still expose sensitive text in its unchanged raw logs.
 - Optional framework recognition uses safe class-name/message inspection, not deep framework state.
 - Evaluated local inference is `NOT_VIABLE`; real-model runs exist only on Windows and no model is recommended.
-- Phase 3 llama.cpp/GGUF code is an explicit benchmark lab only; no automatic model or native-runtime provisioning
-  exists.
+- Phase 3 and Phase 4 llama.cpp/GGUF code is explicit benchmark-lab code only; no automatic model or native-runtime
+  provisioning exists.
 - No OS-level network or model-process sandbox is installed.
 - `lazy-load=false` eagerly validates adapter metadata but Jlama weights are still loaded on first inference.
 
@@ -395,9 +403,10 @@ CI and does not download weights.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-See the [console gallery](docs/console-gallery.md), [Phase 3 screening gallery](docs/phase-3/console-gallery.md),
-[CONTRIBUTING.md](CONTRIBUTING.md), [troubleshooting.md](docs/troubleshooting.md), and
-[Phase 3 progress](docs/phase-3/progress.md). Security reports should follow [SECURITY.md](SECURITY.md).
+See the [console gallery](docs/console-gallery.md), [Phase 4 console gallery](docs/phase-4/console-gallery.md),
+[Phase 4 screening report](docs/phase-4/screening-results.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+[troubleshooting.md](docs/troubleshooting.md), and [Phase 4 progress](docs/phase-4/progress.md). Security reports
+should follow [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 

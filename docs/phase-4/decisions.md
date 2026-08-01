@@ -41,3 +41,11 @@ Official metadata reports 2,274,069,824 total parameters for the multimodal
 2,000,000,000 total-parameter cap. The exact artifact remains in the screening table
 as an ineligible historical control, but it cannot become a finalist. Eligible
 candidates are SmolLM2-360M-Instruct, Qwen3-0.6B, and Qwen2.5-1.5B-Instruct.
+
+## D7 - No eligible tournament winner
+
+No eligible candidate passed every mandatory Gate B requirement. MICRO failed
+holdout and usefulness gates, COMPACT failed holdout check accuracy, and MID failed
+valid-output and selection gates. The passing Qwen3.5 control is above the hard cap.
+Gate C and Gate D therefore remain unexecuted; StackMate adds no production
+llama.cpp adapter or provisioning surface and keeps local inference `NOT_VIABLE`.

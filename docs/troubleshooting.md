@@ -68,11 +68,23 @@ only by an explicit Benchmark V2 llama.cpp lab and both candidates failed produc
 readiness. There is no automatic model/runtime downloader, `AUTO` model profile,
 production llama.cpp worker, or provisioning cache to enable.
 
+Phase 4 GGUF files are also isolated research inputs and are not accepted by the
+product adapter. Three eligible sub-2B candidates were screened: SmolLM2-360M was
+not useful, Qwen3-0.6B missed the holdout check-selection gate, and
+Qwen2.5-1.5B missed validity and selection gates. The Qwen3.5-2B control passed the
+English screen but its official 2,274,069,824 total parameters exceed the hard cap.
+There is no Phase 4 winner or supported GGUF configuration to point at the starter.
+
 To reproduce the Phase 3 lab, first review
 `docs/phase-3/model-runtime-research.md`, provision the exact ignored files yourself,
 and run the explicit `LlamaCppScreeningLab` test with its documented system
 properties. Normal `clean verify` deliberately does not execute native inference or
 download an artifact.
+
+The Phase 4 tournament requires the exact ignored artifacts and hashes recorded in
+`docs/phase-4/candidate-research.md`. Run it only through the explicit lab command
+documented there. It is excluded from normal verification, and the absence of a
+finalist means there is no full-corpus or persistent-worker Phase 4 command.
 
 ## The first local explanation is slow
 
