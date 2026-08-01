@@ -209,6 +209,97 @@ These values come from `stackmate-core/target/site/jacoco/jacoco.csv` generated 
 Implement and integration-test the Spring Boot 4.1 servlet auto-configuration, non-mutating capture filter,
 typed properties, production guard, runtime context extraction, and deterministic English/Turkish console output.
 
+## Phase 3 - Spring Boot runtime integration
+
+### Completed
+
+- Added Boot 4.1 `@AutoConfiguration` registered through the official `AutoConfiguration.imports` resource.
+- Added servlet/MVC/class/property conditions and `@ConditionalOnMissingBean` extension points.
+- Added bounded typed `stackmate.*` properties and generated configuration metadata.
+- Added a `OncePerRequestFilter` that observes exceptions escaping the servlet chain, rethrows the exact same
+  object, skips error dispatch, uses an instance-local recursion guard, and never writes to the response.
+- Added minimal request, handler, selected MDC, active profile, application package, Boot/Spring version,
+  and optional transaction-state extraction. No body, query values, headers, cookies, session, environment values,
+  or bean inventory are collected.
+- Added a production-profile guard that prevents analysis by default and emits at most one warning per handler bean.
+- Added developer extension beans for custom analyzers, sanitizers, renderers, capture handlers, stores, and pipeline parts.
+- Added real MVC integration tests proving normal requests and application `@ExceptionHandler` status/body behavior
+  remain unchanged, while an escaping exception is observed and rethrown with the same identity.
+
+### Verification
+
+```text
+.\mvnw.cmd -pl stackmate-spring-boot-autoconfigure -am test  (Java 21)
+Result: BUILD SUCCESS; 89 core tests and 42 Spring adapter tests passed.
+```
+
+The Spring tests cover enabled/disabled conditions, missing MVC classes, user bean override, custom analyzers,
+missing inference engine, invalid property binding, production guard, configuration metadata, normal requests,
+handled exceptions, escaping exceptions, fail-open capture, error dispatch, context bounds, and response preservation.
+
+### Startup failure decision
+
+Spring Boot's `FailureAnalyzer` mechanism was confirmed, but a catch-all StackMate analyzer was not registered in
+this phase because it could preempt Boot's more specific built-in analyzers before the StackMate application context
+and user privacy configuration exist. Runtime MVC completion remains independent. A future startup adapter must use
+narrow supported failure types or a non-preempting reporting integration.
+
+## Phase 4 - Deterministic console MVP
+
+### Completed
+
+- Added English and natural Turkish output, BOX and COMPACT styles, bounded width, technical-detail controls,
+  application trace, source/runtime labels, and explicit network-disabled status.
+- Added stable displayed incident IDs derived from the fingerprint rather than capture-specific IDs.
+- Re-sanitize every untrusted value at the renderer boundary and emit no ANSI/control sequences.
+- Added concise duplicate output and a minimal severe-JVM-failure path that skips inference.
+- Added the executable Spring Boot sample with all 14 required demo routes and six configuration profiles.
+- Simplified source locations to `SimpleClass#method(File.java:line)` for console scanning while preserving evidence.
+
+### Commands and results
+
+```text
+.\mvnw.cmd -pl stackmate-sample -am package -DskipTests  (Java 21)
+Result: BUILD SUCCESS; executable Boot JAR created.
+
+java -jar stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar --server.port=18087
+Result: application started on Java 21.0.12, Spring Boot 4.1.0, Tomcat 11.0.22.
+
+GET /demo/null-pointer
+GET /demo/redaction
+GET /demo/repeated  (twice)
+Result: HTTP 500, 500, 500, 500. The original Boot error behavior and stack traces remained present.
+
+Observed StackMate behavior:
+- Quick diagnosis printed for the first occurrence.
+- Controlled password, Bearer/JWT-like value, JDBC credentials, email, and Turkish identity value were redacted
+  in StackMate output.
+- The repeated incident printed only `StackMate duplicate ... (count 2)` on its second occurrence.
+- The sample process was stopped after verification.
+
+.\mvnw.cmd spotless:apply  (Java 21)
+Result: BUILD SUCCESS.
+
+.\mvnw.cmd clean verify  (Java 21)
+Result: BUILD SUCCESS across all 9 reactor projects in 13.832 s; 89 core, 42 Spring, and 16 sample tests passed.
+```
+
+The build duration is an observation on this machine, not a product latency benchmark.
+
+### Remaining risks
+
+- StackMate sanitizes its own output. It deliberately preserves the application's normal logger output, so an
+  application exception message containing a secret can still be exposed by the application's existing raw stack trace.
+- The current filter cannot observe exceptions fully handled by MVC resolvers or application exception handlers;
+  ADR 0009 documents the exact visibility boundary.
+- Local inference is not implemented yet; the local starter currently contributes only dependency boundaries.
+- Normal tests use Boot's test stack, which emits a JDK warning about Mockito/Byte Buddy dynamic agent attachment.
+
+### Next phase
+
+Create the controlled 50-case corpus, deterministic evaluation harness, machine/human reports, and JMH benchmarks
+before adding production local inference.
+
 ## Evidence sources
 
 - Spring Boot system requirements: https://docs.spring.io/spring-boot/system-requirements.html

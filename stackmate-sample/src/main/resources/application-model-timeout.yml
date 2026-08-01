@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: model-timeout
+
+stackmate:
+  mode: hybrid
+  inference:
+    enabled: true
+    model-path: ${STACKMATE_MODEL_PATH:models/stackmate-model}
+    timeout: 100ms
+    lazy-load: true

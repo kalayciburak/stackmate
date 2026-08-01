@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: invalid-model
+
+stackmate:
+  mode: hybrid
+  inference:
+    enabled: true
+    model-path: build/missing-model-for-controlled-sample
+    lazy-load: false
