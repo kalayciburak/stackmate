@@ -10,11 +10,13 @@ Frozen: 2026-08-02
 | Schema | 1 |
 | Prompt contract | 2, English only |
 | Cases | 20 |
-| Manifest SHA-256 | `bc6c6cbe897b3c6b886361897ffb70f644fcbf7686f7bd75e8d59472786d7d7c` |
-| Freeze commit | recorded immediately after this corpus commit, before model execution |
+| Final pre-model manifest SHA-256 | `abadadd2216b3c429696a53b0be662abca5c0e46a5b90cf007108b5847ba20bc` |
+| Initial freeze commit | `b0a104deff769047f4ec7b5dfd60c374bb11c940` |
 
-The manifest and recipes were committed before any blind prompt was sent to Qwen. Historical V2 and Phase 4 reports
-were not changed.
+The manifest and recipes were committed before any blind prompt was sent to Qwen. A pre-model type check found that
+three independently authored category labels used conceptual names rather than the existing enum names; those labels
+were corrected without changing a recipe, expected selection, forbidden claim, or model prompt. Historical V2 and
+Phase 4 reports were not changed.
 
 ## Composition
 
@@ -52,7 +54,9 @@ The pre-model command was:
 
 Result: 21 tests passed (2 manifest checks and 19 executable recipe invocations). The first run correctly discovered
 that Spring Framework 7 uses `PlaceholderResolutionException` as the captured root; the independently observable
-root expectation was corrected, and the second run passed. No model was invoked by either run.
+root expectation was corrected, and the second run passed. A separate pre-model inference-input check then verified
+that every diagnostic case exposes the frozen number of deterministic cause/check candidates and that the controlled
+credentials are absent. No model was invoked by these checks.
 
 ## What this corpus does not prove
 

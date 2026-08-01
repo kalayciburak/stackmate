@@ -29,6 +29,9 @@ packaged Spring integration, and any future provisioning decision remain conditi
   with zero accepted safety violations.
 - Revalidated the ignored Qwen GGUF artifact and pinned the current official llama.cpp `b10223` Windows CPU archive.
 - Reviewed current official model metadata, runtime releases, and published GGUF parser advisories.
+- Froze the independent 20-case blind corpus at commit `b0a104deff769047f4ec7b5dfd60c374bb11c940`: 19 cases execute real
+  runtime/integration recipes and one is a synthetic ambiguity edge case. All pre-model recipe and candidate-input
+  checks pass.
 
 ## Verification results
 
@@ -67,11 +70,10 @@ packaged Spring integration, and any future provisioning decision remain conditi
 
 ## Remaining work
 
-1. Freeze and commit the independent 20-case blind corpus.
-2. Run and manually review the combined 100-case Gate A qualification.
-3. Proceed to persistent-worker qualification only if every Gate A threshold passes.
-4. Proceed to a production adapter and packaged Spring verification only through the dependent gates.
-5. Publish final benchmark, threat-model, CI, and product documentation without overwriting historical reports.
+1. Run and manually review the combined 100-case Gate A qualification.
+2. Proceed to persistent-worker qualification only if every Gate A threshold passes.
+3. Proceed to a production adapter and packaged Spring verification only through the dependent gates.
+4. Publish final benchmark, threat-model, CI, and product documentation without overwriting historical reports.
 
 ## Current risks
 
