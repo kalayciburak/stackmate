@@ -17,6 +17,8 @@ public class InferenceProperties {
     }
 
     private boolean enabled = true;
+    private InferenceTriggerPolicy triggerPolicy =
+            InferenceTriggerPolicy.WHEN_ENHANCEMENT_IS_USEFUL;
     private Engine engine = Engine.AUTO;
     private Deployment deployment = Deployment.AUTO;
     private String modelPath = "";
@@ -35,6 +37,14 @@ public class InferenceProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public InferenceTriggerPolicy getTriggerPolicy() {
+        return triggerPolicy;
+    }
+
+    public void setTriggerPolicy(InferenceTriggerPolicy triggerPolicy) {
+        this.triggerPolicy = Objects.requireNonNull(triggerPolicy, "triggerPolicy");
     }
 
     public Engine getEngine() {

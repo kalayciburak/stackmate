@@ -1,7 +1,10 @@
 package io.github.kalayciburak.stackmate.inference;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.github.kalayciburak.stackmate.analysis.DiagnosticCategory;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticStrength;
 import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.SanitizerConfig;
 import io.github.kalayciburak.stackmate.privacy.SanitizerPattern;
@@ -15,78 +18,63 @@ class DefaultInferenceOutputValidatorTest {
     private final DefaultInferenceOutputValidator validator = new DefaultInferenceOutputValidator();
 
     @Test
-    void returnsTrustedOutputOnlyForKnownEvidenceBackedSelections() {
-        StructuredInferenceOutput output = validOutput();
-
-        OutputValidationResult result = validator.validate(request(2_000), output);
+    void returnsTrustedOutputWithSelectionsResolvedToDeterministicCandidates() {
+        OutputValidationResult result = validator.validate(request(2_000), validOutput());
 
         assertThat(result)
                 .isInstanceOfSatisfying(
                         OutputValidationResult.Valid.class,
                         valid -> {
-                            assertThat(valid.output()).isNotSameAs(output);
                             assertThat(valid.output().summary())
-                                    .isEqualTo("This failure may come from the database.");
-                            assertThat(valid.output().causes()).hasSize(1);
+                                    .isEqualTo(
+                                            "The insert failed because the value already exists.");
+                            assertThat(valid.output().selectedCauses())
+                                    .extracting(InferenceCauseCandidate::id)
+                                    .containsExactly("cause.one");
+                            assertThat(valid.output().selectedChecks())
+                                    .extracting(InferenceCheckCandidate::id)
+                                    .containsExactly("check.one");
+                            assertThat(valid.output().usedEvidenceIds())
+                                    .containsExactly("fact.one");
                         });
     }
 
     @Test
-    void rejectsUnknownFactCauseCheckAndSourceLocationIds() {
+    void rejectsUnknownSchemaEvidenceCauseAndCheckIds() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
+                        "99",
                         InferenceLanguage.ENGLISH,
                         "This is an error summary.",
-                        List.of(
-                                new StructuredCause(
-                                        "cause.unknown",
-                                        "This cause follows the error.",
-                                        List.of("fact.unknown"),
-                                        List.of("source.unknown"))),
-                        List.of(
-                                new StructuredCheck(
-                                        "check.unknown",
-                                        "Check this error.",
-                                        List.of("fact.unknown"),
-                                        List.of("source.unknown"))));
-
-        assertCodes(
-                validator.validate(request(2_000), output),
-                OutputValidationIssue.Code.UNKNOWN_CAUSE_ID,
-                OutputValidationIssue.Code.UNKNOWN_CHECK_ID,
-                OutputValidationIssue.Code.UNKNOWN_FACT_ID,
-                OutputValidationIssue.Code.UNKNOWN_SOURCE_LOCATION);
-    }
-
-    @Test
-    void rejectsFactsThatDoNotSupportTheSelectedCandidate() {
-        InferenceRequest request =
-                new InferenceRequest(
-                        "request.one",
-                        InferenceLanguage.ENGLISH,
-                        List.of(
-                                new InferenceFact("fact.one", "First", List.of("source.one")),
-                                new InferenceFact("fact.two", "Second", List.of("source.one"))),
-                        List.of(
-                                new InferenceCauseCandidate(
-                                        "cause.one", "Cause", "Explanation", List.of("fact.one"))),
-                        List.of(),
-                        List.of(location()),
-                        2_000);
-        StructuredInferenceOutput output =
-                new StructuredInferenceOutput(
-                        InferenceLanguage.ENGLISH,
-                        "This is the failure summary.",
-                        List.of(
-                                new StructuredCause(
-                                        "cause.one",
-                                        "This cause follows the error.",
-                                        List.of("fact.two"),
-                                        List.of("source.one"))),
+                        "This explanation uses only the supplied error.",
+                        List.of("cause.unknown"),
+                        List.of("check.unknown"),
+                        List.of("fact.unknown"),
                         List.of());
 
         assertCodes(
-                validator.validate(request, output),
+                validator.validate(request(2_000), output),
+                OutputValidationIssue.Code.UNKNOWN_SCHEMA_VERSION,
+                OutputValidationIssue.Code.UNKNOWN_CAUSE_ID,
+                OutputValidationIssue.Code.UNKNOWN_CHECK_ID,
+                OutputValidationIssue.Code.UNKNOWN_FACT_ID);
+    }
+
+    @Test
+    void rejectsSelectedCandidateWithoutUsedSupportingEvidence() {
+        StructuredInferenceOutput output =
+                new StructuredInferenceOutput(
+                        "2",
+                        InferenceLanguage.ENGLISH,
+                        "This is the failure summary.",
+                        "This explanation uses another supplied fact.",
+                        List.of("cause.one"),
+                        List.of(),
+                        List.of("fact.location"),
+                        List.of());
+
+        assertCodes(
+                validator.validate(request(2_000), output),
                 OutputValidationIssue.Code.UNSUPPORTED_REFERENCE);
     }
 
@@ -94,8 +82,12 @@ class DefaultInferenceOutputValidatorTest {
     void rejectsExcessiveOutputAndUnsafeControlCharacters() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
                         "This error has an escape \u001Bsequence.",
+                        "The operation failed with the supplied evidence.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
 
@@ -106,11 +98,15 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
-    void rejectsForbiddenClaimsAndNumericConfidence() {
+    void rejectsForbiddenClaimsNumericConfidenceAndSourceInspectionClaims() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
                         "This is the guaranteed root cause with confidence: 95.",
+                        "The source code was inspected for this failure.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
 
@@ -120,19 +116,42 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
-    void rejectsSensitiveValuesAndFabricatedSourceReferences() {
+    void rejectsSensitiveValuesFabricatedSourcesAndTechnicalIdentifiers() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
-                        "Check com.attacker.Invented at Invented#run(Invented.java:999) with "
-                                + "password=hunter2.",
+                        "Inspect InventedSource.java:42 and uk_attacker_secret.",
+                        "This error contains password=hunter2.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
 
         assertCodes(
                 validator.validate(request(2_000), output),
                 OutputValidationIssue.Code.SENSITIVE_VALUE,
-                OutputValidationIssue.Code.FABRICATED_SOURCE_REFERENCE);
+                OutputValidationIssue.Code.FABRICATED_SOURCE_REFERENCE,
+                OutputValidationIssue.Code.FABRICATED_IDENTIFIER);
+    }
+
+    @Test
+    void rejectsMarkdownFencesAndDestructiveCommands() {
+        StructuredInferenceOutput output =
+                new StructuredInferenceOutput(
+                        "2",
+                        InferenceLanguage.ENGLISH,
+                        "```json is not allowed.",
+                        "Run rm -rf / to resolve this error.",
+                        List.of(),
+                        List.of(),
+                        List.of(),
+                        List.of());
+
+        assertCodes(
+                validator.validate(request(2_000), output),
+                OutputValidationIssue.Code.MARKDOWN_FENCE,
+                OutputValidationIssue.Code.DESTRUCTIVE_COMMAND);
     }
 
     @Test
@@ -154,8 +173,12 @@ class DefaultInferenceOutputValidatorTest {
         var configuredValidator = new DefaultInferenceOutputValidator(sanitizer);
         var output =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
                         "This error contains CUSTOM-4821.",
+                        "The operation failed with the supplied evidence.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
 
@@ -165,13 +188,16 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
-    void acceptsOnlySuppliedSourceReferencesInModelText() {
+    void acceptsSourceAndTechnicalIdentifiersOnlyWhenSuppliedAsFacts() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
-                        "This failure is visible in example.Repository at "
-                                + "Repository#save(Repository.java:42).",
-                        List.of(),
+                        "The failure is visible at Repository.java:42.",
+                        "The database enforced uk_user_email for this value.",
+                        List.of("cause.one"),
+                        List.of("check.one"),
+                        List.of("fact.one", "fact.location"),
                         List.of());
 
         assertThat(validator.validate(request(2_000), output))
@@ -182,57 +208,74 @@ class DefaultInferenceOutputValidatorTest {
     void rejectsDeclaredAndDetectedLanguageMismatch() {
         StructuredInferenceOutput declaredMismatch =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.TURKISH,
-                        "Hata bu nedenle olabilir.",
+                        "Bu hata verilen kanıtla açıklanabilir.",
+                        "Bu işlem için önce değeri kontrol edin.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
         StructuredInferenceOutput detectedMismatch =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.ENGLISH,
                         "Bu hata çünkü neden olabilir.",
+                        "Bu işlem için değeri kontrol edin.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
-        InferenceRequest englishRequest = request(2_000);
-        InferenceRequest turkishRequest =
+        InferenceRequest english = request(2_000);
+        InferenceRequest turkish =
                 new InferenceRequest(
-                        englishRequest.id(),
+                        english.schemaVersion(),
+                        english.promptVersion(),
+                        english.id(),
                         InferenceLanguage.TURKISH,
-                        englishRequest.facts(),
-                        englishRequest.causes(),
-                        englishRequest.checks(),
-                        englishRequest.sourceLocations(),
-                        englishRequest.maximumOutputCharacters());
-        StructuredInferenceOutput copiedEnglishText =
+                        english.incident(),
+                        english.facts(),
+                        english.candidateCauses(),
+                        english.candidateChecks(),
+                        english.terminology(),
+                        english.maximumOutputCharacters());
+        StructuredInferenceOutput copiedEnglish =
                 new StructuredInferenceOutput(
+                        "2",
                         InferenceLanguage.TURKISH,
-                        "An operation ran in an invalid state",
+                        "An operation ran in an invalid state.",
+                        "The request failed because the value was invalid.",
+                        List.of(),
+                        List.of(),
                         List.of(),
                         List.of());
 
         assertCodes(
-                validator.validate(request(2_000), declaredMismatch),
+                validator.validate(english, declaredMismatch),
                 OutputValidationIssue.Code.LANGUAGE_MISMATCH);
         assertCodes(
-                validator.validate(request(2_000), detectedMismatch),
+                validator.validate(english, detectedMismatch),
                 OutputValidationIssue.Code.LANGUAGE_MISMATCH);
         assertCodes(
-                validator.validate(turkishRequest, copiedEnglishText),
+                validator.validate(turkish, copiedEnglish),
                 OutputValidationIssue.Code.LANGUAGE_MISMATCH);
     }
 
     @Test
-    void rejectsDuplicateCauseAndCheckSelections() {
-        StructuredInferenceOutput valid = validOutput();
-        StructuredInferenceOutput duplicated =
-                new StructuredInferenceOutput(
-                        valid.language(),
-                        valid.summary(),
-                        List.of(valid.causes().getFirst(), valid.causes().getFirst()),
-                        List.of(valid.checks().getFirst(), valid.checks().getFirst()));
-
-        assertCodes(
-                validator.validate(request(2_000), duplicated),
-                OutputValidationIssue.Code.DUPLICATE_SELECTION);
+    void rejectsDuplicateSelectionsAtTheUntrustedOutputBoundary() {
+        assertThatThrownBy(
+                        () ->
+                                new StructuredInferenceOutput(
+                                        "2",
+                                        InferenceLanguage.ENGLISH,
+                                        "The insert failed because the value already exists.",
+                                        "The database enforced the supplied constraint.",
+                                        List.of("cause.one", "cause.one"),
+                                        List.of(),
+                                        List.of("fact.one"),
+                                        List.of()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must be unique");
     }
 
     @Test
@@ -241,7 +284,14 @@ class DefaultInferenceOutputValidatorTest {
                 validator.validate(
                         request(2_000),
                         new StructuredInferenceOutput(
-                                InferenceLanguage.TURKISH, "Hata özeti", List.of(), List.of()));
+                                "99",
+                                InferenceLanguage.TURKISH,
+                                "Hata özeti.",
+                                "Bu hata için kanıt yetersiz.",
+                                List.of(),
+                                List.of(),
+                                List.of(),
+                                List.of()));
 
         assertThat(result)
                 .isInstanceOfSatisfying(
@@ -258,44 +308,45 @@ class DefaultInferenceOutputValidatorTest {
 
     private static StructuredInferenceOutput validOutput() {
         return new StructuredInferenceOutput(
+                "2",
                 InferenceLanguage.ENGLISH,
-                "This failure may come from the database.",
-                List.of(
-                        new StructuredCause(
-                                "cause.one",
-                                "This cause is supported by the captured error.",
-                                List.of("fact.one"),
-                                List.of("source.one"))),
-                List.of(
-                        new StructuredCheck(
-                                "check.one",
-                                "Check the database constraint.",
-                                List.of("fact.one"),
-                                List.of("source.one"))));
+                "The insert failed because the value already exists.",
+                "The database enforced uk_user_email for the supplied value.",
+                List.of("cause.one"),
+                List.of("check.one"),
+                List.of("fact.one"),
+                List.of());
     }
 
     private static InferenceRequest request(int outputLimit) {
         return new InferenceRequest(
+                InferenceRequest.SCHEMA_VERSION,
+                InferenceRequest.PROMPT_VERSION,
                 "request.one",
                 InferenceLanguage.ENGLISH,
+                new InferenceIncident(
+                        DiagnosticCategory.DATABASE_CONSTRAINT, DiagnosticStrength.HIGH),
                 List.of(
+                        new InferenceFact("fact.one", "CONSTRAINT", "uk_user_email"),
+                        new InferenceFact("fact.two", "SQL_STATE", "23505"),
                         new InferenceFact(
-                                "fact.one", "Database constraint failed", List.of("source.one"))),
+                                "fact.location",
+                                "APPLICATION_LOCATION",
+                                "Repository#save(Repository.java:42)")),
                 List.of(
                         new InferenceCauseCandidate(
                                 "cause.one",
-                                "Constraint",
-                                "The constraint rejected data",
-                                List.of("fact.one"))),
+                                "A protected unique value already exists",
+                                List.of("fact.one", "fact.two"))),
                 List.of(
                         new InferenceCheckCandidate(
-                                "check.one", "Inspect the constraint", List.of("fact.one"))),
-                List.of(location()),
+                                "check.one",
+                                "Check whether the value already exists",
+                                List.of("fact.one", "fact.two"))),
+                List.of(
+                        new InferenceTerminology(
+                                "unique constraint",
+                                "A database rule that prevents duplicate values")),
                 outputLimit);
-    }
-
-    private static SourceLocation location() {
-        return new SourceLocation(
-                "source.one", "example.Repository", "save", "Repository.java", 42);
     }
 }

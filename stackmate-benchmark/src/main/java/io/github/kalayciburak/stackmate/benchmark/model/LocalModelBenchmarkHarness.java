@@ -6,16 +6,17 @@ import io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers;
 import io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine;
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
 import io.github.kalayciburak.stackmate.analysis.DiagnosticCategory;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticStrength;
 import io.github.kalayciburak.stackmate.benchmark.corpus.BenchmarkCorpus;
 import io.github.kalayciburak.stackmate.benchmark.corpus.BenchmarkScenarioFactory;
 import io.github.kalayciburak.stackmate.benchmark.corpus.GroundTruthCase;
 import io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
-import io.github.kalayciburak.stackmate.incident.StackFrameSnapshot;
 import io.github.kalayciburak.stackmate.inference.DefaultInferenceOutputValidator;
 import io.github.kalayciburak.stackmate.inference.DeterministicInferenceRequestFactory;
 import io.github.kalayciburak.stackmate.inference.InferenceCauseCandidate;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
+import io.github.kalayciburak.stackmate.inference.InferenceIncident;
 import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceOutputValidator;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
@@ -23,7 +24,6 @@ import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
 import io.github.kalayciburak.stackmate.inference.OutputValidationIssue;
 import io.github.kalayciburak.stackmate.inference.OutputValidationResult;
-import io.github.kalayciburak.stackmate.inference.SourceLocation;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
 import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
@@ -36,14 +36,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 /** Executes all 50 controlled cases in raw-input and structured-input local-model modes. */
 public final class LocalModelBenchmarkHarness {
 
     public static final String RAW_MODE = "A_RAW_MODEL";
     public static final String STRUCTURED_MODE = "B_STRUCTURED_MODEL";
-    public static final String PROMPT_VERSION = "v2";
+    public static final String PROMPT_VERSION = InferenceRequest.PROMPT_VERSION;
 
     private static final int MAXIMUM_INPUT_CHARACTERS = 16_000;
     private static final int MAXIMUM_RAW_OUTPUT_CHARACTERS = 1_024;
@@ -166,10 +165,8 @@ public final class LocalModelBenchmarkHarness {
                 validation instanceof OutputValidationResult.Invalid invalid
                         ? invalid.issues()
                         : List.of();
-        List<String> selectedCauseIds =
-                output.causes().stream().map(cause -> cause.causeId()).toList();
-        List<String> selectedCheckIds =
-                output.checks().stream().map(check -> check.checkId()).toList();
+        List<String> selectedCauseIds = output.selectedCauseIds();
+        List<String> selectedCheckIds = output.selectedCheckIds();
         boolean trusted = issues.isEmpty();
         boolean categoryMatched =
                 trusted
@@ -205,8 +202,7 @@ public final class LocalModelBenchmarkHarness {
                         issues,
                         OutputValidationIssue.Code.UNKNOWN_FACT_ID,
                         OutputValidationIssue.Code.UNKNOWN_CAUSE_ID,
-                        OutputValidationIssue.Code.UNKNOWN_CHECK_ID,
-                        OutputValidationIssue.Code.UNKNOWN_SOURCE_LOCATION),
+                        OutputValidationIssue.Code.UNKNOWN_CHECK_ID),
                 countIssues(issues, OutputValidationIssue.Code.FABRICATED_SOURCE_REFERENCE),
                 Math.max(
                         countForbiddenClaims(rendered, groundTruth.forbiddenClaims()),
@@ -221,49 +217,31 @@ public final class LocalModelBenchmarkHarness {
 
     private InferenceRequest rawRequest(
             IncidentSnapshot incident, String neutralRequestId, InferenceLanguage language) {
-        List<SourceLocation> locations =
-                IntStream.range(
-                                0,
-                                Math.min(
-                                        incident.applicationFrames().size(),
-                                        InferenceRequest.MAXIMUM_SOURCE_LOCATIONS))
-                        .mapToObj(
-                                index ->
-                                        sourceLocation(
-                                                index, incident.applicationFrames().get(index)))
-                        .toList();
-        List<String> sourceIds = locations.stream().map(SourceLocation::id).toList();
         InferenceFact raw =
-                new InferenceFact(RAW_FACT_ID, rawStackTrace(incident, 2_048), sourceIds);
+                new InferenceFact(
+                        RAW_FACT_ID, "RAW_SANITIZED_STACK", rawStackTrace(incident, 2_048));
         List<InferenceCauseCandidate> categoryCandidates =
                 Arrays.stream(DiagnosticCategory.values())
                         .map(
                                 category ->
                                         new InferenceCauseCandidate(
                                                 categoryCandidateId(category),
-                                                category.name(),
                                                 "Select only when the raw stack trace belongs to "
                                                         + category.name()
                                                         + ".",
                                                 List.of(RAW_FACT_ID)))
                         .toList();
         return new InferenceRequest(
+                InferenceRequest.SCHEMA_VERSION,
+                InferenceRequest.PROMPT_VERSION,
                 neutralRequestId,
                 language,
+                new InferenceIncident(DiagnosticCategory.UNKNOWN, DiagnosticStrength.UNKNOWN),
                 List.of(raw),
                 categoryCandidates,
                 List.of(),
-                locations,
+                List.of(),
                 MAXIMUM_RAW_OUTPUT_CHARACTERS);
-    }
-
-    private SourceLocation sourceLocation(int index, StackFrameSnapshot frame) {
-        return new SourceLocation(
-                "source.app." + index,
-                sanitizer.sanitize("className", frame.className()),
-                sanitizer.sanitize("methodName", frame.methodName()),
-                sanitizer.sanitize("fileName", frame.fileName()),
-                frame.lineNumber());
     }
 
     private String rawStackTrace(IncidentSnapshot incident, int maximumCharacters) {

@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.net.ssl.SSLSocketFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -49,6 +50,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 class CorpusV2RuntimeRecipeTest {
+
+    private static final AtomicLong DATABASE_SEQUENCE = new AtomicLong();
 
     static java.util.stream.Stream<CorpusV2Case> realCases() {
         return CorpusV2Manifest.load().cases().stream().filter(CorpusV2Case::realExecution);
@@ -221,7 +224,7 @@ class CorpusV2RuntimeRecipeTest {
     }
 
     private Throwable h2Failure(String recipe) throws Exception {
-        String database = recipe.replace('.', '_');
+        String database = recipe.replace('.', '_') + "_" + DATABASE_SEQUENCE.incrementAndGet();
         try (Connection connection =
                 DriverManager.getConnection("jdbc:h2:mem:" + database + ";DB_CLOSE_DELAY=-1")) {
             return capture(() -> executeH2(connection, recipe));

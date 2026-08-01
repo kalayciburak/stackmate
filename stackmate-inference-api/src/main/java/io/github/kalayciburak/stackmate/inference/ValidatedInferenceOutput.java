@@ -1,20 +1,37 @@
 package io.github.kalayciburak.stackmate.inference;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-/** Trusted model-derived output created only after request-scoped validation. */
+/** Trusted model prose with selections resolved back to deterministic candidates. */
 public final class ValidatedInferenceOutput {
 
     private final InferenceLanguage language;
     private final String summary;
-    private final List<StructuredCause> causes;
-    private final List<StructuredCheck> checks;
+    private final String explanation;
+    private final List<InferenceCauseCandidate> selectedCauses;
+    private final List<InferenceCheckCandidate> selectedChecks;
+    private final List<String> usedEvidenceIds;
+    private final List<String> limitations;
 
-    ValidatedInferenceOutput(StructuredInferenceOutput output) {
+    ValidatedInferenceOutput(InferenceRequest request, StructuredInferenceOutput output) {
+        Map<String, InferenceCauseCandidate> causes =
+                request.candidateCauses().stream()
+                        .collect(
+                                Collectors.toMap(InferenceCauseCandidate::id, Function.identity()));
+        Map<String, InferenceCheckCandidate> checks =
+                request.candidateChecks().stream()
+                        .collect(
+                                Collectors.toMap(InferenceCheckCandidate::id, Function.identity()));
         this.language = output.language();
         this.summary = output.summary();
-        this.causes = output.causes();
-        this.checks = output.checks();
+        this.explanation = output.explanation();
+        this.selectedCauses = output.selectedCauseIds().stream().map(causes::get).toList();
+        this.selectedChecks = output.selectedCheckIds().stream().map(checks::get).toList();
+        this.usedEvidenceIds = output.usedEvidenceIds();
+        this.limitations = output.limitations();
     }
 
     public InferenceLanguage language() {
@@ -25,11 +42,23 @@ public final class ValidatedInferenceOutput {
         return summary;
     }
 
-    public List<StructuredCause> causes() {
-        return causes;
+    public String explanation() {
+        return explanation;
     }
 
-    public List<StructuredCheck> checks() {
-        return checks;
+    public List<InferenceCauseCandidate> selectedCauses() {
+        return selectedCauses;
+    }
+
+    public List<InferenceCheckCandidate> selectedChecks() {
+        return selectedChecks;
+    }
+
+    public List<String> usedEvidenceIds() {
+        return usedEvidenceIds;
+    }
+
+    public List<String> limitations() {
+        return limitations;
     }
 }

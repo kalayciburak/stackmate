@@ -10,8 +10,6 @@ import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
 import io.github.kalayciburak.stackmate.inference.ModelDescriptor;
-import io.github.kalayciburak.stackmate.inference.StructuredCause;
-import io.github.kalayciburak.stackmate.inference.StructuredCheck;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
 import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import java.io.IOException;
@@ -234,32 +232,19 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
 
     private StructuredInferenceOutput parseOutput(String json) throws JsonProcessingException {
         ParsedOutput parsed = mapper.readValue(json, ParsedOutput.class);
-        List<StructuredCause> causes =
-                parsed.causes() == null
-                        ? null
-                        : parsed.causes().stream().map(ParsedCause::toDomain).toList();
-        List<StructuredCheck> checks =
-                parsed.checks() == null
-                        ? null
-                        : parsed.checks().stream().map(ParsedCheck::toDomain).toList();
-        return new StructuredInferenceOutput(parsed.language(), parsed.summary(), causes, checks);
+        return new StructuredInferenceOutput(
+                parsed.schemaVersion(),
+                parsed.language(),
+                parsed.summary(),
+                parsed.explanation(),
+                parsed.selectedCauseIds(),
+                parsed.selectedCheckIds(),
+                parsed.usedEvidenceIds(),
+                parsed.limitations());
     }
 
     private static String normalizeJsonEnvelope(String generated) {
-        String stripped = generated.strip();
-        if (!stripped.startsWith("```") || !stripped.endsWith("```")) {
-            return stripped;
-        }
-        int firstLineEnd = stripped.indexOf('\n');
-        if (firstLineEnd < 0) {
-            return stripped;
-        }
-        String opening = stripped.substring(0, firstLineEnd).strip();
-        if (!opening.equals("```") && !opening.equalsIgnoreCase("```json")) {
-            return stripped;
-        }
-        String content = stripped.substring(firstLineEnd + 1, stripped.length() - 3).strip();
-        return content.startsWith("{") && content.endsWith("}") ? content : stripped;
+        return generated.strip();
     }
 
     @Override
@@ -307,36 +292,12 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     private record ParsedOutput(
+            String schemaVersion,
             InferenceLanguage language,
             String summary,
-            List<ParsedCause> causes,
-            List<ParsedCheck> checks) {}
-
-    private record ParsedCause(
-            String causeId,
             String explanation,
-            List<String> factIds,
-            List<String> sourceLocationIds) {
-        private StructuredCause toDomain() {
-            return new StructuredCause(
-                    causeId,
-                    explanation,
-                    factIds,
-                    sourceLocationIds == null ? List.of() : sourceLocationIds);
-        }
-    }
-
-    private record ParsedCheck(
-            String checkId,
-            String instruction,
-            List<String> factIds,
-            List<String> sourceLocationIds) {
-        private StructuredCheck toDomain() {
-            return new StructuredCheck(
-                    checkId,
-                    instruction,
-                    factIds,
-                    sourceLocationIds == null ? List.of() : sourceLocationIds);
-        }
-    }
+            List<String> selectedCauseIds,
+            List<String> selectedCheckIds,
+            List<String> usedEvidenceIds,
+            List<String> limitations) {}
 }

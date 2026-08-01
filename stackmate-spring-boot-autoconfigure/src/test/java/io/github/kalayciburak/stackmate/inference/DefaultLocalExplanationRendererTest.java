@@ -16,23 +16,40 @@ class DefaultLocalExplanationRendererTest {
     void renders_bounded_terminal_safe_english_and_turkish_output() {
         DefaultLocalExplanationRenderer renderer =
                 new DefaultLocalExplanationRenderer(DefaultSanitizer.defaults());
+        InferenceRequest request =
+                new InferenceRequest(
+                        "2",
+                        "2",
+                        "incident.one",
+                        InferenceLanguage.ENGLISH,
+                        new InferenceIncident(
+                                io.github.kalayciburak.stackmate.analysis.DiagnosticCategory
+                                        .UNKNOWN,
+                                io.github.kalayciburak.stackmate.analysis.DiagnosticStrength
+                                        .MEDIUM),
+                        List.of(new InferenceFact("fact.one", "KNOWN_RULE", "supplied evidence")),
+                        List.of(
+                                new InferenceCauseCandidate(
+                                        "cause.one",
+                                        "This cause uses evidence.",
+                                        List.of("fact.one"))),
+                        List.of(
+                                new InferenceCheckCandidate(
+                                        "check.one", "Check this evidence.", List.of("fact.one"))),
+                        List.of(),
+                        512);
         ValidatedInferenceOutput output =
                 new ValidatedInferenceOutput(
+                        request,
                         new StructuredInferenceOutput(
+                                "2",
                                 InferenceLanguage.ENGLISH,
                                 "This summary has password=local-secret\u001B[2J",
-                                List.of(
-                                        new StructuredCause(
-                                                "cause.one",
-                                                "This cause uses evidence.",
-                                                List.of("fact.one"),
-                                                List.of("source.one"))),
-                                List.of(
-                                        new StructuredCheck(
-                                                "check.one",
-                                                "Check this evidence.",
-                                                List.of("fact.one"),
-                                                List.of("source.one")))));
+                                "The supplied evidence explains the failure.",
+                                List.of("cause.one"),
+                                List.of("check.one"),
+                                List.of("fact.one"),
+                                List.of()));
         ModelDescriptor model =
                 new ModelDescriptor(
                         "test/local",
@@ -63,15 +80,16 @@ class DefaultLocalExplanationRendererTest {
         assertThat(english.lines()).allMatch(line -> line.codePointCount(0, line.length()) <= 60);
         assertThat(english)
                 .contains("StackMate Local Explanation")
-                .contains("Evidence: 1")
+                .contains("Evidence used: 1")
                 .contains("Duration: 12 ms")
-                .contains("Local JVM model")
-                .contains("Network disabled")
+                .contains("Experimental local JVM model")
+                .contains("StackMate made no external network call")
                 .doesNotContain("local-secret")
                 .doesNotContain("\u001B");
         assertThat(turkish)
                 .contains("StackMate Yerel Açıklama")
-                .contains("Ağ devre dışı")
+                .contains("StackMate harici ağ çağrısı")
+                .contains("yapmadı")
                 .doesNotContain("\u001B");
     }
 }

@@ -1,6 +1,7 @@
 package io.github.kalayciburak.stackmate.inference;
 
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticCategory;
 import io.github.kalayciburak.stackmate.evidence.EvidenceItem;
 import io.github.kalayciburak.stackmate.incident.StackFrameSnapshot;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
@@ -10,13 +11,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/** Converts deterministic output into a bounded, sanitized, reference-only inference request. */
+/** Converts deterministic output into a bounded, evidence-only inference request. */
 public final class DeterministicInferenceRequestFactory {
 
-    private static final int MAX_FACT_TEXT = 2_048;
-    private static final int MAX_CAUSE_TITLE = 256;
-    private static final int MAX_CAUSE_EXPLANATION = 2_048;
-    private static final int MAX_CHECK_INSTRUCTION = 1_024;
+    private static final int MAX_FACT_VALUE = 2_048;
+    private static final int MAX_CAUSE_TEXT = 2_048;
+    private static final int MAX_CHECK_TEXT = 1_024;
 
     private final Sanitizer sanitizer;
 
@@ -36,53 +36,14 @@ public final class DeterministicInferenceRequestFactory {
             throw new IllegalArgumentException("maximumInputCharacters must be positive");
         }
 
-        List<FactCandidate> candidates = factCandidates(result);
-        if (candidates.isEmpty()) {
-            throw new IllegalArgumentException("deterministic result has no inference facts");
-        }
-
-        List<SourceLocation> locations = new ArrayList<>();
-        int used = 0;
-        int minimumFactCost = candidates.getFirst().id().length() + 1;
-        for (int index = 0;
-                index < result.incident().applicationFrames().size()
-                        && locations.size() < InferenceRequest.MAXIMUM_SOURCE_LOCATIONS;
-                index++) {
-            SourceLocation location =
-                    location(index, result.incident().applicationFrames().get(index));
-            int cost = locationCost(location);
-            if (used + cost + minimumFactCost > budget) {
-                break;
-            }
-            locations.add(location);
-            used += cost;
-        }
-
-        List<InferenceFact> facts = new ArrayList<>();
-        List<String> locationIds =
-                locations.isEmpty() ? List.of() : List.of(locations.getFirst().id());
-        for (FactCandidate candidate : candidates) {
-            if (facts.size() >= InferenceRequest.MAXIMUM_FACTS) {
-                break;
-            }
-            int remaining = budget - used - candidate.id().length();
-            if (remaining < 1) {
-                break;
-            }
-            String text = truncate(candidate.text(), Math.min(MAX_FACT_TEXT, remaining));
-            if (text.isBlank()) {
-                break;
-            }
-            InferenceFact fact = new InferenceFact(candidate.id(), text, locationIds);
-            facts.add(fact);
-            used += fact.id().length() + fact.text().length();
-        }
+        List<InferenceFact> facts = facts(result, budget);
         if (facts.isEmpty()) {
             throw new IllegalArgumentException("maximumInputCharacters is too small for one fact");
         }
-
+        int used = facts.stream().mapToInt(this::factCost).sum();
         Set<String> factIds = new HashSet<>();
         facts.forEach(fact -> factIds.add(fact.id()));
+
         List<InferenceCauseCandidate> causes = new ArrayList<>();
         for (var cause : result.diagnosis().causes()) {
             if (causes.size() >= InferenceRequest.MAXIMUM_CAUSES) {
@@ -93,14 +54,16 @@ public final class DeterministicInferenceRequestFactory {
             if (references.isEmpty()) {
                 continue;
             }
-            String title = bounded("causeTitle", cause.title(), MAX_CAUSE_TITLE);
-            String explanation =
-                    bounded("causeExplanation", cause.explanation(), MAX_CAUSE_EXPLANATION);
-            int cost = cause.id().length() + title.length() + explanation.length();
+            String text =
+                    bounded(
+                            "causeText",
+                            cause.title() + ". " + cause.explanation(),
+                            MAX_CAUSE_TEXT);
+            int cost = cause.id().length() + text.length();
             if (used + cost > budget) {
                 continue;
             }
-            causes.add(new InferenceCauseCandidate(cause.id(), title, explanation, references));
+            causes.add(new InferenceCauseCandidate(cause.id(), text, references));
             used += cost;
         }
 
@@ -114,68 +77,109 @@ public final class DeterministicInferenceRequestFactory {
             if (references.isEmpty()) {
                 continue;
             }
-            String instruction =
-                    bounded("checkInstruction", check.instruction(), MAX_CHECK_INSTRUCTION);
-            int cost = check.id().length() + instruction.length();
+            String text = bounded("checkText", check.instruction(), MAX_CHECK_TEXT);
+            int cost = check.id().length() + text.length();
             if (used + cost > budget) {
                 continue;
             }
-            checks.add(new InferenceCheckCandidate(check.id(), instruction, references));
+            checks.add(new InferenceCheckCandidate(check.id(), text, references));
             used += cost;
         }
 
+        var primaryCause = result.diagnosis().causes().getFirst();
+        List<InferenceTerminology> terminology = terminology(primaryCause.category(), language);
         return new InferenceRequest(
+                InferenceRequest.SCHEMA_VERSION,
+                InferenceRequest.PROMPT_VERSION,
                 result.fingerprint().value(),
                 language,
+                new InferenceIncident(primaryCause.category(), primaryCause.strength()),
                 facts,
                 causes,
                 checks,
-                locations,
+                terminology,
                 Math.min(
                         Math.max(1, maximumOutputCharacters),
                         InferenceRequest.MAXIMUM_OUTPUT_CHARACTERS));
     }
 
-    private List<FactCandidate> factCandidates(DeterministicResult result) {
-        List<FactCandidate> candidates = new ArrayList<>();
+    private List<InferenceFact> facts(DeterministicResult result, int budget) {
+        List<InferenceFact> facts = new ArrayList<>();
+        int used = 0;
         for (EvidenceItem evidence : result.diagnosis().evidence()) {
-            String text =
-                    evidence.type().name()
-                            + " | "
-                            + safe("evidenceSource", evidence.source())
-                            + " | "
-                            + safe("evidenceValue", evidence.value());
-            candidates.add(new FactCandidate(evidence.id(), truncate(text, MAX_FACT_TEXT)));
+            if (facts.size() >= InferenceRequest.MAXIMUM_FACTS) {
+                break;
+            }
+            String type = evidence.type().name();
+            String value = bounded("evidenceValue", evidence.value(), MAX_FACT_VALUE);
+            int remaining = budget - used - evidence.id().length() - type.length();
+            if (remaining < 1) {
+                break;
+            }
+            value = truncate(value, Math.min(value.length(), remaining));
+            if (value.isBlank()) {
+                break;
+            }
+            InferenceFact fact = new InferenceFact(evidence.id(), type, value);
+            facts.add(fact);
+            used += factCost(fact);
         }
-        return candidates;
+        for (int index = 0;
+                index < result.incident().applicationFrames().size()
+                        && facts.size() < InferenceRequest.MAXIMUM_FACTS;
+                index++) {
+            InferenceFact fact =
+                    applicationFact(index, result.incident().applicationFrames().get(index));
+            if (used + factCost(fact) > budget) {
+                break;
+            }
+            facts.add(fact);
+            used += factCost(fact);
+        }
+        return facts;
     }
 
-    private SourceLocation location(int index, StackFrameSnapshot frame) {
-        return new SourceLocation(
-                "source.app." + index,
-                bounded("className", frame.className(), 256),
-                bounded("methodName", frame.methodName(), 128),
-                bounded("fileName", frame.fileName(), 256),
-                Math.max(-1, frame.lineNumber()));
+    private InferenceFact applicationFact(int index, StackFrameSnapshot frame) {
+        String value =
+                bounded("className", frame.className(), 256)
+                        + "#"
+                        + bounded("methodName", frame.methodName(), 128)
+                        + "("
+                        + bounded(
+                                "fileName",
+                                frame.fileName().isBlank() ? "unknown" : frame.fileName(),
+                                256)
+                        + (frame.lineNumber() >= 0 ? ":" + frame.lineNumber() : "")
+                        + ")";
+        return new InferenceFact("fact.application." + index, "APPLICATION_LOCATION", value);
     }
 
-    private int locationCost(SourceLocation location) {
-        return location.id().length()
-                + location.className().length()
-                + location.methodName().length()
-                + location.fileName().length();
+    private List<InferenceTerminology> terminology(
+            DiagnosticCategory category, InferenceLanguage language) {
+        if (category != DiagnosticCategory.DATABASE_CONSTRAINT) {
+            return List.of();
+        }
+        return language == InferenceLanguage.TURKISH
+                ? List.of(
+                        new InferenceTerminology(
+                                "veritabanı kısıtı",
+                                "Verinin uyması gereken ve veritabanının uyguladığı bütünlük kuralı"))
+                : List.of(
+                        new InferenceTerminology(
+                                "database constraint",
+                                "An integrity rule enforced by the database for stored data"));
+    }
+
+    private int factCost(InferenceFact fact) {
+        return fact.id().length() + fact.type().length() + fact.value().length();
     }
 
     private String bounded(String field, String value, int maximum) {
-        String safe = safe(field, value);
+        String safe = sanitizer.sanitize(field, Objects.requireNonNull(value, field));
         if (safe.isBlank()) {
             safe = "unknown";
         }
         return truncate(safe, maximum);
-    }
-
-    private String safe(String field, String value) {
-        return sanitizer.sanitize(field, Objects.requireNonNull(value, field));
     }
 
     private static String truncate(String value, int maximum) {
@@ -188,6 +192,4 @@ public final class DeterministicInferenceRequestFactory {
         }
         return value.substring(0, end);
     }
-
-    private record FactCandidate(String id, String text) {}
 }

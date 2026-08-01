@@ -3,14 +3,14 @@ package io.github.kalayciburak.stackmate.inference;
 import java.util.List;
 
 /** A deterministic next-check candidate that model output may select by stable ID. */
-public record InferenceCheckCandidate(String id, String instruction, List<String> factIds) {
+public record InferenceCheckCandidate(String id, String text, List<String> evidenceIds) {
 
     public InferenceCheckCandidate {
         id = Contracts.requireStableId(id, "id");
-        instruction = Contracts.requireBoundedText(instruction, "instruction", 1_024);
-        factIds = Contracts.immutableStableIds(factIds, "factIds", 32);
-        if (factIds.isEmpty()) {
-            throw new IllegalArgumentException("factIds must not be empty");
+        text = Contracts.requireBoundedText(text, "text", 1_024);
+        evidenceIds = Contracts.immutableStableIds(evidenceIds, "evidenceIds", 32);
+        if (evidenceIds.isEmpty()) {
+            throw new IllegalArgumentException("evidenceIds must not be empty");
         }
     }
 }

@@ -3,8 +3,11 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticCategory;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticStrength;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
 import io.github.kalayciburak.stackmate.inference.InferenceFailure;
+import io.github.kalayciburak.stackmate.inference.InferenceIncident;
 import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
@@ -23,7 +26,9 @@ import org.junit.jupiter.api.io.TempDir;
 
 class JlamaLocalInferenceEngineTest {
     private static final String VALID_OUTPUT =
-            "{\"language\":\"ENGLISH\",\"summary\":\"Evidence only\",\"causes\":[],\"checks\":[]}";
+            "{\"schemaVersion\":\"2\",\"language\":\"ENGLISH\",\"summary\":\"Evidence only\","
+                    + "\"explanation\":\"The supplied fact is explained.\",\"selectedCauseIds\":[],"
+                    + "\"selectedCheckIds\":[],\"usedEvidenceIds\":[\"fact-1\"],\"limitations\":[]}";
 
     @TempDir Path temporaryDirectory;
     private final ObjectMapper mapper = Protocol.strictMapper();
@@ -125,7 +130,7 @@ class JlamaLocalInferenceEngineTest {
     }
 
     @Test
-    void acceptsOnlyASingleJsonMarkdownEnvelopeWithoutExtraText() throws Exception {
+    void rejectsMarkdownFencesAndCommentaryAroundJson() throws Exception {
         JlamaLocalInferenceEngine fenced =
                 engine(
                         Duration.ofSeconds(1),
@@ -138,7 +143,8 @@ class JlamaLocalInferenceEngineTest {
                         command ->
                                 responseOnce("Here is JSON:\n```json\n" + VALID_OUTPUT + "\n```"));
 
-        assertThat(fenced.infer(request())).isInstanceOf(InferenceResult.Success.class);
+        assertThat(failure(fenced.infer(request())).kind())
+                .isEqualTo(InferenceFailure.Kind.INVALID_OUTPUT);
         assertThat(failure(commentary.infer(request())).kind())
                 .isEqualTo(InferenceFailure.Kind.INVALID_OUTPUT);
         fenced.close();
@@ -471,9 +477,12 @@ class JlamaLocalInferenceEngineTest {
 
     private static InferenceRequest request() {
         return new InferenceRequest(
+                "2",
+                "2",
                 "request-1",
                 InferenceLanguage.ENGLISH,
-                List.of(new InferenceFact("fact-1", "Observed fact", List.of())),
+                new InferenceIncident(DiagnosticCategory.UNKNOWN, DiagnosticStrength.MEDIUM),
+                List.of(new InferenceFact("fact-1", "KNOWN_RULE", "Observed fact")),
                 List.of(),
                 List.of(),
                 List.of(),

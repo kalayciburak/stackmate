@@ -3,28 +3,44 @@ package io.github.kalayciburak.stackmate.inference;
 import java.util.List;
 import java.util.Objects;
 
-/** Parsed but untrusted model output that must pass {@link InferenceOutputValidator}. */
+/** Parsed but untrusted explanation and supplied-ID selections produced by a model. */
 public record StructuredInferenceOutput(
+        String schemaVersion,
         InferenceLanguage language,
         String summary,
-        List<StructuredCause> causes,
-        List<StructuredCheck> checks) {
+        String explanation,
+        List<String> selectedCauseIds,
+        List<String> selectedCheckIds,
+        List<String> usedEvidenceIds,
+        List<String> limitations) {
 
     public static final int MAXIMUM_TEXT_LENGTH = 8_192;
 
     public StructuredInferenceOutput {
+        schemaVersion = Contracts.requireBoundedText(schemaVersion, "schemaVersion", 16);
         language = Objects.requireNonNull(language, "language");
-        summary = Contracts.requireBoundedText(summary, "summary", MAXIMUM_TEXT_LENGTH);
-        causes = immutableBounded(causes, "causes", InferenceRequest.MAXIMUM_CAUSES);
-        checks = immutableBounded(checks, "checks", InferenceRequest.MAXIMUM_CHECKS);
+        summary = Contracts.requireBoundedText(summary, "summary", 1_024);
+        explanation = Contracts.requireBoundedText(explanation, "explanation", 4_096);
+        selectedCauseIds =
+                Contracts.immutableStableIds(
+                        selectedCauseIds, "selectedCauseIds", InferenceRequest.MAXIMUM_CAUSES);
+        selectedCheckIds =
+                Contracts.immutableStableIds(
+                        selectedCheckIds, "selectedCheckIds", InferenceRequest.MAXIMUM_CHECKS);
+        usedEvidenceIds =
+                Contracts.immutableStableIds(
+                        usedEvidenceIds, "usedEvidenceIds", InferenceRequest.MAXIMUM_FACTS);
+        limitations = immutableBoundedText(limitations, "limitations", 16, 512);
     }
 
-    private static <T> List<T> immutableBounded(List<T> values, String name, int maximum) {
+    private static List<String> immutableBoundedText(
+            List<String> values, String name, int maximumItems, int maximumText) {
         Objects.requireNonNull(values, name);
-        List<T> copy = List.copyOf(values);
-        if (copy.size() > maximum) {
-            throw new IllegalArgumentException(name + " exceeds limit " + maximum);
+        if (values.size() > maximumItems) {
+            throw new IllegalArgumentException(name + " exceeds limit " + maximumItems);
         }
-        return copy;
+        return values.stream()
+                .map(value -> Contracts.requireBoundedText(value, name, maximumText))
+                .toList();
     }
 }

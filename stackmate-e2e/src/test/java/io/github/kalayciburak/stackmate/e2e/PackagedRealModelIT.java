@@ -22,6 +22,7 @@ class PackagedRealModelIT {
                 PackagedSample.start(
                         "e2e,hybrid",
                         "--stackmate.inference.model-path=" + model,
+                        "--stackmate.inference.trigger-policy=always",
                         "--stackmate.inference.timeout=30s")) {
             int mark = sample.mark();
             PackagedSample.Response response = sample.get("/demo/invalid-number");

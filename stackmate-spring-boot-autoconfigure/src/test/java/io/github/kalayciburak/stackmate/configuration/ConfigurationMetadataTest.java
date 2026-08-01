@@ -22,6 +22,7 @@ class ConfigurationMetadataTest {
                     .contains("stackmate.diagnostics.maximum-cause-depth")
                     .contains("stackmate.privacy.include-request-body")
                     .contains("stackmate.inference.executor.queue-capacity")
+                    .contains("stackmate.inference.trigger-policy")
                     .contains("stackmate.inference.circuit-breaker.cooldown")
                     .contains("stackmate.deduplication.maximum-entries")
                     .contains("stackmate.console.maximum-width")

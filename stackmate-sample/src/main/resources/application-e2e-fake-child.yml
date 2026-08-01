@@ -2,6 +2,7 @@ stackmate:
   mode: hybrid
   inference:
     enabled: true
+    trigger-policy: always
     lazy-load: true
     timeout: 750ms
     repair-attempts: 0

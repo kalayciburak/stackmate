@@ -39,6 +39,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
     private final LocalExplanationRenderer renderer;
     private final LocalInferenceMetrics metrics;
     private final StackMateProperties properties;
+    private final EvidenceAwareInferencePolicy triggerPolicy = new EvidenceAwareInferencePolicy();
     private final ThreadPoolExecutor executor;
     private final ScheduledThreadPoolExecutor timeoutExecutor;
     private final AtomicBoolean unavailableWarningLogged = new AtomicBoolean();
@@ -80,6 +81,10 @@ public final class DefaultAsyncLocalInferenceCoordinator
     public void submit(DeterministicResult result, Runnable releaseReservation) {
         Objects.requireNonNull(result, "result");
         Objects.requireNonNull(releaseReservation, "releaseReservation");
+        if (!triggerPolicy.shouldInfer(result, properties.getInference().getTriggerPolicy())) {
+            debug("POLICY_SKIPPED");
+            return;
+        }
         if (closed.get()) {
             metrics.recordFailure(LocalInferenceMetrics.FailureReason.SHUTDOWN);
             release(releaseReservation);
@@ -239,6 +244,10 @@ public final class DefaultAsyncLocalInferenceCoordinator
     }
 
     private void debug(LocalInferenceMetrics.FailureReason reason) {
+        debug(reason.name());
+    }
+
+    private void debug(String reason) {
         if (properties.getConsole().isDebugLogging()) {
             LOGGER.debug(MARKER, "StackMate local inference skipped safely: {}", reason);
         }

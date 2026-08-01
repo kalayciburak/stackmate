@@ -6,10 +6,8 @@ import io.github.kalayciburak.stackmate.output.RenderStyle;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /** Terminal-safe renderer for output that has already passed request-scoped validation. */
 public final class DefaultLocalExplanationRenderer implements LocalExplanationRenderer {
@@ -34,40 +32,39 @@ public final class DefaultLocalExplanationRenderer implements LocalExplanationRe
         List<String> lines = new ArrayList<>();
         lines.add(tr ? "StackMate Yerel Açıklama" : "StackMate Local Explanation");
         lines.add(label(tr, "Özet", "Summary") + safe("inferenceSummary", output.summary()));
-        if (!output.causes().isEmpty()) {
-            lines.add(tr ? "Olası nedenler:" : "Possible causes:");
-            output.causes()
-                    .forEach(
-                            cause ->
-                                    lines.add(
-                                            "  - " + safe("inferenceCause", cause.explanation())));
+        lines.add(
+                label(tr, "Açıklama", "Explanation")
+                        + safe("inferenceExplanation", output.explanation()));
+        if (!output.selectedCauses().isEmpty()) {
+            lines.add(tr ? "Önceliklendirilen nedenler:" : "Prioritized causes:");
+            output.selectedCauses()
+                    .forEach(cause -> lines.add("  - " + safe("inferenceCause", cause.text())));
         }
-        if (!output.checks().isEmpty()) {
-            lines.add(tr ? "Önerilen kontroller:" : "Suggested checks:");
-            output.checks()
-                    .forEach(
-                            check ->
-                                    lines.add(
-                                            "  - " + safe("inferenceCheck", check.instruction())));
+        if (!output.selectedChecks().isEmpty()) {
+            lines.add(tr ? "Önceliklendirilen kontroller:" : "Prioritized checks:");
+            output.selectedChecks()
+                    .forEach(check -> lines.add("  - " + safe("inferenceCheck", check.text())));
         }
-        lines.add(label(tr, "Kanıt", "Evidence") + evidenceCount(output));
+        if (!output.limitations().isEmpty()) {
+            lines.add(tr ? "Sınırlılıklar:" : "Limitations:");
+            output.limitations()
+                    .forEach(
+                            limitation ->
+                                    lines.add("  - " + safe("inferenceLimitation", limitation)));
+        }
+        lines.add(label(tr, "Kullanılan kanıt", "Evidence used") + output.usedEvidenceIds().size());
         lines.add(label(tr, "Süre", "Duration") + Math.max(0, elapsed.toMillis()) + " ms");
         lines.add(
                 label(tr, "Kaynak", "Source")
-                        + (tr ? "Yerel JVM modeli " : "Local JVM model ")
+                        + (tr ? "Deneysel yerel JVM modeli " : "Experimental local JVM model ")
                         + safe("modelName", model.displayName())
                         + " "
                         + safe("modelVersion", model.version())
                         + " | "
-                        + (tr ? "Ağ devre dışı" : "Network disabled"));
+                        + (tr
+                                ? "StackMate harici ağ çağrısı yapmadı"
+                                : "StackMate made no external network call"));
         return format(lines, options);
-    }
-
-    private static int evidenceCount(ValidatedInferenceOutput output) {
-        Set<String> facts = new HashSet<>();
-        output.causes().forEach(cause -> facts.addAll(cause.factIds()));
-        output.checks().forEach(check -> facts.addAll(check.factIds()));
-        return facts.size();
     }
 
     private String safe(String field, String value) {

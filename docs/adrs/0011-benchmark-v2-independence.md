@@ -39,4 +39,3 @@ development and holdout sets. Historical V1 results are not overwritten.
 - Reuse analyzer constants in fixtures: creates direct alignment and hides ID drift.
 - Keep only synthetic throwables: fast but insufficient evidence for real framework wrapper behavior.
 - Modify holdout cases after seeing failures: invalidates the holdout.
-

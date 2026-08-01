@@ -242,3 +242,44 @@ extractions. Detailed case output and metric semantics are in `docs/benchmark-v2
 
 Redesign inference schema and prompts so the local model can only explain and rank deterministic facts. Then add the
 evidence-aware policy; deterministic V2 gaps remain visible and will not be hidden by model output.
+
+## Phase 4 - reduced model authority and evidence-aware triggering
+
+Status: completed
+
+### Completed work
+
+- Replaced the experimental inference contract with schema version 2. Category, evidence strength, facts, candidate
+  causes/checks, and application locations are deterministic inputs; the model can return only bounded prose,
+  limitations, and selections of supplied IDs.
+- Removed model-authored `StructuredCause`, `StructuredCheck`, and `SourceLocation` output types. Added a migration note
+  and ADR 0012 because this intentionally breaks the pre-release experimental SPI.
+- Added strict request-scoped validation for schema/language, unknown and unsupported IDs, source-like references,
+  technical identifiers, secrets, terminal controls, Markdown fences, destructive commands, unsupported claims, and
+  output bounds.
+- Added separate natural English and Turkish versioned system and repair prompt resources. Incident and previous-output
+  content remain explicitly delimited and normalized as untrusted data.
+- Added `NEVER`, `ALWAYS`, and `WHEN_ENHANCEMENT_IS_USEFUL` trigger policies. The default runs only for non-fallback
+  `MEDIUM` evidence, before executor submission; `HIGH`, `LOW`, `UNKNOWN`, and fallback diagnoses skip inference.
+- Isolated H2 benchmark recipes with unique per-execution database names after a repeated module run exposed shared
+  in-memory state between the evaluation and recipe suites. The frozen manifest and its hash did not change.
+
+### Verification so far
+
+| Command | Result |
+|---|---|
+| Clean affected test compilation | Success after updating stale schema-V1 tests |
+| Inference API tests | 27 passed, 0 failures/errors/skips |
+| JVM inference tests | 26 passed, 0 failures/errors/skips |
+| Spring policy/configuration focused tests | 13 passed, 0 failures/errors/skips |
+| Benchmark module plus dependencies | Success in 18.256 s; benchmark module 62 tests passed |
+| Packaged schema-V2 fake-child verification | Success in 46.469 s; 11 Failsafe tests passed in 29.215 s |
+
+The first repeated benchmark-module run failed six H2 cases because `DB_CLOSE_DELAY=-1` preserved databases with names
+derived only from recipe IDs. A monotonic execution suffix now makes the test recipes independent of suite order and
+repeat execution.
+
+### Next phase
+
+Continue with focused deterministic hardening based on the frozen V2 failure classifications, then rerun V2 without
+changing its ground truth.

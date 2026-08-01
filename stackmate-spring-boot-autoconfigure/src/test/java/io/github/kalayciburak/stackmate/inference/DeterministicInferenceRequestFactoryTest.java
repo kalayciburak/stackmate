@@ -41,14 +41,33 @@ class DeterministicInferenceRequestFactoryTest {
 
         assertThat(totalCharacters(request)).isLessThanOrEqualTo(300);
         assertThat(request.language()).isEqualTo(InferenceLanguage.TURKISH);
+        assertThat(request.schemaVersion()).isEqualTo("2");
+        assertThat(request.promptVersion()).isEqualTo("2");
+        assertThat(request.incident().category())
+                .isEqualTo(result.diagnosis().causes().getFirst().category());
+        assertThat(request.incident().evidenceStrength())
+                .isEqualTo(result.diagnosis().causes().getFirst().strength());
         assertThat(request.maximumOutputCharacters()).isEqualTo(512);
         assertThat(request.facts()).isNotEmpty();
         assertThat(request.facts())
                 .extracting(InferenceFact::id)
                 .allMatch(id -> id.matches("[a-z0-9._-]+"));
-        assertThat(request.sourceLocations())
-                .extracting(SourceLocation::id)
-                .allMatch(id -> id.matches("source\\.app\\.\\d+"));
+        assertThat(request.facts())
+                .filteredOn(fact -> fact.type().equals("APPLICATION_LOCATION"))
+                .extracting(InferenceFact::value)
+                .contains("example.OrderService#create(OrderService.java:42)");
+        assertThat(request.candidateCauses())
+                .allSatisfy(
+                        cause ->
+                                assertThat(request.facts())
+                                        .extracting(InferenceFact::id)
+                                        .containsAll(cause.evidenceIds()));
+        assertThat(request.candidateChecks())
+                .allSatisfy(
+                        check ->
+                                assertThat(request.facts())
+                                        .extracting(InferenceFact::id)
+                                        .containsAll(check.evidenceIds()));
         assertThat(request.toString())
                 .doesNotContain("private-value")
                 .doesNotContain("headers")
@@ -58,28 +77,23 @@ class DeterministicInferenceRequestFactoryTest {
     private static int totalCharacters(InferenceRequest request) {
         int total =
                 request.facts().stream()
-                        .mapToInt(fact -> fact.id().length() + fact.text().length())
-                        .sum();
-        total +=
-                request.causes().stream()
                         .mapToInt(
-                                cause ->
-                                        cause.id().length()
-                                                + cause.title().length()
-                                                + cause.explanation().length())
+                                fact ->
+                                        fact.id().length()
+                                                + fact.type().length()
+                                                + fact.value().length())
                         .sum();
         total +=
-                request.checks().stream()
-                        .mapToInt(check -> check.id().length() + check.instruction().length())
+                request.candidateCauses().stream()
+                        .mapToInt(cause -> cause.id().length() + cause.text().length())
                         .sum();
         total +=
-                request.sourceLocations().stream()
-                        .mapToInt(
-                                source ->
-                                        source.id().length()
-                                                + source.className().length()
-                                                + source.methodName().length()
-                                                + source.fileName().length())
+                request.candidateChecks().stream()
+                        .mapToInt(check -> check.id().length() + check.text().length())
+                        .sum();
+        total +=
+                request.terminology().stream()
+                        .mapToInt(term -> term.term().length() + term.definition().length())
                         .sum();
         return total;
     }

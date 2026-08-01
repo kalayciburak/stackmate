@@ -9,8 +9,6 @@ import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
 import io.github.kalayciburak.stackmate.inference.ModelCapabilities;
 import io.github.kalayciburak.stackmate.inference.ModelDescriptor;
-import io.github.kalayciburak.stackmate.inference.StructuredCause;
-import io.github.kalayciburak.stackmate.inference.StructuredCheck;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ class LocalModelBenchmarkHarnessTest {
                 .filteredOn(request -> request.id().startsWith("raw-case-"))
                 .allSatisfy(
                         request -> {
-                            assertThat(request.checks()).isEmpty();
+                            assertThat(request.candidateChecks()).isEmpty();
                             assertThat(request.facts())
                                     .singleElement()
                                     .satisfies(
@@ -68,27 +66,22 @@ class LocalModelBenchmarkHarnessTest {
         @Override
         public InferenceResult infer(InferenceRequest request) {
             requests.add(request);
-            List<StructuredCause> causes =
-                    request.causes().isEmpty()
-                            ? List.of()
-                            : List.of(
-                                    new StructuredCause(
-                                            request.causes().getFirst().id(),
-                                            request.causes().getFirst().explanation(),
-                                            request.causes().getFirst().factIds(),
-                                            List.of()));
-            List<StructuredCheck> checks =
-                    request.checks().isEmpty()
-                            ? List.of()
-                            : List.of(
-                                    new StructuredCheck(
-                                            request.checks().getFirst().id(),
-                                            request.checks().getFirst().instruction(),
-                                            request.checks().getFirst().factIds(),
-                                            List.of()));
             return new InferenceResult.Success(
                     new StructuredInferenceOutput(
-                            request.language(), request.facts().getFirst().text(), causes, checks),
+                            "2",
+                            request.language(),
+                            request.facts().getFirst().value(),
+                            "The explanation uses only the supplied facts.",
+                            request.candidateCauses().stream()
+                                    .limit(1)
+                                    .map(cause -> cause.id())
+                                    .toList(),
+                            request.candidateChecks().stream()
+                                    .limit(1)
+                                    .map(check -> check.id())
+                                    .toList(),
+                            List.of(request.facts().getFirst().id()),
+                            List.of()),
                     Duration.ofMillis(1));
         }
 

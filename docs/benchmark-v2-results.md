@@ -91,4 +91,3 @@ $env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
 ```
 
 Result: build success in 8.693 seconds; one evaluator test passed after executing 80 cases and writing both reports.
-

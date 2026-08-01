@@ -1,13 +1,9 @@
 package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.kalayciburak.stackmate.inference.InferenceCauseCandidate;
-import io.github.kalayciburak.stackmate.inference.InferenceCheckCandidate;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
 import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
-import io.github.kalayciburak.stackmate.inference.StructuredCause;
-import io.github.kalayciburak.stackmate.inference.StructuredCheck;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -75,43 +71,33 @@ public final class SampleFakeInferenceChildMain {
                 scenario.contains("fakeunknownevidence")
                         ? List.of("fact.unknown")
                         : List.of(fact.id());
-        List<String> sourceIds =
-                request.sourceLocations().isEmpty()
-                        ? List.of()
-                        : List.of(request.sourceLocations().getFirst().id());
         String summary =
                 scenario.contains("fakefabricatedsource")
                         ? "Inspect InventedSource.java:42 before continuing."
                         : request.language() == InferenceLanguage.TURKISH
                                 ? "Bu hata yalnızca sağlanan kanıtlarla açıklanmıştır."
                                 : "This failure is explained only by the supplied evidence.";
-        List<StructuredCause> causes =
-                request.causes().isEmpty()
+        String explanation =
+                request.language() == InferenceLanguage.TURKISH
+                        ? "Yalnızca deterministik adaylar önceliklendirilmiştir."
+                        : "Only deterministic candidates were prioritized.";
+        List<String> causes =
+                request.candidateCauses().isEmpty()
                         ? List.of()
-                        : List.of(cause(request.causes().getFirst(), factIds, sourceIds));
-        List<StructuredCheck> checks =
-                request.checks().isEmpty()
+                        : List.of(request.candidateCauses().getFirst().id());
+        List<String> checks =
+                request.candidateChecks().isEmpty()
                         ? List.of()
-                        : List.of(check(request.checks().getFirst(), factIds, sourceIds));
-        return new StructuredInferenceOutput(request.language(), summary, causes, checks);
-    }
-
-    private static StructuredCause cause(
-            InferenceCauseCandidate candidate, List<String> factIds, List<String> sourceIds) {
-        return new StructuredCause(
-                candidate.id(),
-                "The supplied cause is supported by the selected evidence.",
+                        : List.of(request.candidateChecks().getFirst().id());
+        return new StructuredInferenceOutput(
+                request.schemaVersion(),
+                request.language(),
+                summary,
+                explanation,
+                causes,
+                checks,
                 factIds,
-                sourceIds);
-    }
-
-    private static StructuredCheck check(
-            InferenceCheckCandidate candidate, List<String> factIds, List<String> sourceIds) {
-        return new StructuredCheck(
-                candidate.id(),
-                "Check the supplied candidate before changing application behavior.",
-                factIds,
-                sourceIds);
+                List.of());
     }
 
     private static void write(

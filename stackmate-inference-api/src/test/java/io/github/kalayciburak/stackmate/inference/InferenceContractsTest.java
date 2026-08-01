@@ -3,6 +3,8 @@ package io.github.kalayciburak.stackmate.inference;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.github.kalayciburak.stackmate.analysis.DiagnosticCategory;
+import io.github.kalayciburak.stackmate.analysis.DiagnosticStrength;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -24,41 +26,57 @@ class InferenceContractsTest {
     }
 
     @Test
-    void requestRejectsUnknownAndDuplicateReferences() {
+    void requestRejectsUnknownDuplicateAndWrongSchemaReferences() {
         assertThatThrownBy(
                         () ->
                                 new InferenceRequest(
+                                        "1",
+                                        InferenceRequest.PROMPT_VERSION,
                                         "request.one",
                                         InferenceLanguage.ENGLISH,
-                                        List.of(
-                                                new InferenceFact(
-                                                        "fact.one",
-                                                        "A fact",
-                                                        List.of("src.missing"))),
+                                        incident(),
+                                        List.of(fact()),
                                         List.of(),
                                         List.of(),
-                                        List.of(location()),
+                                        List.of(),
                                         1_000))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("unknown source location");
+                .hasMessageContaining("schemaVersion");
 
         assertThatThrownBy(
                         () ->
                                 new InferenceRequest(
+                                        InferenceRequest.SCHEMA_VERSION,
+                                        InferenceRequest.PROMPT_VERSION,
                                         "request.one",
                                         InferenceLanguage.ENGLISH,
+                                        incident(),
                                         List.of(fact(), fact()),
                                         List.of(),
                                         List.of(),
-                                        List.of(location()),
+                                        List.of(),
                                         1_000))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("fact IDs must be unique");
+
+        assertThatThrownBy(
+                        () ->
+                                request(
+                                        List.of(fact()),
+                                        List.of(
+                                                new InferenceCauseCandidate(
+                                                        "cause.one",
+                                                        "Cause",
+                                                        List.of("fact.missing")))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("unknown cause evidence");
     }
 
     @Test
-    void requestEnforcesStableIdsAndBounds() {
-        assertThatThrownBy(() -> new InferenceFact("BAD ID", "fact", List.of()))
+    void requestEnforcesStableIdsFactTypesAndBounds() {
+        assertThatThrownBy(() -> new InferenceFact("BAD ID", "SQL_STATE", "23505"))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new InferenceFact("fact.one", "sql state", "23505"))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> request(List.of(fact()), 0))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -67,7 +85,9 @@ class InferenceContractsTest {
                                 request(
                                         List.of(
                                                 new InferenceFact(
-                                                        "fact.one", "x".repeat(2_049), List.of())),
+                                                        "fact.one",
+                                                        "SANITIZED_MESSAGE",
+                                                        "x".repeat(2_049))),
                                         1_000))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -89,7 +109,14 @@ class InferenceContractsTest {
     void resultSeparatesUntrustedSuccessFromFailure() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
-                        InferenceLanguage.ENGLISH, "Summary", List.of(), List.of());
+                        "2",
+                        InferenceLanguage.ENGLISH,
+                        "Summary",
+                        "Explanation",
+                        List.of(),
+                        List.of(),
+                        List.of("fact.one"),
+                        List.of());
         InferenceResult success = new InferenceResult.Success(output, Duration.ZERO);
         InferenceResult failure =
                 new InferenceResult.Failed(
@@ -116,23 +143,40 @@ class InferenceContractsTest {
     private static InferenceRequest request(
             List<InferenceFact> facts, int maximumOutputCharacters) {
         return new InferenceRequest(
+                InferenceRequest.SCHEMA_VERSION,
+                InferenceRequest.PROMPT_VERSION,
                 "request.one",
                 InferenceLanguage.ENGLISH,
+                incident(),
                 facts,
-                List.of(
-                        new InferenceCauseCandidate(
-                                "cause.one", "Cause", "Explanation", List.of("fact.one"))),
+                List.of(new InferenceCauseCandidate("cause.one", "Cause", List.of("fact.one"))),
                 List.of(new InferenceCheckCandidate("check.one", "Check it", List.of("fact.one"))),
-                List.of(location()),
+                List.of(new InferenceTerminology("constraint", "A database integrity rule")),
                 maximumOutputCharacters);
     }
 
-    private static InferenceFact fact() {
-        return new InferenceFact("fact.one", "Captured failure", List.of("source.one"));
+    private static InferenceRequest request(
+            List<InferenceFact> facts, List<InferenceCauseCandidate> causes) {
+        return new InferenceRequest(
+                InferenceRequest.SCHEMA_VERSION,
+                InferenceRequest.PROMPT_VERSION,
+                "request.one",
+                InferenceLanguage.ENGLISH,
+                incident(),
+                facts,
+                causes,
+                List.of(),
+                List.of(),
+                1_000);
     }
 
-    private static SourceLocation location() {
-        return new SourceLocation("source.one", "example.Service", "run", "Service.java", 12);
+    private static InferenceFact fact() {
+        return new InferenceFact("fact.one", "SQL_STATE", "23505");
+    }
+
+    private static InferenceIncident incident() {
+        return new InferenceIncident(
+                DiagnosticCategory.DATABASE_CONSTRAINT, DiagnosticStrength.HIGH);
     }
 
     private static ModelDescriptor descriptor(ModelCapabilities capabilities) {

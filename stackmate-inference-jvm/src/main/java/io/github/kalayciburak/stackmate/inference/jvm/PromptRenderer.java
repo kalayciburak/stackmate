@@ -2,6 +2,7 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,14 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 final class PromptRenderer {
-    static final String VERSION = "v2";
-    private static final String RESOURCE =
-            "/io/github/kalayciburak/stackmate/inference/jvm/prompts/" + VERSION + "/system.txt";
-    private static final String REPAIR_RESOURCE =
-            "/io/github/kalayciburak/stackmate/inference/jvm/prompts/" + VERSION + "/repair.txt";
-    private static final String SYSTEM_PROMPT = loadSystemPrompt();
-    private static final String REPAIR_PROMPT =
-            loadPrompt(REPAIR_RESOURCE, "Return exactly one JSON object");
+    static final String VERSION = InferenceRequest.PROMPT_VERSION;
+    private static final String BASE =
+            "/io/github/kalayciburak/stackmate/inference/jvm/prompts/schema-v2/";
+    private static final String ENGLISH_SYSTEM = loadPrompt("en/system.txt", "Required schema");
+    private static final String TURKISH_SYSTEM = loadPrompt("tr/system.txt", "Zorunlu şema");
+    private static final String ENGLISH_REPAIR =
+            loadPrompt("en/repair.txt", "Return exactly one JSON object");
+    private static final String TURKISH_REPAIR =
+            loadPrompt("tr/repair.txt", "Yalnızca tek bir JSON nesnesi döndür");
 
     private final ObjectMapper mapper;
 
@@ -24,54 +26,53 @@ final class PromptRenderer {
         this.mapper = mapper;
     }
 
-    String systemPrompt() {
-        return SYSTEM_PROMPT;
+    String systemPrompt(InferenceLanguage language) {
+        return language == InferenceLanguage.TURKISH ? TURKISH_SYSTEM : ENGLISH_SYSTEM;
     }
 
     String userPrompt(InferenceRequest request) {
         PromptInput input =
                 new PromptInput(
-                        VERSION,
-                        request.id(),
+                        request.schemaVersion(),
+                        request.promptVersion(),
                         request.language().name(),
+                        new Incident(
+                                request.incident().category().name(),
+                                request.incident().evidenceStrength().name()),
                         request.facts().stream()
                                 .map(
                                         fact ->
                                                 new Fact(
                                                         fact.id(),
-                                                        normalize(fact.text()),
-                                                        fact.sourceLocationIds()))
+                                                        normalize(fact.type()),
+                                                        normalize(fact.value())))
                                 .toList(),
-                        request.causes().stream()
+                        request.candidateCauses().stream()
                                 .map(
                                         cause ->
-                                                new Cause(
+                                                new Candidate(
                                                         cause.id(),
-                                                        normalize(cause.title()),
-                                                        normalize(cause.explanation()),
-                                                        cause.factIds()))
+                                                        normalize(cause.text()),
+                                                        cause.evidenceIds()))
                                 .toList(),
-                        request.checks().stream()
+                        request.candidateChecks().stream()
                                 .map(
                                         check ->
-                                                new Check(
+                                                new Candidate(
                                                         check.id(),
-                                                        normalize(check.instruction()),
-                                                        check.factIds()))
+                                                        normalize(check.text()),
+                                                        check.evidenceIds()))
                                 .toList(),
-                        request.sourceLocations().stream()
+                        request.terminology().stream()
                                 .map(
-                                        location ->
-                                                new Location(
-                                                        location.id(),
-                                                        normalize(location.className()),
-                                                        normalize(location.methodName()),
-                                                        normalize(location.fileName()),
-                                                        location.lineNumber()))
+                                        term ->
+                                                new Term(
+                                                        normalize(term.term()),
+                                                        normalize(term.definition())))
                                 .toList());
         try {
-            return "<STACKMATE_UNTRUSTED_INCIDENT version=\""
-                    + VERSION
+            return "<STACKMATE_UNTRUSTED_INCIDENT schemaVersion=\""
+                    + request.schemaVersion()
                     + "\">\n"
                     + mapper.writeValueAsString(input)
                     + "\n</STACKMATE_UNTRUSTED_INCIDENT>";
@@ -81,8 +82,8 @@ final class PromptRenderer {
         }
     }
 
-    String repairSystemPrompt() {
-        return REPAIR_PROMPT;
+    String repairSystemPrompt(InferenceLanguage language) {
+        return language == InferenceLanguage.TURKISH ? TURKISH_REPAIR : ENGLISH_REPAIR;
     }
 
     String repairUserPrompt(InferenceRequest request, String previousOutput) {
@@ -123,11 +124,8 @@ final class PromptRenderer {
         return result.toString();
     }
 
-    private static String loadSystemPrompt() {
-        return loadPrompt(RESOURCE, "Required top-level keys");
-    }
-
-    private static String loadPrompt(String resource, String requiredText) {
+    private static String loadPrompt(String relative, String requiredText) {
+        String resource = BASE + relative;
         try (InputStream input = PromptRenderer.class.getResourceAsStream(resource)) {
             if (input == null) {
                 throw new ExceptionInInitializerError(
@@ -145,20 +143,20 @@ final class PromptRenderer {
     }
 
     private record PromptInput(
+            String schemaVersion,
             String promptVersion,
-            String requestId,
             String language,
+            Incident incident,
             List<Fact> facts,
-            List<Cause> causes,
-            List<Check> checks,
-            List<Location> sourceLocations) {}
+            List<Candidate> candidateCauses,
+            List<Candidate> candidateChecks,
+            List<Term> terminology) {}
 
-    private record Fact(String id, String text, List<String> sourceLocationIds) {}
+    private record Incident(String category, String evidenceStrength) {}
 
-    private record Cause(String id, String title, String explanation, List<String> factIds) {}
+    private record Fact(String id, String type, String value) {}
 
-    private record Check(String id, String instruction, List<String> factIds) {}
+    private record Candidate(String id, String text, List<String> evidenceIds) {}
 
-    private record Location(
-            String id, String className, String methodName, String fileName, int lineNumber) {}
+    private record Term(String term, String definition) {}
 }

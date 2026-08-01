@@ -131,7 +131,7 @@ public final class JlamaChildMain {
         PromptContext prompt =
                 promptSupport
                         .builder()
-                        .addSystemMessage(renderer.systemPrompt())
+                        .addSystemMessage(renderer.systemPrompt(request.language()))
                         .addUserMessage(renderer.userPrompt(request))
                         .build();
         int generatedTokens =
@@ -167,7 +167,7 @@ public final class JlamaChildMain {
         PromptContext prompt =
                 promptSupport
                         .builder()
-                        .addSystemMessage(renderer.repairSystemPrompt())
+                        .addSystemMessage(renderer.repairSystemPrompt(request.language()))
                         .addUserMessage(renderer.repairUserPrompt(request, previousOutput))
                         .build();
         int generatedTokens =

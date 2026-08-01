@@ -71,4 +71,3 @@ $env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
 
 The freeze verification passed 56 JUnit invocations: two manifest assertions and 54 parameterized runtime recipes.
 Changing any case requires a new corpus version and manifest digest; it must not be silently edited to improve a score.
-

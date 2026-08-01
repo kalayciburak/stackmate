@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers;
 import io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine;
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
+import io.github.kalayciburak.stackmate.configuration.InferenceTriggerPolicy;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
@@ -93,17 +94,13 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                             calls.incrementAndGet();
                             return new InferenceResult.Success(
                                     new StructuredInferenceOutput(
+                                            "2",
                                             request.language(),
                                             "This local explanation uses supplied evidence.",
-                                            List.of(
-                                                    new StructuredCause(
-                                                            "cause.not-supplied",
-                                                            "This cause is not supplied.",
-                                                            List.of(
-                                                                    request.facts()
-                                                                            .getFirst()
-                                                                            .id()),
-                                                            List.of())),
+                                            "It selects only supplied candidates.",
+                                            List.of("cause.not-supplied"),
+                                            List.of(),
+                                            List.of(request.facts().getFirst().id()),
                                             List.of()),
                                     Duration.ofMillis(3));
                         });
@@ -269,11 +266,17 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
     private static InferenceResult success(InferenceRequest request) {
         return new InferenceResult.Success(
                 new StructuredInferenceOutput(
+                        "2",
                         request.language(),
                         request.language() == InferenceLanguage.TURKISH
                                 ? "Bu hata için yerel açıklama üretildi."
                                 : "This local explanation uses supplied evidence.",
+                        request.language() == InferenceLanguage.TURKISH
+                                ? "Açıklama yalnızca sağlanan kanıta dayanır."
+                                : "The explanation uses only supplied evidence.",
                         List.of(),
+                        List.of(),
+                        List.of(request.facts().getFirst().id()),
                         List.of()),
                 Duration.ofMillis(5));
     }
@@ -281,6 +284,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
     private static StackMateProperties properties() {
         StackMateProperties properties = new StackMateProperties();
         properties.setMode(StackMateProperties.Mode.HYBRID);
+        properties.getInference().setTriggerPolicy(InferenceTriggerPolicy.ALWAYS);
         properties.getInference().getExecutor().setThreads(1);
         properties.getInference().getExecutor().setQueueCapacity(1);
         return properties;

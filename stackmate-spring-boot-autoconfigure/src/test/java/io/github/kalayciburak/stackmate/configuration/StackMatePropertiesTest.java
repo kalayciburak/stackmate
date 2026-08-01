@@ -35,6 +35,8 @@ class StackMatePropertiesTest {
         assertThat(properties.getPrivacy().isPiiRedaction()).isTrue();
         assertThat(properties.getPrivacy().getCustomRedactionPatterns()).isEmpty();
         assertThat(properties.getInference().isEnabled()).isTrue();
+        assertThat(properties.getInference().getTriggerPolicy())
+                .isEqualTo(InferenceTriggerPolicy.WHEN_ENHANCEMENT_IS_USEFUL);
         assertThat(properties.getInference().getEngine())
                 .isEqualTo(InferenceProperties.Engine.AUTO);
         assertThat(properties.getInference().getDeployment())
@@ -85,6 +87,7 @@ class StackMatePropertiesTest {
                                 Map.entry("stackmate.diagnostics.maximum-cause-depth", "12"),
                                 Map.entry("stackmate.privacy.pii-redaction", "false"),
                                 Map.entry("stackmate.inference.timeout", "3s"),
+                                Map.entry("stackmate.inference.trigger-policy", "always"),
                                 Map.entry("stackmate.inference.executor.threads", "1"),
                                 Map.entry("stackmate.inference.circuit-breaker.cooldown", "30s"),
                                 Map.entry("stackmate.deduplication.ttl", "2m"),
@@ -102,6 +105,8 @@ class StackMatePropertiesTest {
         assertThat(properties.getDiagnostics().getMaximumCauseDepth()).isEqualTo(12);
         assertThat(properties.getPrivacy().isPiiRedaction()).isFalse();
         assertThat(properties.getInference().getTimeout()).isEqualTo(Duration.ofSeconds(3));
+        assertThat(properties.getInference().getTriggerPolicy())
+                .isEqualTo(InferenceTriggerPolicy.ALWAYS);
         assertThat(properties.getInference().getExecutor().getThreads()).isEqualTo(1);
         assertThat(properties.getInference().getCircuitBreaker().getCooldown())
                 .isEqualTo(Duration.ofSeconds(30));

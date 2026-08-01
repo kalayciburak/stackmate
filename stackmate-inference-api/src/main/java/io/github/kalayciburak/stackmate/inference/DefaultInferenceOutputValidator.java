@@ -4,16 +4,15 @@ import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
 import io.github.kalayciburak.stackmate.privacy.SanitizerConfig;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Default bounded validator for model-produced structured output. */
+/** Default bounded validator for evidence-only model explanations. */
 public final class DefaultInferenceOutputValidator implements InferenceOutputValidator {
 
     private static final List<String> DEFAULT_FORBIDDEN_CLAIMS =
@@ -24,7 +23,13 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     "kesin kök neden",
                     "garanti kök neden",
                     "ignore previous instructions",
-                    "system prompt");
+                    "system prompt",
+                    "source code was inspected",
+                    "repository was inspected",
+                    "kaynak kodu inceledim",
+                    "depoyu inceledim",
+                    "network access",
+                    "internet access");
     private static final Pattern NUMERIC_CONFIDENCE =
             Pattern.compile("(?iu)(confidence|güven(?:\\s+puanı)?)\\s*[:=]?\\s*\\d");
     private static final Pattern FILE_AND_LINE =
@@ -35,6 +40,18 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
     private static final Pattern QUALIFIED_CLASS =
             Pattern.compile(
                     "(?<![\\p{L}\\p{N}_$])(?:[a-z_][\\p{L}\\p{N}_$]*\\.)+[A-Z][\\p{L}\\p{N}_$]*(?![\\p{L}\\p{N}_$])");
+    private static final Pattern SOURCE_FILE =
+            Pattern.compile(
+                    "(?<![\\p{L}\\p{N}_$.-])[\\p{L}\\p{N}_$.-]+\\.java(?![\\p{L}\\p{N}_$.-])");
+    private static final Pattern SNAKE_IDENTIFIER =
+            Pattern.compile(
+                    "(?<![\\p{L}\\p{N}_])(?:[a-z][a-z0-9]*_){1,}[a-z0-9]+(?![\\p{L}\\p{N}_])");
+    private static final Pattern TECHNICAL_CAMEL_IDENTIFIER =
+            Pattern.compile(
+                    "(?<![\\p{L}\\p{N}_$])[A-Z][\\p{L}\\p{N}_$]*(?:Controller|Service|Repository|Exception)(?![\\p{L}\\p{N}_$])");
+    private static final Pattern DESTRUCTIVE_COMMAND =
+            Pattern.compile(
+                    "(?iu)(?:rm\\s+-rf|remove-item(?:\\s+-recurse)?|drop\\s+(?:table|database)|format\\s+[a-z]:|del\\s+/[sfq]|shutdown\\s+(?:/s|-h))");
     private static final Set<String> ENGLISH_MARKERS =
             Set.of(
                     "a",
@@ -85,9 +102,7 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
         this(DEFAULT_FORBIDDEN_CLAIMS, defaultOutputSanitizer());
     }
 
-    /**
-     * Creates a validator with the default claim policy and an application-configured sanitizer.
-     */
+    /** Creates a validator with the default claim policy and a configured sanitizer. */
     public DefaultInferenceOutputValidator(Sanitizer sanitizer) {
         this(DEFAULT_FORBIDDEN_CLAIMS, sanitizer);
     }
@@ -115,12 +130,20 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
         Objects.requireNonNull(request, "request");
         Objects.requireNonNull(output, "output");
         List<OutputValidationIssue> issues = new ArrayList<>();
-        Map<String, InferenceCauseCandidate> causes = indexCauses(request.causes());
-        Map<String, InferenceCheckCandidate> checks = indexChecks(request.checks());
+        Set<String> causes =
+                ids(request.candidateCauses().stream().map(InferenceCauseCandidate::id).toList());
+        Set<String> checks =
+                ids(request.candidateChecks().stream().map(InferenceCheckCandidate::id).toList());
         Set<String> facts = ids(request.facts().stream().map(InferenceFact::id).toList());
-        Set<String> locations =
-                ids(request.sourceLocations().stream().map(SourceLocation::id).toList());
+        String allowedText = allowedText(request);
 
+        if (!output.schemaVersion().equals(request.schemaVersion())) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.UNKNOWN_SCHEMA_VERSION,
+                    "schemaVersion",
+                    "output schema version does not match the request");
+        }
         if (output.language() != request.language()) {
             issue(
                     issues,
@@ -128,65 +151,41 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     "language",
                     "output language does not match the request");
         }
-        validateText(output.summary(), "summary", request, issues);
-        validateDuplicateSelections(
-                output.causes().stream().map(StructuredCause::causeId).toList(), "causes", issues);
-        validateDuplicateSelections(
-                output.checks().stream().map(StructuredCheck::checkId).toList(), "checks", issues);
+        validateReferences(
+                output.selectedCauseIds(),
+                causes,
+                "selectedCauseIds",
+                OutputValidationIssue.Code.UNKNOWN_CAUSE_ID,
+                "cause ID was not supplied",
+                issues);
+        validateReferences(
+                output.selectedCheckIds(),
+                checks,
+                "selectedCheckIds",
+                OutputValidationIssue.Code.UNKNOWN_CHECK_ID,
+                "check ID was not supplied",
+                issues);
+        validateReferences(
+                output.usedEvidenceIds(),
+                facts,
+                "usedEvidenceIds",
+                OutputValidationIssue.Code.UNKNOWN_FACT_ID,
+                "evidence ID was not supplied",
+                issues);
+        validateDuplicateSelections(output.selectedCauseIds(), "selectedCauseIds", issues);
+        validateDuplicateSelections(output.selectedCheckIds(), "selectedCheckIds", issues);
+        validateDuplicateSelections(output.usedEvidenceIds(), "usedEvidenceIds", issues);
+        validateCandidateSupport(request, output, issues);
 
-        for (int index = 0; index < output.causes().size(); index++) {
-            StructuredCause cause = output.causes().get(index);
-            String path = "causes[" + index + "]";
-            InferenceCauseCandidate candidate = causes.get(cause.causeId());
-            if (candidate == null) {
-                issue(
-                        issues,
-                        OutputValidationIssue.Code.UNKNOWN_CAUSE_ID,
-                        path + ".causeId",
-                        "cause ID was not supplied");
-            }
-            validateReferences(cause.factIds(), facts, path + ".factIds", issues, true);
-            validateReferences(
-                    cause.sourceLocationIds(),
-                    locations,
-                    path + ".sourceLocationIds",
-                    issues,
-                    false);
-            if (candidate != null && !candidate.factIds().containsAll(cause.factIds())) {
-                issue(
-                        issues,
-                        OutputValidationIssue.Code.UNSUPPORTED_REFERENCE,
-                        path + ".factIds",
-                        "cause references a fact that does not support the supplied candidate");
-            }
-            validateText(cause.explanation(), path + ".explanation", request, issues);
-        }
-        for (int index = 0; index < output.checks().size(); index++) {
-            StructuredCheck check = output.checks().get(index);
-            String path = "checks[" + index + "]";
-            InferenceCheckCandidate candidate = checks.get(check.checkId());
-            if (candidate == null) {
-                issue(
-                        issues,
-                        OutputValidationIssue.Code.UNKNOWN_CHECK_ID,
-                        path + ".checkId",
-                        "check ID was not supplied");
-            }
-            validateReferences(check.factIds(), facts, path + ".factIds", issues, true);
-            validateReferences(
-                    check.sourceLocationIds(),
-                    locations,
-                    path + ".sourceLocationIds",
-                    issues,
-                    false);
-            if (candidate != null && !candidate.factIds().containsAll(check.factIds())) {
-                issue(
-                        issues,
-                        OutputValidationIssue.Code.UNSUPPORTED_REFERENCE,
-                        path + ".factIds",
-                        "check references a fact that does not support the supplied candidate");
-            }
-            validateText(check.instruction(), path + ".instruction", request, issues);
+        validateText(output.summary(), "summary", request, allowedText, issues);
+        validateText(output.explanation(), "explanation", request, allowedText, issues);
+        for (int index = 0; index < output.limitations().size(); index++) {
+            validateText(
+                    output.limitations().get(index),
+                    "limitations[" + index + "]",
+                    request,
+                    allowedText,
+                    issues);
         }
         if (outputCharacters(output) > request.maximumOutputCharacters()) {
             issue(
@@ -196,15 +195,43 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     "output exceeds the request limit");
         }
         if (issues.isEmpty()) {
-            return new OutputValidationResult.Valid(new ValidatedInferenceOutput(output));
+            return new OutputValidationResult.Valid(new ValidatedInferenceOutput(request, output));
         }
         return new OutputValidationResult.Invalid(issues);
+    }
+
+    private void validateCandidateSupport(
+            InferenceRequest request,
+            StructuredInferenceOutput output,
+            List<OutputValidationIssue> issues) {
+        Set<String> used = Set.copyOf(output.usedEvidenceIds());
+        request.candidateCauses().stream()
+                .filter(candidate -> output.selectedCauseIds().contains(candidate.id()))
+                .filter(candidate -> candidate.evidenceIds().stream().noneMatch(used::contains))
+                .forEach(
+                        candidate ->
+                                issue(
+                                        issues,
+                                        OutputValidationIssue.Code.UNSUPPORTED_REFERENCE,
+                                        "selectedCauseIds",
+                                        "selected cause has no used supporting evidence"));
+        request.candidateChecks().stream()
+                .filter(candidate -> output.selectedCheckIds().contains(candidate.id()))
+                .filter(candidate -> candidate.evidenceIds().stream().noneMatch(used::contains))
+                .forEach(
+                        candidate ->
+                                issue(
+                                        issues,
+                                        OutputValidationIssue.Code.UNSUPPORTED_REFERENCE,
+                                        "selectedCheckIds",
+                                        "selected check has no used supporting evidence"));
     }
 
     private void validateText(
             String text,
             String path,
             InferenceRequest request,
+            String allowedText,
             List<OutputValidationIssue> issues) {
         if (containsUnsafeControlCharacter(text)) {
             issue(
@@ -220,12 +247,33 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     path,
                     "text contains sensitive or unsafe data");
         }
-        if (containsFabricatedSourceReference(text, request.sourceLocations())) {
+        if (text.contains("```")) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.MARKDOWN_FENCE,
+                    path,
+                    "text contains a Markdown fence");
+        }
+        if (DESTRUCTIVE_COMMAND.matcher(text).find()) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.DESTRUCTIVE_COMMAND,
+                    path,
+                    "text contains a destructive command");
+        }
+        if (containsFabricatedSourceReference(text, allowedText)) {
             issue(
                     issues,
                     OutputValidationIssue.Code.FABRICATED_SOURCE_REFERENCE,
                     path,
-                    "text contains a source reference that was not supplied");
+                    "text contains a source reference that was not supplied as evidence");
+        }
+        if (containsFabricatedIdentifier(text, allowedText)) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.FABRICATED_IDENTIFIER,
+                    path,
+                    "text contains a technical identifier that was not supplied");
         }
         String normalized = text.toLowerCase(Locale.ROOT);
         if (forbiddenClaims.stream().anyMatch(normalized::contains)
@@ -245,6 +293,27 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
         }
     }
 
+    private static String allowedText(InferenceRequest request) {
+        StringBuilder text = new StringBuilder();
+        request.facts()
+                .forEach(
+                        fact ->
+                                text.append(fact.type())
+                                        .append(' ')
+                                        .append(fact.value())
+                                        .append(' '));
+        request.candidateCauses().forEach(candidate -> text.append(candidate.text()).append(' '));
+        request.candidateChecks().forEach(candidate -> text.append(candidate.text()).append(' '));
+        request.terminology()
+                .forEach(
+                        term ->
+                                text.append(term.term())
+                                        .append(' ')
+                                        .append(term.definition())
+                                        .append(' '));
+        return text.toString().toLowerCase(Locale.ROOT);
+    }
+
     private static boolean containsUnsafeControlCharacter(String value) {
         return value.codePoints()
                 .anyMatch(
@@ -254,51 +323,26 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                                         && codePoint != '\t');
     }
 
-    private static boolean containsFabricatedSourceReference(
-            String text, List<SourceLocation> sourceLocations) {
-        MatcherIterator fileMatches = new MatcherIterator(FILE_AND_LINE.matcher(text));
-        while (fileMatches.hasNext()) {
-            var match = fileMatches.next();
-            String fileName = match.group(1);
-            int lineNumber = Integer.parseInt(match.group(2));
-            boolean known =
-                    sourceLocations.stream()
-                            .anyMatch(
-                                    location ->
-                                            location.fileName().equals(fileName)
-                                                    && location.lineNumber() == lineNumber);
-            if (!known) {
-                return true;
-            }
-        }
-        MatcherIterator methodMatches = new MatcherIterator(CLASS_AND_METHOD.matcher(text));
-        while (methodMatches.hasNext()) {
-            var match = methodMatches.next();
-            boolean known =
-                    sourceLocations.stream()
-                            .anyMatch(
-                                    location ->
-                                            simpleName(location.className()).equals(match.group(1))
-                                                    && location.methodName()
-                                                            .equals(match.group(2)));
-            if (!known) {
-                return true;
-            }
-        }
-        MatcherIterator classMatches = new MatcherIterator(QUALIFIED_CLASS.matcher(text));
-        while (classMatches.hasNext()) {
-            String className = classMatches.next().group();
-            if (sourceLocations.stream()
-                    .noneMatch(location -> location.className().equals(className))) {
+    private static boolean containsFabricatedSourceReference(String text, String allowedText) {
+        return unknownMatch(FILE_AND_LINE, text, allowedText)
+                || unknownMatch(CLASS_AND_METHOD, text, allowedText)
+                || unknownMatch(QUALIFIED_CLASS, text, allowedText)
+                || unknownMatch(SOURCE_FILE, text, allowedText);
+    }
+
+    private static boolean containsFabricatedIdentifier(String text, String allowedText) {
+        return unknownMatch(SNAKE_IDENTIFIER, text, allowedText)
+                || unknownMatch(TECHNICAL_CAMEL_IDENTIFIER, text, allowedText);
+    }
+
+    private static boolean unknownMatch(Pattern pattern, String text, String allowedText) {
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            if (!allowedText.contains(matcher.group().toLowerCase(Locale.ROOT))) {
                 return true;
             }
         }
         return false;
-    }
-
-    private static String simpleName(String className) {
-        int separator = className.lastIndexOf('.');
-        return separator < 0 ? className : className.substring(separator + 1);
     }
 
     private static Sanitizer defaultOutputSanitizer() {
@@ -312,23 +356,6 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                         defaults.redactPaymentCard(),
                         defaults.sensitiveFieldNames(),
                         defaults.customPatterns()));
-    }
-
-    private static final class MatcherIterator {
-
-        private final java.util.regex.Matcher matcher;
-
-        private MatcherIterator(java.util.regex.Matcher matcher) {
-            this.matcher = matcher;
-        }
-
-        private boolean hasNext() {
-            return matcher.find();
-        }
-
-        private java.util.regex.MatchResult next() {
-            return matcher.toMatchResult();
-        }
     }
 
     private static boolean hasOppositeLanguageOnly(String text, InferenceLanguage expected) {
@@ -354,17 +381,12 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
             List<String> references,
             Set<String> known,
             String path,
-            List<OutputValidationIssue> issues,
-            boolean fact) {
+            OutputValidationIssue.Code code,
+            String message,
+            List<OutputValidationIssue> issues) {
         for (String reference : references) {
             if (!known.contains(reference)) {
-                issue(
-                        issues,
-                        fact
-                                ? OutputValidationIssue.Code.UNKNOWN_FACT_ID
-                                : OutputValidationIssue.Code.UNKNOWN_SOURCE_LOCATION,
-                        path,
-                        fact ? "fact ID was not supplied" : "source location was not supplied");
+                issue(issues, code, path, message);
             }
         }
     }
@@ -380,44 +402,19 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
         }
     }
 
-    private static Map<String, InferenceCauseCandidate> indexCauses(
-            List<InferenceCauseCandidate> values) {
-        Map<String, InferenceCauseCandidate> result = new HashMap<>();
-        values.forEach(value -> result.put(value.id(), value));
-        return result;
-    }
-
-    private static Map<String, InferenceCheckCandidate> indexChecks(
-            List<InferenceCheckCandidate> values) {
-        Map<String, InferenceCheckCandidate> result = new HashMap<>();
-        values.forEach(value -> result.put(value.id(), value));
-        return result;
-    }
-
     private static Set<String> ids(List<String> values) {
         return Set.copyOf(values);
     }
 
     private static int outputCharacters(StructuredInferenceOutput output) {
-        long count = output.summary().length();
-        count +=
-                output.causes().stream()
-                        .mapToLong(
-                                cause ->
-                                        cause.causeId().length()
-                                                + cause.explanation().length()
-                                                + joinedLength(cause.factIds())
-                                                + joinedLength(cause.sourceLocationIds()))
-                        .sum();
-        count +=
-                output.checks().stream()
-                        .mapToLong(
-                                check ->
-                                        check.checkId().length()
-                                                + check.instruction().length()
-                                                + joinedLength(check.factIds())
-                                                + joinedLength(check.sourceLocationIds()))
-                        .sum();
+        long count =
+                output.schemaVersion().length()
+                        + output.summary().length()
+                        + output.explanation().length()
+                        + joinedLength(output.selectedCauseIds())
+                        + joinedLength(output.selectedCheckIds())
+                        + joinedLength(output.usedEvidenceIds())
+                        + joinedLength(output.limitations());
         return count > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) count;
     }
 
