@@ -23,3 +23,16 @@ renamed or overwritten.
 GGUF files and native screening binaries remain ignored, local research inputs. A feasibility artifact cannot enter a
 production catalog without immutable provenance, size, SHA-256, architecture, quantization, license, and Gate A
 evidence. No downloader will be built before that condition is met.
+
+## D5 - Third-party GGUF is a feasibility input only
+
+No official Qwen Q4_K_M repository was available at research time. Pinned Bartowski artifacts may be screened only
+after byte-size and SHA-256 verification. Their cards do not cryptographically bind the conversion to the pinned
+official Qwen revisions, so they cannot become a production `READY` catalog entry on this evidence alone.
+
+## D6 - Use official llama.cpp b10219 for Gate A
+
+The Windows x86_64 CPU archive from release `b10219`, commit
+`c629da565c80b0b17fac6262acdca4d772e745d8`, passed local checksum and version verification. The published
+java-llama.cpp binding was rejected because it embeds llama.cpp `b4916`, predating Qwen3.5 support and relevant GGUF
+parser fixes.

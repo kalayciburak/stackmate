@@ -59,3 +59,45 @@ running after verification and the sample processes.
 Research the exact Qwen3.5 model revisions, GGUF provenance, current llama.cpp support/security floor, and the
 java-llama.cpp embedded revision before adding an isolated screening path.
 
+## Phase 1 - Model and runtime research
+
+Status: completed on 2026-08-01
+
+### Completed work
+
+- Pinned immutable official Qwen3.5-2B and Qwen3.5-4B revisions and confirmed their Apache-2.0 licenses.
+- Confirmed that the official repositories do not publish the required Q4_K_M GGUF artifact.
+- Selected two pinned Bartowski Q4_K_M files strictly as feasibility inputs and recorded expected sizes and hashes.
+- Checked available disk space before model download; approximately 554 GiB was free.
+- Selected official llama.cpp release `b10219` at commit `c629da565c80b0b17fac6262acdca4d772e745d8`.
+- Downloaded its official Windows x86_64 CPU archive into the ignored lab directory, verified SHA-256, and confirmed
+  the executable version.
+- Reviewed official llama.cpp security advisories. The chosen release is above the relevant GGUF parser fixes. The
+  unused RPC backend remains an explicitly excluded upstream risk.
+- Rejected published java-llama.cpp binaries because their embedded llama.cpp `b4916` revision is too old for Qwen3.5
+  and the selected security floor.
+
+### Commands and results
+
+```text
+llama-cli --version
+=> version 10219 (c629da565), Clang 20.1.8, Windows x86_64
+
+Get-FileHash llama-b10219-bin-win-cpu-x64.zip -Algorithm SHA256
+=> 5F3FC78E61D7402F7051C3580159C8A12FF6CB98912E42F4272932E1AFB7F882
+
+Get-PSDrive C
+=> approximately 554 GiB free before model download
+```
+
+### Remaining risks
+
+- The experimental GGUF cards do not prove the exact immutable official upstream revision used during conversion.
+- Only Windows x86_64 has been executed.
+- Native GGUF parsing remains memory-unsafe code even with a patched, pinned runtime.
+- Gate A model quality is not yet known.
+
+### Next phase
+
+Add an isolated Benchmark V2 llama.cpp screening harness that reuses the Phase 2 prompt, schema, sanitizer, and
+semantic output validator without changing Spring production behavior.
