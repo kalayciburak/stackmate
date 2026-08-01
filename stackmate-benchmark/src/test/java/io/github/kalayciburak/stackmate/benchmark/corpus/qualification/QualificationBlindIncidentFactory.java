@@ -45,9 +45,27 @@ public final class QualificationBlindIncidentFactory {
 
     private ThrowableSnapshot ambiguousThrowable(
             QualificationBlindCase benchmarkCase, StackFrameSnapshot frame) {
-        if (!benchmarkCase.recipe().equals("blind.unknown.ambiguous-wrapper")) {
+        if (!benchmarkCase.recipe().equals("blind.unknown.ambiguous-wrapper")
+                && !benchmarkCase.recipe().equals("blind.unknown.capture-metadata")) {
             throw new IllegalArgumentException(
                     "unsupported synthetic blind recipe: " + benchmarkCase.recipe());
+        }
+        if (benchmarkCase.recipe().equals("blind.unknown.capture-metadata")) {
+            ThrowableNode root =
+                    new ThrowableNode(
+                            benchmarkCase.expectedRootType(),
+                            "throwable metadata capture failed",
+                            List.of(frame),
+                            List.of(),
+                            SqlExceptionDetails.none(),
+                            0,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            List.of("throwable.type.unavailable"));
+            return new ThrowableSnapshot(List.of(root), 1, false);
         }
         ThrowableNode wrapper =
                 new ThrowableNode(

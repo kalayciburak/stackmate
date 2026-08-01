@@ -17,7 +17,7 @@ public record QualificationBlindManifest(
         String promptVersion,
         List<QualificationBlindCase> cases) {
 
-    public static final String RESOURCE = "/corpus-phase-5-blind/manifest.json";
+    public static final String RESOURCE = "/corpus-v3-qualification/manifest.json";
 
     public QualificationBlindManifest {
         schemaVersion = exact(schemaVersion, "1", "schemaVersion");

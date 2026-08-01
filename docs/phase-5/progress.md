@@ -29,9 +29,10 @@ packaged Spring integration, and any future provisioning decision remain conditi
   with zero accepted safety violations.
 - Revalidated the ignored Qwen GGUF artifact and pinned the current official llama.cpp `b10223` Windows CPU archive.
 - Reviewed current official model metadata, runtime releases, and published GGUF parser advisories.
-- Froze the independent 20-case blind corpus at commit `b0a104deff769047f4ec7b5dfd60c374bb11c940`: 19 cases execute real
-  runtime/integration recipes and one is a synthetic ambiguity edge case. All pre-model recipe and candidate-input
-  checks pass.
+- Froze the independent 20-case blind corpus at commit `b0a104deff769047f4ec7b5dfd60c374bb11c940`. A pre-model
+  requirements audit corrected its composition to all 20 specified purposes: 18 cases execute real runtime or
+  integration recipes and two are synthetic restraint edge cases. All pre-model recipe and candidate-input checks
+  pass.
 
 ## Verification results
 

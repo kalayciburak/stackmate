@@ -25,7 +25,7 @@ class QualificationBlindManifestTest {
                                         item ->
                                                 item.expectedDisposition()
                                                         == CorpusV2Case.Disposition.RESTRAIN))
-                .hasSize(2);
+                .hasSize(3);
     }
 
     @Test
