@@ -7,11 +7,11 @@ zincirinden dışarı taşan istisnayı gözlemler, küçük ve güvenli bir anl
 üretir ve aynı uygulama loguna kısa bir tanı ekler. Asıl istisna, HTTP durumu, yanıt gövdesi, Spring exception
 handler'ları ve loglama yapılandırması uygulamanın denetiminde kalır.
 
-Ürünün çekirdeği deterministik motordur. Yerel model yalnızca isteğe bağlı ve deneysel bir açıklama katmanıdır;
-yeni kanıt ekleyemez veya doğrulanmamış bir iddiayı olguya dönüştüremez.
+Ürünün çekirdeği deterministik motordur. Yerel model yalnızca isteğe bağlı ve güvenilmeyen bir açıklama katmanıdır;
+kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştiremez.
 
-Güncel durum: **çalışan deterministik MVP; deneysel yerel inference**. StackMate henüz production-ready olarak
-sunulmamakta ve Maven Central'da yayımlanmamaktadır.
+Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Yerel SPI araştırma ve
+güvenli fallback testleri için korunur. StackMate production-ready olarak sunulmaz ve Maven Central'da yayımlanmaz.
 
 İngilizce dokümantasyon: [README.md](README.md)
 
@@ -35,9 +35,9 @@ inference açıldığında da yerel model ağırlıkları ve inference runtime'�
   bağlı PII değerlerini maskeler.
 - İngilizce veya doğal teknik Türkçe, kutulu ya da compact hızlı tanı basar.
 - Normalize edilmiş SHA-256 fingerprint üretir ve sınırlı TTL deposu içinde yinelenen inference çağrılarını önler.
-- İsteğe bağlı olarak Qwen2.5-0.5B-Instruct modelini Jlama ile yönetilen Java 21 child process'inde, sınırlı stdio
-  protokolü üzerinden çalıştırır.
-- Model metnini göstermeden önce bütün evidence/cause/check/source referanslarını doğrular.
+- Kullanıcının açıkça sağladığı desteklenen modeli Jlama ile yönetilen Java 21 child process'inde, sınırlı stdio
+  protokolü üzerinden deneysel olarak çalıştırabilir; Phase 2 sonucunda önerilen bir model yoktur.
+- Modelin yalnızca sağlanan evidence/cause/check ID'lerini seçmesine izin verir ve metni göstermeden önce doğrular.
 - İsteğe bağlı olarak dört dosyalı temizlenmiş incident paketini atomik biçimde yerel diske yazar.
 
 ## Neler yapmaz?
@@ -130,7 +130,8 @@ loglar ve denetimi Spring'in mevcut hata işleme akışına bırakır.
 
 ## Yerel model hızlı başlangıcı
 
-Yerel inference deneyseldir. Base starter yerine local starter'ı ekleyin:
+Değerlendirilen yerel modeller `NOT_VIABLE` sonucunu aldı. Bu hızlı başlangıç öneri değil, açık deney ve entegrasyon
+testi içindir. Base starter yerine local starter'ı ekleyin:
 
 ```xml
 <dependency>
@@ -156,9 +157,10 @@ stackmate:
     timeout: 10s
 ```
 
-Değerlendirilen model `EXPERIMENTAL` olduğu için local starter kullanıldığında da varsayılan mod deterministiktir.
-Inference için `stackmate.mode=hybrid` değerini açıkça verin. Eksik veya geçersiz model deterministik tanıyı açık
-bırakır ve inference ilk istendiğinde en fazla bir kısa kurulum uyarısı üretir.
+Local starter ile de varsayılan mod deterministiktir. Inference için `stackmate.mode=hybrid` değerini açıkça verin.
+Varsayılan `when-enhancement-is-useful` politikası kesin `HIGH` tanıları ve `LOW`/bilinmeyen tanıları atlar; yalnızca
+fallback olmayan `MEDIUM` kanıtı gönderir. Eksik veya geçersiz model deterministik tanıyı açık bırakır ve inference
+ilk istendiğinde en fazla bir kısa kurulum uyarısı üretir.
 
 Model servlet request thread'inin dışında asenkron çalışır. Worker kurulu Java 21 runtime'ını kullanır; preview ve
 vector bayrakları yalnızca child JVM'dedir. İletişim HTTP veya network socket değil, çerçevelenmiş stdin/stdout'tur.
@@ -333,16 +335,16 @@ agent çalıştırmaz. Retention temizliği yalnızca tanınan paketlerle sını
 
 ## Benchmark durumu
 
-50 vakalık kontrollü deterministik corpus, desteklenen kategori, root type, exact fact, cause ve check beklentilerinde
-50/50 sonuç vermektedir. Bu bir kural regresyon corpus'udur; rastgele uygulamalarda kusursuz doğruluk iddiası
-değildir. Yerel microbenchmark ve model ölçümleri [benchmark.md](docs/benchmark.md) içindedir.
+Bağımsız ve dondurulmuş V2 corpus'u 80 vaka içerir: 60 development, 20 holdout ve 54 gerçek runtime/integration.
+Genel amaçlı güçlendirmeden sonra deterministik kategori doğruluğu 74/80 (%92,50), holdout 19/20 (%95), root type
+80/80, bilinmeyen hata ölçülülüğü 8/8, secret leakage 0 ve fingerprint kararlılığı 80/80'dir. Bunlar corpus
+sonuçlarıdır; kusursuz doğruluk iddiası değildir. Ayrıntılar [benchmark-v2-results.md](docs/benchmark-v2-results.md)
+belgesindedir.
 
-Tam İngilizce prompt-v2 corpus'unda yapılandırılmış StackMate girdisi 36/50 geçerli çıktı ve kategori/cause/check
-için %72 doğruluk üretti; ham stack girdisi ise 8/50 geçerli çıktı ve %2 kategori doğruluğunda kaldı.
-Yapılandırılmış modda median/P95 gecikme 7,21/18,93 saniye, worker tepe working set'i 2.790 MiB oldu. Düzeltilmiş
-beş vakalık Türkçe örnek 0/5 geçerli çıktı verdi. Yapılandırılmış girdi ham girdiden açıkça daha iyi olsa da kalite,
-gecikme, bellek ve Türkçe eşikleri geçmedi; bu nedenle inference `EXPERIMENTAL` kalır ve yalnızca İngilizce desteği
-bildirir.
+Yalnız açıklama yapan schema-v2 sözleşmesinde hem Qwen2.5-0.5B-Instruct hem de Qwen2.5-Coder-0.5B-Instruct,
+İngilizce 0/10 ve Türkçe 0/10 geçerli yapılandırılmış çıktı üretti. Warm medyanlar 17,1-22,0 saniye; ölçülen Coder
+worker tepesi yaklaşık 2,09 GiB oldu. Geçersiz çıktı fallback'i çalıştı ve geçersiz hiçbir sonuç kabul edilmedi;
+ancak güvenli sınırlama model yararlılığını kanıtlamaz. Bu nedenle değerlendirilen yapılandırmalar `NOT_VIABLE`dır.
 
 Modelsiz normal doğrulama:
 
@@ -350,7 +352,7 @@ Modelsiz normal doğrulama:
 ./mvnw clean verify
 ```
 
-50 vakalık açık A/B/C model benchmark'ı:
+Açık araştırma amaçlı A/B/C model benchmark'ı:
 
 ```bash
 ./mvnw -pl stackmate-benchmark -am -Pmodel-benchmark \
@@ -366,9 +368,9 @@ Makineye özgü raporlar `stackmate-benchmark/target/` altında kalır ve Git ta
 - Startup failure analizi araştırıldı ancak bilinçli olarak ertelendi.
 - Uygulama, değiştirilmemiş ham loglarında hassas metni yine açığa çıkarabilir.
 - Opsiyonel framework tanıma, derin framework state yerine güvenli class-name/message incelemesi kullanır.
-- Yerel inference kalite, gecikme, bellek ve Türkçe eşiklerini geçmez; gerçek model cross-platform koşusu yoktur.
+- Değerlendirilen yerel inference `NOT_VIABLE`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
 - İşletim sistemi düzeyinde ağ veya model-process sandbox'ı yoktur.
-- İngilizce manuel özet incelemesi 36 geçerli çıktıda 3,53/5'tir; daha geniş insan değerlendirmesi gerekir.
+- `lazy-load=false` adapter metadata'sını başlangıçta doğrular; Jlama ağırlıkları yine ilk inference'ta yükler.
 
 ## Geliştirme
 
@@ -378,16 +380,16 @@ Makineye özgü raporlar `stackmate-benchmark/target/` altında kalır ve Git ta
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-[CONTRIBUTING.md](CONTRIBUTING.md), [troubleshooting.md](docs/troubleshooting.md) ve
-[progress.md](docs/progress.md) belgelerine bakın. Güvenlik bildirimleri [SECURITY.md](SECURITY.md) üzerinden
-yapılmalıdır.
+[konsol galerisi](docs/console-gallery.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+[troubleshooting.md](docs/troubleshooting.md) ve [Phase 2 ilerleme kaydı](docs/phase-2-progress.md) belgelerine bakın.
+Güvenlik bildirimleri [SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
 
 ## Yol haritası
 
-Yakın dönem çalışmalar kanıt odaklıdır: analizör ve gerçek entegrasyon kapsamını büyütmek, yerel model kaynak
-kullanımını azaltmak/sınırlamak, manuel Türkçe değerlendirmeyi genişletmek, model process'ini platformlar arasında
-doğrulamak ve release provenance/SBOM kontrollerini güçlendirmek. WebFlux, isteğe bağlı logging adapter'ları, IDE
-entegrasyonu, JFR zenginleştirmesi ve agent handoff mevcut özellik gibi sunulmayan gelecek adımlarıdır.
+Önerilen sıradaki yön deterministik ürünün public-alpha hardening çalışmasıdır: API uyumluluğu, daha geniş paketlenmiş
+örnekler, dokümantasyon kullanılabilirliği, provenance/SBOM ve cross-platform CI kanıtı. Yeni bir yerel-model hipotezi,
+deterministik ürünü engellemeden ayrı değerlendirilmelidir. WebFlux, logging adapter'ları, IDE entegrasyonu, JFR
+zenginleştirmesi ve agent handoff gelecek adımlarıdır.
 
 ## Lisans
 

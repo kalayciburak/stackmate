@@ -30,15 +30,23 @@ stackmate-sample
        -> stackmate-spring-boot-starter
             -> stackmate-spring-boot-autoconfigure
                  -> stackmate-core
-                 -> stackmate-inference-jvm (optional)
-                      -> stackmate-inference-api
-                           -> stackmate-core
+                 -> stackmate-inference-api (optional)
        -> stackmate-inference-api
        -> stackmate-inference-jvm
+            -> stackmate-inference-api
+                 -> stackmate-core
 
 stackmate-benchmark
   -> stackmate-core
   -> stackmate-inference-api
+  -> stackmate-inference-jvm
+
+stackmate-e2e
+  -> packaged stackmate-sample artifact
+
+stackmate-startup-baseline
+  -> Spring Boot WebMVC control
+  -> deterministic or local starter only through explicit build profiles
 ```
 
 ### `stackmate-core`
@@ -54,25 +62,33 @@ breaker contracts. It may use core domain types but exposes no Jlama type or raw
 
 ### `stackmate-inference-jvm`
 
-The experimental Jlama adapter and managed Java 21 worker protocol. Jlama is runtime-scoped here and absent from
-the deterministic starter. Local files only; no model downloader, HTTP client, server, or telemetry.
+The Jlama research adapter and versioned, length-prefixed managed Java 21 worker protocol. Jlama is runtime-scoped
+here and absent from the deterministic starter. Local files only; no model downloader, HTTP client, server, or
+telemetry. Evaluated Phase 2 model configurations are `NOT_VIABLE`; retaining this boundary does not make a model a
+diagnostic authority.
 
 ### `stackmate-spring-boot-autoconfigure`
 
 Typed properties, conditions, servlet capture, Spring runtime context, SLF4J console output, safe production
-profile guard, application custom analyzer discovery, optional inference orchestration, and future startup
-analysis. Optional dependencies are isolated behind class-presence conditions.
+profile guard, application custom analyzer discovery, and optional inference orchestration. Optional dependencies
+are isolated behind class-presence conditions. Startup failure analysis remains outside the implemented boundary.
 
 ### Starters
 
 The base starter aggregates deterministic auto-configuration only. The local starter explicitly adds the
 inference API and Jlama adapter. Neither contains model weights.
 
-### Sample and benchmark
+### Samples, packaged E2E, and benchmark
 
 The sample is intentionally faulty demonstration code only. The benchmark owns controlled ground truth,
 deterministic evaluation, raw-versus-structured inference comparison, schema/leakage/injection checks, and JMH
 microbenchmarks. Generated machine-specific reports remain under `target/`.
+
+`stackmate-e2e` uses Maven Failsafe to launch the executable sample JAR with `ProcessBuilder`, issue real HTTP
+requests, inspect stdout/stderr, shut down the parent, and assert that no observed managed child remains. Its fake
+worker uses the real protocol and process lifecycle without model weights. `stackmate-startup-baseline` holds one
+minimal WebMVC graph that is packaged with no StackMate, the deterministic starter, and the local starter so startup
+deltas are not compared against different applications.
 
 ## Runtime invariants
 

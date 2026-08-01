@@ -349,3 +349,118 @@ skips. Symbolic-link creation and rejection executed successfully rather than be
 
 Run model Lab V2 using the schema-V2 explanation-only contract, beginning with the existing local Qwen model and
 screening no more than two documented candidates.
+
+## Phase 6 - local Model Lab V2
+
+Status: completed; evaluated configurations classified `NOT_VIABLE`
+
+### Completed work
+
+- Recorded license, revision, byte size, and expected checksum before downloading one new artifact:
+  Qwen2.5-Coder-0.5B-Instruct revision `ea3f2471cf1b1f0db85067f1ef93848e38e88c25`.
+- Downloaded the official files atomically into the ignored `.stackmate/models` directory and verified the
+  988,097,824-byte SafeTensors SHA-256 as
+  `F9523886352217DED3AEEEF552B381AF79D568C6D49A4B9E423288CEA56B0A44`.
+- Screened the existing general model and the one new Coder model on 10 English and 10 Turkish schema-v2 cases each.
+  No second new artifact was downloaded. Qwen3 was rejected before download because the bounded adapter does not
+  support its architecture.
+- Kept raw-stack evaluation only for the general English research baseline and added structured-only screening so
+  weak candidates do not double model time.
+- Changed model reporting so category/root/fact generation metrics are explicitly `NOT_APPLICABLE`; only supplied-ID
+  selection, schema/safety, latency, fallback, and resource results remain product metrics.
+- Added protocol failure kinds and bounded sanitized benchmark failure messages. Model output token generation and
+  independent character validation limits no longer rely on an exact four-characters-per-token claim.
+
+### Actual results
+
+| Screen | Valid | Median | P95 |
+|---|---:|---:|---:|
+| General English | 0/10 | 18,808 ms | 23,278 ms |
+| General Turkish | 0/10 | 17,103 ms | 27,846 ms |
+| Coder English | 0/10 | 20,032 ms | 21,779 ms |
+| Coder Turkish | 0/10 | 21,999 ms | 23,016 ms |
+
+All 40 were invalid structured JSON after the bounded repair policy. Accepted unknown IDs, fabricated source
+references, secrets, forbidden claims, and prompt-injection successes were zero. The Coder English worker peaked at
+2,243,895,296 bytes working set; sampled parent plus worker was 2,426,294,272 bytes. Zero process-tree network
+endpoints were observed by the Windows sampler. Because neither candidate passed screening, the full 50-case model
+run was intentionally not executed.
+
+### Verification
+
+The schema/report/protocol regression run passed 321 tests: core 102, inference API 27, JVM inference 31, Spring
+autoconfiguration 99, benchmark 62. Model reports are machine-local under `target/model-lab-v2/` and are not committed.
+
+## Phase 7 - startup and synchronous-path measurement
+
+Status: completed
+
+### Completed work
+
+- Added `stackmate-startup-baseline`, one minimal WebMVC graph packaged without StackMate and with deterministic/local
+  starters through explicit profiles. This replaced an invalid pilot that compared two different applications.
+- Added `stackmate-benchmark/scripts/measure-startup.ps1`: random port, bounded readiness, two excluded warmups, ten
+  fresh-JVM measurements, process-tree cleanup, and JSON/Markdown reports under ignored `target/`.
+- Added a combined JMH benchmark for throwable snapshot, application-frame selection, deterministic analysis, and
+  fingerprinting.
+
+### Actual results
+
+- Control median/P95: 1,448/1,467 ms.
+- Deterministic starter: 1,485/1,530 ms; +37 ms median and +63 ms P95.
+- Local starter lazy: 1,663/1,714 ms; +215/+247 ms.
+- Local adapter eager: 1,910/1,944 ms; +462/+477 ms. This does not eagerly load Jlama weights.
+- JMH average: snapshot 128.321 microseconds, diagnosis 32.076 microseconds, combined core path 212.716 microseconds.
+
+Environment and methodology are curated in `docs/benchmark-v2-results.md`; machine-local raw reports are ignored.
+
+## Phase 8 - console and documentation review
+
+Status: completed
+
+### Completed work
+
+- Created `docs/console-gallery.md` from packaged English/Turkish runs and direct deterministic renderer fixtures.
+- Reconfirmed that malformed JSON and `@Valid` failures resolved by Spring MVC retain normal HTTP 400 behavior and
+  print no StackMate card at the current capture boundary.
+- Added an explicit unknown sample and packaged restraint assertion.
+- A gallery run exposed that the schema-v2 fake worker selected evidence unrelated to its selected candidates. The
+  validator rejected it correctly; the fixture now selects the union of supporting evidence IDs.
+- Added sanitized bounded inference failure detail to opt-in debug logging. Raw invalid output and prompts remain
+  private.
+- Updated English/Turkish READMEs, architecture, threat model, troubleshooting, changelog, model selection, benchmark
+  results, third-party notices, and ADR 0014 with the `NOT_VIABLE` decision.
+
+## Phase 9 - final independent review and verification
+
+Status: completed
+
+### Final verification
+
+- `./mvnw.cmd clean verify` passed for all 11 reactor projects in 59.530 seconds of Maven time
+  (60.668 seconds wall clock).
+- Surefire ran 309 tests and Failsafe ran 12 packaged-process integration tests. There were no failures, errors,
+  or skipped tests.
+- Final unit-test distribution: core 102, inference API 27, inference JVM 30, Spring autoconfiguration 71,
+  sample 16, and benchmark 63.
+- Final line/branch coverage: core 96.46%/87.14%, inference API 91.25%/75.27%, inference JVM 80.11%/62.57%,
+  and Spring autoconfiguration 83.19%/62.79%. The benchmark harness was 28.95%/15.25%. Sample coverage was
+  16.07%/0% because its main purpose is execution in external packaged JVMs that the unit-test JaCoCo agent does
+  not instrument.
+- Maven Enforcer dependency convergence and banned-dependency checks passed. A final dependency tree reconfirmed
+  that core has no runtime dependencies, inference API depends only on core, the deterministic starter does not pull
+  inference/Jlama, and the local starter opts into Jlama 0.8.4 and Jackson 2.21.4.
+- Core and inference API contain no Spring, Jackson, SLF4J, Servlet, or Jlama imports. The auto-configuration imports
+  registration and generated configuration metadata are present in the packaged auto-configuration JAR.
+- The four explicit final reviews found no unresolved critical or high issue: architecture boundaries remain intact;
+  protocol, sanitizer, path, and fallback controls are covered; inference stays off request threads and high-evidence
+  incidents skip it; and the console/README path describes the real capture boundary and `NOT_VIABLE` model result.
+
+### Remaining evidence limits
+
+- Only Windows was executed locally. Linux, Windows, and macOS workflows are configured, but no remote runner result
+  is claimed because this branch was not pushed.
+- Mockito/Byte Buddy printed the known dynamic-agent warning on Java 21. It did not fail verification, but a future
+  JDK may require explicit test-agent configuration.
+- Jlama/model-process native and third-party behavior is not an OS sandbox. The product makes no impossibility claim
+  about network access or malicious model containment.

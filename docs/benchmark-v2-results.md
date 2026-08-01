@@ -134,3 +134,68 @@ than rewritten after execution.
 The hardened affected-reactor run passed 315 tests (core 101, inference API 27, JVM inference 26, Spring
 autoconfiguration 99, benchmark 62) in 21.617 seconds. The generated V2 report observed 2,000 warm samples; these values
 remain non-JMH observations.
+
+## Local model Lab V2
+
+The production contract was reduced before screening: the model can explain and rank only supplied facts and IDs.
+Category, root type, source locations, and evidence strength are no longer model metrics because they are trusted
+deterministic fields. Screening used prompt version 2, a maximum of one repair, a managed child JVM, and 10 cases per
+language/candidate.
+
+| Candidate / language | Structured valid | Cause/check exact | Invalid JSON | Median | P95 |
+|---|---:|---:|---:|---:|---:|
+| Qwen2.5-0.5B-Instruct / English | 0/10 | 0/10 | 10 | 18,808 ms | 23,278 ms |
+| Qwen2.5-0.5B-Instruct / Turkish | 0/10 | 0/10 | 10 | 17,103 ms | 27,846 ms |
+| Qwen2.5-Coder-0.5B-Instruct / English | 0/10 | 0/10 | 10 | 20,032 ms | 21,779 ms |
+| Qwen2.5-Coder-0.5B-Instruct / Turkish | 0/10 | 0/10 | 10 | 21,999 ms | 23,016 ms |
+
+The general-model raw-stack research mode was 0/10 valid, median 30,653 ms and P95 34,352 ms. It is retained only as
+a research baseline. The structured input was much smaller and faster but still unusable; input efficiency is not a
+substitute for valid output.
+
+Across the four structured screens, accepted fabricated source references, unknown IDs, unsupported claims, secret
+leaks, and prompt-injection successes were zero. Invalid-output fallback was 40/40. No valid prose survived, so English
+and Turkish readability were not manually scoreable and are not reported as positive results. Both candidates were
+eliminated at screening; the full 50-case model run was not performed.
+
+For Qwen2.5-Coder English, the Windows 250 ms process sampler measured a 2,243,895,296-byte worker peak working set and
+a 2,426,294,272-byte combined parent-plus-worker approximation. It observed zero process-tree network endpoints. These
+measurements do not prove an OS-level network sandbox or cross-platform RSS. The resulting readiness decision is
+`NOT_VIABLE`; see ADR 0014.
+
+## Request-thread core path JMH
+
+The representative throwable contains three wrappers/causes, a suppressed exception, SQLState evidence, framework and
+application frames. JMH 1.37 used two fresh forks, five one-second warmups and five one-second measurements per fork on
+Amazon Corretto 21.0.12.
+
+| Benchmark | Average | 99.9% CI | Min / max iteration |
+|---|---:|---:|---:|
+| Throwable snapshot | 128.321 microseconds/op | +/- 4.876 | 122.894 / 132.003 |
+| Analyzer selection and diagnosis | 32.076 microseconds/op | +/- 1.310 | 31.033 / 33.431 |
+| Snapshot, application-frame selection, diagnosis, fingerprint | 212.716 microseconds/op | +/- 4.683 | 209.847 / 219.526 |
+
+This measures the core synchronous work, not servlet dispatch, SLF4J backend cost, or model inference. JMH average-time
+results are not P95 latency. They are far below the 5 ms capture and 10 ms deterministic targets on this machine.
+
+## Packaged startup measurement
+
+The process harness packages one minimal WebMVC fixture four ways so application code and endpoint graph stay constant:
+without StackMate, deterministic starter, local starter with lazy adapter, and local starter with `lazy-load=false`.
+Every observation is a fresh JVM on port zero. Two warmups are excluded and ten starts are measured per mode; readiness
+is the Spring `Started ... Application` line. OS file caches are not cleared.
+
+| Mode | Minimum | Median | P95 | Maximum | Median delta vs control |
+|---|---:|---:|---:|---:|---:|
+| Without StackMate | 1,404 ms | 1,448 ms | 1,467 ms | 1,467 ms | - |
+| Deterministic starter | 1,435 ms | 1,485 ms | 1,530 ms | 1,530 ms | +37 ms |
+| Local starter, lazy | 1,632 ms | 1,663 ms | 1,714 ms | 1,714 ms | +215 ms |
+| Local starter, adapter eager | 1,851 ms | 1,910 ms | 1,944 ms | 1,944 ms | +462 ms |
+
+The eager label is deliberately qualified: `lazy-load=false` validates and initializes adapter metadata during
+startup, but Jlama still loads model weights on first inference. No configured model was used in this startup run, so it
+is not a weight-loading benchmark.
+
+Environment: Windows 11 10.0.22631, AMD Ryzen 9 7950X, 32 logical processors, 63.16 GiB RAM, Amazon Corretto
+21.0.12. Control/deterministic/local executable sizes were 19,867,631 / 20,138,959 / 34,737,977 bytes. The repeatable
+script is `stackmate-benchmark/scripts/measure-startup.ps1`; reports under `target/` remain machine-local.

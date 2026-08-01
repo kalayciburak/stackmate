@@ -7,11 +7,11 @@ that escapes the MVC request chain, copies a small safe snapshot, derives eviden
 diagnosis to the same application log. The original exception, HTTP status, response body, Spring exception
 handlers, and logging configuration remain owned by the application.
 
-The deterministic engine is the product core. A local model is an optional, experimental explanation layer; it
-cannot add evidence or turn an unverified claim into a fact.
+The deterministic engine is the product core. A local model is an optional, untrusted explanation layer; it cannot
+add or override a category, root type, evidence item, or source location.
 
-Current status: **working deterministic MVP; experimental local inference**. StackMate is not yet presented as
-production-ready or published to Maven Central.
+Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. The local SPI remains for
+research and safe-fallback testing. StackMate is not presented as production-ready or published to Maven Central.
 
 Turkish documentation: [README.tr.md](README.tr.md)
 
@@ -34,8 +34,9 @@ when inference is enabled, local model weights and an inference runtime.
 - Redacts credential patterns, tokens, connection-string credentials, terminal escapes, and optional PII.
 - Prints English or natural Turkish quick diagnoses in box or compact form.
 - Computes a normalized SHA-256 fingerprint and suppresses duplicate inference within a bounded TTL store.
-- Optionally runs Qwen2.5-0.5B-Instruct through Jlama in a managed Java 21 child process using bounded stdio.
-- Validates every model evidence/cause/check/source reference before rendering model prose.
+- Can explicitly run a user-provided supported model through Jlama in a managed Java 21 child process using bounded
+  stdio; no evaluated Phase 2 model is recommended.
+- Allows model prose to select only supplied evidence/cause/check IDs and validates it before rendering.
 - Optionally exports a sanitized four-file incident bundle through atomic local filesystem publication.
 
 ## What it does not do
@@ -128,7 +129,8 @@ and then returns control to Spring's existing error handling.
 
 ## Local-model quickstart
 
-Local inference is experimental. Add the local starter instead of the base starter:
+The evaluated local models are `NOT_VIABLE`; this quickstart is for explicit experimentation and integration testing,
+not a recommendation. Add the local starter instead of the base starter:
 
 ```xml
 <dependency>
@@ -154,9 +156,10 @@ stackmate:
     timeout: 10s
 ```
 
-Because the evaluated model is `EXPERIMENTAL`, deterministic mode remains the default even with the local starter.
-Set `stackmate.mode=hybrid` explicitly to opt in. Missing/invalid models leave deterministic diagnosis active and
-produce at most one concise setup warning after inference is first requested.
+Deterministic mode remains the default even with the local starter. Set `stackmate.mode=hybrid` explicitly to opt in.
+The default `when-enhancement-is-useful` policy skips inference for exact `HIGH` diagnoses and for `LOW`/unknown
+diagnoses; only non-fallback `MEDIUM` evidence is submitted. Missing/invalid models leave deterministic diagnosis
+active and produce at most one concise setup warning after inference is first requested.
 
 The model runs asynchronously outside the request thread. The worker uses the installed Java 21 runtime, preview
 and vector flags only in the child, and framed standard input/output—not HTTP or a network socket.
@@ -330,15 +333,15 @@ an agent. Retention deletion is limited to recognized bundles and refuses direct
 
 ## Benchmark status
 
-The deterministic 50-case controlled corpus currently scores 50/50 for supported category, root type, exact fact,
-cause, and check expectations. This is a rule-regression corpus, not a claim of perfect accuracy on arbitrary
-applications. Local microbenchmarks and model measurements are recorded in [benchmark.md](docs/benchmark.md).
+The independent frozen V2 corpus has 80 cases (60 development, 20 holdout; 54 real runtime/integration). After
+general-purpose hardening, deterministic category accuracy is 74/80 (92.50%), holdout 19/20 (95%), root type 80/80,
+unknown restraint 8/8, secret leakage 0, and fingerprint stability 80/80. These are corpus results, not a perfect-
+accuracy claim. Full definitions and limitations are in [benchmark-v2-results.md](docs/benchmark-v2-results.md).
 
-In the full English prompt-v2 model corpus, structured StackMate input produced 36/50 valid outputs and 72%
-category/cause/check accuracy, versus 8/50 valid outputs and 2% category accuracy for raw stack input. Structured
-median/P95 latency was 7.21/18.93 seconds; peak worker working set was 2,790 MiB. A corrected five-case Turkish
-sample produced 0/5 valid outputs. Structured input clearly beats raw input, but quality, latency, memory, and
-Turkish gates fail, so local inference remains `EXPERIMENTAL` and advertises English support only.
+Under the explanation-only schema-v2 contract, both Qwen2.5-0.5B-Instruct and Qwen2.5-Coder-0.5B-Instruct produced
+0/10 valid English and 0/10 valid Turkish structured outputs. Warm medians were 17.1-22.0 seconds; the measured Coder
+worker peak was about 2.09 GiB. Invalid-output fallback succeeded and no invalid result was accepted, but containment
+does not establish usefulness. Local inference is therefore `NOT_VIABLE` for the evaluated configurations.
 
 Run normal verification without a model:
 
@@ -346,7 +349,7 @@ Run normal verification without a model:
 ./mvnw clean verify
 ```
 
-Run the explicit 50-case A/B/C model benchmark:
+Run the explicit research model benchmark (not part of normal verification):
 
 ```bash
 ./mvnw -pl stackmate-benchmark -am -Pmodel-benchmark \
@@ -362,9 +365,9 @@ Generated machine-specific reports stay under `stackmate-benchmark/target/` and 
 - Startup failure analysis was investigated but intentionally deferred.
 - The application may still expose sensitive text in its unchanged raw logs.
 - Optional framework recognition uses safe class-name/message inspection, not deep framework state.
-- Local inference misses quality, latency, memory, and Turkish-language gates and has no cross-platform real-model run.
+- Evaluated local inference is `NOT_VIABLE`; real-model runs exist only on Windows and no model is recommended.
 - No OS-level network or model-process sandbox is installed.
-- The English manual summary review was 3.53/5 over 36 valid outputs; broader human review is still needed.
+- `lazy-load=false` eagerly validates adapter metadata but Jlama weights are still loaded on first inference.
 
 ## Development
 
@@ -374,15 +377,16 @@ Generated machine-specific reports stay under `stackmate-benchmark/target/` and 
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md), [troubleshooting.md](docs/troubleshooting.md), and
-[progress.md](docs/progress.md). Security reports should follow [SECURITY.md](SECURITY.md).
+See the [console gallery](docs/console-gallery.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+[troubleshooting.md](docs/troubleshooting.md), and [Phase 2 progress](docs/phase-2-progress.md). Security reports should
+follow [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
-Near-term work is evidence-driven: improve analyzer coverage and real integration scenarios, reduce/contain local
-model resource use, expand manual Turkish evaluation, add model-process cross-platform validation, and strengthen
-release provenance/SBOM checks. WebFlux, optional logging adapters, IDE integration, JFR enrichment, and agent
-handoff remain future milestones rather than implied current features.
+The recommended next direction is public-alpha hardening of the deterministic product: API compatibility, wider
+packaged examples, documentation usability, provenance/SBOM work, and cross-platform CI evidence. A new local-model
+hypothesis should be evaluated separately rather than blocking the deterministic product. WebFlux, logging adapters,
+IDE integration, JFR enrichment, and agent handoff remain future milestones.
 
 ## License
 

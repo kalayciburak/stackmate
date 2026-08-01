@@ -18,9 +18,10 @@ tests, and the clean baseline `verify`. Locations below are repository-relative.
 ## Executive result
 
 The deterministic architecture is sound: core remains Spring-independent, the starter boundaries are correct, MVC
-capture preserves the servlet response, and the model output passes a separate validation boundary. The audit found no
-critical issue. It found three high-risk weaknesses at the local process boundary and four practical medium risks. The
-implemented fixes are intentionally narrow; no public API was broken and no low-severity aesthetic refactor was made.
+capture preserves the servlet response, and model output passes a separate validation boundary. The audit found no
+critical issue. Across the completed phase it confirmed five HIGH, nine MEDIUM, one LOW, and two informational/residual
+findings. Confirmed HIGH and practical MEDIUM findings were fixed. The schema-v2 pre-release inference API break is
+intentional and has an ADR/migration note; no unrelated API was changed for aesthetics.
 
 ## Findings
 
@@ -190,6 +191,60 @@ implemented fixes are intentionally narrow; no public API was broken and no low-
 - Fix status: **fixed before child launch**.
 - Test added: overlap, gap, unsupported dtype, byte-size mismatch, relative/Unicode path, and path symlink coverage.
 
+### P2-AUD-013 — token and character limits encoded an unsafe fixed-width assumption
+
+- Severity: **MEDIUM**
+- Location: `JlamaChildMain.java`, `DefaultAsyncLocalInferenceCoordinator.java`.
+- Evidence: the configured output-token limit was converted to a validation envelope using four characters per token,
+  and the child converted characters back to tokens with the same fixed ratio. Tokenizers do not provide that invariant.
+- Actual risk: otherwise valid JSON could be truncated or rejected, while changing one limit could unexpectedly change
+  the other safety boundary.
+- Proposed fix: retain independent hard caps, use a conservative eight-character validation envelope and six-character
+  generation estimate, and never exceed the configured token or absolute character limits.
+- Fix status: **fixed**. The mapping remains an estimate and is documented rather than called exact token accounting.
+- Test added: coordinator bound assertions and model benchmark regression coverage.
+
+### P2-AUD-014 — debug fallback hid the sanitized rejection reason
+
+- Severity: **MEDIUM**
+- Location: `DefaultAsyncLocalInferenceCoordinator.java`.
+- Evidence: debug mode logged only `ENGINE_ERROR` or `INVALID_OUTPUT`, even though the engine and validator held bounded
+  reasons. This prevented operators from distinguishing an unknown ID from malformed framing without exposing raw data.
+- Actual risk: poor diagnosis of local failures encouraged unsafe prompt/output logging during troubleshooting.
+- Proposed fix: log only sanitized, bounded engine failure messages and sorted validator issue codes when debug is
+  explicitly enabled; never log prompts or invalid raw output.
+- Fix status: **fixed**.
+- Test/evidence: packaged malformed-frame and timeout runs show bounded reasons; sanitizer is injected into the
+  coordinator boundary.
+
+### P2-AUD-015 — `lazy-load=false` did not eagerly load model weights
+
+- Severity: **LOW / documentation**
+- Location: local adapter initialization and configuration documentation.
+- Evidence: process startup measurement shows eager adapter validation, but Jlama weights are still demand-loaded on
+  the first inference.
+- Actual risk: users could expect the first-request cold cost to move entirely to startup.
+- Fix status: **documented**. The setting is described as adapter/metadata eager initialization, not eager weight load.
+
+### P2-AUD-016 — schema-v2 made the packaged valid fixture select unsupported evidence
+
+- Severity: **MEDIUM for the validation system; sample fixture only**
+- Location: `SampleFakeInferenceChildMain.java`.
+- Evidence: the fake worker selected the first fact while also selecting cause/check candidates backed by different
+  facts. The stricter validator correctly rejected the nominally valid E2E scenario.
+- Actual risk: a false-negative integration fixture could hide lifecycle regressions and make the console gallery lie.
+- Proposed fix: select the union of evidence backing each selected deterministic candidate.
+- Fix status: **fixed**; packaged E2E is rerun in final verification.
+
+### P2-AUD-017 — evaluated real models do not meet the reduced contract
+
+- Severity: **INFORMATIONAL / product decision**
+- Location: local Model Lab V2.
+- Evidence: both screened models produced 0/10 valid English and 0/10 valid Turkish structured outputs, with warm
+  medians above 17 seconds; sampled worker memory also exceeded target.
+- Actual risk: continuing to label the integration merely experimental could be read as an imminent product feature.
+- Fix status: **classified `NOT_VIABLE`** for evaluated configurations; deterministic mode remains the product path.
+
 ## Public API review
 
 - `stackmate-core` exposes immutable records and the intended analyzer, sanitizer, deduplication, export, renderer, and
@@ -202,8 +257,9 @@ implemented fixes are intentionally narrow; no public API was broken and no low-
   custom-analyzer, sanitizer, renderer, exporter, deduplication, and inference consumers.
 - Some core domain records necessarily have public constructors because custom analyzers/exporters consume them. The
   audit found no safe, high-value package-private reduction that would justify compatibility risk in `0.1.0-SNAPSHOT`.
-- No breaking public API change was made in this milestone. The Phase 2 inference schema change will be documented as
-  an explicit pre-release migration when implemented.
+- The inference schema-v2 change intentionally removed model-authored diagnostic/source types from the pre-release API.
+  ADR 0012 and the migration section in the inference API README record the break. No Jlama or Spring implementation
+  type was introduced into the public contract.
 
 ## Dependency and module boundary evidence
 
@@ -282,9 +338,45 @@ milestone.
 
 ## Remaining audit risks
 
-1. Packaged fake-child protocol and orphan cleanup must be proven in a Failsafe lifecycle.
-2. Native/Jlama code and malicious model files cannot be made fully safe inside the worker; process isolation, checksums,
+1. Native/Jlama code and malicious model files cannot be made fully safe inside the worker; process isolation, checksums,
    strict size bounds, source trust, and OS controls remain important.
-3. Windows is the only locally executed real-model platform at this point.
-4. Resolved `@ExceptionHandler`, startup, log-only, and non-servlet exceptions remain outside capture scope.
-5. The Phase 1 inference schema remains authoritative until the version-2 contract milestone lands.
+2. Windows is the only locally executed real-model platform; remote CI configuration is not runner evidence.
+3. Resolved `@ExceptionHandler`, Spring MVC resolver, startup, log-only, and non-servlet exceptions remain outside
+   capture scope.
+4. Packaged orphan cleanup is covered by Failsafe on Windows locally, but Linux/macOS runner execution is unverified.
+5. Targeted adversarial tests do not replace sustained fuzzing or an OS process/network sandbox.
+
+## Final four-way review
+
+### Architecture
+
+The final reactor contains ten child modules plus the parent. Dependency direction is acyclic, the deterministic
+starter remains inference-free, engine types do not cross the inference API, and the E2E module is intentionally a
+Failsafe test module rather than a published product JAR. No breaking public API change was introduced merely to
+reduce visibility. The reduced schema-v2 contract is an intentional pre-release contract correction documented by
+ADR 0012.
+
+### Security and privacy
+
+The review traced all untrusted model/process strings through bounded sanitization, strict response validation, and
+debug-only sanitized failure reasons. Exact SafeTensors metadata validation, symlink rejection, terminal-control
+stripping, zero-width key normalization, repeated redaction, unknown-ID rejection, and invalid-output fallback have
+focused regression coverage. The remaining native/model-file and OS-sandbox limitations are documented rather than
+hidden.
+
+### Performance and lifecycle
+
+Inference is submitted to a bounded dedicated executor and never runs on the servlet thread. Default policy skips
+high-confidence exact diagnoses and low/insufficient incidents. Packaged tests cover queue saturation, timeout,
+unexpected exit, shutdown during inference, duplicate suppression, and process-tree cleanup. JMH and fresh-JVM
+startup measurements are environment evidence, not portable build gates.
+
+### Developer experience
+
+The README quickstart, packaged E2E suite, and console gallery distinguish trusted deterministic facts from optional
+model prose. English and Turkish renderers remain independently usable. The gallery explicitly shows that validation
+and malformed-body errors resolved inside Spring MVC are not captured at the current boundary; the product does not
+claim otherwise. The evaluated real-model path is labeled `NOT_VIABLE`, while deterministic diagnostics are the
+recommended product path.
+
+Final clean verification: 309 Surefire tests and 12 Failsafe tests passed with zero failures, errors, or skips.

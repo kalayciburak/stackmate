@@ -66,17 +66,16 @@ StackMate never downloads or repairs a model directory. Confirm provenance and S
 ## The first local explanation is slow
 
 Model validation, child-JVM startup, weight loading, and the first inference are lazy by default. In the authoritative
-prompt-v2 English corpus, Qwen2.5-0.5B/Jlama structured inference had a 7.21-second median, 18.93-second P95, and a
-2,790 MiB sampled peak worker working set on the reference Windows machine. These are observations, not guarantees.
-Increase `stackmate.inference.timeout` only after reviewing resource impact; deterministic output is already printed
-before the model result.
+Phase 2 explanation-only screening, Qwen2.5-0.5B/Jlama structured inference had a 17.1-18.8-second median and up to
+27.8-second P95. Qwen2.5-Coder-0.5B had a 20.0-22.0-second median and its English worker peaked near 2.09 GiB working
+set on the reference Windows machine. These are observations, not guarantees. The evaluated configurations are
+`NOT_VIABLE`; increasing the timeout is not a recommended product fix. Deterministic output is already printed first.
 
-`stackmate.inference.lazy-load=false` validates the configured adapter at context creation, but model generation
-still occurs only when an incident is submitted. The local integration remains experimental.
+`stackmate.inference.lazy-load=false` validates and initializes adapter metadata at context creation, but Jlama model
+weights still load on first inference. Do not describe this setting as eager weight loading.
 
-The selected model failed the five-case Turkish language gate and is advertised as English-only. Setting
-`stackmate.language=tr` still localizes deterministic output, but validated local-model explanations fall back to
-the deterministic diagnosis when the model emits English prose.
+Both screened models failed all ten Turkish structured cases. Setting `stackmate.language=tr` still localizes the
+trusted deterministic output. No evaluated model is recommended for Turkish or English local explanations.
 
 ## The local child exits or times out
 
@@ -85,7 +84,8 @@ stdio. It kills a timed-out worker, bounds restarts, records an in-memory failur
 the configured threshold. Deterministic diagnosis remains active.
 
 Enable `stackmate.console.debug-logging=true` for a bounded internal reason; prompts and raw invalid model output
-are not logged. Check child-process permissions, memory pressure, model integrity, Java 21 availability, and timeout.
+are not logged. Failure text is sanitized and bounded before debug logging. Check child-process permissions, memory
+pressure, model integrity, Java 21 availability, and timeout.
 
 Executable fat-JAR/classpath discovery is a known experimental compatibility surface. If development-classpath
 execution works but a custom packaging layout fails, include the packaging command and sanitized error type in a

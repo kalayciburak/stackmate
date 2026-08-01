@@ -63,7 +63,7 @@ process command line is already inside the deployment trust boundary.
 | Threat | Abuse path and impact | Implemented controls | Residual risk |
 |---|---|---|---|
 | Secret or PII leakage | Exception/request/model text reaches console, prompt, fingerprint, or export | Minimal metadata collection; no bodies, headers, cookies, query values, environment values, or system-property dump; default credential/JWT/Base64/hex/JDBC redaction; zero-width/control normalization; fail-closed truncated-JWT handling; optional email, card, and Turkish identity redaction; sanitization at snapshot, prompt, model-output, console, and export boundaries | Novel secret formats may evade patterns; host application's unchanged raw logging remains capable of disclosure |
-| Prompt injection | Exception text tells the model to ignore rules, request files, invent evidence, or emit commands | Versioned system instruction labels incident strings untrusted; bounded structured facts/candidates with stable IDs; delimiter/control/fence normalization; no tool API; output must reference known evidence/cause/check/source IDs; invalid output falls back | A model may still produce persuasive but weak prose using valid IDs; inference remains experimental |
+| Prompt injection | Exception text tells the model to ignore rules, request files, invent evidence, or emit commands | Separate versioned English/Turkish instructions label incident strings untrusted; bounded facts/candidates with stable IDs; delimiter/control/fence normalization; no tool API; output may select only known evidence/cause/check IDs; invalid output falls back | A model may still produce persuasive but weak prose using valid IDs; evaluated inference is not viable |
 | Hallucinated facts or locations | Model invents class, method, file, line, constraint, or solution | Deterministic rules are authoritative; the public API exposes only structured output; validator rejects unknown IDs and source references; evidence strength is deterministic; invalid text is not rendered as advice | Natural-language semantic contradictions inside otherwise schema-valid prose are difficult to eliminate completely |
 | Terminal injection | ESC/control characters alter terminal display or logs | Snapshot and sanitizer strip control characters and terminal escape sequences; renderer and model output are sanitized again; ANSI is not sourced from incident data | Host logger/layout may add its own control sequences independently |
 | Exception storm / denial of service | Repeated failures exhaust request CPU, queue, memory, logs, or inference | Cause/suppressed/frame/message/input/output bounds; SHA-256 fingerprint normalization; bounded TTL duplicate store; atomic inference reservation; one-thread bounded executor; queue rejection and deterministic fallback; timeout, circuit breaker, one-time warning | Unique-fingerprint storms can still cause deterministic/logging cost up to configured bounds; OS-level CPU/memory limits are not imposed by StackMate |
@@ -71,7 +71,7 @@ process command line is already inside the deployment trust boundary.
 | Interrupted-thread corruption | Timeout or shutdown clears the caller's interrupt state | Inference never uses the request thread; interrupted waits restore the interrupt flag; shutdown is bounded | Third-party runtime code in the child controls its own interrupt handling |
 | Malicious or oversized model | Crafted metadata/weights cause traversal, excessive allocation, unsafe deserialization, or runtime crash | Explicit local path only; no download or remote code; normalized path and symbolic-link checks; required SafeTensors/tokenizer metadata; regular-file checks; bounded aggregate weight size; Qwen dimension bounds; known dtype and exact shape-byte validation; non-overlapping/gap-free/fully-indexed tensor ranges; managed child JVM isolates crashes; parent timeout/circuit breaker/fallback | Jlama parses complex attacker-supplied files and is not an adversarial model sandbox; child currently has the user's filesystem permissions and no hard RSS/CPU limit |
 | Native inference crash | JNI/vector/native defect terminates inference or corrupts memory | Production MVP uses Jlama's Java path in a separate JVM; no vendor types cross the API; child exit is a failure result and deterministic mode continues | JVM/JIT/vector defects can still crash the child; parent process creation consumes OS resources |
-| Stdio protocol abuse | Child emits huge, malformed, delayed, or unsolicited frames | Length-prefixed bounded protocol; strict message types and JSON decoding; parent timeout; invalid output rejected; no shell interpolation or network socket | A wedged child may require forcible termination; operating-system process semantics vary |
+| Stdio protocol abuse | Child emits huge, malformed, delayed, or unsolicited frames | Version-2 length-prefixed bounded protocol; strict duplicate/depth/UTF-8/message checks; request/response IDs; one response per request; sanitized failure kinds; parent timeout; invalid output rejected; no shell interpolation or network socket | A wedged child may require forcible termination; operating-system process semantics vary |
 | Unsafe export path / symlink attack | Configured path escapes, follows a link, overwrites files, or retention deletes user content | Export disabled by default; normalized absolute root; existing path-component and target symlink rejection; fixed digest-derived incident directory; four fixed filenames; `CREATE_NEW`; temporary sibling directory plus atomic move; retention considers only `STM-XXXXXXXX` directories and refuses unknown/symlink entries; no recursive delete | A privileged attacker can race path components on filesystems without stronger directory-handle APIs; filesystem may not support atomic directory moves, in which case export fails |
 | Incident persistence | Sanitized bundles are read by another local user or retained too long | No persistence by default; configurable bounded retention; sanitized content only; no source/request body/header; no upload or agent execution | File permissions inherit platform defaults; users must protect the chosen directory and backups |
 | Network policy regression | A new dependency or future adapter makes a runtime request | No URL/model-download/API-key surface in current runtime; model supplied as a local file; managed IPC uses stdio; normal and benchmark CI do not download weights | Dependency code is not an OS network sandbox; release review should retain dependency-tree and runtime traffic checks |
@@ -92,16 +92,16 @@ before hashing; unbounded raw values are not retained by the duplicate store.
 ## Security validation
 
 Automated tests cover bearer/JWT/password/API-key/JDBC/PII/control/zero-width sanitization, cause cycles and bounds,
-prompt-injection delimiters, unknown evidence/cause/check/source IDs, invalid output fallback, inference timeout and
+prompt-injection delimiters, unknown evidence/cause/check IDs, fabricated source/identifier text, invalid output fallback, inference timeout and
 engine failure, bounded queue and duplicate reservation, servlet response preservation, strict protocol framing and
 response matching, SafeTensors shape/dtype/range validation, relative/Unicode/symlink model paths, and export
 symlink/atomic publication/retention behavior. Normal CI uses a fake engine and never obtains model weights.
 
-The local model is classified `EXPERIMENTAL`. In the full English prompt-v2 corpus, structured input produced
-36/50 validator-approved outputs compared with 8/50 for raw input. Rejected outputs included three unknown-ID and
-three fabricated-source attempts in structured mode; none was rendered as trusted advice. Structured-mode
-controlled secret leakage and prompt-injection failures were zero. The model still missed the quality, latency,
-memory, and Turkish-language gates. Cross-platform real-model behavior also remains unverified.
+Phase 2 classifies the evaluated local models `NOT_VIABLE`. Qwen2.5-0.5B-Instruct and
+Qwen2.5-Coder-0.5B-Instruct each produced 0/10 valid structured outputs in both English and Turkish. All 40 invalid
+structured responses fell back; accepted unknown IDs, fabricated sources, secret leakage, and prompt-injection
+successes were zero. The Coder worker also exceeded the 1.5 GiB target. These results demonstrate containment, not
+model usefulness. Cross-platform real-model behavior remains unverified.
 
 ## Remaining high-priority mitigations
 
@@ -111,4 +111,4 @@ memory, and Turkish-language gates. Cross-platform real-model behavior also rema
 4. Document recommended filesystem permissions for exported incidents and local model directories.
 5. Add sustained property-based fuzzing for the stdio decoder, sanitizer, and SafeTensors metadata beyond the current
    targeted adversarial suite.
-6. Repeat the model corpus on alternative English/Turkish-capable engines and models before changing status.
+6. Keep real inference opt-in and `NOT_VIABLE` until a materially new model/runtime hypothesis passes screening.
