@@ -2,7 +2,12 @@ package io.github.kalayciburak.stackmate.inference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
+import io.github.kalayciburak.stackmate.privacy.SanitizerConfig;
+import io.github.kalayciburak.stackmate.privacy.SanitizerPattern;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 class DefaultInferenceOutputValidatorTest {
@@ -131,6 +136,35 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
+    void rejectsValuesMatchedByTheApplicationSanitizerPolicy() {
+        SanitizerConfig defaults = SanitizerConfig.defaults();
+        var sanitizer =
+                new DefaultSanitizer(
+                        new SanitizerConfig(
+                                2_000,
+                                defaults.replacement(),
+                                false,
+                                false,
+                                false,
+                                Set.of(),
+                                List.of(
+                                        new SanitizerPattern(
+                                                Pattern.compile("CUSTOM-[0-9]+"),
+                                                defaults.replacement()))));
+        var configuredValidator = new DefaultInferenceOutputValidator(sanitizer);
+        var output =
+                new StructuredInferenceOutput(
+                        InferenceLanguage.ENGLISH,
+                        "This error contains CUSTOM-4821.",
+                        List.of(),
+                        List.of());
+
+        assertCodes(
+                configuredValidator.validate(request(2_000), output),
+                OutputValidationIssue.Code.SENSITIVE_VALUE);
+    }
+
+    @Test
     void acceptsOnlySuppliedSourceReferencesInModelText() {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
@@ -158,12 +192,31 @@ class DefaultInferenceOutputValidatorTest {
                         "Bu hata çünkü neden olabilir.",
                         List.of(),
                         List.of());
+        InferenceRequest englishRequest = request(2_000);
+        InferenceRequest turkishRequest =
+                new InferenceRequest(
+                        englishRequest.id(),
+                        InferenceLanguage.TURKISH,
+                        englishRequest.facts(),
+                        englishRequest.causes(),
+                        englishRequest.checks(),
+                        englishRequest.sourceLocations(),
+                        englishRequest.maximumOutputCharacters());
+        StructuredInferenceOutput copiedEnglishText =
+                new StructuredInferenceOutput(
+                        InferenceLanguage.TURKISH,
+                        "An operation ran in an invalid state",
+                        List.of(),
+                        List.of());
 
         assertCodes(
                 validator.validate(request(2_000), declaredMismatch),
                 OutputValidationIssue.Code.LANGUAGE_MISMATCH);
         assertCodes(
                 validator.validate(request(2_000), detectedMismatch),
+                OutputValidationIssue.Code.LANGUAGE_MISMATCH);
+        assertCodes(
+                validator.validate(turkishRequest, copiedEnglishText),
                 OutputValidationIssue.Code.LANGUAGE_MISMATCH);
     }
 

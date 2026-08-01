@@ -7,7 +7,6 @@ import java.util.List;
 public class CaptureProperties {
 
     private boolean mvcUnhandled = true;
-    private boolean startupFailures = true;
     private List<String> selectedMdcKeys =
             new ArrayList<>(List.of("traceId", "spanId", "correlationId"));
 
@@ -17,14 +16,6 @@ public class CaptureProperties {
 
     public void setMvcUnhandled(boolean mvcUnhandled) {
         this.mvcUnhandled = mvcUnhandled;
-    }
-
-    public boolean isStartupFailures() {
-        return startupFailures;
-    }
-
-    public void setStartupFailures(boolean startupFailures) {
-        this.startupFailures = startupFailures;
     }
 
     public List<String> getSelectedMdcKeys() {

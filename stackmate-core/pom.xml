@@ -28,14 +28,8 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
           <execution>
+            <id>coverage-check</id>
             <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report-and-check</id>
-            <goals>
-              <goal>report</goal>
               <goal>check</goal>
             </goals>
             <phase>verify</phase>

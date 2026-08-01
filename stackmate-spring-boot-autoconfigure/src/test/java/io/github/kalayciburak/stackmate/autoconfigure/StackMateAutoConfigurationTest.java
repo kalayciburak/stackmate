@@ -9,8 +9,16 @@ import io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler;
 import io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
+import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
+import io.github.kalayciburak.stackmate.inference.InferenceRequest;
+import io.github.kalayciburak.stackmate.inference.InferenceResult;
+import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
+import io.github.kalayciburak.stackmate.inference.LocalInferenceMetrics;
+import io.github.kalayciburak.stackmate.inference.ModelCapabilities;
+import io.github.kalayciburak.stackmate.inference.ModelDescriptor;
 import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
+import io.github.kalayciburak.stackmate.runtime.AsyncLocalInferenceCoordinator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -26,6 +34,14 @@ class StackMateAutoConfigurationTest {
     private final WebApplicationContextRunner contextRunner =
             new WebApplicationContextRunner()
                     .withConfiguration(AutoConfigurations.of(StackMateAutoConfiguration.class));
+
+    private final WebApplicationContextRunner inferenceContextRunner =
+            new WebApplicationContextRunner()
+                    .withConfiguration(
+                            AutoConfigurations.of(
+                                    StackMateAutoConfiguration.class,
+                                    StackMateJvmInferenceAutoConfiguration.class,
+                                    StackMateInferenceAutoConfiguration.class));
 
     @Test
     void should_enable_deterministic_servlet_diagnostics_with_safe_defaults() {
@@ -111,6 +127,68 @@ class StackMateAutoConfigurationTest {
                 });
     }
 
+    @Test
+    void should_create_lazy_hybrid_coordinator_with_or_without_local_engine() {
+        inferenceContextRunner
+                .withPropertyValues(
+                        "stackmate.mode=HYBRID",
+                        "stackmate.inference.model-path=missing-local-model")
+                .run(
+                        context -> {
+                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
+                            assertThat(context.getBean(LocalInferenceEngine.class))
+                                    .isInstanceOf(
+                                            io.github.kalayciburak.stackmate.inference
+                                                    .LazyLocalInferenceEngine.class);
+                        });
+
+        inferenceContextRunner
+                .withPropertyValues("stackmate.mode=HYBRID")
+                .run(
+                        context -> {
+                            assertThat(context).hasSingleBean(AsyncLocalInferenceCoordinator.class);
+                            assertThat(context).hasSingleBean(LocalInferenceMetrics.class);
+                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
+                        });
+
+        inferenceContextRunner
+                .withPropertyValues("stackmate.mode=HYBRID")
+                .withUserConfiguration(LocalEngineConfiguration.class)
+                .run(
+                        context -> {
+                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
+                            assertThat(context).hasSingleBean(AsyncLocalInferenceCoordinator.class);
+                        });
+    }
+
+    @Test
+    void should_not_create_inference_beans_when_disabled_or_api_is_absent() {
+        inferenceContextRunner
+                .withPropertyValues("stackmate.mode=HYBRID", "stackmate.inference.enabled=false")
+                .run(
+                        context ->
+                                assertThat(context)
+                                        .doesNotHaveBean(AsyncLocalInferenceCoordinator.class));
+
+        inferenceContextRunner
+                .withPropertyValues("stackmate.enabled=false", "stackmate.mode=HYBRID")
+                .run(
+                        context -> {
+                            assertThat(context).doesNotHaveBean(StackMateProperties.class);
+                            assertThat(context)
+                                    .doesNotHaveBean(AsyncLocalInferenceCoordinator.class);
+                        });
+
+        inferenceContextRunner
+                .withClassLoader(new FilteredClassLoader(LocalInferenceEngine.class))
+                .run(
+                        context -> {
+                            assertThat(context).hasSingleBean(ServletExceptionCaptureHandler.class);
+                            assertThat(context)
+                                    .doesNotHaveBean(AsyncLocalInferenceCoordinator.class);
+                        });
+    }
+
     @Configuration(proxyBeanMethods = false)
     static class UserExtensions {
 
@@ -136,6 +214,37 @@ class StackMateAutoConfigurationTest {
                 public AnalysisContribution analyze(IncidentSnapshot incident) {
                     return new AnalysisContribution(id(), List.of(), List.of(), List.of());
                 }
+            };
+        }
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    static class LocalEngineConfiguration {
+
+        @Bean
+        LocalInferenceEngine localInferenceEngine() {
+            return new LocalInferenceEngine() {
+                @Override
+                public InferenceAvailability availability() {
+                    return InferenceAvailability.available();
+                }
+
+                @Override
+                public ModelDescriptor model() {
+                    return new ModelDescriptor(
+                            "test/local",
+                            "Test Local",
+                            "1",
+                            new ModelCapabilities(true, true, true, 16_000, 8_192));
+                }
+
+                @Override
+                public InferenceResult infer(InferenceRequest request) {
+                    throw new AssertionError("auto-configuration must stay lazy");
+                }
+
+                @Override
+                public void close() {}
             };
         }
     }

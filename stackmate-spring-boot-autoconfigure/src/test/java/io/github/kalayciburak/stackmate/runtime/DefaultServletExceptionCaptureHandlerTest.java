@@ -49,12 +49,15 @@ class DefaultServletExceptionCaptureHandlerTest {
         MockEnvironment environment = new MockEnvironment();
         environment.setActiveProfiles("prod");
         RecordingRenderer renderer = new RecordingRenderer();
-        DefaultServletExceptionCaptureHandler handler = handler(properties, renderer, environment);
+        int[] submissions = {0};
+        DefaultServletExceptionCaptureHandler handler =
+                handler(properties, renderer, environment, (result, release) -> submissions[0]++);
 
         handler.capture(captured(failure("blocked")));
 
         assertThat(renderer.fullRenders).isZero();
         assertThat(renderer.duplicateRenders).isZero();
+        assertThat(submissions[0]).isZero();
     }
 
     @Test
@@ -88,6 +91,27 @@ class DefaultServletExceptionCaptureHandlerTest {
         handler.capture(captured(failure("original")));
     }
 
+    @Test
+    void should_render_quick_output_before_submitting_one_reserved_inference() {
+        StackMateProperties properties = new StackMateProperties();
+        RecordingRenderer renderer = new RecordingRenderer();
+        int[] submissions = {0};
+        AsyncLocalInferenceCoordinator coordinator =
+                (result, release) -> {
+                    assertThat(renderer.fullRenders).isOne();
+                    submissions[0]++;
+                };
+        DefaultServletExceptionCaptureHandler handler =
+                handler(properties, renderer, new MockEnvironment(), coordinator);
+        CapturedServletException captured = captured(failure("same failure"));
+
+        handler.capture(captured);
+        handler.capture(captured);
+
+        assertThat(submissions[0]).isOne();
+        assertThat(renderer.duplicateRenders).isOne();
+    }
+
     private DefaultServletExceptionCaptureHandler handler(
             StackMateProperties properties, ConsoleRenderer renderer) {
         return handler(properties, renderer, new MockEnvironment());
@@ -95,6 +119,14 @@ class DefaultServletExceptionCaptureHandlerTest {
 
     private DefaultServletExceptionCaptureHandler handler(
             StackMateProperties properties, ConsoleRenderer renderer, MockEnvironment environment) {
+        return handler(properties, renderer, environment, null);
+    }
+
+    private DefaultServletExceptionCaptureHandler handler(
+            StackMateProperties properties,
+            ConsoleRenderer renderer,
+            MockEnvironment environment,
+            AsyncLocalInferenceCoordinator coordinator) {
         return new DefaultServletExceptionCaptureHandler(
                 ThrowableSnapshotter.defaults(),
                 new DeterministicDiagnosticEngine(
@@ -102,7 +134,8 @@ class DefaultServletExceptionCaptureHandlerTest {
                 new BoundedInMemoryDeduplicationStore(8, Duration.ofMinutes(1)),
                 renderer,
                 properties,
-                new ProductionProfileGuard(environment, properties));
+                new ProductionProfileGuard(environment, properties),
+                coordinator);
     }
 
     private CapturedServletException captured(Throwable failure) {

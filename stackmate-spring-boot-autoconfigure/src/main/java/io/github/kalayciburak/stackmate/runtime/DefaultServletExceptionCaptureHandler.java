@@ -8,6 +8,7 @@ import io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.deduplication.DeduplicationResult;
 import io.github.kalayciburak.stackmate.deduplication.DeduplicationStore;
+import io.github.kalayciburak.stackmate.export.IncidentExporter;
 import io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
 import io.github.kalayciburak.stackmate.incident.JvmRuntimeContext;
@@ -40,6 +41,8 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
     private final ConsoleRenderer consoleRenderer;
     private final StackMateProperties properties;
     private final ProductionProfileGuard productionGuard;
+    private final AsyncLocalInferenceCoordinator inferenceCoordinator;
+    private final IncidentExporter incidentExporter;
     private final AtomicLong incidentSequence = new AtomicLong();
 
     public DefaultServletExceptionCaptureHandler(
@@ -49,12 +52,53 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
             ConsoleRenderer consoleRenderer,
             StackMateProperties properties,
             ProductionProfileGuard productionGuard) {
+        this(
+                snapshotter,
+                diagnosticEngine,
+                deduplicationStore,
+                consoleRenderer,
+                properties,
+                productionGuard,
+                null,
+                null);
+    }
+
+    public DefaultServletExceptionCaptureHandler(
+            ThrowableSnapshotter snapshotter,
+            DeterministicDiagnosticEngine diagnosticEngine,
+            DeduplicationStore deduplicationStore,
+            ConsoleRenderer consoleRenderer,
+            StackMateProperties properties,
+            ProductionProfileGuard productionGuard,
+            AsyncLocalInferenceCoordinator inferenceCoordinator) {
+        this(
+                snapshotter,
+                diagnosticEngine,
+                deduplicationStore,
+                consoleRenderer,
+                properties,
+                productionGuard,
+                inferenceCoordinator,
+                null);
+    }
+
+    public DefaultServletExceptionCaptureHandler(
+            ThrowableSnapshotter snapshotter,
+            DeterministicDiagnosticEngine diagnosticEngine,
+            DeduplicationStore deduplicationStore,
+            ConsoleRenderer consoleRenderer,
+            StackMateProperties properties,
+            ProductionProfileGuard productionGuard,
+            AsyncLocalInferenceCoordinator inferenceCoordinator,
+            IncidentExporter incidentExporter) {
         this.snapshotter = Objects.requireNonNull(snapshotter, "snapshotter");
         this.diagnosticEngine = Objects.requireNonNull(diagnosticEngine, "diagnosticEngine");
         this.deduplicationStore = Objects.requireNonNull(deduplicationStore, "deduplicationStore");
         this.consoleRenderer = Objects.requireNonNull(consoleRenderer, "consoleRenderer");
         this.properties = Objects.requireNonNull(properties, "properties");
         this.productionGuard = Objects.requireNonNull(productionGuard, "productionGuard");
+        this.inferenceCoordinator = inferenceCoordinator;
+        this.incidentExporter = incidentExporter;
         warnWhenProductionGuardBlocksAnalysis();
     }
 
@@ -86,10 +130,29 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                             capturedException.context().springRuntime(),
                             JvmRuntimeContext.current());
             DeterministicResult result = diagnosticEngine.analyze(incident);
-            DeduplicationResult duplicate = recordOccurrence(result.fingerprint());
+            DeduplicationResult duplicate =
+                    recordOccurrence(result.fingerprint(), inferenceCoordinator != null);
             render(result, duplicate);
+            export(result, duplicate);
+            submitInference(result, duplicate);
         } catch (Throwable internalFailure) {
             debugInternalFailure(internalFailure);
+        }
+    }
+
+    private void export(DeterministicResult result, DeduplicationResult duplicate) {
+        if (incidentExporter == null || duplicate.duplicate()) {
+            return;
+        }
+        try {
+            incidentExporter.export(result);
+        } catch (Throwable exportFailure) {
+            if (properties.getConsole().isDebugLogging()) {
+                LOGGER.debug(
+                        MARKER,
+                        "StackMate incident export failed safely: {}",
+                        exportFailure.getClass().getName());
+            }
         }
     }
 
@@ -126,12 +189,31 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                 || className.startsWith("org.springframework.");
     }
 
-    private DeduplicationResult recordOccurrence(ExceptionFingerprint fingerprint) {
+    private DeduplicationResult recordOccurrence(
+            ExceptionFingerprint fingerprint, boolean requestInference) {
         if (properties.getDeduplication().isEnabled()) {
-            return deduplicationStore.record(fingerprint.value());
+            return deduplicationStore.record(fingerprint.value(), requestInference);
         }
         Instant now = Instant.now();
-        return new DeduplicationResult(1, false, false, now, now);
+        return new DeduplicationResult(1, false, requestInference, now, now);
+    }
+
+    private void submitInference(DeterministicResult result, DeduplicationResult duplicate) {
+        if (inferenceCoordinator == null || !duplicate.inferenceReserved()) {
+            return;
+        }
+        Runnable release =
+                () -> deduplicationStore.releaseInferenceReservation(result.fingerprint().value());
+        try {
+            inferenceCoordinator.submit(result, release);
+        } catch (Throwable submissionFailure) {
+            try {
+                release.run();
+            } catch (RuntimeException ignored) {
+                // Dedup release failures are internal and must remain fail-open.
+            }
+            debugInferenceFailure("SUBMISSION_FAILURE");
+        }
     }
 
     private void render(DeterministicResult result, DeduplicationResult duplicate) {
@@ -191,6 +273,12 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                     MARKER,
                     "StackMate deterministic analysis failed safely: {}",
                     failure.getClass().getName());
+        }
+    }
+
+    private void debugInferenceFailure(String reason) {
+        if (properties.getConsole().isDebugLogging()) {
+            LOGGER.debug(MARKER, "StackMate local inference skipped safely: {}", reason);
         }
     }
 }

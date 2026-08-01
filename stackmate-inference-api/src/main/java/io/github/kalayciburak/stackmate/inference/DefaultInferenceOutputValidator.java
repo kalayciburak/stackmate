@@ -36,9 +36,46 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
             Pattern.compile(
                     "(?<![\\p{L}\\p{N}_$])(?:[a-z_][\\p{L}\\p{N}_$]*\\.)+[A-Z][\\p{L}\\p{N}_$]*(?![\\p{L}\\p{N}_$])");
     private static final Set<String> ENGLISH_MARKERS =
-            Set.of("the", "this", "that", "because", "cause", "check", "failure", "error");
+            Set.of(
+                    "a",
+                    "an",
+                    "the",
+                    "is",
+                    "was",
+                    "were",
+                    "in",
+                    "with",
+                    "this",
+                    "that",
+                    "because",
+                    "cause",
+                    "check",
+                    "failure",
+                    "failed",
+                    "error",
+                    "operation",
+                    "invalid",
+                    "state",
+                    "request",
+                    "value");
     private static final Set<String> TURKISH_MARKERS =
-            Set.of("bu", "şu", "çünkü", "neden", "kontrol", "hata", "olabilir", "için");
+            Set.of(
+                    "bir",
+                    "bu",
+                    "şu",
+                    "çünkü",
+                    "neden",
+                    "kontrol",
+                    "hata",
+                    "olabilir",
+                    "için",
+                    "işlem",
+                    "geçersiz",
+                    "durum",
+                    "başarısız",
+                    "istek",
+                    "değer",
+                    "değil");
 
     private final List<String> forbiddenClaims;
     private final Sanitizer sanitizer;
@@ -46,6 +83,13 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
     /** Creates a validator with the default forbidden-claim policy. */
     public DefaultInferenceOutputValidator() {
         this(DEFAULT_FORBIDDEN_CLAIMS, defaultOutputSanitizer());
+    }
+
+    /**
+     * Creates a validator with the default claim policy and an application-configured sanitizer.
+     */
+    public DefaultInferenceOutputValidator(Sanitizer sanitizer) {
+        this(DEFAULT_FORBIDDEN_CLAIMS, sanitizer);
     }
 
     /** Creates a validator with an application-provided forbidden-claim policy. */
@@ -303,7 +347,7 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                 oppositeCount++;
             }
         }
-        return expectedCount == 0 && oppositeCount >= 3;
+        return expectedCount == 0 && oppositeCount >= 2;
     }
 
     private static void validateReferences(

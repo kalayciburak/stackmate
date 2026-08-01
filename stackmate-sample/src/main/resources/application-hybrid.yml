@@ -9,3 +9,4 @@ stackmate:
     enabled: true
     model-path: ${STACKMATE_MODEL_PATH:models/stackmate-model}
     lazy-load: true
+    timeout: 30s

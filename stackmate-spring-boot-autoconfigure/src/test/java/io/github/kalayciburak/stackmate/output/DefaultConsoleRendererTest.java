@@ -27,7 +27,11 @@ import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class DefaultConsoleRendererTest {
 
@@ -176,8 +180,148 @@ class DefaultConsoleRendererTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @ParameterizedTest
+    @MethodSource("builtInTurkishCases")
+    void localizes_built_in_title_explanation_and_check_without_english_prose(
+            String causeId,
+            String checkId,
+            DiagnosticCategory category,
+            String expectedTitle,
+            String expectedExplanation,
+            String expectedCheck) {
+        String englishTitle = "English built-in title for " + causeId;
+        String englishExplanation = "English built-in explanation for " + causeId;
+        String englishCheck = "English built-in check for " + checkId;
+        DeterministicResult result =
+                localizedResult(
+                        causeId, checkId, category, englishTitle, englishExplanation, englishCheck);
+
+        String turkish =
+                renderer.render(
+                        result, detailedOptions(RenderLanguage.TURKISH, RenderStyle.COMPACT));
+        String english =
+                renderer.render(
+                        result, detailedOptions(RenderLanguage.ENGLISH, RenderStyle.COMPACT));
+
+        assertThat(turkish)
+                .contains(expectedTitle)
+                .contains(expectedExplanation)
+                .contains(expectedCheck)
+                .doesNotContain(englishTitle)
+                .doesNotContain(englishExplanation)
+                .doesNotContain(englishCheck);
+        assertThat(english)
+                .contains(englishTitle)
+                .contains(englishExplanation)
+                .contains(englishCheck);
+    }
+
+    @Test
+    void keeps_sanitized_custom_analyzer_prose_as_turkish_fallback() {
+        DeterministicResult result =
+                localizedResult(
+                        "cause.custom.failure",
+                        "check.custom.failure",
+                        DiagnosticCategory.UNKNOWN,
+                        "Özel neden",
+                        "password=custom-secret özel açıklama",
+                        "Özel kontrolü uygulayın.");
+
+        String rendered =
+                renderer.render(
+                        result, detailedOptions(RenderLanguage.TURKISH, RenderStyle.COMPACT));
+
+        assertThat(rendered)
+                .contains("Özel neden")
+                .contains("password=[REDACTED] özel açıklama")
+                .contains("Özel kontrolü uygulayın.")
+                .doesNotContain("custom-secret");
+    }
+
     private static RenderOptions options(RenderLanguage language, RenderStyle style) {
         return new RenderOptions(language, style, 60, true, false, false);
+    }
+
+    private static RenderOptions detailedOptions(RenderLanguage language, RenderStyle style) {
+        return new RenderOptions(language, style, 120, false, true, false);
+    }
+
+    private static Stream<Arguments> builtInTurkishCases() {
+        return Stream.of(
+                Arguments.of(
+                        "cause.java.unsupported-operation",
+                        "check.java.unsupported-operation",
+                        DiagnosticCategory.GENERAL_JAVA,
+                        "İstenen işlem desteklenmiyor",
+                        "Yakalanan kesin Java hata türü",
+                        "Somut implementasyonun işlemi"),
+                Arguments.of(
+                        "cause.spring.configuration-binding",
+                        "check.spring.configuration-properties",
+                        DiagnosticCategory.SPRING_CONFIGURATION,
+                        "Spring yapılandırma özellikleri bağlanamadı",
+                        "Yakalanan Spring hata türü",
+                        "Özellik adlarını, değer türlerini"),
+                Arguments.of(
+                        "cause.web.json-shape-mismatch",
+                        "check.web.json-shape-mismatch",
+                        DiagnosticCategory.SERIALIZATION,
+                        "JSON yapısı hedef türle eşleşmedi",
+                        "Yakalanan web veya serileştirme hata türü",
+                        "Gelen JSON yapısını hedef veri türüyle karşılaştırın"),
+                Arguments.of(
+                        "cause.database.unique-constraint",
+                        "check.database.unique-constraint",
+                        DiagnosticCategory.DATABASE_CONSTRAINT,
+                        "Benzersizlik kısıtı ihlal edildi",
+                        "yapılandırılmış SQLState bu tanıyı",
+                        "Çakışan anahtarı"),
+                Arguments.of(
+                        "cause.security.access-denied",
+                        "check.security.access-denied",
+                        DiagnosticCategory.AUTHORIZATION,
+                        "Yetkilendirme işleme erişimi reddetti",
+                        "Yakalanan güvenlik hata türü",
+                        "Kimliği doğrulanmış kullanıcıyı"),
+                Arguments.of(
+                        "cause.infrastructure.dns-resolution",
+                        "check.infrastructure.dns-resolution",
+                        DiagnosticCategory.DNS,
+                        "Sunucu adı çözümlenemedi",
+                        "Yakalanan altyapı hata türü",
+                        "Sunucu adını, DNS resolver'ı"),
+                Arguments.of(
+                        "cause.unknown",
+                        "check.inspect-root-cause",
+                        DiagnosticCategory.UNKNOWN,
+                        "Deterministik bir neden belirlenemedi",
+                        "Mevcut kanıtlar bilinen deterministik bir kuralla eşleşmedi",
+                        "Kök hata türünü, mesajını"));
+    }
+
+    private static DeterministicResult localizedResult(
+            String causeId,
+            String checkId,
+            DiagnosticCategory category,
+            String title,
+            String explanation,
+            String check) {
+        EvidenceItem evidence = evidence();
+        Diagnosis diagnosis =
+                new Diagnosis(
+                        List.of(evidence),
+                        List.of(
+                                new DiagnosedCause(
+                                        causeId,
+                                        category,
+                                        title,
+                                        explanation,
+                                        DiagnosticStrength.HIGH,
+                                        List.of(evidence.id()))),
+                        List.of(new CheckCandidate(checkId, check, List.of(evidence.id()))),
+                        List.of("renderer-test@1"),
+                        causeId.equals("cause.unknown"));
+        return new DeterministicResult(incident("localized failure", true), diagnosis, FINGERPRINT);
     }
 
     private static DeterministicResult result(boolean applicationFrame) {

@@ -16,6 +16,8 @@ import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.context.ServletContextExtractor;
 import io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore;
 import io.github.kalayciburak.stackmate.deduplication.DeduplicationStore;
+import io.github.kalayciburak.stackmate.export.FileSystemIncidentExporter;
+import io.github.kalayciburak.stackmate.export.IncidentExporter;
 import io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter;
 import io.github.kalayciburak.stackmate.output.ConsoleRenderer;
 import io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer;
@@ -23,6 +25,7 @@ import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
 import io.github.kalayciburak.stackmate.privacy.SanitizerConfig;
 import io.github.kalayciburak.stackmate.privacy.SanitizerPattern;
+import io.github.kalayciburak.stackmate.runtime.AsyncLocalInferenceCoordinator;
 import io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler;
 import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits;
 import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter;
@@ -168,6 +171,17 @@ public class StackMateAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "stackmate.export", name = "enabled", havingValue = "true")
+    IncidentExporter stackMateIncidentExporter(
+            StackMateProperties properties, Sanitizer sanitizer) {
+        return new FileSystemIncidentExporter(
+                properties.getExport().getDirectory(),
+                properties.getExport().getMaximumIncidents(),
+                sanitizer);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     ProductionProfileGuard stackMateProductionProfileGuard(
             Environment environment, StackMateProperties properties) {
         return new ProductionProfileGuard(environment, properties);
@@ -191,14 +205,18 @@ public class StackMateAutoConfiguration {
             DeduplicationStore deduplicationStore,
             ConsoleRenderer consoleRenderer,
             StackMateProperties properties,
-            ProductionProfileGuard productionGuard) {
+            ProductionProfileGuard productionGuard,
+            ObjectProvider<AsyncLocalInferenceCoordinator> inferenceCoordinator,
+            ObjectProvider<IncidentExporter> incidentExporter) {
         return new DefaultServletExceptionCaptureHandler(
                 snapshotter,
                 diagnosticEngine,
                 deduplicationStore,
                 consoleRenderer,
                 properties,
-                productionGuard);
+                productionGuard,
+                inferenceCoordinator.getIfAvailable(),
+                incidentExporter.getIfAvailable());
     }
 
     @Bean

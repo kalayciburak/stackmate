@@ -22,7 +22,6 @@ class StackMatePropertiesTest {
         assertThat(properties.getLanguage()).isEqualTo(StackMateProperties.Language.EN);
         assertThat(properties.getApplicationPackages()).isEmpty();
         assertThat(properties.getCapture().isMvcUnhandled()).isTrue();
-        assertThat(properties.getCapture().isStartupFailures()).isTrue();
         assertThat(properties.getCapture().getSelectedMdcKeys())
                 .containsExactly("traceId", "spanId", "correlationId");
         assertThat(properties.getDiagnostics().getMaximumCauseDepth()).isEqualTo(32);
@@ -135,6 +134,10 @@ class StackMatePropertiesTest {
                 .hasRootCauseInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> bind(Map.of("stackmate.inference.timeout", "0s")))
                 .hasRootCauseInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> bind(Map.of("stackmate.inference.temperature", "0.1")))
+                .hasRootCauseInstanceOf(IllegalArgumentException.class)
+                .rootCause()
+                .hasMessageContaining("must be 0.0");
         assertThatThrownBy(() -> bind(Map.of("stackmate.deduplication.maximum-entries", "-1")))
                 .hasRootCauseInstanceOf(IllegalArgumentException.class);
     }

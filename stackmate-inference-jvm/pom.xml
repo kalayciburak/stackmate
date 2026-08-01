@@ -20,7 +20,6 @@
     <dependency>
       <groupId>com.github.tjake</groupId>
       <artifactId>jlama-core</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -33,4 +32,41 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <!-- Exercised by the explicit real-model child-JVM benchmark, outside this JVM's agent. -->
+            <exclude>**/JlamaChildMain*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>inference-jvm-coverage-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.75</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

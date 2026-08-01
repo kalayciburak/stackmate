@@ -78,7 +78,11 @@ public class InferenceProperties {
     }
 
     public void setTemperature(double temperature) {
-        this.temperature = PropertyValidation.range(temperature, 0.0, 2.0, "inference.temperature");
+        if (Double.compare(temperature, 0.0) != 0) {
+            throw new IllegalArgumentException(
+                    "inference.temperature must be 0.0 in this StackMate version");
+        }
+        this.temperature = 0.0;
     }
 
     public int getMaximumInputCharacters() {
