@@ -1,0 +1,5 @@
+HTTP status: 500
+HTTP body: {"timestamp":"[timestamp]","status":500,"error":"Internal Server Error","path":"/demo/null-pointer"}
+Normal application log: java.lang.NullPointerException: Controlled null pointer sample
+StackMate diagnostic blocks: 0
+

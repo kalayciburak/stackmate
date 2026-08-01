@@ -1,0 +1,25 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Hızlı Tanı                                                                             |
+| Olay: STM-C46673C7                                                                               |
+| Kategori: VERİTABANI KISITI                                                                      |
+| Kanıt gücü: YÜKSEK                                                                               |
+| Özet: Benzersizlik kısıtı ihlal edildi                                                           |
+| Kök hata: java.sql.SQLException: duplicate key value violates unique constraint                  |
+| "uk_sample_reference"                                                                            |
+| İlk uygulama konumu: SampleDatabaseException#create(SampleDatabaseException.java:47)             |
+| Ayrıntı: Yakalanan kalıcılık hata türü veya yapılandırılmış SQLState bu tanıyı destekliyor.      |
+| İstek: GET /demo/database/duplicate                                                              |
+| İlk kontroller:                                                                                  |
+|   - Çakışan anahtarı ve işlemin insert mi update mi olması gerektiğini kontrol edin.             |
+|   - SQLState'i, vendor kodunu, veritabanı loglarını ve ilk uygulama karesindeki işlemi kontrol   |
+| edin.                                                                                            |
+| Uygulama izi:                                                                                    |
+|   SampleDatabaseException#create(SampleDatabaseException.java:47)                                |
+|   SampleDatabaseException#duplicateKey(SampleDatabaseException.java:14)                          |
+|   DemoFailureController#duplicateDatabaseValue(DemoFailureController.java:52)                    |
+|   SampleDatabaseException#create(SampleDatabaseException.java:48)                                |
+| Kaynak: Deterministik kurallar                                                                   |
+| Çalışma ortamı: Java 21.0.12 | Spring Boot 4.1.0 | Ağ devre dışı                                 |
++--------------------------------------------------------------------------------------------------+
+

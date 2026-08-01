@@ -1,0 +1,32 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Incident: STM-1732006D                                                                           |
+| Category: GENERAL_JAVA                                                                           |
+| Evidence: HIGH                                                                                   |
+| Summary: Text could not be parsed as the requested number                                        |
+| Root: java.lang.NumberFormatException: For input string: "not-a-number"                          |
+| First app location: DemoFailureController#invalidNumber(DemoFailureController.java:29)           |
+| Details: An exact NumberFormatException was captured.                                            |
+| Request: GET /demo/invalid-number                                                                |
+| First checks:                                                                                    |
+|   - Check the input format and locale assumptions at the parsing boundary.                       |
+| Application trace:                                                                               |
+|   DemoFailureController#invalidNumber(DemoFailureController.java:29)                             |
+| Source: Deterministic rules                                                                      |
+| Runtime: Java 21.0.12 | Spring Boot 4.1.0 | Network disabled                                     |
++--------------------------------------------------------------------------------------------------+
+
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Local Explanation                                                                      |
+| Summary: An exception occurred during parsing of a number in a Java application.                 |
+| Possible causes:                                                                                 |
+|   - An exact NumberFormatException was captured.                                                 |
+| Suggested checks:                                                                                |
+|   - Check the input format and locale assumptions at the parsing boundary.                       |
+| Evidence: 1                                                                                      |
+| Duration: 6702 ms                                                                                |
+| Source: Local JVM model Qwen2.5-0.5B-Instruct 4.43.1 | Network disabled                          |
++--------------------------------------------------------------------------------------------------+
+

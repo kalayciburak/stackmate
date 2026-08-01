@@ -1,0 +1,22 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Incident: STM-00B3DEB4                                                                           |
+| Category: GENERAL_JAVA                                                                           |
+| Evidence: HIGH                                                                                   |
+| Summary: An operation ran in an invalid state                                                    |
+| Root: java.lang.IllegalStateException: Controlled fake data: password=[REDACTED],                |
+| Authorization: [REDACTED] [REDACTED],                                                            |
+| jdbc:postgresql://demo.invalid:5432/sample?user=[REDACTED]&password=[REDACTED],                  |
+| email=[REDACTED], tcKimlikNo=[REDACTED]                                                          |
+| First app location: DemoFailureController#redaction(DemoFailureController.java:90)               |
+| Details: An exact IllegalStateException was captured.                                            |
+| Request: GET /demo/redaction                                                                     |
+| First checks:                                                                                    |
+|   - Check lifecycle and state transitions before the first application frame.                    |
+| Application trace:                                                                               |
+|   DemoFailureController#redaction(DemoFailureController.java:90)                                 |
+| Source: Deterministic rules                                                                      |
+| Runtime: Java 21.0.12 | Spring Boot 4.1.0 | Network disabled                                     |
++--------------------------------------------------------------------------------------------------+
+

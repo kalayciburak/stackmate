@@ -1,0 +1,25 @@
+[timestamp] ERROR [stackmate-sample] STACKMATE :
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Incident: STM-C46673C7                                                                           |
+| Category: DATABASE_CONSTRAINT                                                                    |
+| Evidence: HIGH                                                                                   |
+| Summary: A database unique constraint was violated                                               |
+| Root: java.sql.SQLException: duplicate key value violates unique constraint                      |
+| "uk_sample_reference"                                                                            |
+| First app location: SampleDatabaseException#create(SampleDatabaseException.java:47)              |
+| Details: The captured SQLState identifies a unique constraint violation.                         |
+| Request: GET /demo/database/duplicate                                                            |
+| First checks:                                                                                    |
+|   - Check the conflicting key and whether the operation should insert or update.                 |
+|   - Check the SQL state, vendor code, database logs, and the operation at the first application  |
+| frame.                                                                                           |
+| Application trace:                                                                               |
+|   SampleDatabaseException#create(SampleDatabaseException.java:47)                                |
+|   SampleDatabaseException#duplicateKey(SampleDatabaseException.java:14)                          |
+|   DemoFailureController#duplicateDatabaseValue(DemoFailureController.java:52)                    |
+|   SampleDatabaseException#create(SampleDatabaseException.java:48)                                |
+| Source: Deterministic rules                                                                      |
+| Runtime: Java 21.0.12 | Spring Boot 4.1.0 | Network disabled                                     |
++--------------------------------------------------------------------------------------------------+
+
