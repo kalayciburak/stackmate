@@ -8,7 +8,6 @@ import io.github.kalayciburak.stackmate.analysis.DiagnosticStrength;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
 import io.github.kalayciburak.stackmate.inference.InferenceFailure;
 import io.github.kalayciburak.stackmate.inference.InferenceIncident;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import java.io.DataInputStream;
@@ -27,7 +26,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 class JlamaLocalInferenceEngineTest {
     private static final String VALID_OUTPUT =
-            "{\"schemaVersion\":\"2\",\"language\":\"ENGLISH\",\"summary\":\"Evidence only\","
+            "{\"schemaVersion\":\"2\",\"summary\":\"Evidence only\","
                     + "\"explanation\":\"The supplied fact is explained.\",\"selectedCauseIds\":[],"
                     + "\"selectedCheckIds\":[],\"usedEvidenceIds\":[\"fact-1\"],\"limitations\":[]}";
 
@@ -655,7 +654,6 @@ class JlamaLocalInferenceEngineTest {
                 "2",
                 "2",
                 "request-1",
-                InferenceLanguage.ENGLISH,
                 new InferenceIncident(DiagnosticCategory.UNKNOWN, DiagnosticStrength.MEDIUM),
                 List.of(new InferenceFact("fact-1", "KNOWN_RULE", "Observed fact")),
                 List.of(),

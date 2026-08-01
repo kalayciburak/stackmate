@@ -85,8 +85,9 @@ set on the reference Windows machine. These are observations, not guarantees. Th
 `stackmate.inference.lazy-load=false` validates and initializes adapter metadata at context creation, but Jlama model
 weights still load on first inference. Do not describe this setting as eager weight loading.
 
-Both screened models failed all ten Turkish structured cases. Setting `stackmate.language=tr` still localizes the
-trusted deterministic output. No evaluated model is recommended for Turkish or English local explanations.
+StackMate-generated runtime output is English only in Phase 4. Remove the pre-release `stackmate.language` property;
+unknown StackMate properties are rejected. `README.tr.md` remains the complete Turkish usage guide. Phase 1-3
+bilingual measurements are historical and do not describe current runtime-language support.
 
 ## The local child exits or times out
 

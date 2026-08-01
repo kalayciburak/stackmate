@@ -2,7 +2,6 @@ package io.github.kalayciburak.stackmate.benchmark.microbenchmark;
 
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
 import io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer;
-import io.github.kalayciburak.stackmate.output.RenderLanguage;
 import io.github.kalayciburak.stackmate.output.RenderOptions;
 import io.github.kalayciburak.stackmate.output.RenderStyle;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,7 @@ public class ConsoleRenderingBenchmark {
     public void setup() {
         renderer = new DefaultConsoleRenderer(BenchmarkFixtures.sanitizer());
         result = BenchmarkFixtures.deterministicResult();
-        options = new RenderOptions(RenderLanguage.ENGLISH, RenderStyle.BOX, 100, true, true, true);
+        options = new RenderOptions(RenderStyle.BOX, 100, true, true, true);
     }
 
     @Benchmark

@@ -20,7 +20,7 @@ public record OutputValidationIssue(Code code, String path, String message) {
         DESTRUCTIVE_COMMAND,
         MARKDOWN_FENCE,
         FORBIDDEN_CLAIM,
-        LANGUAGE_MISMATCH,
+        OUTPUT_NOT_ENGLISH,
         DUPLICATE_SELECTION
     }
 

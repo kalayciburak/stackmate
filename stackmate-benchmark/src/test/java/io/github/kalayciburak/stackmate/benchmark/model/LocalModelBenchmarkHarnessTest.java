@@ -3,7 +3,6 @@ package io.github.kalayciburak.stackmate.benchmark.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
@@ -21,7 +20,7 @@ class LocalModelBenchmarkHarnessTest {
     void keepsRawCaseIdentifiersNeutralAndEvaluatesAllModes() throws InterruptedException {
         var engine = new CapturingEngine();
 
-        var result = new LocalModelBenchmarkHarness(engine).evaluate(InferenceLanguage.ENGLISH);
+        var result = new LocalModelBenchmarkHarness(engine).evaluate();
 
         assertThat(engine.requests).hasSize(100);
         assertThat(engine.requests.subList(0, 99))
@@ -59,16 +58,9 @@ class LocalModelBenchmarkHarnessTest {
     void canScreenOnlyTheProductionStructuredMode() throws InterruptedException {
         var engine = new CapturingEngine();
 
-        var result =
-                new LocalModelBenchmarkHarness(engine)
-                        .evaluate(InferenceLanguage.TURKISH, 2, false);
+        var result = new LocalModelBenchmarkHarness(engine).evaluate(2, false);
 
         assertThat(engine.requests).hasSize(2);
-        assertThat(engine.requests)
-                .allSatisfy(
-                        request ->
-                                assertThat(request.language())
-                                        .isEqualTo(InferenceLanguage.TURKISH));
         assertThat(result.raw().status()).isEqualTo("NOT_EXECUTED");
         assertThat(result.structured().caseCount()).isEqualTo(2);
     }
@@ -84,7 +76,7 @@ class LocalModelBenchmarkHarnessTest {
         @Override
         public ModelDescriptor model() {
             return new ModelDescriptor(
-                    "fake", "Fake", "1", new ModelCapabilities(true, true, true, 16_000, 8_192));
+                    "fake", "Fake", "1", new ModelCapabilities(true, 16_000, 8_192));
         }
 
         @Override
@@ -93,7 +85,6 @@ class LocalModelBenchmarkHarnessTest {
             return new InferenceResult.Success(
                     new StructuredInferenceOutput(
                             "2",
-                            request.language(),
                             request.facts().getFirst().value(),
                             "The explanation uses only the supplied facts.",
                             request.candidateCauses().stream()

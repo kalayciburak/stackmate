@@ -10,6 +10,9 @@ handlers, and logging configuration remain owned by the application.
 The deterministic engine is the product core. A local model is an optional, untrusted explanation layer; it cannot
 add or override a category, root type, evidence item, or source location.
 
+StackMate currently generates runtime diagnostics in English. `README.tr.md` is complete Turkish documentation for
+Turkish-speaking developers; it does not imply Turkish runtime output.
+
 Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 3 also screened
 quantized Qwen3.5 2B/4B through pinned llama.cpp and did not pass the mandatory bilingual ID-selection gates. The
 local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
@@ -34,7 +37,7 @@ when inference is enabled, local model weights and an inference runtime.
 - Recognizes common Java, Spring configuration/MVC/security, JDBC/persistence, network, TLS, DNS, timeout, and
   concurrency patterns without pulling optional frameworks into the core.
 - Redacts credential patterns, tokens, connection-string credentials, terminal escapes, and optional PII.
-- Prints English or natural Turkish quick diagnoses in box or compact form.
+- Prints bounded English quick diagnoses in box or compact form.
 - Computes a normalized SHA-256 fingerprint and suppresses duplicate inference within a bounded TTL store.
 - Can explicitly run a user-provided supported model through Jlama in a managed Java 21 child process using bounded
   stdio; no evaluated Phase 2 model is recommended.
@@ -121,7 +124,6 @@ Optional explicit configuration:
 stackmate:
   enabled: true
   mode: deterministic
-  language: en
   application-packages:
     - com.example.myapp
 ```
@@ -192,13 +194,6 @@ curl -i -H 'Content-Type: application/json' -d '{}' \
   http://localhost:8080/demo/validation
 ```
 
-Turkish output:
-
-```bash
-java -jar stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar \
-  --spring.profiles.active=turkish
-```
-
 Hybrid output with an already provisioned model:
 
 ```bash
@@ -243,7 +238,6 @@ at configuration binding because those collection paths do not exist.
 stackmate:
   enabled: true
   mode: deterministic       # set hybrid explicitly for experimental inference
-  language: en              # en | tr
   application-packages: []
   capture:
     mvc-unhandled: true

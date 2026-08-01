@@ -10,7 +10,6 @@ public record InferenceRequest(
         String schemaVersion,
         String promptVersion,
         String id,
-        InferenceLanguage language,
         InferenceIncident incident,
         List<InferenceFact> facts,
         List<InferenceCauseCandidate> candidateCauses,
@@ -31,7 +30,6 @@ public record InferenceRequest(
         schemaVersion = exactVersion(schemaVersion, SCHEMA_VERSION, "schemaVersion");
         promptVersion = exactVersion(promptVersion, PROMPT_VERSION, "promptVersion");
         id = Contracts.requireStableId(id, "id");
-        language = Objects.requireNonNull(language, "language");
         incident = Objects.requireNonNull(incident, "incident");
         facts = immutableBounded(facts, "facts", MAXIMUM_FACTS);
         candidateCauses = immutableBounded(candidateCauses, "candidateCauses", MAXIMUM_CAUSES);

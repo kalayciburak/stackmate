@@ -33,7 +33,6 @@ class InferenceContractsTest {
                                         "1",
                                         InferenceRequest.PROMPT_VERSION,
                                         "request.one",
-                                        InferenceLanguage.ENGLISH,
                                         incident(),
                                         List.of(fact()),
                                         List.of(),
@@ -49,7 +48,6 @@ class InferenceContractsTest {
                                         InferenceRequest.SCHEMA_VERSION,
                                         InferenceRequest.PROMPT_VERSION,
                                         "request.one",
-                                        InferenceLanguage.ENGLISH,
                                         incident(),
                                         List.of(fact(), fact()),
                                         List.of(),
@@ -94,15 +92,12 @@ class InferenceContractsTest {
 
     @Test
     void modelContractsRejectNullAndInvalidLimits() {
-        assertThatThrownBy(() -> new ModelCapabilities(true, true, true, 0, 1))
+        assertThatThrownBy(() -> new ModelCapabilities(true, 0, 1))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> descriptor(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("capabilities");
-        assertThat(
-                        new ModelCapabilities(true, true, false, 1, 1)
-                                .supports(InferenceLanguage.ENGLISH))
-                .isTrue();
+        assertThat(new ModelCapabilities(true, 1, 1).structuredOutput()).isTrue();
     }
 
     @Test
@@ -110,7 +105,6 @@ class InferenceContractsTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "Summary",
                         "Explanation",
                         List.of(),
@@ -146,7 +140,6 @@ class InferenceContractsTest {
                 InferenceRequest.SCHEMA_VERSION,
                 InferenceRequest.PROMPT_VERSION,
                 "request.one",
-                InferenceLanguage.ENGLISH,
                 incident(),
                 facts,
                 List.of(new InferenceCauseCandidate("cause.one", "Cause", List.of("fact.one"))),
@@ -161,7 +154,6 @@ class InferenceContractsTest {
                 InferenceRequest.SCHEMA_VERSION,
                 InferenceRequest.PROMPT_VERSION,
                 "request.one",
-                InferenceLanguage.ENGLISH,
                 incident(),
                 facts,
                 causes,

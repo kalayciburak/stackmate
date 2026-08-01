@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- StackMate-generated runtime diagnostics, inference prompts, model explanations, setup messages, and incident-export
+  headings are now English only. `README.tr.md` remains the complete Turkish documentation.
+- The pre-release inference schema and rendering APIs no longer carry one-value language selectors.
+- Unknown `stackmate.*` configuration is rejected to make stale settings visible.
+
+### Removed
+
+- Removed `stackmate.language`, the Turkish sample profile, Turkish runtime renderer/prompt resources, Turkish
+  inference benchmark mode, and tests whose only purpose was runtime localization.
+
 ### Added
 
 - Java 21 multi-module Maven project with a Maven 3.9.16 wrapper and Apache License 2.0 metadata.
@@ -16,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   and resource failure categories, with an explicit unknown fallback.
 - Spring Boot 4.1 servlet auto-configuration, typed settings, production-profile guard, extension points, and
   non-mutating exception observation.
-- English and Turkish bounded console rendering, compact and box styles, and an executable sample application.
+- English bounded console rendering, compact and box styles, and an executable sample application.
 - A versioned 50-case deterministic benchmark corpus, report generation, safety counters, and JMH microbenchmarks.
 - Engine-neutral local-inference contracts and an experimental, optional JVM-local inference integration with
   a managed child JVM, bounded execution, validated structured output, timeout/circuit-breaker fallback, and
@@ -27,8 +39,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   language sample, with machine-readable and human-readable generated reports.
 - A frozen independent 80-case V2 corpus with a 20-case holdout split, 67.5% executable runtime/integration cases,
   restraint, sanitization, fingerprint, and latency metrics.
-- Maven Failsafe packaged-process verification for deterministic, disabled, Turkish, and managed fake-worker modes.
-- Explanation-only inference schema version 2, separate English/Turkish prompts, and an evidence-aware trigger policy
+- Maven Failsafe packaged-process verification for deterministic, disabled, and managed fake-worker modes.
+- Explanation-only inference schema version 2, an English prompt, and an evidence-aware trigger policy
   that skips exact and insufficient diagnoses by default.
 - Version-2 child protocol hardening, strict SafeTensors range/shape checks, adversarial sanitizer/path/lifecycle tests,
   process-level startup measurement, request-path JMH, and an actual console gallery.
@@ -44,8 +56,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Model-free deterministic fallback when optional inference is absent, invalid, unavailable, or times out.
 - Sanitized bounded debug reasons, exact model metadata validation, symbolic-link rejection, strict protocol versioning,
   and packaged orphan-process assertions.
-- Removed obsolete packaged prompts that still described model-authored source locations; only schema-v2 English and
-  Turkish resources remain.
+- Removed obsolete packaged prompts that still described model-authored source locations; only the schema-v2 English
+  resources remain.
 - Verified SHA-256 and size for the two ignored feasibility GGUF files and the official llama.cpp Windows archive;
   rejected java-llama.cpp's older embedded runtime and excluded llama.cpp RPC from the experiment.
 

@@ -18,4 +18,4 @@ Return exactly one JSON object. Do not use Markdown fences or add text outside J
 confidence score or destructive command.
 
 Required schema:
-{"schemaVersion":"2","language":"ENGLISH","summary":"concise string","explanation":"concise string","selectedCauseIds":["supplied id"],"selectedCheckIds":["supplied id"],"usedEvidenceIds":["supplied id"],"limitations":[]}
+{"schemaVersion":"2","summary":"concise string","explanation":"concise string","selectedCauseIds":["supplied id"],"selectedCheckIds":["supplied id"],"usedEvidenceIds":["supplied id"],"limitations":[]}

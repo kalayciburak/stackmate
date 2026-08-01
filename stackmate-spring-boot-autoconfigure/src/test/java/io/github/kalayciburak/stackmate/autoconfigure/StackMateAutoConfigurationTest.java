@@ -235,7 +235,7 @@ class StackMateAutoConfigurationTest {
                             "test/local",
                             "Test Local",
                             "1",
-                            new ModelCapabilities(true, true, true, 16_000, 8_192));
+                            new ModelCapabilities(true, 16_000, 8_192));
                 }
 
                 @Override

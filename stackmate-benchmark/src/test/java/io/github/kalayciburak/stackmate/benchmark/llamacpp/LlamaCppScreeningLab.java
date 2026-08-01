@@ -17,7 +17,6 @@ import io.github.kalayciburak.stackmate.inference.DefaultInferenceOutputValidato
 import io.github.kalayciburak.stackmate.inference.DeterministicInferenceRequestFactory;
 import io.github.kalayciburak.stackmate.inference.InferenceCauseCandidate;
 import io.github.kalayciburak.stackmate.inference.InferenceCheckCandidate;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.OutputValidationResult;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
@@ -89,20 +88,17 @@ class LlamaCppScreeningLab {
         Instant started = Instant.now();
 
         for (GenerationProfile profile : configuration.profiles()) {
-            for (InferenceLanguage language : configuration.languages()) {
-                for (CorpusV2Case benchmarkCase : cases) {
-                    CaseResult result = execute(configuration, profile, language, benchmarkCase);
-                    results.add(result);
-                    System.out.printf(
-                            Locale.ROOT,
-                            "[Phase3] %s %s %s valid=%s repaired=%s processMs=%d%n",
-                            profile,
-                            language,
-                            benchmarkCase.caseId(),
-                            result.valid(),
-                            result.repaired(),
-                            result.totalProcessMillis());
-                }
+            for (CorpusV2Case benchmarkCase : cases) {
+                CaseResult result = execute(configuration, profile, benchmarkCase);
+                results.add(result);
+                System.out.printf(
+                        Locale.ROOT,
+                        "[Phase3] %s ENGLISH %s valid=%s repaired=%s processMs=%d%n",
+                        profile,
+                        benchmarkCase.caseId(),
+                        result.valid(),
+                        result.repaired(),
+                        result.totalProcessMillis());
             }
         }
 
@@ -123,23 +119,16 @@ class LlamaCppScreeningLab {
                         results);
         writeReport(configuration.outputDirectory(), report);
 
-        assertThat(results)
-                .hasSize(
-                        cases.size()
-                                * configuration.languages().size()
-                                * configuration.profiles().size());
+        assertThat(results).hasSize(cases.size() * configuration.profiles().size());
         assertThat(results).allMatch(result -> result.fallbackSucceeded());
     }
 
     private CaseResult execute(
-            Configuration configuration,
-            GenerationProfile profile,
-            InferenceLanguage language,
-            CorpusV2Case benchmarkCase)
+            Configuration configuration, GenerationProfile profile, CorpusV2Case benchmarkCase)
             throws Exception {
         var incident = incidents.create(benchmarkCase);
         var deterministic = diagnosticEngine.analyze(incident);
-        InferenceRequest request = requestFactory.create(deterministic, language, 16_000, 8_192);
+        InferenceRequest request = requestFactory.create(deterministic, 16_000, 8_192);
         List<String> expectedCauses =
                 expectedSelections(
                         benchmarkCase,
@@ -186,7 +175,7 @@ class LlamaCppScreeningLab {
                 benchmarkCase.provenance().name(),
                 benchmarkCase.expectedDisposition().name(),
                 profile.name(),
-                language.name(),
+                "ENGLISH",
                 finalValidation.valid(),
                 repairAttempted,
                 repairAttempted && finalValidation.valid(),
@@ -243,10 +232,7 @@ class LlamaCppScreeningLab {
         Path schemaFile = runDirectory.resolve("schema.json");
         Path outputFile = runDirectory.resolve("output.json");
         Path logFile = runDirectory.resolve("runtime.log");
-        Files.writeString(
-                promptFile,
-                qwenNonThinkingPrompt(request.language(), prompt),
-                StandardCharsets.UTF_8);
+        Files.writeString(promptFile, qwenNonThinkingPrompt(prompt), StandardCharsets.UTF_8);
         Files.writeString(
                 schemaFile, mapper.writeValueAsString(schema(request)), StandardCharsets.UTF_8);
 
@@ -358,7 +344,6 @@ class LlamaCppScreeningLab {
         root.put("additionalProperties", false);
         ObjectNode properties = root.putObject("properties");
         properties.set("schemaVersion", enumString(List.of(request.schemaVersion())));
-        properties.set("language", enumString(List.of(request.language().name())));
         properties.set("summary", boundedString(1, 120));
         properties.set("explanation", boundedString(1, 180));
         properties.set(
@@ -384,7 +369,6 @@ class LlamaCppScreeningLab {
         ArrayNode required = root.putArray("required");
         List.of(
                         "schemaVersion",
-                        "language",
                         "summary",
                         "explanation",
                         "selectedCauseIds",
@@ -395,12 +379,9 @@ class LlamaCppScreeningLab {
         return root;
     }
 
-    private String qwenNonThinkingPrompt(
-            InferenceLanguage language, PromptRendererTestAccess.RenderedPrompt prompt) {
+    private String qwenNonThinkingPrompt(PromptRendererTestAccess.RenderedPrompt prompt) {
         String outputBounds =
-                language == InferenceLanguage.TURKISH
-                        ? "Çıktı sınırları zorunludur: Özet en fazla 10 kelimelik tek ve tamamlanmış bir cümle olsun. Açıklama en fazla 20 kelimelik tek ve tamamlanmış bir cümle olsun. Yalnızca en özgül neden ile kontrol kimliğini seç. Kanıt yetersiz değilse sınırlılıklar boş olsun; yetersizse en fazla 8 kelimelik tamamlanmış tek cümle yaz."
-                        : "Output bounds are mandatory: make summary one complete sentence of at most 10 words and explanation one complete sentence of at most 20 words. Select only the most specific supplied cause and check IDs. Use an empty limitations array unless evidence is insufficient; otherwise use one complete sentence of at most 8 words.";
+                "Output bounds are mandatory: make summary one complete sentence of at most 10 words and explanation one complete sentence of at most 20 words. Select only the most specific supplied cause and check IDs. Use an empty limitations array unless evidence is insufficient; otherwise use one complete sentence of at most 8 words.";
         return "<|im_start|>system\n"
                 + prompt.system()
                 + "\n\n"
@@ -483,9 +464,7 @@ class LlamaCppScreeningLab {
         Map<String, List<CaseResult>> grouped = new LinkedHashMap<>();
         results.forEach(
                 result ->
-                        grouped.computeIfAbsent(
-                                        result.profile() + ":" + result.language(),
-                                        ignored -> new ArrayList<>())
+                        grouped.computeIfAbsent(result.profile(), ignored -> new ArrayList<>())
                                 .add(result));
         return grouped.entrySet().stream()
                 .map(entry -> summarize(entry.getKey(), entry.getValue()))
@@ -548,7 +527,7 @@ class LlamaCppScreeningLab {
                 .append(report.maximumOutputTokens())
                 .append(" tokens\n\n");
         text.append(
-                "| Profile/language | Valid | Cause | Check | Repair | Timeouts | Crashes | Hidden thinking | Median process | P95 process |\n");
+                "| Profile | Valid | Cause | Check | Repair | Timeouts | Crashes | Hidden thinking | Median process | P95 process |\n");
         text.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
         report.summaries()
                 .forEach(
@@ -580,15 +559,13 @@ class LlamaCppScreeningLab {
                                         .append(" ms|")
                                         .append(summary.p95ProcessMillis())
                                         .append(" ms|\n"));
-        text.append("\n## Validated outputs for manual language review\n\n");
+        text.append("\n## Validated outputs for manual English review\n\n");
         report.results().stream()
                 .filter(CaseResult::valid)
                 .forEach(
                         result ->
                                 text.append("### ")
                                         .append(result.profile())
-                                        .append(' ')
-                                        .append(result.language())
                                         .append(' ')
                                         .append(result.caseId())
                                         .append("\n\n- Summary: ")
@@ -687,7 +664,6 @@ class LlamaCppScreeningLab {
             int maximumOutputTokens,
             int threads,
             String caseSelection,
-            List<InferenceLanguage> languages,
             List<GenerationProfile> profiles,
             Path outputDirectory) {
 
@@ -713,9 +689,6 @@ class LlamaCppScreeningLab {
                                     "stackmate.llamacpp.threads",
                                     Integer.toString(Math.max(1, Math.min(16, processors / 2))))),
                     System.getProperty("stackmate.llamacpp.cases", "screening"),
-                    parseEnumList(
-                            System.getProperty("stackmate.llamacpp.languages", "ENGLISH,TURKISH"),
-                            InferenceLanguage.class),
                     parseEnumList(
                             System.getProperty("stackmate.llamacpp.profiles", "GREEDY,RECOMMENDED"),
                             GenerationProfile.class),

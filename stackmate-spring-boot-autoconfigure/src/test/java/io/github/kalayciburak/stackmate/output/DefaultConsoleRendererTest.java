@@ -27,11 +27,7 @@ import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class DefaultConsoleRendererTest {
 
@@ -45,8 +41,7 @@ class DefaultConsoleRendererTest {
     @Test
     void rendersEnglishBoxSnapshotWithoutCaptureSpecificId() {
         String rendered =
-                renderer.render(result(true), options(RenderLanguage.ENGLISH, RenderStyle.BOX))
-                        .replace("\r\n", "\n");
+                renderer.render(result(true), options(RenderStyle.BOX)).replace("\r\n", "\n");
 
         assertThat(rendered)
                 .isEqualTo(
@@ -74,30 +69,13 @@ class DefaultConsoleRendererTest {
     }
 
     @Test
-    void rendersNaturalTurkishCompactOutput() {
-        String rendered =
-                renderer.render(result(true), options(RenderLanguage.TURKISH, RenderStyle.COMPACT));
-
-        assertThat(rendered)
-                .contains("StackMate Hızlı Tanı")
-                .contains("Olay: STM-01234567")
-                .contains("Kategori: GENEL JAVA")
-                .contains("Özet: Null bir referansa erişildi")
-                .contains("İlk uygulama karesini ve burada erişilen değerleri")
-                .contains("inceleyin.")
-                .contains("Ağ devre")
-                .contains("dışı")
-                .doesNotContain("Null reference was dereferenced");
-    }
-
-    @Test
     void boundsEveryLineAndStripsTerminalEscapesAndSecrets() {
         String rendered =
                 renderer.render(
                         resultWithMessage(
                                 "\u001B[31m password=very-secret " + "long-value ".repeat(30),
                                 true),
-                        options(RenderLanguage.ENGLISH, RenderStyle.BOX));
+                        options(RenderStyle.BOX));
 
         assertThat(rendered.lines()).allMatch(line -> line.codePointCount(0, line.length()) <= 60);
         assertThat(rendered)
@@ -108,15 +86,13 @@ class DefaultConsoleRendererTest {
 
     @Test
     void usesExplicitUnknownFallbackAndOmitsAbsentLocation() {
-        String rendered =
-                renderer.render(
-                        unknownResult(false), options(RenderLanguage.TURKISH, RenderStyle.COMPACT));
+        String rendered = renderer.render(unknownResult(false), options(RenderStyle.COMPACT));
 
         assertThat(rendered)
-                .contains("Kategori: BİLİNMİYOR")
-                .contains("Kesin tanı için yeterli bağlam yok.")
-                .doesNotContain("İlk uygulama konumu")
-                .doesNotContain("Uygulama izi");
+                .contains("Category: UNKNOWN")
+                .contains("Insufficient context for a conclusive diagnosis.")
+                .doesNotContain("First app location")
+                .doesNotContain("Application trace");
     }
 
     @Test
@@ -126,13 +102,7 @@ class DefaultConsoleRendererTest {
                 renderer.renderDuplicate(
                         result(true),
                         new DeduplicationResult(7, true, false, now, now),
-                        new RenderOptions(
-                                RenderLanguage.ENGLISH,
-                                RenderStyle.COMPACT,
-                                80,
-                                true,
-                                false,
-                                false));
+                        new RenderOptions(RenderStyle.COMPACT, 80, true, false, false));
 
         assertThat(rendered).isEqualTo("StackMate duplicate STM-01234567 (count 7)");
     }
@@ -143,13 +113,7 @@ class DefaultConsoleRendererTest {
                 renderer.renderSevereJvmFailure(
                         FINGERPRINT,
                         "java.lang.OutOfMemoryError\u001B[2J",
-                        new RenderOptions(
-                                RenderLanguage.ENGLISH,
-                                RenderStyle.COMPACT,
-                                80,
-                                true,
-                                false,
-                                false));
+                        new RenderOptions(RenderStyle.COMPACT, 80, true, false, false));
 
         assertThat(rendered)
                 .isEqualTo("StackMate severe JVM failure STM-01234567: java.lang.OutOfMemoryError")
@@ -158,170 +122,14 @@ class DefaultConsoleRendererTest {
 
     @Test
     void validatesWidthBounds() {
-        assertThatThrownBy(
-                        () ->
-                                new RenderOptions(
-                                        RenderLanguage.ENGLISH,
-                                        RenderStyle.BOX,
-                                        59,
-                                        true,
-                                        false,
-                                        false))
+        assertThatThrownBy(() -> new RenderOptions(RenderStyle.BOX, 59, true, false, false))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(
-                        () ->
-                                new RenderOptions(
-                                        RenderLanguage.ENGLISH,
-                                        RenderStyle.BOX,
-                                        201,
-                                        true,
-                                        false,
-                                        false))
+        assertThatThrownBy(() -> new RenderOptions(RenderStyle.BOX, 201, true, false, false))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @ParameterizedTest
-    @MethodSource("builtInTurkishCases")
-    void localizes_built_in_title_explanation_and_check_without_english_prose(
-            String causeId,
-            String checkId,
-            DiagnosticCategory category,
-            String expectedTitle,
-            String expectedExplanation,
-            String expectedCheck) {
-        String englishTitle = "English built-in title for " + causeId;
-        String englishExplanation = "English built-in explanation for " + causeId;
-        String englishCheck = "English built-in check for " + checkId;
-        DeterministicResult result =
-                localizedResult(
-                        causeId, checkId, category, englishTitle, englishExplanation, englishCheck);
-
-        String turkish =
-                renderer.render(
-                        result, detailedOptions(RenderLanguage.TURKISH, RenderStyle.COMPACT));
-        String english =
-                renderer.render(
-                        result, detailedOptions(RenderLanguage.ENGLISH, RenderStyle.COMPACT));
-
-        assertThat(turkish)
-                .contains(expectedTitle)
-                .contains(expectedExplanation)
-                .contains(expectedCheck)
-                .doesNotContain(englishTitle)
-                .doesNotContain(englishExplanation)
-                .doesNotContain(englishCheck);
-        assertThat(english)
-                .contains(englishTitle)
-                .contains(englishExplanation)
-                .contains(englishCheck);
-    }
-
-    @Test
-    void keeps_sanitized_custom_analyzer_prose_as_turkish_fallback() {
-        DeterministicResult result =
-                localizedResult(
-                        "cause.custom.failure",
-                        "check.custom.failure",
-                        DiagnosticCategory.UNKNOWN,
-                        "Özel neden",
-                        "password=custom-secret özel açıklama",
-                        "Özel kontrolü uygulayın.");
-
-        String rendered =
-                renderer.render(
-                        result, detailedOptions(RenderLanguage.TURKISH, RenderStyle.COMPACT));
-
-        assertThat(rendered)
-                .contains("Özel neden")
-                .contains("password=[REDACTED] özel açıklama")
-                .contains("Özel kontrolü uygulayın.")
-                .doesNotContain("custom-secret");
-    }
-
-    private static RenderOptions options(RenderLanguage language, RenderStyle style) {
-        return new RenderOptions(language, style, 60, true, false, false);
-    }
-
-    private static RenderOptions detailedOptions(RenderLanguage language, RenderStyle style) {
-        return new RenderOptions(language, style, 120, false, true, false);
-    }
-
-    private static Stream<Arguments> builtInTurkishCases() {
-        return Stream.of(
-                Arguments.of(
-                        "cause.java.unsupported-operation",
-                        "check.java.unsupported-operation",
-                        DiagnosticCategory.GENERAL_JAVA,
-                        "İstenen işlem desteklenmiyor",
-                        "Yakalanan kesin Java hata türü",
-                        "Somut implementasyonun işlemi"),
-                Arguments.of(
-                        "cause.spring.configuration-binding",
-                        "check.spring.configuration-properties",
-                        DiagnosticCategory.SPRING_CONFIGURATION,
-                        "Spring yapılandırma özellikleri bağlanamadı",
-                        "Yakalanan Spring hata türü",
-                        "Özellik adlarını, değer türlerini"),
-                Arguments.of(
-                        "cause.web.json-shape-mismatch",
-                        "check.web.json-shape-mismatch",
-                        DiagnosticCategory.SERIALIZATION,
-                        "JSON yapısı hedef türle eşleşmedi",
-                        "Yakalanan web veya serileştirme hata türü",
-                        "Gelen JSON yapısını hedef veri türüyle karşılaştırın"),
-                Arguments.of(
-                        "cause.database.unique-constraint",
-                        "check.database.unique-constraint",
-                        DiagnosticCategory.DATABASE_CONSTRAINT,
-                        "Benzersizlik kısıtı ihlal edildi",
-                        "yapılandırılmış SQLState bu tanıyı",
-                        "Çakışan anahtarı"),
-                Arguments.of(
-                        "cause.security.access-denied",
-                        "check.security.access-denied",
-                        DiagnosticCategory.AUTHORIZATION,
-                        "Yetkilendirme işleme erişimi reddetti",
-                        "Yakalanan güvenlik hata türü",
-                        "Kimliği doğrulanmış kullanıcıyı"),
-                Arguments.of(
-                        "cause.infrastructure.dns-resolution",
-                        "check.infrastructure.dns-resolution",
-                        DiagnosticCategory.DNS,
-                        "Sunucu adı çözümlenemedi",
-                        "Yakalanan altyapı hata türü",
-                        "Sunucu adını, DNS resolver'ı"),
-                Arguments.of(
-                        "cause.unknown",
-                        "check.inspect-root-cause",
-                        DiagnosticCategory.UNKNOWN,
-                        "Deterministik bir neden belirlenemedi",
-                        "Mevcut kanıtlar bilinen deterministik bir kuralla eşleşmedi",
-                        "Kök hata türünü, mesajını"));
-    }
-
-    private static DeterministicResult localizedResult(
-            String causeId,
-            String checkId,
-            DiagnosticCategory category,
-            String title,
-            String explanation,
-            String check) {
-        EvidenceItem evidence = evidence();
-        Diagnosis diagnosis =
-                new Diagnosis(
-                        List.of(evidence),
-                        List.of(
-                                new DiagnosedCause(
-                                        causeId,
-                                        category,
-                                        title,
-                                        explanation,
-                                        DiagnosticStrength.HIGH,
-                                        List.of(evidence.id()))),
-                        List.of(new CheckCandidate(checkId, check, List.of(evidence.id()))),
-                        List.of("renderer-test@1"),
-                        causeId.equals("cause.unknown"));
-        return new DeterministicResult(incident("localized failure", true), diagnosis, FINGERPRINT);
+    private static RenderOptions options(RenderStyle style) {
+        return new RenderOptions(style, 60, true, false, false);
     }
 
     private static DeterministicResult result(boolean applicationFrame) {

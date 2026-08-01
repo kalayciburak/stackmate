@@ -134,7 +134,7 @@ public final class BenchmarkReportGenerator {
                             .count();
             text.append("- ").append(domain).append(": ").append(count).append('\n');
         }
-        text.append("\nManual English/Turkish review uses `manual-review-worksheet.md`.\n");
+        text.append("\nManual English review uses `manual-review-worksheet.md`.\n");
         return text.toString();
     }
 

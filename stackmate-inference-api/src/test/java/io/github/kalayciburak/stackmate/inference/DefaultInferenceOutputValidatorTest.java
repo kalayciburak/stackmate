@@ -44,7 +44,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "99",
-                        InferenceLanguage.ENGLISH,
                         "This is an error summary.",
                         "This explanation uses only the supplied error.",
                         List.of("cause.unknown"),
@@ -65,7 +64,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "This is the failure summary.",
                         "This explanation uses another supplied fact.",
                         List.of("cause.one"),
@@ -83,7 +81,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "This error has an escape \u001Bsequence.",
                         "The operation failed with the supplied evidence.",
                         List.of(),
@@ -102,7 +99,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "This is the guaranteed root cause with confidence: 95.",
                         "The source code was inspected for this failure.",
                         List.of(),
@@ -120,7 +116,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "Inspect InventedSource.java:42 and uk_attacker_secret.",
                         "This error contains password=hunter2.",
                         List.of(),
@@ -140,7 +135,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "```json is not allowed.",
                         "Run rm -rf / to resolve this error.",
                         List.of(),
@@ -174,7 +168,6 @@ class DefaultInferenceOutputValidatorTest {
         var output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "This error contains CUSTOM-4821.",
                         "The operation failed with the supplied evidence.",
                         List.of(),
@@ -192,7 +185,6 @@ class DefaultInferenceOutputValidatorTest {
         StructuredInferenceOutput output =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.ENGLISH,
                         "The failure is visible at Repository.java:42.",
                         "The database enforced uk_user_email for this value.",
                         List.of("cause.one"),
@@ -205,60 +197,20 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
-    void rejectsDeclaredAndDetectedLanguageMismatch() {
-        StructuredInferenceOutput declaredMismatch =
+    void rejectsOutputThatDoesNotAppearToBeEnglish() {
+        StructuredInferenceOutput nonEnglish =
                 new StructuredInferenceOutput(
                         "2",
-                        InferenceLanguage.TURKISH,
-                        "Bu hata verilen kanıtla açıklanabilir.",
-                        "Bu işlem için önce değeri kontrol edin.",
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        List.of());
-        StructuredInferenceOutput detectedMismatch =
-                new StructuredInferenceOutput(
-                        "2",
-                        InferenceLanguage.ENGLISH,
                         "Bu hata çünkü neden olabilir.",
                         "Bu işlem için değeri kontrol edin.",
                         List.of(),
                         List.of(),
                         List.of(),
                         List.of());
-        InferenceRequest english = request(2_000);
-        InferenceRequest turkish =
-                new InferenceRequest(
-                        english.schemaVersion(),
-                        english.promptVersion(),
-                        english.id(),
-                        InferenceLanguage.TURKISH,
-                        english.incident(),
-                        english.facts(),
-                        english.candidateCauses(),
-                        english.candidateChecks(),
-                        english.terminology(),
-                        english.maximumOutputCharacters());
-        StructuredInferenceOutput copiedEnglish =
-                new StructuredInferenceOutput(
-                        "2",
-                        InferenceLanguage.TURKISH,
-                        "An operation ran in an invalid state.",
-                        "The request failed because the value was invalid.",
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        List.of());
 
         assertCodes(
-                validator.validate(english, declaredMismatch),
-                OutputValidationIssue.Code.LANGUAGE_MISMATCH);
-        assertCodes(
-                validator.validate(english, detectedMismatch),
-                OutputValidationIssue.Code.LANGUAGE_MISMATCH);
-        assertCodes(
-                validator.validate(turkish, copiedEnglish),
-                OutputValidationIssue.Code.LANGUAGE_MISMATCH);
+                validator.validate(request(2_000), nonEnglish),
+                OutputValidationIssue.Code.OUTPUT_NOT_ENGLISH);
     }
 
     @Test
@@ -267,7 +219,6 @@ class DefaultInferenceOutputValidatorTest {
                         () ->
                                 new StructuredInferenceOutput(
                                         "2",
-                                        InferenceLanguage.ENGLISH,
                                         "The insert failed because the value already exists.",
                                         "The database enforced the supplied constraint.",
                                         List.of("cause.one", "cause.one"),
@@ -285,7 +236,6 @@ class DefaultInferenceOutputValidatorTest {
                         request(2_000),
                         new StructuredInferenceOutput(
                                 "99",
-                                InferenceLanguage.TURKISH,
                                 "Hata özeti.",
                                 "Bu hata için kanıt yetersiz.",
                                 List.of(),
@@ -309,7 +259,6 @@ class DefaultInferenceOutputValidatorTest {
     private static StructuredInferenceOutput validOutput() {
         return new StructuredInferenceOutput(
                 "2",
-                InferenceLanguage.ENGLISH,
                 "The insert failed because the value already exists.",
                 "The database enforced uk_user_email for the supplied value.",
                 List.of("cause.one"),
@@ -323,7 +272,6 @@ class DefaultInferenceOutputValidatorTest {
                 InferenceRequest.SCHEMA_VERSION,
                 InferenceRequest.PROMPT_VERSION,
                 "request.one",
-                InferenceLanguage.ENGLISH,
                 new InferenceIncident(
                         DiagnosticCategory.DATABASE_CONSTRAINT, DiagnosticStrength.HIGH),
                 List.of(

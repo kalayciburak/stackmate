@@ -1,6 +1,5 @@
 package io.github.kalayciburak.stackmate.inference;
 
-import io.github.kalayciburak.stackmate.output.RenderLanguage;
 import io.github.kalayciburak.stackmate.output.RenderOptions;
 import io.github.kalayciburak.stackmate.output.RenderStyle;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
@@ -28,51 +27,40 @@ public final class DefaultLocalExplanationRenderer implements LocalExplanationRe
         Objects.requireNonNull(model, "model");
         Objects.requireNonNull(elapsed, "elapsed");
         Objects.requireNonNull(options, "options");
-        boolean tr = options.language() == RenderLanguage.TURKISH;
         List<String> lines = new ArrayList<>();
-        lines.add(tr ? "StackMate Yerel Açıklama" : "StackMate Local Explanation");
-        lines.add(label(tr, "Özet", "Summary") + safe("inferenceSummary", output.summary()));
-        lines.add(
-                label(tr, "Açıklama", "Explanation")
-                        + safe("inferenceExplanation", output.explanation()));
+        lines.add("StackMate Local Explanation");
+        lines.add("Summary: " + safe("inferenceSummary", output.summary()));
+        lines.add("Explanation: " + safe("inferenceExplanation", output.explanation()));
         if (!output.selectedCauses().isEmpty()) {
-            lines.add(tr ? "Önceliklendirilen nedenler:" : "Prioritized causes:");
+            lines.add("Prioritized causes:");
             output.selectedCauses()
                     .forEach(cause -> lines.add("  - " + safe("inferenceCause", cause.text())));
         }
         if (!output.selectedChecks().isEmpty()) {
-            lines.add(tr ? "Önceliklendirilen kontroller:" : "Prioritized checks:");
+            lines.add("Prioritized checks:");
             output.selectedChecks()
                     .forEach(check -> lines.add("  - " + safe("inferenceCheck", check.text())));
         }
         if (!output.limitations().isEmpty()) {
-            lines.add(tr ? "Sınırlılıklar:" : "Limitations:");
+            lines.add("Limitations:");
             output.limitations()
                     .forEach(
                             limitation ->
                                     lines.add("  - " + safe("inferenceLimitation", limitation)));
         }
-        lines.add(label(tr, "Kullanılan kanıt", "Evidence used") + output.usedEvidenceIds().size());
-        lines.add(label(tr, "Süre", "Duration") + Math.max(0, elapsed.toMillis()) + " ms");
+        lines.add("Evidence used: " + output.usedEvidenceIds().size());
+        lines.add("Duration: " + Math.max(0, elapsed.toMillis()) + " ms");
         lines.add(
-                label(tr, "Kaynak", "Source")
-                        + (tr ? "Deneysel yerel JVM modeli " : "Experimental local JVM model ")
+                "Source: Experimental local JVM model "
                         + safe("modelName", model.displayName())
                         + " "
                         + safe("modelVersion", model.version())
-                        + " | "
-                        + (tr
-                                ? "StackMate harici ağ çağrısı yapmadı"
-                                : "StackMate made no external network call"));
+                        + " | StackMate made no external network call");
         return format(lines, options);
     }
 
     private String safe(String field, String value) {
         return sanitizer.sanitize(field, Objects.requireNonNull(value, field));
-    }
-
-    private static String label(boolean tr, String turkish, String english) {
-        return (tr ? turkish : english) + ": ";
     }
 
     private static String format(List<String> sourceLines, RenderOptions options) {

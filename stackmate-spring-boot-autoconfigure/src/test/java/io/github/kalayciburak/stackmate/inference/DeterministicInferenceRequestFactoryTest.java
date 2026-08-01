@@ -37,10 +37,9 @@ class DeterministicInferenceRequestFactoryTest {
         DeterministicInferenceRequestFactory factory =
                 new DeterministicInferenceRequestFactory(DefaultSanitizer.defaults());
 
-        InferenceRequest request = factory.create(result, InferenceLanguage.TURKISH, 300, 512);
+        InferenceRequest request = factory.create(result, 300, 512);
 
         assertThat(totalCharacters(request)).isLessThanOrEqualTo(300);
-        assertThat(request.language()).isEqualTo(InferenceLanguage.TURKISH);
         assertThat(request.schemaVersion()).isEqualTo("2");
         assertThat(request.promptVersion()).isEqualTo("2");
         assertThat(request.incident().category())

@@ -1,11 +1,9 @@
 package io.github.kalayciburak.stackmate.benchmark.model;
 
 import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.jvm.JlamaLocalInferenceEngine;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.Locale;
 
 /** Explicit, opt-in A/B/C benchmark entry point for a user-provisioned local model. */
 public final class LocalModelBenchmarkMain {
@@ -21,7 +19,6 @@ public final class LocalModelBenchmarkMain {
                 Duration.ofSeconds(
                         Long.parseLong(
                                 System.getProperty("stackmate.benchmark.timeout-seconds", "30")));
-        InferenceLanguage language = language();
         int maximumCases =
                 Integer.parseInt(System.getProperty("stackmate.benchmark.maximum-cases", "50"));
         boolean includeRaw =
@@ -32,9 +29,7 @@ public final class LocalModelBenchmarkMain {
                 throw new IllegalStateException(
                         "local model is unavailable: " + availability.detail());
             }
-            var result =
-                    new LocalModelBenchmarkHarness(engine)
-                            .evaluate(language, maximumCases, includeRaw);
+            var result = new LocalModelBenchmarkHarness(engine).evaluate(maximumCases, includeRaw);
             var reports =
                     new LocalModelBenchmarkReportWriter()
                             .write(outputDirectory, result, engine.model());
@@ -50,19 +45,5 @@ public final class LocalModelBenchmarkMain {
                     "-Dstackmate.model.path=/absolute/path/to/model is required");
         }
         return Path.of(value);
-    }
-
-    private static InferenceLanguage language() {
-        String configured =
-                System.getProperty("stackmate.benchmark.language", "en")
-                        .strip()
-                        .toLowerCase(Locale.ROOT);
-        return switch (configured) {
-            case "en" -> InferenceLanguage.ENGLISH;
-            case "tr" -> InferenceLanguage.TURKISH;
-            default ->
-                    throw new IllegalArgumentException(
-                            "stackmate.benchmark.language must be en or tr");
-        };
     }
 }

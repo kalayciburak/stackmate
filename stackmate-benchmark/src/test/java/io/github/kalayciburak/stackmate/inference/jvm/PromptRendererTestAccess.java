@@ -10,15 +10,13 @@ public final class PromptRendererTestAccess {
 
     public static RenderedPrompt initial(InferenceRequest request) {
         PromptRenderer renderer = new PromptRenderer(new ObjectMapper());
-        return new RenderedPrompt(
-                renderer.systemPrompt(request.language()), renderer.userPrompt(request));
+        return new RenderedPrompt(renderer.systemPrompt(), renderer.userPrompt(request));
     }
 
     public static RenderedPrompt repair(InferenceRequest request, String previousOutput) {
         PromptRenderer renderer = new PromptRenderer(new ObjectMapper());
         return new RenderedPrompt(
-                renderer.repairSystemPrompt(request.language()),
-                renderer.repairUserPrompt(request, previousOutput));
+                renderer.repairSystemPrompt(), renderer.repairUserPrompt(request, previousOutput));
     }
 
     public record RenderedPrompt(String system, String user) {}

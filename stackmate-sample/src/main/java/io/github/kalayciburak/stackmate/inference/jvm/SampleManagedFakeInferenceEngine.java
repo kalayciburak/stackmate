@@ -25,7 +25,7 @@ public final class SampleManagedFakeInferenceEngine implements LocalInferenceEng
                     "stackmate-e2e-fake",
                     "StackMate packaged E2E fake child",
                     "1",
-                    new ModelCapabilities(true, true, true, 16_000, 8_192));
+                    new ModelCapabilities(true, 16_000, 8_192));
 
     private final ObjectMapper mapper = Protocol.strictMapper();
     private final ManagedChild child;

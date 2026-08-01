@@ -2,7 +2,6 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.StructuredInferenceOutput;
 import java.io.BufferedInputStream;
@@ -71,13 +70,8 @@ public final class SampleFakeInferenceChildMain {
         String summary =
                 scenario.contains("fakefabricatedsource")
                         ? "Inspect InventedSource.java:42 before continuing."
-                        : request.language() == InferenceLanguage.TURKISH
-                                ? "Bu hata yalnızca sağlanan kanıtlarla açıklanmıştır."
-                                : "This failure is explained only by the supplied evidence.";
-        String explanation =
-                request.language() == InferenceLanguage.TURKISH
-                        ? "Yalnızca deterministik adaylar önceliklendirilmiştir."
-                        : "Only deterministic candidates were prioritized.";
+                        : "This failure is explained only by the supplied evidence.";
+        String explanation = "Only deterministic candidates were prioritized.";
         List<String> causes =
                 request.candidateCauses().isEmpty()
                         ? List.of()
@@ -87,14 +81,7 @@ public final class SampleFakeInferenceChildMain {
                         ? List.of()
                         : List.of(request.candidateChecks().getFirst().id());
         return new StructuredInferenceOutput(
-                request.schemaVersion(),
-                request.language(),
-                summary,
-                explanation,
-                causes,
-                checks,
-                factIds,
-                List.of());
+                request.schemaVersion(), summary, explanation, causes, checks, factIds, List.of());
     }
 
     private static List<String> selectedEvidence(InferenceRequest request, String scenario) {

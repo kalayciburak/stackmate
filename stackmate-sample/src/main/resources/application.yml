@@ -6,7 +6,6 @@ stackmate:
   enabled: true
   application-packages:
     - io.github.kalayciburak.stackmate.sample
-  language: en
   mode: deterministic
   inference:
     enabled: false

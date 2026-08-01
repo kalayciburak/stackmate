@@ -3,7 +3,6 @@ package io.github.kalayciburak.stackmate.inference;
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
 import io.github.kalayciburak.stackmate.configuration.InferenceProperties;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
-import io.github.kalayciburak.stackmate.output.RenderLanguage;
 import io.github.kalayciburak.stackmate.output.RenderOptions;
 import io.github.kalayciburak.stackmate.output.RenderStyle;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
@@ -118,9 +117,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
                 return;
             }
             model = engine.model();
-            InferenceLanguage language = language();
-            if (!model.capabilities().structuredOutput()
-                    || !model.capabilities().supports(language)) {
+            if (!model.capabilities().structuredOutput()) {
                 startFailure(releaseReservation);
                 return;
             }
@@ -132,7 +129,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
                     Math.min(
                             outputCharacters(properties.getInference().getMaximumOutputTokens()),
                             model.capabilities().maximumOutputCharacters());
-            request = requestFactory.create(result, language, maximumInput, maximumOutput);
+            request = requestFactory.create(result, maximumInput, maximumOutput);
         } catch (Throwable setupFailure) {
             preserveInterrupt(setupFailure);
             startFailure(releaseReservation);
@@ -276,9 +273,6 @@ public final class DefaultAsyncLocalInferenceCoordinator
 
     private RenderOptions renderOptions() {
         return new RenderOptions(
-                properties.getLanguage() == StackMateProperties.Language.TR
-                        ? RenderLanguage.TURKISH
-                        : RenderLanguage.ENGLISH,
                 properties.getConsole().getStyle()
                                 == io.github.kalayciburak.stackmate.configuration.ConsoleProperties
                                         .Style.COMPACT
@@ -288,12 +282,6 @@ public final class DefaultAsyncLocalInferenceCoordinator
                 false,
                 false,
                 false);
-    }
-
-    private InferenceLanguage language() {
-        return properties.getLanguage() == StackMateProperties.Language.TR
-                ? InferenceLanguage.TURKISH
-                : InferenceLanguage.ENGLISH;
     }
 
     private static int outputCharacters(int maximumOutputTokens) {

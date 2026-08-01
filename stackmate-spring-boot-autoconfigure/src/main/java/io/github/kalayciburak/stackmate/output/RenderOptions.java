@@ -4,7 +4,6 @@ import java.util.Objects;
 
 /** Immutable, per-call console rendering options. */
 public record RenderOptions(
-        RenderLanguage language,
         RenderStyle style,
         int maxWidth,
         boolean showApplicationTrace,
@@ -15,7 +14,6 @@ public record RenderOptions(
     public static final int MAX_WIDTH = 200;
 
     public RenderOptions {
-        language = Objects.requireNonNull(language, "language");
         style = Objects.requireNonNull(style, "style");
         if (maxWidth < MIN_WIDTH || maxWidth > MAX_WIDTH) {
             throw new IllegalArgumentException("maxWidth must be between 60 and 200");
@@ -23,6 +21,6 @@ public record RenderOptions(
     }
 
     public static RenderOptions defaults() {
-        return new RenderOptions(RenderLanguage.ENGLISH, RenderStyle.BOX, 100, true, false, false);
+        return new RenderOptions(RenderStyle.BOX, 100, true, false, false);
     }
 }

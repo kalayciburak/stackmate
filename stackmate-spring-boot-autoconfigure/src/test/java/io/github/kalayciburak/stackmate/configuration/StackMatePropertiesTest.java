@@ -19,7 +19,6 @@ class StackMatePropertiesTest {
 
         assertThat(properties.isEnabled()).isTrue();
         assertThat(properties.getMode()).isEqualTo(StackMateProperties.Mode.DETERMINISTIC);
-        assertThat(properties.getLanguage()).isEqualTo(StackMateProperties.Language.EN);
         assertThat(properties.getApplicationPackages()).isEmpty();
         assertThat(properties.getCapture().isMvcUnhandled()).isTrue();
         assertThat(properties.getCapture().getSelectedMdcKeys())
@@ -80,7 +79,6 @@ class StackMatePropertiesTest {
                         Map.ofEntries(
                                 Map.entry("stackmate.enabled", "false"),
                                 Map.entry("stackmate.mode", "deterministic"),
-                                Map.entry("stackmate.language", "tr"),
                                 Map.entry("stackmate.application-packages[0]", "com.example"),
                                 Map.entry("stackmate.capture.mvc-unhandled", "false"),
                                 Map.entry("stackmate.capture.selected-mdc-keys[0]", "requestId"),
@@ -98,7 +96,6 @@ class StackMatePropertiesTest {
 
         assertThat(properties.isEnabled()).isFalse();
         assertThat(properties.getMode()).isEqualTo(StackMateProperties.Mode.DETERMINISTIC);
-        assertThat(properties.getLanguage()).isEqualTo(StackMateProperties.Language.TR);
         assertThat(properties.getApplicationPackages()).containsExactly("com.example");
         assertThat(properties.getCapture().isMvcUnhandled()).isFalse();
         assertThat(properties.getCapture().getSelectedMdcKeys()).containsExactly("requestId");

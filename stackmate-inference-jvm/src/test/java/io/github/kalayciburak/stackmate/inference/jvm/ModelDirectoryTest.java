@@ -26,8 +26,7 @@ class ModelDirectoryTest {
 
         assertThat(model.path()).isAbsolute().isEqualTo(supplied.toRealPath());
         assertThat(model.descriptor().id()).isEqualTo("model-alan");
-        assertThat(model.descriptor().capabilities().english()).isTrue();
-        assertThat(model.descriptor().capabilities().turkish()).isTrue();
+        assertThat(model.descriptor().capabilities().structuredOutput()).isTrue();
     }
 
     @Test

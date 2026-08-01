@@ -75,7 +75,7 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     "state",
                     "request",
                     "value");
-    private static final Set<String> TURKISH_MARKERS =
+    private static final Set<String> NON_ENGLISH_MARKERS =
             Set.of(
                     "bir",
                     "bu",
@@ -143,13 +143,6 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     OutputValidationIssue.Code.UNKNOWN_SCHEMA_VERSION,
                     "schemaVersion",
                     "output schema version does not match the request");
-        }
-        if (output.language() != request.language()) {
-            issue(
-                    issues,
-                    OutputValidationIssue.Code.LANGUAGE_MISMATCH,
-                    "language",
-                    "output language does not match the request");
         }
         validateReferences(
                 output.selectedCauseIds(),
@@ -284,12 +277,12 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                     path,
                     "text contains a forbidden claim");
         }
-        if (hasOppositeLanguageOnly(text, request.language())) {
+        if (appearsNonEnglish(text)) {
             issue(
                     issues,
-                    OutputValidationIssue.Code.LANGUAGE_MISMATCH,
+                    OutputValidationIssue.Code.OUTPUT_NOT_ENGLISH,
                     path,
-                    "text appears to use a different language");
+                    "text does not appear to be English");
         }
     }
 
@@ -358,23 +351,19 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                         defaults.customPatterns()));
     }
 
-    private static boolean hasOppositeLanguageOnly(String text, InferenceLanguage expected) {
+    private static boolean appearsNonEnglish(String text) {
         String[] words = text.toLowerCase(Locale.ROOT).split("[^\\p{L}]+");
-        Set<String> expectedMarkers =
-                expected == InferenceLanguage.ENGLISH ? ENGLISH_MARKERS : TURKISH_MARKERS;
-        Set<String> oppositeMarkers =
-                expected == InferenceLanguage.ENGLISH ? TURKISH_MARKERS : ENGLISH_MARKERS;
-        int expectedCount = 0;
-        int oppositeCount = 0;
+        int englishCount = 0;
+        int nonEnglishCount = 0;
         for (String word : words) {
-            if (expectedMarkers.contains(word)) {
-                expectedCount++;
+            if (ENGLISH_MARKERS.contains(word)) {
+                englishCount++;
             }
-            if (oppositeMarkers.contains(word)) {
-                oppositeCount++;
+            if (NON_ENGLISH_MARKERS.contains(word)) {
+                nonEnglishCount++;
             }
         }
-        return expectedCount == 0 && oppositeCount >= 2;
+        return englishCount == 0 && nonEnglishCount >= 2;
     }
 
     private static void validateReferences(

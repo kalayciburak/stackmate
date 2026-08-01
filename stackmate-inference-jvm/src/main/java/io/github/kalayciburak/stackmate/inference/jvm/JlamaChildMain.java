@@ -152,7 +152,7 @@ public final class JlamaChildMain {
         PromptContext prompt =
                 promptSupport
                         .builder()
-                        .addSystemMessage(renderer.systemPrompt(request.language()))
+                        .addSystemMessage(renderer.systemPrompt())
                         .addUserMessage(renderer.userPrompt(request))
                         .build();
         int generatedTokens = maximumGeneratedTokens(request);
@@ -185,7 +185,7 @@ public final class JlamaChildMain {
         PromptContext prompt =
                 promptSupport
                         .builder()
-                        .addSystemMessage(renderer.repairSystemPrompt(request.language()))
+                        .addSystemMessage(renderer.repairSystemPrompt())
                         .addUserMessage(renderer.repairUserPrompt(request, previousOutput))
                         .build();
         int generatedTokens = maximumGeneratedTokens(request);

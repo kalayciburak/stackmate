@@ -2,7 +2,6 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +13,8 @@ final class PromptRenderer {
     private static final String BASE =
             "/io/github/kalayciburak/stackmate/inference/jvm/prompts/schema-v2/";
     private static final String ENGLISH_SYSTEM = loadPrompt("en/system.txt", "Required schema");
-    private static final String TURKISH_SYSTEM = loadPrompt("tr/system.txt", "Zorunlu şema");
     private static final String ENGLISH_REPAIR =
             loadPrompt("en/repair.txt", "Return exactly one JSON object");
-    private static final String TURKISH_REPAIR =
-            loadPrompt("tr/repair.txt", "Yalnızca tek bir JSON nesnesi döndür");
 
     private final ObjectMapper mapper;
 
@@ -26,8 +22,8 @@ final class PromptRenderer {
         this.mapper = mapper;
     }
 
-    String systemPrompt(InferenceLanguage language) {
-        return language == InferenceLanguage.TURKISH ? TURKISH_SYSTEM : ENGLISH_SYSTEM;
+    String systemPrompt() {
+        return ENGLISH_SYSTEM;
     }
 
     String userPrompt(InferenceRequest request) {
@@ -35,7 +31,6 @@ final class PromptRenderer {
                 new PromptInput(
                         request.schemaVersion(),
                         request.promptVersion(),
-                        request.language().name(),
                         new Incident(
                                 request.incident().category().name(),
                                 request.incident().evidenceStrength().name()),
@@ -82,8 +77,8 @@ final class PromptRenderer {
         }
     }
 
-    String repairSystemPrompt(InferenceLanguage language) {
-        return language == InferenceLanguage.TURKISH ? TURKISH_REPAIR : ENGLISH_REPAIR;
+    String repairSystemPrompt() {
+        return ENGLISH_REPAIR;
     }
 
     String repairUserPrompt(InferenceRequest request, String previousOutput) {
@@ -145,7 +140,6 @@ final class PromptRenderer {
     private record PromptInput(
             String schemaVersion,
             String promptVersion,
-            String language,
             Incident incident,
             List<Fact> facts,
             List<Candidate> candidateCauses,

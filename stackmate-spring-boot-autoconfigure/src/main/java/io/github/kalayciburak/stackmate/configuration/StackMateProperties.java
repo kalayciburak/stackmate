@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /** Type-safe root configuration for the bounded StackMate runtime. */
-@ConfigurationProperties("stackmate")
+@ConfigurationProperties(prefix = "stackmate", ignoreUnknownFields = false)
 public class StackMateProperties {
 
     /** Selects deterministic-only or deterministic-plus-local-inference processing. */
@@ -16,15 +16,8 @@ public class StackMateProperties {
         HYBRID
     }
 
-    /** Selects the supported console language. */
-    public enum Language {
-        EN,
-        TR
-    }
-
     private boolean enabled = true;
     private Mode mode = Mode.DETERMINISTIC;
-    private Language language = Language.EN;
     private List<String> applicationPackages = new ArrayList<>();
 
     @NestedConfigurationProperty private CaptureProperties capture = new CaptureProperties();
@@ -59,14 +52,6 @@ public class StackMateProperties {
 
     public void setMode(Mode mode) {
         this.mode = Objects.requireNonNull(mode, "mode");
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = Objects.requireNonNull(language, "language");
     }
 
     public List<String> getApplicationPackages() {

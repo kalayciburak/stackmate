@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
 import io.github.kalayciburak.stackmate.inference.InferenceFailure;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
 import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
@@ -133,12 +132,6 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
                 return failed(
                         InferenceFailure.Kind.REJECTED, "inference request is required", false);
             }
-            if (!model().capabilities().supports(request.language())) {
-                return failed(
-                        InferenceFailure.Kind.REJECTED,
-                        "requested language is not supported by the local model",
-                        false);
-            }
             if (!child.mayStart()) {
                 return failed(
                         InferenceFailure.Kind.UNAVAILABLE,
@@ -234,7 +227,6 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
         ParsedOutput parsed = mapper.readValue(json, ParsedOutput.class);
         return new StructuredInferenceOutput(
                 parsed.schemaVersion(),
-                parsed.language(),
                 parsed.summary(),
                 parsed.explanation(),
                 parsed.selectedCauseIds(),
@@ -293,7 +285,6 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
 
     private record ParsedOutput(
             String schemaVersion,
-            InferenceLanguage language,
             String summary,
             String explanation,
             List<String> selectedCauseIds,

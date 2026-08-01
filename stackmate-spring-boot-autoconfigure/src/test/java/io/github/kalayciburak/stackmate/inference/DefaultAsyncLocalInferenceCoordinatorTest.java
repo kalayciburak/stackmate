@@ -98,7 +98,6 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                             return new InferenceResult.Success(
                                     new StructuredInferenceOutput(
                                             "2",
-                                            request.language(),
                                             "This local explanation uses supplied evidence.",
                                             "It selects only supplied candidates.",
                                             List.of("cause.not-supplied"),
@@ -254,7 +253,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                         "test/local-model",
                         "Test Local Model",
                         "1",
-                        new ModelCapabilities(true, true, true, 16_000, 8_192));
+                        new ModelCapabilities(true, 16_000, 8_192));
             }
 
             @Override
@@ -271,13 +270,8 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
         return new InferenceResult.Success(
                 new StructuredInferenceOutput(
                         "2",
-                        request.language(),
-                        request.language() == InferenceLanguage.TURKISH
-                                ? "Bu hata için yerel açıklama üretildi."
-                                : "This local explanation uses supplied evidence.",
-                        request.language() == InferenceLanguage.TURKISH
-                                ? "Açıklama yalnızca sağlanan kanıta dayanır."
-                                : "The explanation uses only supplied evidence.",
+                        "This local explanation uses supplied evidence.",
+                        "The explanation uses only supplied evidence.",
                         List.of(),
                         List.of(),
                         List.of(request.facts().getFirst().id()),

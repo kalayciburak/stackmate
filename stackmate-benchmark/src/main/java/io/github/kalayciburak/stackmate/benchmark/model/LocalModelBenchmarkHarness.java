@@ -17,7 +17,6 @@ import io.github.kalayciburak.stackmate.inference.DeterministicInferenceRequestF
 import io.github.kalayciburak.stackmate.inference.InferenceCauseCandidate;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
 import io.github.kalayciburak.stackmate.inference.InferenceIncident;
-import io.github.kalayciburak.stackmate.inference.InferenceLanguage;
 import io.github.kalayciburak.stackmate.inference.InferenceOutputValidator;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
 import io.github.kalayciburak.stackmate.inference.InferenceResult;
@@ -68,19 +67,16 @@ public final class LocalModelBenchmarkHarness {
         this.structuredRequestFactory = new DeterministicInferenceRequestFactory(sanitizer);
     }
 
-    public BenchmarkResult evaluate(InferenceLanguage language) throws InterruptedException {
-        return evaluate(language, BenchmarkCorpus.cases().size());
+    public BenchmarkResult evaluate() throws InterruptedException {
+        return evaluate(BenchmarkCorpus.cases().size());
     }
 
-    public BenchmarkResult evaluate(InferenceLanguage language, int maximumCases)
-            throws InterruptedException {
-        return evaluate(language, maximumCases, true);
+    public BenchmarkResult evaluate(int maximumCases) throws InterruptedException {
+        return evaluate(maximumCases, true);
     }
 
-    public BenchmarkResult evaluate(
-            InferenceLanguage language, int maximumCases, boolean includeRaw)
+    public BenchmarkResult evaluate(int maximumCases, boolean includeRaw)
             throws InterruptedException {
-        Objects.requireNonNull(language, "language");
         if (maximumCases < 1 || maximumCases > BenchmarkCorpus.cases().size()) {
             throw new IllegalArgumentException("maximumCases must be between 1 and 50");
         }
@@ -100,8 +96,8 @@ public final class LocalModelBenchmarkHarness {
                                 rawRequest(
                                         incident,
                                         "raw-case-"
-                                                + String.format(Locale.ROOT, "%03d", caseIndex + 1),
-                                        language),
+                                                + String.format(
+                                                        Locale.ROOT, "%03d", caseIndex + 1)),
                                 false));
             }
             structuredCases.add(
@@ -110,7 +106,6 @@ public final class LocalModelBenchmarkHarness {
                             groundTruth,
                             structuredRequestFactory.create(
                                     deterministic,
-                                    language,
                                     MAXIMUM_INPUT_CHARACTERS,
                                     MAXIMUM_STRUCTURED_OUTPUT_CHARACTERS),
                             true));
@@ -124,7 +119,6 @@ public final class LocalModelBenchmarkHarness {
                             + ")");
         }
         return new BenchmarkResult(
-                language,
                 includeRaw ? summarize(rawCases, false) : notExecutedMode(),
                 summarize(structuredCases, true));
     }
@@ -254,8 +248,7 @@ public final class LocalModelBenchmarkHarness {
                 issues.stream().map(issue -> issue.code().name()).distinct().toList());
     }
 
-    private InferenceRequest rawRequest(
-            IncidentSnapshot incident, String neutralRequestId, InferenceLanguage language) {
+    private InferenceRequest rawRequest(IncidentSnapshot incident, String neutralRequestId) {
         InferenceFact raw =
                 new InferenceFact(
                         RAW_FACT_ID, "RAW_SANITIZED_STACK", rawStackTrace(incident, 2_048));
@@ -274,7 +267,6 @@ public final class LocalModelBenchmarkHarness {
                 InferenceRequest.SCHEMA_VERSION,
                 InferenceRequest.PROMPT_VERSION,
                 neutralRequestId,
-                language,
                 new InferenceIncident(DiagnosticCategory.UNKNOWN, DiagnosticStrength.UNKNOWN),
                 List.of(raw),
                 categoryCandidates,
@@ -441,6 +433,5 @@ public final class LocalModelBenchmarkHarness {
         return sorted.get(Math.max(0, Math.min(index, sorted.size() - 1)));
     }
 
-    public record BenchmarkResult(
-            InferenceLanguage language, ModelModeSummary raw, ModelModeSummary structured) {}
+    public record BenchmarkResult(ModelModeSummary raw, ModelModeSummary structured) {}
 }

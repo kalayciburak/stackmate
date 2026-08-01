@@ -48,7 +48,7 @@ public final class LocalModelBenchmarkReportWriter {
         result.put("generatedAt", Instant.now().toString());
         result.put("corpusVersion", BenchmarkCorpus.CORPUS_VERSION);
         result.put("promptVersion", LocalModelBenchmarkHarness.PROMPT_VERSION);
-        result.put("language", modelResult.language());
+        result.put("language", "ENGLISH");
         result.put("evaluatedCaseCount", modelResult.raw().caseCount());
         result.put("machine", machine());
         result.put(
@@ -119,8 +119,7 @@ public final class LocalModelBenchmarkReportWriter {
                 .append(BenchmarkCorpus.CORPUS_VERSION)
                 .append("` (")
                 .append(modelResult.raw().caseCount())
-                .append(" of 50 controlled cases) · language: `")
-                .append(modelResult.language())
+                .append(" of 50 controlled cases) · language: `ENGLISH")
                 .append("`\n\n");
         text.append("Model: `")
                 .append(model.displayName())
@@ -159,7 +158,7 @@ public final class LocalModelBenchmarkReportWriter {
         text.append(
                 "- Content-level leakage counts cover parsed candidates; the production SPI "
                         + "intentionally discards rejected raw engine text.\n");
-        text.append("- English/Turkish readability requires `manual-review-worksheet.md`.\n");
+        text.append("- English readability requires `manual-review-worksheet.md`.\n");
         return text.toString();
     }
 

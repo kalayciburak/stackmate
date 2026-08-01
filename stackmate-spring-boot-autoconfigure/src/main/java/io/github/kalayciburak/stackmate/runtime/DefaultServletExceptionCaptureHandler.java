@@ -13,7 +13,6 @@ import io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
 import io.github.kalayciburak.stackmate.incident.JvmRuntimeContext;
 import io.github.kalayciburak.stackmate.output.ConsoleRenderer;
-import io.github.kalayciburak.stackmate.output.RenderLanguage;
 import io.github.kalayciburak.stackmate.output.RenderOptions;
 import io.github.kalayciburak.stackmate.output.RenderStyle;
 import io.github.kalayciburak.stackmate.throwable.ApplicationFrameSelector;
@@ -229,16 +228,11 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
     }
 
     private RenderOptions renderOptions() {
-        RenderLanguage language =
-                properties.getLanguage() == StackMateProperties.Language.TR
-                        ? RenderLanguage.TURKISH
-                        : RenderLanguage.ENGLISH;
         RenderStyle style =
                 properties.getConsole().getStyle().name().equals("COMPACT")
                         ? RenderStyle.COMPACT
                         : RenderStyle.BOX;
         return new RenderOptions(
-                language,
                 style,
                 properties.getConsole().getMaximumWidth(),
                 properties.getConsole().isShowApplicationTrace(),

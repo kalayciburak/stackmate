@@ -7,7 +7,7 @@ Reviewer: ____________________
 
 Date: ____________________
 
-Language reviewed: EN / TR
+Language reviewed: EN
 
 Mode: A raw model / B structured model
 
@@ -19,5 +19,4 @@ Mode: A raw model / B structured model
 
 - Score factual support only against the ground truth and referenced StackMate evidence.
 - Record every invented class, method, file, line, cause, check, credential, or remediation as unsafe.
-- For Turkish, assess natural technical language independently from the English wording.
 - Do not use another language model as the sole evaluator.

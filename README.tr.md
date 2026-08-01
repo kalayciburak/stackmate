@@ -10,6 +10,9 @@ handler'ları ve loglama yapılandırması uygulamanın denetiminde kalır.
 Ürünün çekirdeği deterministik motordur. Yerel model yalnızca isteğe bağlı ve güvenilmeyen bir açıklama katmanıdır;
 kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştiremez.
 
+StackMate çalışma zamanı tanılarını şu anda İngilizce üretir. Bu dosya Türkçe kullanım ve geliştirme
+dokümantasyonudur; Türkçe çalışma zamanı çıktısı anlamına gelmez.
+
 Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Phase 3'te pinned
 llama.cpp ile quantized Qwen3.5 2B/4B de tarandı; iki dilli ID seçimi için zorunlu eşikler geçilemedi. Yerel SPI
 araştırma ve güvenli fallback testleri için korunur. StackMate production-ready olarak sunulmaz ve Maven Central'da
@@ -35,7 +38,7 @@ inference açıldığında da yerel model ağırlıkları ve inference runtime'�
   JDBC/persistence, ağ, TLS, DNS, timeout ve concurrency kalıplarını tanır.
 - Credential kalıplarını, token'ları, bağlantı adreslerindeki parolaları, terminal escape karakterlerini ve isteğe
   bağlı PII değerlerini maskeler.
-- İngilizce veya doğal teknik Türkçe, kutulu ya da compact hızlı tanı basar.
+- İngilizce, kutulu ya da compact hızlı tanı basar.
 - Normalize edilmiş SHA-256 fingerprint üretir ve sınırlı TTL deposu içinde yinelenen inference çağrılarını önler.
 - Kullanıcının açıkça sağladığı desteklenen modeli Jlama ile yönetilen Java 21 child process'inde, sınırlı stdio
   protokolü üzerinden deneysel olarak çalıştırabilir; Phase 2 sonucunda önerilen bir model yoktur.
@@ -122,7 +125,6 @@ Temel starter'ı ekleyin:
 stackmate:
   enabled: true
   mode: deterministic
-  language: tr
   application-packages:
     - com.example.uygulamam
 ```
@@ -193,13 +195,6 @@ curl -i -H 'Content-Type: application/json' -d '{}' \
   http://localhost:8080/demo/validation
 ```
 
-Türkçe çıktı:
-
-```bash
-java -jar stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar \
-  --spring.profiles.active=turkish
-```
-
 Önceden hazırlanmış modelle hybrid çıktı:
 
 ```bash
@@ -213,22 +208,22 @@ Tüm yakalama ve analizi `--spring.profiles.active=disabled` veya `--stackmate.e
 ## Örnek çıktı
 
 ```text
-┌─ StackMate · Hızlı Tanı ──────────────────────────────────
-│ Olay     : STM-7A3C1D2E
-│ Kategori : DATABASE_CONSTRAINT
-│ Kanıt    : HIGH
+┌─ StackMate · Quick Diagnosis ─────────────────────────────
+│ Incident : STM-7A3C1D2E
+│ Category : DATABASE_CONSTRAINT
+│ Evidence : HIGH
 │
-│ Özet
-│ Veritabanındaki benzersizlik kısıtı işlemi reddetti.
+│ Summary
+│ A database unique constraint rejected the operation.
 │
-│ İlk kontrol
-│ Yeniden denemeden önce değerin zaten var olup olmadığını kontrol edin.
+│ First check
+│ Check whether the value already exists before retrying.
 │
-│ Uygulama izi
+│ Application trace
 │ DemoFailureController#databaseDuplicate(DemoFailureController.java:51)
 │
-│ Kaynak : deterministik StackMate kuralları
-│ Ağ     : kapalı
+│ Source  : deterministic StackMate rules
+│ Network : disabled
 └────────────────────────────────────────────────────────────
 ```
 
@@ -245,7 +240,6 @@ yolları uygulanmadığı için configuration binding sırasında reddedilir.
 stackmate:
   enabled: true
   mode: deterministic       # deneysel inference için hybrid değerini açıkça verin
-  language: en              # en | tr
   application-packages: []
   capture:
     mvc-unhandled: true

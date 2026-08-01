@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 /** Trusted model prose with selections resolved back to deterministic candidates. */
 public final class ValidatedInferenceOutput {
 
-    private final InferenceLanguage language;
     private final String summary;
     private final String explanation;
     private final List<InferenceCauseCandidate> selectedCauses;
@@ -25,17 +24,12 @@ public final class ValidatedInferenceOutput {
                 request.candidateChecks().stream()
                         .collect(
                                 Collectors.toMap(InferenceCheckCandidate::id, Function.identity()));
-        this.language = output.language();
         this.summary = output.summary();
         this.explanation = output.explanation();
         this.selectedCauses = output.selectedCauseIds().stream().map(causes::get).toList();
         this.selectedChecks = output.selectedCheckIds().stream().map(checks::get).toList();
         this.usedEvidenceIds = output.usedEvidenceIds();
         this.limitations = output.limitations();
-    }
-
-    public InferenceLanguage language() {
-        return language;
     }
 
     public String summary() {

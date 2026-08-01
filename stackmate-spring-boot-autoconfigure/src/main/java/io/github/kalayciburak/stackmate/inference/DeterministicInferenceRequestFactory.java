@@ -25,12 +25,8 @@ public final class DeterministicInferenceRequestFactory {
     }
 
     public InferenceRequest create(
-            DeterministicResult result,
-            InferenceLanguage language,
-            int maximumInputCharacters,
-            int maximumOutputCharacters) {
+            DeterministicResult result, int maximumInputCharacters, int maximumOutputCharacters) {
         Objects.requireNonNull(result, "result");
-        Objects.requireNonNull(language, "language");
         int budget = Math.min(maximumInputCharacters, InferenceRequest.MAXIMUM_TOTAL_CHARACTERS);
         if (budget < 1) {
             throw new IllegalArgumentException("maximumInputCharacters must be positive");
@@ -87,12 +83,11 @@ public final class DeterministicInferenceRequestFactory {
         }
 
         var primaryCause = result.diagnosis().causes().getFirst();
-        List<InferenceTerminology> terminology = terminology(primaryCause.category(), language);
+        List<InferenceTerminology> terminology = terminology(primaryCause.category());
         return new InferenceRequest(
                 InferenceRequest.SCHEMA_VERSION,
                 InferenceRequest.PROMPT_VERSION,
                 result.fingerprint().value(),
-                language,
                 new InferenceIncident(primaryCause.category(), primaryCause.strength()),
                 facts,
                 causes,
@@ -154,20 +149,14 @@ public final class DeterministicInferenceRequestFactory {
         return new InferenceFact("fact.application." + index, "APPLICATION_LOCATION", value);
     }
 
-    private List<InferenceTerminology> terminology(
-            DiagnosticCategory category, InferenceLanguage language) {
+    private List<InferenceTerminology> terminology(DiagnosticCategory category) {
         if (category != DiagnosticCategory.DATABASE_CONSTRAINT) {
             return List.of();
         }
-        return language == InferenceLanguage.TURKISH
-                ? List.of(
-                        new InferenceTerminology(
-                                "veritabanı kısıtı",
-                                "Verinin uyması gereken ve veritabanının uyguladığı bütünlük kuralı"))
-                : List.of(
-                        new InferenceTerminology(
-                                "database constraint",
-                                "An integrity rule enforced by the database for stored data"));
+        return List.of(
+                new InferenceTerminology(
+                        "database constraint",
+                        "An integrity rule enforced by the database for stored data"));
     }
 
     private int factCost(InferenceFact fact) {
