@@ -18,6 +18,13 @@ public final class InfrastructureAnalyzer implements DiagnosticAnalyzer {
                             "An exact JDK UnknownHostException was captured.",
                             "Check the host name, DNS resolver, search domains, and network path."),
                     rule(
+                            "java.nio.channels.UnresolvedAddressException",
+                            DiagnosticCategory.DNS,
+                            "dns-unresolved-address",
+                            "The destination address could not be resolved",
+                            "An exact JDK UnresolvedAddressException was captured.",
+                            "Check the host name, address construction, DNS resolver, and network path."),
+                    rule(
                             "javax.net.ssl.SSLHandshakeException",
                             DiagnosticCategory.TLS,
                             "tls-handshake",
@@ -73,27 +80,40 @@ public final class InfrastructureAnalyzer implements DiagnosticAnalyzer {
     }
 
     @Override
+    public String version() {
+        return "2";
+    }
+
+    @Override
     public int order() {
-        return 600;
+        return 90;
     }
 
     @Override
     public AnalysisContribution analyze(IncidentSnapshot incident) {
         ContributionBuilder contribution = new ContributionBuilder(ID);
         for (AnalyzerSupport.NodeFact fact : AnalyzerSupport.nodes(incident.throwable())) {
-            boolean exact = false;
+            TypeRule exactRule = null;
             for (TypeRule rule : TYPE_RULES) {
                 if (AnalyzerSupport.hasType(fact.node(), rule.type())) {
-                    addTypeMatch(contribution, fact, rule);
-                    exact = true;
+                    exactRule = rule;
                     break;
                 }
             }
-            if (!exact) {
+            if (exactRule == null || isTlsProtocolMismatch(fact)) {
                 addMessagePattern(contribution, fact);
+            }
+            if (exactRule != null) {
+                addTypeMatch(contribution, fact, exactRule);
             }
         }
         return contribution.build();
+    }
+
+    private boolean isTlsProtocolMismatch(AnalyzerSupport.NodeFact fact) {
+        return AnalyzerSupport.messageContains(
+                        fact.node(), "unsupported or unrecognized ssl message")
+                || AnalyzerSupport.messageContains(fact.node(), "unrecognized ssl message");
     }
 
     private void addTypeMatch(
@@ -110,6 +130,15 @@ public final class InfrastructureAnalyzer implements DiagnosticAnalyzer {
 
     private void addMessagePattern(
             ContributionBuilder contribution, AnalyzerSupport.NodeFact fact) {
+        if (isTlsProtocolMismatch(fact)) {
+            addPattern(
+                    contribution,
+                    fact,
+                    "tls-protocol",
+                    DiagnosticCategory.TLS,
+                    "The peer may not be speaking the expected TLS protocol",
+                    "Check whether the destination port expects TLS and whether a plain-text service was contacted.");
+        }
         if (AnalyzerSupport.messageContains(fact.node(), "connection refused")) {
             addPattern(
                     contribution,

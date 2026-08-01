@@ -60,6 +60,13 @@ public final class SpringSecurityAnalyzer implements DiagnosticAnalyzer {
                             "The captured Spring Security exception type reports a denied authorization decision.",
                             "Check method or request authorization rules and the principal authorities."),
                     rule(
+                            "AccessControlException",
+                            DiagnosticCategory.AUTHORIZATION,
+                            "access-control-denied",
+                            "A Java access-control check denied the operation",
+                            "An exact JDK AccessControlException was captured.",
+                            "Check the requested permission and the runtime access-control policy."),
+                    rule(
                             "CredentialsExpiredException",
                             DiagnosticCategory.AUTHENTICATION,
                             "credentials-expired",
@@ -122,8 +129,13 @@ public final class SpringSecurityAnalyzer implements DiagnosticAnalyzer {
     }
 
     @Override
+    public String version() {
+        return "2";
+    }
+
+    @Override
     public int order() {
-        return 500;
+        return 80;
     }
 
     @Override
@@ -146,7 +158,8 @@ public final class SpringSecurityAnalyzer implements DiagnosticAnalyzer {
     private boolean isSecurityNamespace(String type) {
         return type.startsWith("org.springframework.security.")
                 || type.startsWith("io.jsonwebtoken.")
-                || type.startsWith("com.auth0.jwt.");
+                || type.startsWith("com.auth0.jwt.")
+                || type.equals("java.security.AccessControlException");
     }
 
     private void addTypeMatch(

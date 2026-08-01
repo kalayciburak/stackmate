@@ -142,8 +142,25 @@ implemented fixes are intentionally narrow; no public API was broken and no low-
 - Proposed fix: schema version 2 must permit explanation and selection of supplied IDs only; trusted category, root,
   and locations must always come from the deterministic result; use separate English and Turkish templates and an
   evidence-aware trigger policy.
-- Fix status: **scheduled for the mandatory contract-redesign phase**. Corpus V2 must be frozen before analyzer behavior
-  changes.
+- Fix status: **fixed after the corpus V2 freeze**. Schema version 2 accepts only bounded explanation text and known
+  cause/check/evidence IDs; category, strength, root type, and application locations remain deterministic. English and
+  Turkish now use separate prompt resources, and the default trigger skips exact high-evidence diagnoses.
+
+### P2-AUD-010 — generic root causes outranked framework context
+
+- Severity: **MEDIUM**
+- Location: built-in analyzer ordering and database cause traversal.
+- Evidence: corpus V2 classified `BeanCreationException -> IllegalStateException`, MVC conversion wrappers, JDBC data
+  conversion, and JDBC connection wrappers by their generic deepest Java cause because `GeneralJavaAnalyzer` ran first.
+- Actual risk: technically true but less actionable diagnoses hid the framework boundary that supplied the failure
+  context.
+- Reproduction: the unchanged frozen-corpus baseline categorized only 59/80 cases; Spring creation, MVC conversion, H2
+  conversion, and JDBC connection examples selected general Java or generic database causes.
+- Proposed fix: order request, Spring, database, security, and infrastructure context before general Java; traverse
+  database chains root-first within a verified database wrapper; add only portable class/message rules.
+- Fix status: **fixed**. Analyzer versions were incremented so fingerprints reflect the rule-set change.
+- Test added: framework precedence, database-wrapped network cause, concrete index subclasses, both Jackson package
+  generations, optimistic locking, DNS, TLS-message, and structured property/request evidence.
 
 ## Public API review
 

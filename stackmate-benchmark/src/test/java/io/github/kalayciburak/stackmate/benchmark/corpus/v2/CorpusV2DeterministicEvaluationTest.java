@@ -35,7 +35,15 @@ class CorpusV2DeterministicEvaluationTest {
 
     private static final Instant CAPTURE_TIME = Instant.parse("2026-08-01T00:00:00Z");
     private static final Set<String> SCORED_ACTUAL_FACT_TYPES =
-            Set.of("EXCEPTION_CLASS", "MESSAGE_PATTERN", "SQL_STATE", "WRAPPER_TYPE");
+            Set.of(
+                    "EXCEPTION_CLASS",
+                    "EXPECTED_TYPE",
+                    "HANDLER_METHOD",
+                    "MESSAGE_PATTERN",
+                    "PROPERTY_NAME",
+                    "REQUEST_PATH",
+                    "SQL_STATE",
+                    "WRAPPER_TYPE");
     private static final Set<String> FACT_EXPECTATION_TYPES =
             Set.of(
                     "EXCEPTION_CLASS",

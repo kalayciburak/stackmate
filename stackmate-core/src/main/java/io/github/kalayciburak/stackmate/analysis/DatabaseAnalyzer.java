@@ -67,28 +67,28 @@ public final class DatabaseAnalyzer implements DiagnosticAnalyzer {
                     persistenceRule(
                             "OptimisticLockException",
                             "optimistic-lock",
-                            DiagnosticCategory.DATABASE_LOCKING,
+                            DiagnosticCategory.PERSISTENCE_STATE,
                             "An optimistic locking check failed",
                             "The captured persistence exception type reports optimistic lock failure.",
                             "Check the entity version and concurrent updates before retrying the operation."),
                     persistenceRule(
                             "OptimisticLockingFailureException",
                             "optimistic-lock",
-                            DiagnosticCategory.DATABASE_LOCKING,
+                            DiagnosticCategory.PERSISTENCE_STATE,
                             "An optimistic locking check failed",
                             "The captured persistence exception type reports optimistic lock failure.",
                             "Check the entity version and concurrent updates before retrying the operation."),
                     persistenceRule(
                             "ObjectOptimisticLockingFailureException",
                             "optimistic-lock",
-                            DiagnosticCategory.DATABASE_LOCKING,
+                            DiagnosticCategory.PERSISTENCE_STATE,
                             "An optimistic locking check failed",
                             "The captured persistence exception type reports optimistic lock failure.",
                             "Check the entity version and concurrent updates before retrying the operation."),
                     persistenceRule(
                             "StaleObjectStateException",
                             "optimistic-lock",
-                            DiagnosticCategory.DATABASE_LOCKING,
+                            DiagnosticCategory.PERSISTENCE_STATE,
                             "An optimistic locking check failed",
                             "The captured persistence exception type reports optimistic lock failure.",
                             "Check the entity version and concurrent updates before retrying the operation."),
@@ -148,25 +148,40 @@ public final class DatabaseAnalyzer implements DiagnosticAnalyzer {
     }
 
     @Override
+    public String version() {
+        return "2";
+    }
+
+    @Override
     public int order() {
-        return 400;
+        return 70;
     }
 
     @Override
     public AnalysisContribution analyze(IncidentSnapshot incident) {
         ContributionBuilder contribution = new ContributionBuilder(ID);
-        for (AnalyzerSupport.NodeFact fact : AnalyzerSupport.nodes(incident.throwable())) {
+        List<AnalyzerSupport.NodeFact> facts = AnalyzerSupport.nodes(incident.throwable());
+        boolean databaseContext =
+                facts.stream()
+                        .anyMatch(
+                                fact ->
+                                        isDatabaseException(fact)
+                                                || persistenceRule(fact.node().type()) != null);
+        for (AnalyzerSupport.NodeFact fact : facts.reversed()) {
             PersistenceRule persistenceRule = persistenceRule(fact.node().type());
             if (persistenceRule != null) {
                 addPersistenceDiagnosis(contribution, fact, persistenceRule);
             }
             boolean databaseException = isDatabaseException(fact);
-            if (!databaseException && persistenceRule == null) {
+            if (!databaseContext) {
                 continue;
             }
             List<String> identifiers =
                     databaseException ? addIdentifierEvidence(contribution, fact) : List.of();
             addMessageOnlyDiagnosis(contribution, fact, identifiers);
+            if (!databaseException && persistenceRule == null) {
+                continue;
+            }
             if (!databaseException) {
                 continue;
             }
@@ -557,9 +572,11 @@ public final class DatabaseAnalyzer implements DiagnosticAnalyzer {
                     "The captured message matches a database deadlock pattern.",
                     "Check lock ordering and transaction duration before applying a bounded retry.");
         }
-        if (noSqlState
-                && (AnalyzerSupport.messageContains(fact.node(), "could not obtain lock")
-                        || AnalyzerSupport.messageContains(fact.node(), "lock wait timeout"))) {
+        if (AnalyzerSupport.messageContains(fact.node(), "could not obtain lock")
+                || AnalyzerSupport.messageContains(fact.node(), "lock wait timeout")
+                || AnalyzerSupport.messageContains(fact.node(), "lock timeout")
+                || AnalyzerSupport.messageContains(fact.node(), "timeout trying to lock")
+                || AnalyzerSupport.messageContains(fact.node(), "is locked by tx")) {
             addPatternDiagnosis(
                     contribution,
                     fact,
@@ -570,10 +587,10 @@ public final class DatabaseAnalyzer implements DiagnosticAnalyzer {
                     "The captured message matches a lock acquisition or lock-timeout pattern.",
                     "Check competing transactions, lock ordering, transaction duration, and lock timeout.");
         }
-        if (noSqlState
-                && (AnalyzerSupport.messageContains(fact.node(), "transaction is required")
-                        || AnalyzerSupport.messageContains(
-                                fact.node(), "no transaction is in progress"))) {
+        if (AnalyzerSupport.messageContains(fact.node(), "transaction is required")
+                || AnalyzerSupport.messageContains(fact.node(), "no transaction is in progress")
+                || AnalyzerSupport.messageContains(fact.node(), "savepoint is invalid")
+                || AnalyzerSupport.messageContains(fact.node(), "invalid savepoint")) {
             addPatternDiagnosis(
                     contribution,
                     fact,

@@ -1,12 +1,27 @@
 package io.github.kalayciburak.stackmate.analysis;
 
+import io.github.kalayciburak.stackmate.evidence.EvidenceReliability;
+import io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity;
+import io.github.kalayciburak.stackmate.evidence.EvidenceType;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /** Diagnoses MVC request, validation, and serialization failures using optional type names only. */
 public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
 
     public static final String ID = "web-request";
+
+    private static final List<Pattern> PROPERTY_PATTERNS =
+            List.of(
+                    Pattern.compile(
+                            "(?i)request parameter\\s+['\"]([A-Za-z][A-Za-z0-9_.-]{0,127})['\"]"),
+                    Pattern.compile("(?i)on field\\s+['\"]([A-Za-z][A-Za-z0-9_.-]{0,127})['\"]"),
+                    Pattern.compile(
+                            "(?i)(?:^|\\s)([A-Za-z][A-Za-z0-9_.-]{0,127}):\\s+(?:must|may|size|invalid|required)"));
+    private static final Pattern EXPECTED_TYPE =
+            Pattern.compile(
+                    "(?i)(?:to (?:required )?type|target type)\\s*[\\['\"]+([A-Za-z_$][A-Za-z0-9_.$]*(?:\\[\\])?)[\\]'\"]+");
 
     private static final List<TypeRule> TYPE_RULES =
             List.of(
@@ -60,6 +75,20 @@ public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
                             "The captured serializer exception type reports an invalid value format.",
                             "Check the target field type and its accepted textual format."),
                     rule(
+                            "JsonMappingException",
+                            DiagnosticCategory.SERIALIZATION,
+                            "json-mapping",
+                            "JSON could not be mapped to or from the target type",
+                            "The captured serializer exception type reports a JSON mapping failure.",
+                            "Check the target type, serializer configuration, and object graph."),
+                    rule(
+                            "StreamReadException",
+                            DiagnosticCategory.SERIALIZATION,
+                            "json-stream-read",
+                            "The JSON input stream could not be parsed",
+                            "The captured serializer exception type reports malformed JSON input.",
+                            "Check JSON syntax, encoding, and content type."),
+                    rule(
                             "MissingServletRequestParameterException",
                             DiagnosticCategory.WEB_REQUEST,
                             "missing-request-parameter",
@@ -108,8 +137,13 @@ public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
     }
 
     @Override
+    public String version() {
+        return "2";
+    }
+
+    @Override
     public int order() {
-        return 300;
+        return 40;
     }
 
     @Override
@@ -131,7 +165,9 @@ public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
                 }
             }
             addMessagePatterns(contribution, fact);
+            addStructuredMessageEvidence(contribution, fact);
         }
+        addRequestEvidence(contribution, incident);
         return contribution.build();
     }
 
@@ -139,7 +175,8 @@ public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
         return type.startsWith("org.springframework.")
                 || type.startsWith("jakarta.validation.")
                 || type.startsWith("javax.validation.")
-                || type.startsWith("com.fasterxml.jackson.");
+                || type.startsWith("com.fasterxml.jackson.")
+                || type.startsWith("tools.jackson.");
     }
 
     private void addMessagePatterns(
@@ -187,6 +224,64 @@ public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
                     "check.web.enum-conversion-message",
                     "Compare the received value with the endpoint enum constants and configured case handling.",
                     evidenceId);
+        }
+    }
+
+    private void addStructuredMessageEvidence(
+            ContributionBuilder contribution, AnalyzerSupport.NodeFact fact) {
+        for (Pattern pattern : PROPERTY_PATTERNS) {
+            var matcher = pattern.matcher(fact.node().message());
+            if (matcher.find()) {
+                String property = matcher.group(1);
+                int separator = property.lastIndexOf('.');
+                if (separator >= 0 && separator + 1 < property.length()) {
+                    property = property.substring(separator + 1);
+                }
+                contribution.addEvidence(
+                        "web.property." + fact.ordinal(),
+                        EvidenceType.PROPERTY_NAME,
+                        fact.path() + ".message",
+                        property,
+                        EvidenceSensitivity.POTENTIALLY_SENSITIVE,
+                        EvidenceReliability.MEDIUM);
+                break;
+            }
+        }
+        var expectedType = EXPECTED_TYPE.matcher(fact.node().message());
+        if (expectedType.find()) {
+            contribution.addEvidence(
+                    "web.expected-type." + fact.ordinal(),
+                    EvidenceType.EXPECTED_TYPE,
+                    fact.path() + ".message",
+                    expectedType.group(1),
+                    EvidenceSensitivity.PUBLIC,
+                    EvidenceReliability.MEDIUM);
+        }
+    }
+
+    private void addRequestEvidence(ContributionBuilder contribution, IncidentSnapshot incident) {
+        var request = incident.requestContext();
+        if (!request.path().isBlank()) {
+            contribution.addEvidence(
+                    "web.request-path",
+                    EvidenceType.REQUEST_PATH,
+                    "incident.requestContext.path",
+                    request.path(),
+                    EvidenceSensitivity.POTENTIALLY_SENSITIVE,
+                    EvidenceReliability.HIGH);
+        }
+        if (!request.handlerMethod().isBlank()) {
+            String handler =
+                    request.handlerClass().isBlank()
+                            ? request.handlerMethod()
+                            : request.handlerClass() + "#" + request.handlerMethod();
+            contribution.addEvidence(
+                    "web.handler-method",
+                    EvidenceType.HANDLER_METHOD,
+                    "incident.requestContext.handler",
+                    handler,
+                    EvidenceSensitivity.PUBLIC,
+                    EvidenceReliability.HIGH);
         }
     }
 

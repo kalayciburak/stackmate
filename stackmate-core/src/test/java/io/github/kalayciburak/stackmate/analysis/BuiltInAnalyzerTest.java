@@ -29,6 +29,23 @@ class BuiltInAnalyzerTest {
     }
 
     @Test
+    void recognizesConcreteArrayAndStringIndexFailures() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "java.lang.ArrayIndexOutOfBoundsException", "Index 3", 0),
+                                IncidentFixtures.node(
+                                        "java.lang.StringIndexOutOfBoundsException",
+                                        "index 8",
+                                        1)));
+
+        assertThat(diagnosis.causes())
+                .extracting(DiagnosedCause::id)
+                .containsExactly("cause.java.index-out-of-bounds");
+    }
+
+    @Test
     void diagnosesUnsupportedTimeoutAndRejectedExecutionBranches() {
         Diagnosis diagnosis =
                 aggregator.diagnose(
@@ -132,6 +149,46 @@ class BuiltInAnalyzerTest {
     }
 
     @Test
+    void extractsSanitizedSpringPropertyAndExpectedTypeEvidence() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "org.springframework.util.PlaceholderResolutionException",
+                                        "Could not resolve placeholder 'sample.required-url'",
+                                        0),
+                                IncidentFixtures.node(
+                                        "org.springframework.core.convert.ConversionFailedException",
+                                        "Failed to convert from type [java.lang.String] to type [java.lang.Integer]",
+                                        1)));
+
+        assertThat(diagnosis.evidence())
+                .filteredOn(item -> item.type() == EvidenceType.PROPERTY_NAME)
+                .extracting(item -> item.value())
+                .contains("sample.required-url");
+        assertThat(diagnosis.evidence())
+                .filteredOn(item -> item.type() == EvidenceType.EXPECTED_TYPE)
+                .extracting(item -> item.value())
+                .contains("java.lang.Integer");
+    }
+
+    @Test
+    void prioritizesSpringContextOverGenericNestedCause() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "org.springframework.beans.factory.BeanCreationException",
+                                        "bean creation failed",
+                                        0),
+                                IncidentFixtures.node(
+                                        "java.lang.IllegalStateException", "factory failed", 1)));
+
+        assertThat(diagnosis.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.SPRING_CONFIGURATION);
+    }
+
+    @Test
     void diagnosesMvcValidationAndSerializationNames() {
         Diagnosis validation =
                 aggregator.diagnose(
@@ -154,6 +211,56 @@ class BuiltInAnalyzerTest {
         assertThat(serialization.causes())
                 .extracting(DiagnosedCause::category)
                 .contains(DiagnosticCategory.SERIALIZATION);
+    }
+
+    @Test
+    void recognizesBothJacksonPackageGenerationsAndPrioritizesWebContext() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "org.springframework.http.converter.HttpMessageNotReadableException",
+                                        "JSON parse error",
+                                        0),
+                                IncidentFixtures.node(
+                                        "tools.jackson.databind.exc.InvalidFormatException",
+                                        "invalid number",
+                                        1),
+                                IncidentFixtures.node(
+                                        "java.lang.NumberFormatException", "not a number", 2)));
+
+        assertThat(diagnosis.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.SERIALIZATION);
+        assertThat(diagnosis.causes())
+                .extracting(DiagnosedCause::id)
+                .contains("cause.web.json-value-format");
+    }
+
+    @Test
+    void capturesRequestHandlerAndPropertyEvidenceWithoutQueryValues() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incidentWithRequest(
+                                "/orders",
+                                "example.OrderController",
+                                "create",
+                                IncidentFixtures.node(
+                                        "org.springframework.web.bind.MissingServletRequestParameterException",
+                                        "Required request parameter 'page' is not present",
+                                        0)));
+
+        assertThat(diagnosis.evidence())
+                .filteredOn(item -> item.type() == EvidenceType.PROPERTY_NAME)
+                .extracting(item -> item.value())
+                .containsExactly("page");
+        assertThat(diagnosis.evidence())
+                .filteredOn(item -> item.type() == EvidenceType.REQUEST_PATH)
+                .extracting(item -> item.value())
+                .containsExactly("/orders");
+        assertThat(diagnosis.evidence())
+                .filteredOn(item -> item.type() == EvidenceType.HANDLER_METHOD)
+                .extracting(item -> item.value())
+                .containsExactly("example.OrderController#create");
     }
 
     @Test
@@ -373,6 +480,66 @@ class BuiltInAnalyzerTest {
     }
 
     @Test
+    void usesRootNetworkMessageWithinDatabaseWrapperContext() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "java.sql.SQLException",
+                                        "connection acquisition failed",
+                                        0),
+                                IncidentFixtures.node(
+                                        "java.net.ConnectException", "Connection refused", 1)));
+
+        assertThat(diagnosis.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.DATABASE_CONNECTION);
+        assertThat(diagnosis.causes())
+                .extracting(DiagnosedCause::id)
+                .contains("cause.database.connection-refused-message");
+    }
+
+    @Test
+    void preservesSpecificLockAndTransactionMessagesAlongsideVendorSqlState() {
+        Diagnosis lock =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.sqlNode(
+                                        "org.h2.jdbc.JdbcSQLTimeoutException",
+                                        "Timeout trying to lock table ORDERS",
+                                        "HYT00",
+                                        50200,
+                                        0)));
+        Diagnosis transaction =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.sqlNode(
+                                        "org.h2.jdbc.JdbcSQLNonTransientException",
+                                        "Savepoint is invalid",
+                                        "90063",
+                                        90063,
+                                        0)));
+
+        assertThat(lock.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.DATABASE_LOCKING);
+        assertThat(transaction.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.DATABASE_TRANSACTION);
+    }
+
+    @Test
+    void classifiesOptimisticLockAsPersistenceState() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "jakarta.persistence.OptimisticLockException",
+                                        "stale version",
+                                        0)));
+
+        assertThat(diagnosis.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.PERSISTENCE_STATE);
+    }
+
+    @Test
     void diagnosesSpringSecurityName() {
         Diagnosis diagnosis =
                 aggregator.diagnose(
@@ -390,6 +557,20 @@ class BuiltInAnalyzerTest {
                                     .isEqualTo(DiagnosticCategory.AUTHORIZATION);
                             assertThat(cause.strength()).isEqualTo(DiagnosticStrength.HIGH);
                         });
+    }
+
+    @Test
+    void recognizesExactJdkAccessControlDenialWithoutBroadSecurityExceptionRule() {
+        Diagnosis diagnosis =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "java.security.AccessControlException",
+                                        "access denied",
+                                        0)));
+
+        assertThat(diagnosis.causes().getFirst().category())
+                .isEqualTo(DiagnosticCategory.AUTHORIZATION);
     }
 
     @Test
@@ -440,6 +621,25 @@ class BuiltInAnalyzerTest {
         assertThat(diagnosis.evidence())
                 .extracting(item -> item.type())
                 .contains(EvidenceType.WRAPPER_CLASS);
+    }
+
+    @Test
+    void recognizesUnresolvedAddressAndTlsProtocolMessages() {
+        Diagnosis dns =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "java.nio.channels.UnresolvedAddressException", "", 0)));
+        Diagnosis tls =
+                aggregator.diagnose(
+                        IncidentFixtures.incident(
+                                IncidentFixtures.node(
+                                        "java.net.SocketException",
+                                        "Unsupported or unrecognized SSL message",
+                                        0)));
+
+        assertThat(dns.causes().getFirst().category()).isEqualTo(DiagnosticCategory.DNS);
+        assertThat(tls.causes().getFirst().category()).isEqualTo(DiagnosticCategory.TLS);
     }
 
     private void assertSqlState(

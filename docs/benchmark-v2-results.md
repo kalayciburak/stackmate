@@ -91,3 +91,46 @@ $env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
 ```
 
 Result: build success in 8.693 seconds; one evaluator test passed after executing 80 cases and writing both reports.
+
+## Post-freeze deterministic hardening
+
+No corpus case or expected value changed. General-purpose analyzer changes raised category accuracy while preserving the
+holdout split and all safety invariants.
+
+| Metric | Frozen baseline | Hardened result |
+|---|---:|---:|
+| Category accuracy | 59/80 (73.75%) | 74/80 (92.50%) |
+| Development category accuracy | 43/60 (71.67%) | 55/60 (91.67%) |
+| Holdout category accuracy | 16/20 (80.00%) | 19/20 (95.00%) |
+| Root-type accuracy | 80/80 | 80/80 |
+| Annotated fact precision | 27/30 (90.00%) | 31/38 (81.58%) |
+| Annotated fact recall | 27/46 (58.70%) | 31/46 (67.39%) |
+| Unsupported-case restraint | 8/8 | 8/8 |
+| Secret leakage / sanitization failures | 0 / 0 | 0 / 0 |
+| Fingerprint stability | 80/80 | 80/80 |
+| Conflicting-category collision groups | 0 | 0 |
+| Observed warm median | 66 microseconds | 74 microseconds |
+| Observed warm P95 | 218 microseconds | 237 microseconds |
+
+The precision denominator grew because the hardened evaluator now scores newly implemented `PROPERTY_NAME`,
+`EXPECTED_TYPE`, `HANDLER_METHOD`, and `REQUEST_PATH` evidence rather than silently excluding those types. Seven typed
+facts did not equal the frozen expectations. Several are deliberate evidence mismatches: Java reported primitive `int`
+rather than the corpus's boxed `Integer`; the executed nested enum class differs from the illustrative package in the
+manifest; the synthetic bind message says `billing.retry` while its expected fact says `sample.port`; and the evaluator
+does not fabricate HTTP request/handler context for throwable-only recipes.
+
+The remaining six category mismatches are retained rather than overfit:
+
+- malformed JSON and a missing request body are classified as `SERIALIZATION`, not the corpus's broader `WEB_REQUEST`;
+- generic `SecurityException` is insufficient to prove authorization, while `SignatureException` and
+  `CertificateExpiredException` are not necessarily authentication failures without security context;
+- on this Windows run, the TLS-to-plain recipe exposed only `SocketException: An established connection was aborted...`,
+  so a TLS category would require an unsupported inference.
+
+H2 2.4.240 also returned SQLState `42S04` for a missing table and `42001` for syntax, while frozen expectations contain
+`42S02` and `42000`. The engine preserves the observed driver values; these are recorded as ground-truth defects rather
+than rewritten after execution.
+
+The hardened affected-reactor run passed 315 tests (core 101, inference API 27, JVM inference 26, Spring
+autoconfiguration 99, benchmark 62) in 21.617 seconds. The generated V2 report observed 2,000 warm samples; these values
+remain non-JMH observations.

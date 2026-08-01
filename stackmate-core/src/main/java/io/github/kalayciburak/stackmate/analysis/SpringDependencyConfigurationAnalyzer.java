@@ -1,12 +1,28 @@
 package io.github.kalayciburak.stackmate.analysis;
 
+import io.github.kalayciburak.stackmate.evidence.EvidenceReliability;
+import io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity;
+import io.github.kalayciburak.stackmate.evidence.EvidenceType;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /** Diagnoses Spring dependency-injection and configuration failures by captured type name. */
 public final class SpringDependencyConfigurationAnalyzer implements DiagnosticAnalyzer {
 
     public static final String ID = "spring-di-config";
+
+    private static final List<Pattern> PROPERTY_PATTERNS =
+            List.of(
+                    Pattern.compile(
+                            "(?i)could not resolve placeholder\\s+['\"]([A-Za-z0-9_.-]{1,128})['\"]"),
+                    Pattern.compile(
+                            "(?i)failed to bind properties under\\s+['\"]([A-Za-z0-9_.-]{1,128})['\"]"),
+                    Pattern.compile(
+                            "(?i)(?:invalid property|property)\\s+['\"]([A-Za-z][A-Za-z0-9_.-]{0,127})['\"]"));
+    private static final Pattern EXPECTED_TYPE =
+            Pattern.compile(
+                    "(?i)(?:to (?:required )?type|target type)\\s*[\\['\"]+([A-Za-z_$][A-Za-z0-9_.$]*(?:\\[\\])?)[\\]'\"]+");
 
     private static final List<TypeRule> TYPE_RULES =
             List.of(
@@ -129,8 +145,13 @@ public final class SpringDependencyConfigurationAnalyzer implements DiagnosticAn
     }
 
     @Override
+    public String version() {
+        return "2";
+    }
+
+    @Override
     public int order() {
-        return 200;
+        return 50;
     }
 
     @Override
@@ -150,6 +171,7 @@ public final class SpringDependencyConfigurationAnalyzer implements DiagnosticAn
             if (!exactMatch) {
                 addMessagePatternMatches(contribution, fact);
             }
+            addStructuredMessageEvidence(contribution, fact);
         }
         return contribution.build();
     }
@@ -242,6 +264,33 @@ public final class SpringDependencyConfigurationAnalyzer implements DiagnosticAn
         String evidenceId = contribution.addMessagePatternEvidence("spring", fact, patternId);
         contribution.addCause(causeId, category, title, explanation, evidenceId);
         contribution.addCheck(checkId, check, evidenceId);
+    }
+
+    private void addStructuredMessageEvidence(
+            ContributionBuilder contribution, AnalyzerSupport.NodeFact fact) {
+        for (Pattern pattern : PROPERTY_PATTERNS) {
+            var matcher = pattern.matcher(fact.node().message());
+            if (matcher.find()) {
+                contribution.addEvidence(
+                        "spring.property." + fact.ordinal(),
+                        EvidenceType.PROPERTY_NAME,
+                        fact.path() + ".message",
+                        matcher.group(1),
+                        EvidenceSensitivity.POTENTIALLY_SENSITIVE,
+                        EvidenceReliability.MEDIUM);
+                break;
+            }
+        }
+        var expectedType = EXPECTED_TYPE.matcher(fact.node().message());
+        if (expectedType.find()) {
+            contribution.addEvidence(
+                    "spring.expected-type." + fact.ordinal(),
+                    EvidenceType.EXPECTED_TYPE,
+                    fact.path() + ".message",
+                    expectedType.group(1),
+                    EvidenceSensitivity.PUBLIC,
+                    EvidenceReliability.MEDIUM);
+        }
     }
 
     private record TypeRule(

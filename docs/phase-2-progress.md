@@ -283,3 +283,34 @@ repeat execution.
 
 Continue with focused deterministic hardening based on the frozen V2 failure classifications, then rerun V2 without
 changing its ground truth.
+
+## Phase 4b - post-freeze deterministic hardening
+
+Status: completed
+
+### Result
+
+- Category accuracy improved from 59/80 to 74/80; development improved from 43/60 to 55/60 and holdout from 16/20 to
+  19/20.
+- Added contextual analyzer precedence, root-aware JDBC wrapper analysis, concrete array/string index rules, both
+  Jackson package generations, optimistic-lock persistence-state classification, JDK unresolved-address handling, and
+  bounded typed property/type/request/handler evidence.
+- Increased analyzer versions for every changed rule set so diagnostic fingerprints cannot silently reuse stale
+  diagnoses.
+- Preserved 8/8 unknown restraint, 0 secret leaks, 0 sanitization failures, 80/80 fingerprint stability, and zero
+  conflicting-category collision groups.
+- Retained six category disagreements and documented bad/unevaluable ground truth instead of adding corpus-specific
+  rules.
+
+### Verification
+
+| Command | Result |
+|---|---|
+| Core focused verification | 101 tests passed |
+| Affected reactor plus benchmark | 315 tests passed in 21.617 s |
+| Frozen V2 evaluation | 74/80 category, 80/80 root, 31/46 fact recall, 8/8 restraint |
+
+### Next phase
+
+Harden the managed-child protocol, model paths, sanitizer, and process lifecycle with the remaining adversarial cases,
+then run the reduced-contract local-model lab.

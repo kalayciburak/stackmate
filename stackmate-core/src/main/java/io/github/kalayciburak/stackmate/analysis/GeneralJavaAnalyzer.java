@@ -49,7 +49,21 @@ public final class GeneralJavaAnalyzer implements DiagnosticAnalyzer {
                             "java.lang.IndexOutOfBoundsException",
                             "cause.java.index-out-of-bounds",
                             "An index was outside the available range",
-                            "An exact IndexOutOfBoundsException was captured.",
+                            "An exact index-out-of-bounds exception was captured.",
+                            "check.java.index-range",
+                            "Check collection or array size and the computed index."),
+                    rule(
+                            "java.lang.ArrayIndexOutOfBoundsException",
+                            "cause.java.index-out-of-bounds",
+                            "An index was outside the available range",
+                            "An exact index-out-of-bounds exception was captured.",
+                            "check.java.index-range",
+                            "Check collection or array size and the computed index."),
+                    rule(
+                            "java.lang.StringIndexOutOfBoundsException",
+                            "cause.java.index-out-of-bounds",
+                            "An index was outside the available range",
+                            "An exact index-out-of-bounds exception was captured.",
                             "check.java.index-range",
                             "Check collection or array size and the computed index."),
                     rule(
@@ -112,6 +126,11 @@ public final class GeneralJavaAnalyzer implements DiagnosticAnalyzer {
     @Override
     public String id() {
         return ID;
+    }
+
+    @Override
+    public String version() {
+        return "2";
     }
 
     @Override
