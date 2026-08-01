@@ -128,3 +128,44 @@ reactor verification will run again after the packaged E2E module is integrated.
 
 Add packaged-process Failsafe tests that start the executable sample, exercise real HTTP, use the real local IPC
 lifecycle with a deterministic fake child, and prove shutdown cleanup.
+
+## Phase 2 - packaged-process end-to-end verification
+
+Status: completed on Windows Java 21
+
+### Completed work
+
+- Added the dedicated `stackmate-e2e` module and documented the boundary in ADR 0010.
+- Added 11 real Failsafe integration tests. They start the repackaged sample JAR with `ProcessBuilder`, use random local
+  ports, poll bounded readiness, send real HTTP requests, capture both process streams, request graceful shutdown, and
+  assert that every observed child PID has exited.
+- Covered normal, database duplicate, generic Java, malformed JSON, redaction, repeated, disabled, and Turkish modes.
+- Verified the documented capture limit: Spring MVC handles malformed JSON internally with HTTP 400, so the servlet
+  escape filter does not claim a diagnosis.
+- Added a deterministic sample-only child using the production length-prefixed standard-I/O protocol and managed
+  lifecycle. Normal CI covers valid output, unknown evidence, fabricated source, invalid JSON, oversized framing,
+  invalid UTF-8, timeout, exit code 17, queue saturation, private child stderr, and shutdown during inference.
+- Added an explicit `real-model-e2e` profile. It is excluded from normal Failsafe execution and requires a user-supplied
+  model path.
+
+### Verification
+
+| Command | Result |
+|---|---|
+| First `./mvnw.cmd -pl stackmate-e2e -am verify` | Failed during discovery: non-static lifecycle methods lacked `@TestInstance(PER_CLASS)` |
+| `./mvnw.cmd -rf :stackmate-e2e verify` | Did not run: resume could not resolve the uninstalled sample artifact outside its reactor segment |
+| Final `./mvnw.cmd -pl stackmate-e2e -am verify` | Success in 47.743 s; 11 Failsafe tests passed in 29.700 s; no failures/errors/skips |
+| Warning-clean repeat of the same command | Success in 47.450 s; the same 11 Failsafe tests passed in 29.626 s |
+
+The successful run also executed the upstream unit suites and Maven Enforcer rules. HTTP status and Boot error bodies
+were unchanged in all asserted modes. The fake child's stderr token/ANSI payload never appeared in parent output, and
+all observed descendant processes were dead after graceful application shutdown.
+
+### Platform status
+
+- Windows x86_64, Amazon Corretto 21.0.12: executed and passed.
+- Linux and macOS: not executed locally; workflow results must not be claimed until remote CI runs.
+
+### Next phase
+
+Freeze and commit benchmark corpus V2 before changing analyzer behavior or the inference contract.

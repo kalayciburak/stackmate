@@ -1,7 +1,7 @@
 # Phase 2 architecture and implementation audit
 
-Date: 2026-08-01  
-Baseline commit: `3e319b1bcef0ab954ab4164a1ed585416bc144e2`  
+Date: 2026-08-01
+Baseline commit: `3e319b1bcef0ab954ab4164a1ed585416bc144e2`
 Audit branch: `phase-2-hardening`
 
 ## Scope and method
@@ -243,4 +243,3 @@ milestone.
 3. Windows is the only locally executed real-model platform at this point.
 4. Resolved `@ExceptionHandler`, startup, log-only, and non-servlet exceptions remain outside capture scope.
 5. The Phase 1 inference schema remains authoritative until the version-2 contract milestone lands.
-

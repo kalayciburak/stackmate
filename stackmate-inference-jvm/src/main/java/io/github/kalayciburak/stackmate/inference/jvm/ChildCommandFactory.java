@@ -10,8 +10,8 @@ import java.util.zip.ZipFile;
 
 final class ChildCommandFactory {
     private static final String MAXIMUM_HEAP = "-Xmx1536m";
-    private static final String CHILD_MAIN = JlamaChildMain.class.getName();
-    private static final String CHILD_ENTRY =
+    private static final String DEFAULT_CHILD_MAIN = JlamaChildMain.class.getName();
+    private static final String DEFAULT_CHILD_ENTRY =
             "io/github/kalayciburak/stackmate/inference/jvm/JlamaChildMain.class";
     private static final String PROPERTIES_LAUNCHER =
             "org.springframework.boot.loader.launch.PropertiesLauncher";
@@ -21,11 +21,20 @@ final class ChildCommandFactory {
     private final Path javaHome;
     private final String osName;
     private final String classPath;
+    private final String childMain;
+    private final String childEntry;
 
     ChildCommandFactory(Path javaHome, String osName, String classPath) {
+        this(javaHome, osName, classPath, DEFAULT_CHILD_MAIN, DEFAULT_CHILD_ENTRY);
+    }
+
+    ChildCommandFactory(
+            Path javaHome, String osName, String classPath, String childMain, String childEntry) {
         this.javaHome = javaHome.toAbsolutePath().normalize();
         this.osName = osName;
         this.classPath = classPath;
+        this.childMain = requireClassName(childMain, "childMain");
+        this.childEntry = requireEntry(childEntry);
     }
 
     static ChildCommandFactory currentRuntime() {
@@ -48,19 +57,19 @@ final class ChildCommandFactory {
         command.add("--add-modules=jdk.incubator.vector");
 
         Path singleJar = singleJarClassPath();
-        if (singleJar != null && !containsEntry(singleJar, CHILD_ENTRY)) {
+        if (singleJar != null && !containsEntry(singleJar, childEntry)) {
             if (!containsEntry(singleJar, PROPERTIES_LAUNCHER_ENTRY)) {
                 throw new UnsupportedPackagingException(
                         "single-JAR runtime has neither StackMate child classes nor Spring Boot PropertiesLauncher");
             }
-            command.add("-Dloader.main=" + CHILD_MAIN);
+            command.add("-Dloader.main=" + childMain);
             command.add("-cp");
             command.add(singleJar.toString());
             command.add(PROPERTIES_LAUNCHER);
         } else {
             command.add("-cp");
             command.add(classPath);
-            command.add(CHILD_MAIN);
+            command.add(childMain);
         }
         command.add(modelDirectory.toString());
         return List.copyOf(command);
@@ -87,6 +96,24 @@ final class ChildCommandFactory {
         } catch (IOException exception) {
             throw new UnsupportedPackagingException("cannot inspect runtime JAR", exception);
         }
+    }
+
+    private static String requireClassName(String value, String name) {
+        if (value == null
+                || !value.matches("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)+")) {
+            throw new IllegalArgumentException(name + " must be a fully qualified class name");
+        }
+        return value;
+    }
+
+    private static String requireEntry(String value) {
+        if (value == null
+                || value.startsWith("/")
+                || value.contains("..")
+                || !value.matches("[A-Za-z0-9_$/.-]+\\.class")) {
+            throw new IllegalArgumentException("childEntry must be a safe class entry");
+        }
+        return value;
     }
 
     static final class UnsupportedPackagingException extends IllegalStateException {

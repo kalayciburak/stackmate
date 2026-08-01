@@ -1,6 +1,6 @@
 # StackMate Phase 2 threat model
 
-Date: 2026-08-01  
+Date: 2026-08-01
 Scope: deterministic capture/render/export pipeline and optional managed-JVM inference
 
 ## Executive summary
@@ -162,4 +162,3 @@ through any StackMate API.
 - schema V2 validator needs adversarial English/Turkish identifier and prompt-injection cases;
 - model path tests must cover symlink, Unicode/space, partial directory, and read-only cases across available platforms;
 - real model/native behavior remains Windows-only until CI or reference hardware provides other platforms.
-

@@ -67,6 +67,26 @@ class ChildCommandFactoryTest {
                 .hasMessageContaining("neither StackMate child classes nor Spring Boot");
     }
 
+    @Test
+    void supportsAnExplicitPackagedTestChildWithoutShellInterpolation() throws Exception {
+        Path bootJar = jarWith("org/springframework/boot/loader/launch/PropertiesLauncher.class");
+        String fakeMain = "example.StackMateFakeChild";
+
+        List<String> command =
+                new ChildCommandFactory(
+                                Path.of("C:/jdk"),
+                                "Windows 11",
+                                bootJar.toString(),
+                                fakeMain,
+                                "example/StackMateFakeChild.class")
+                        .command(temporaryDirectory.resolve("model with spaces"));
+
+        assertThat(command)
+                .contains("-Dloader.main=" + fakeMain)
+                .doesNotContain(JlamaChildMain.class.getName());
+        assertThat(command.getLast()).endsWith("model with spaces");
+    }
+
     private Path jarWith(String entryName) throws Exception {
         Path jar = temporaryDirectory.resolve(entryName.hashCode() + ".jar");
         try (ZipOutputStream output = new ZipOutputStream(Files.newOutputStream(jar))) {

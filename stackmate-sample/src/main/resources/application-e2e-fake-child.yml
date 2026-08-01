@@ -1,0 +1,13 @@
+stackmate:
+  mode: hybrid
+  inference:
+    enabled: true
+    lazy-load: true
+    timeout: 750ms
+    repair-attempts: 0
+    executor:
+      threads: 1
+      queue-capacity: 1
+    circuit-breaker:
+      failure-threshold: 100
+      cooldown: 1s

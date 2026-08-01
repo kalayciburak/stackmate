@@ -27,6 +27,7 @@
     <module>stackmate-spring-boot-starter</module>
     <module>stackmate-spring-boot-starter-local</module>
     <module>stackmate-sample</module>
+    <module>stackmate-e2e</module>
     <module>stackmate-benchmark</module>
   </modules>
 
