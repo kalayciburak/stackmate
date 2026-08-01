@@ -157,7 +157,8 @@ direction is public-alpha hardening; it is not started here.
 - `./mvnw.cmd --batch-mode --no-transfer-progress -DskipTests spotless:check`:
   passed across all 11 reactor projects; no formatter apply command was used.
 - `./mvnw.cmd --batch-mode --no-transfer-progress clean verify`: passed across all
-  11 reactor projects in 58.229 seconds.
+  11 reactor projects in 58.229 seconds before the lab-counter correction and
+  57.748 seconds in the final post-correction run.
 - Surefire: 311; Failsafe: 11; failures/errors/skips: 0/0/0.
 - Core coverage: 96.46% line and 87.14% branch; every configured JaCoCo gate passed.
 - V3 corpus and candidate-manifest SHA-256 values revalidated exactly.
@@ -166,3 +167,15 @@ direction is public-alpha hardening; it is not started here.
 - Normal workflow files invoke Maven verification only; no model/native download,
   remote model service, or secret is configured.
 - StackMate inference worker count after verification: zero.
+- Reproduced all four sanitized screening reports under ignored
+  `.stackmate/phase4/evidence/` after discovering that `clean verify` correctly
+  removed their original `target/` location. The archive covers 160 case/profile
+  results and is not affected by later Maven clean operations.
+- Corrected a lab-only acceptance counter that conflated a rejected initial
+  non-English response with its valid repaired response. The product validator had
+  already rejected the initial text; the fixed report records zero accepted language
+  mismatches and leaves the tournament decision unchanged.
+- Re-ran the COMPACT candidate after the counter fix: recommended remained 20/20
+  valid, 19/20 cause, 18/20 check, one generated mismatch, and zero accepted
+  mismatches. The regenerated aggregate report SHA-256 is
+  `cbe32747ddd2c7f8a5453e102b5d36ec2b3310dcfd6ce4159cd1d7d906c6e86b`.

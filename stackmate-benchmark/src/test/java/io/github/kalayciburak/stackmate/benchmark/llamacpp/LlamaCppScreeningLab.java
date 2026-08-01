@@ -190,6 +190,18 @@ class LlamaCppScreeningLab {
                         || issueCodes.contains("FABRICATED_IDENTIFIER")
                         || screeningCase.purpose() == ScreeningCase.Purpose.FABRICATED_SOURCE_TRAP
                                 && forbiddenClaimGenerated;
+        List<String> finalIssueCodes = finalValidation.issueCodes();
+        boolean fabricatedReferenceAccepted =
+                finalValidation.valid()
+                        && (finalIssueCodes.contains("FABRICATED_SOURCE_REFERENCE")
+                                || finalIssueCodes.contains("FABRICATED_IDENTIFIER")
+                                || screeningCase.purpose()
+                                                == ScreeningCase.Purpose.FABRICATED_SOURCE_TRAP
+                                        && containsForbiddenClaim(
+                                                finalLaunch.output(),
+                                                screeningCase.forbiddenClaims()));
+        boolean languageMismatchAccepted =
+                finalValidation.valid() && finalIssueCodes.contains("OUTPUT_NOT_ENGLISH");
         boolean fallbackSucceeded = !finalValidation.valid() || output != null;
 
         return new CaseResult(
@@ -215,9 +227,9 @@ class LlamaCppScreeningLab {
                 secretLeakage,
                 forbiddenClaimGenerated,
                 fabricatedReferenceGenerated,
-                finalValidation.valid() && fabricatedReferenceGenerated,
+                fabricatedReferenceAccepted,
                 languageMismatchGenerated,
-                finalValidation.valid() && languageMismatchGenerated,
+                languageMismatchAccepted,
                 expectedCauses,
                 expectedChecks,
                 output == null ? List.of() : output.selectedCauseIds(),

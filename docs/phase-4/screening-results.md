@@ -39,9 +39,26 @@ sampled every 100 ms from `llama-completion.exe`.
 
 Manual usefulness decisions and reasons are in
 [screening-manual-review.md](screening-manual-review.md). The sanitized per-case
-machine reports remain in ignored `stackmate-benchmark/target/phase4/screening/`
-directories. They are not committed because they contain machine-specific paths and
-timing.
+machine reports were reproduced after final `clean verify` and archived under
+ignored `.stackmate/phase4/evidence/<candidate>/` directories. They are not committed
+because they contain machine-specific paths and timing. Four aggregate JSON reports
+and their Markdown views cover all 160 case/profile results; the archive contains no
+model weights beyond the separately ignored model inputs.
+
+Current local aggregate-report SHA-256 values after regeneration are:
+
+| Candidate | Aggregate JSON SHA-256 |
+|---|---|
+| MICRO | `8fffec586184306e6aa0555c2b24822358b527e12269b47d9b667892038c4675` |
+| COMPACT, corrected counter | `cbe32747ddd2c7f8a5453e102b5d36ec2b3310dcfd6ce4159cd1d7d906c6e86b` |
+| MID | `95c212f21d4752de8018b35e505cb909ddee2e0af76b52c9dc02efb00aa5056f` |
+| ineligible control | `74d34ddd45b142291d30f4e5142078219607dfdb4b5f79d7ebd932c06bfa6f3f` |
+
+These hashes identify the ignored local evidence archive, not a portable benchmark
+baseline: reports deliberately contain timestamps, absolute paths, and machine
+timings. The authoritative comparison table above remains the first complete run;
+regeneration is a reproducibility and preservation check, not a silent replacement
+of recorded performance values.
 
 ### Alternative-profile results
 
@@ -86,6 +103,13 @@ validator to reject letters outside the Latin script; the result was quarantined
 `OUTPUT_NOT_ENGLISH`, one bounded repair returned English JSON, and no mismatched
 text became trusted output. This is recorded as one generated language mismatch and
 zero accepted mismatches.
+
+The first archive regeneration exposed a lab-only counter bug: an initial rejected
+language mismatch followed by a valid English repair was counted as an accepted
+mismatch even though the renderer had never trusted it. Acceptance accounting now
+uses only the final validation result, the COMPACT report was regenerated, and the
+correct accepted-mismatch count is zero. Product validation/fallback behavior and
+the Gate B decision were unchanged.
 
 The GREEDY COMPACT and both MID profiles generated one fabricated technical/source
 identifier each. All were rejected, so accepted fabricated references remained zero.

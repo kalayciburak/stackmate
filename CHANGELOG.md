@@ -64,6 +64,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   the COMPACT screen was rejected, repaired once, and never exposed as trusted output.
 - Phase 4 model and official Windows llama.cpp artifacts were pinned by immutable revisions, expected sizes, and
   SHA-256 before isolated execution. No GGUF/native artifact enters a production module or normal CI.
+- Corrected the research harness so a rejected initial language/fabrication issue is never counted as accepted when
+  a later bounded repair succeeds; acceptance counters now inspect only the final validated response.
 - Redaction and output-boundary controls for common credentials, tokens, personal identifiers, terminal controls,
   and configured sensitive patterns.
 - Model-free deterministic fallback when optional inference is absent, invalid, unavailable, or times out.
