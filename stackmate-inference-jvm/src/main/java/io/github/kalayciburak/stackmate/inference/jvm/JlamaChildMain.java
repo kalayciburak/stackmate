@@ -1,6 +1,5 @@
 package io.github.kalayciburak.stackmate.inference.jvm;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tjake.jlama.model.AbstractModel;
@@ -33,8 +32,7 @@ public final class JlamaChildMain {
             return;
         }
 
-        ObjectMapper mapper =
-                new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+        ObjectMapper mapper = Protocol.strictMapper();
         try (DataInputStream input = new DataInputStream(new BufferedInputStream(System.in));
                 DataOutputStream output =
                         new DataOutputStream(new BufferedOutputStream(protocolStream))) {

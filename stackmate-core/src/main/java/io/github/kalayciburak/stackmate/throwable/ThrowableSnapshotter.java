@@ -141,7 +141,7 @@ public final class ThrowableSnapshotter {
 
     private ThrowableNode cycleNode(Throwable throwable, int depth) {
         return new ThrowableNode(
-                throwable.getClass().getName(),
+                captureType(throwable, new ArrayList<>()),
                 "",
                 List.of(),
                 List.of(),
@@ -173,10 +173,14 @@ public final class ThrowableSnapshotter {
         String type = throwable.getClass().getName();
         try {
             String sanitized = sanitizer.sanitize("className", type);
-            return sanitized == null ? type : sanitized;
+            if (sanitized == null || sanitized.isBlank()) {
+                addFailure(failures, "type:empty-sanitizer-result");
+                return "unknown.throwable";
+            }
+            return sanitized;
         } catch (Throwable failure) {
             handleFailure(failure, failures, "type");
-            return type;
+            return "unknown.throwable";
         }
     }
 

@@ -85,7 +85,7 @@ class StackMatePropertiesTest {
                                 Map.entry("stackmate.diagnostics.maximum-cause-depth", "12"),
                                 Map.entry("stackmate.privacy.pii-redaction", "false"),
                                 Map.entry("stackmate.inference.timeout", "3s"),
-                                Map.entry("stackmate.inference.executor.threads", "2"),
+                                Map.entry("stackmate.inference.executor.threads", "1"),
                                 Map.entry("stackmate.inference.circuit-breaker.cooldown", "30s"),
                                 Map.entry("stackmate.deduplication.ttl", "2m"),
                                 Map.entry("stackmate.console.ansi", "never"),
@@ -102,7 +102,7 @@ class StackMatePropertiesTest {
         assertThat(properties.getDiagnostics().getMaximumCauseDepth()).isEqualTo(12);
         assertThat(properties.getPrivacy().isPiiRedaction()).isFalse();
         assertThat(properties.getInference().getTimeout()).isEqualTo(Duration.ofSeconds(3));
-        assertThat(properties.getInference().getExecutor().getThreads()).isEqualTo(2);
+        assertThat(properties.getInference().getExecutor().getThreads()).isEqualTo(1);
         assertThat(properties.getInference().getCircuitBreaker().getCooldown())
                 .isEqualTo(Duration.ofSeconds(30));
         assertThat(properties.getDeduplication().getTtl()).isEqualTo(Duration.ofMinutes(2));
@@ -133,6 +133,16 @@ class StackMatePropertiesTest {
         assertThatThrownBy(() -> bind(Map.of("stackmate.diagnostics.maximum-cause-depth", "0")))
                 .hasRootCauseInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> bind(Map.of("stackmate.inference.timeout", "0s")))
+                .hasRootCauseInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> bind(Map.of("stackmate.inference.timeout", "2h")))
+                .hasRootCauseInstanceOf(IllegalArgumentException.class)
+                .rootCause()
+                .hasMessageContaining("one hour");
+        assertThatThrownBy(() -> bind(Map.of("stackmate.inference.executor.threads", "2")))
+                .hasRootCauseInstanceOf(IllegalArgumentException.class)
+                .rootCause()
+                .hasMessageContaining("must be 1");
+        assertThatThrownBy(() -> bind(Map.of("stackmate.diagnostics.maximum-message-length", "0")))
                 .hasRootCauseInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> bind(Map.of("stackmate.inference.temperature", "0.1")))
                 .hasRootCauseInstanceOf(IllegalArgumentException.class)

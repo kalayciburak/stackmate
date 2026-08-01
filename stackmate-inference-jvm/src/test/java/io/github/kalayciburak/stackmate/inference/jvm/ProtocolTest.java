@@ -8,10 +8,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 class ProtocolTest {
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = Protocol.strictMapper();
 
     @Test
     void roundTripsBoundedFrame() throws Exception {
@@ -80,6 +82,49 @@ class ProtocolTest {
                                         new DataInputStream(
                                                 new ByteArrayInputStream(malformed.toByteArray())),
                                         Protocol.Response.class,
+                                        mapper,
+                                        1_024))
+                .isInstanceOf(Protocol.ProtocolException.class)
+                .hasMessageContaining("malformed");
+    }
+
+    @Test
+    void rejectsDuplicateUnknownDeepAndInvalidUtf8Content() throws Exception {
+        assertMalformed(
+                "{\"version\":1,\"version\":1,\"operation\":\"health\",\"requestId\":\"1\",\"payload\":{}}");
+        assertMalformed(
+                "{\"version\":1,\"operation\":\"health\",\"requestId\":\"1\",\"payload\":{},\"extra\":true}");
+        assertMalformed("[".repeat(65) + "0" + "]".repeat(65));
+        assertMalformed(new byte[] {(byte) 0xC3, (byte) 0x28});
+    }
+
+    @Test
+    void sanitizesProcessFailuresBeforeReturningDetails() {
+        String failure =
+                Protocol.boundedError(
+                        new IOException(
+                                "password=hunter2 Authorization: Bearer abc.def.ghi\u001B[31m"));
+
+        assertThat(failure)
+                .doesNotContain("hunter2", "abc.def.ghi", "\u001B")
+                .contains("[REDACTED]");
+    }
+
+    private void assertMalformed(String json) throws Exception {
+        assertMalformed(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void assertMalformed(byte[] payload) throws Exception {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream output = new DataOutputStream(bytes);
+        output.writeInt(payload.length);
+        output.write(payload);
+        assertThatThrownBy(
+                        () ->
+                                Protocol.readFrame(
+                                        new DataInputStream(
+                                                new ByteArrayInputStream(bytes.toByteArray())),
+                                        Protocol.Request.class,
                                         mapper,
                                         1_024))
                 .isInstanceOf(Protocol.ProtocolException.class)

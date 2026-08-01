@@ -59,6 +59,6 @@ public class DiagnosticsProperties {
     public void setMaximumMessageLength(int maximumMessageLength) {
         this.maximumMessageLength =
                 PropertyValidation.range(
-                        maximumMessageLength, 0, 100_000, "diagnostics.maximumMessageLength");
+                        maximumMessageLength, 1, 100_000, "diagnostics.maximumMessageLength");
     }
 }

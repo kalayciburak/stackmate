@@ -7,7 +7,6 @@ interface ChildProcessLauncher {
     Process launch(List<String> command) throws IOException;
 
     static ChildProcessLauncher system() {
-        return command ->
-                new ProcessBuilder(command).redirectError(ProcessBuilder.Redirect.INHERIT).start();
+        return command -> new ProcessBuilder(command).start();
     }
 }

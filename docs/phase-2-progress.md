@@ -86,3 +86,45 @@ the target. This bounded sample is not a replacement for the later V2 model benc
 ### Next phase
 
 Perform the independent architecture, concurrency, process-protocol, sanitizer, and public-API audit.
+
+## Phase 1 - independent architecture and implementation audit
+
+Status: completed, with the inference-contract redesign explicitly deferred until after corpus V2 is frozen
+
+### Completed work
+
+- Audited public contracts, Maven dependency direction, Boot auto-configuration, executor and deduplication behavior,
+  managed-child framing/lifecycle, model-path validation, sanitization, fingerprinting, export, and console boundaries.
+- Published the severity-ranked review in `docs/reviews/phase-2-architecture-audit.md` and the repository-grounded
+  security analysis in `docs/reviews/stackmate-threat-model.md`.
+- Fixed three HIGH findings: raw child stderr inheritance, non-interruptible serialized inference, and incomplete model
+  metadata/resource validation.
+- Fixed practical MEDIUM findings in strict JSON protocol parsing, whole-document export truncation, sanitizer failure
+  fallback, and unsafe configuration bounds.
+- Preserved the existing public API and deterministic module architecture. No LOW finding was refactored for aesthetics.
+
+### Verification
+
+| Command | Result |
+|---|---|
+| `./mvnw.cmd spotless:apply` | Success; only changed Java sources were formatted |
+| First affected-module `test` | Failed: one new assertion expected a different bounded capture-failure code |
+| Second affected-module `test` | Failed: one property-message assertion used wording different from production |
+| Final `./mvnw.cmd -pl stackmate-spring-boot-autoconfigure,stackmate-inference-jvm -am test` | Success; 211 tests, 0 failures/errors/skips after the lazy-wrapper regression is included |
+| JDK 21 `jdeps` | Core uses `java.base` and `java.sql`; inference API uses `java.base` and core only |
+
+The two intermediate failures were test expectation errors and are retained here rather than hidden. The complete clean
+reactor verification will run again after the packaged E2E module is integrated.
+
+### Remaining risks
+
+- Phase 1 model contract still duplicates deterministic authority until schema version 2 lands.
+- Packaged fake-child lifecycle and orphan cleanup are not yet proven by Failsafe.
+- Child-JVM isolation is not an OS sandbox; malicious model/native-runtime risk cannot be eliminated in Java code.
+- Host application logging can expose the original secret-bearing exception because StackMate intentionally does not
+  take ownership of logging appenders.
+
+### Next phase
+
+Add packaged-process Failsafe tests that start the executable sample, exercise real HTTP, use the real local IPC
+lifecycle with a deterministic fake child, and prove shutdown cleanup.

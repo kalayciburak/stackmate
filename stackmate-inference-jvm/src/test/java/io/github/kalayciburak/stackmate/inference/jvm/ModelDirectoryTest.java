@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -58,5 +61,55 @@ class ModelDirectoryTest {
         assertThatThrownBy(() -> ModelDirectory.validate(malformed, new ObjectMapper()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("SafeTensors header");
+    }
+
+    @Test
+    void rejectsUnsafeDimensionsAndTensorMetadataBeforeStartingTheWorker() throws Exception {
+        Path dimensions = TestModelDirectory.create(temporaryDirectory.resolve("dimensions"));
+        Files.writeString(
+                dimensions.resolve("config.json"),
+                """
+                {"model_type":"qwen2","hidden_size":63,"intermediate_size":128,
+                "num_hidden_layers":1,"num_attention_heads":8,"num_key_value_heads":1,
+                "vocab_size":256,"max_position_embeddings":128}
+                """);
+        assertThatThrownBy(() -> ModelDirectory.validate(dimensions, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("unsafe hidden_size");
+
+        Path empty = TestModelDirectory.create(temporaryDirectory.resolve("empty-metadata"));
+        writeTensor(empty.resolve("model.safetensors"), "{}", new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(empty, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no tensors");
+
+        Path offset = TestModelDirectory.create(temporaryDirectory.resolve("escaping-offset"));
+        writeTensor(
+                offset.resolve("model.safetensors"),
+                "{\"weight\":{\"dtype\":\"U8\",\"shape\":[1],\"data_offsets\":[0,2]}}",
+                new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(offset, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("offsets escape");
+
+        Path rank = TestModelDirectory.create(temporaryDirectory.resolve("unsafe-rank"));
+        writeTensor(
+                rank.resolve("model.safetensors"),
+                "{\"weight\":{\"dtype\":\"U8\",\"shape\":[1,1,1,1,1,1,1,1,1],\"data_offsets\":[0,1]}}",
+                new byte[] {0});
+        assertThatThrownBy(() -> ModelDirectory.validate(rank, Protocol.strictMapper()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("rank");
+    }
+
+    private void writeTensor(Path path, String metadata, byte[] data) throws Exception {
+        byte[] header = metadata.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer tensor =
+                ByteBuffer.allocate(Long.BYTES + header.length + data.length)
+                        .order(ByteOrder.LITTLE_ENDIAN)
+                        .putLong(header.length)
+                        .put(header)
+                        .put(data);
+        Files.write(path, tensor.array());
     }
 }

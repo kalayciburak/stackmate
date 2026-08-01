@@ -1,7 +1,6 @@
 package io.github.kalayciburak.stackmate.inference.jvm;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
@@ -21,12 +20,13 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReentrantLock;
 
 /** Jlama-backed local inference isolated in one managed child JVM. */
 public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
     private static final Duration DEFAULT_TIMEOUT = Duration.ofMinutes(5);
 
-    private final Object lock = new Object();
+    private final ReentrantLock lock = new ReentrantLock();
     private final ModelDirectory modelDirectory;
     private final ObjectMapper mapper;
     private final ManagedChild child;
@@ -93,7 +93,8 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
 
     @Override
     public InferenceAvailability availability() {
-        synchronized (lock) {
+        lock.lock();
+        try {
             if (closed) {
                 return unavailable("local inference engine is closed");
             }
@@ -110,6 +111,8 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
                         InferenceAvailability.Status.DEGRADED, child.lastFailure());
             }
             return InferenceAvailability.available();
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -120,7 +123,8 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
 
     @Override
     public InferenceResult infer(InferenceRequest request) throws InterruptedException {
-        synchronized (lock) {
+        lockInterruptiblyPreservingStatus();
+        try {
             if (closed) {
                 return failed(
                         InferenceFailure.Kind.UNAVAILABLE,
@@ -192,6 +196,17 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
                         "local inference process failed: " + Protocol.boundedError(exception),
                         true);
             }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void lockInterruptiblyPreservingStatus() throws InterruptedException {
+        try {
+            lock.lockInterruptibly();
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw exception;
         }
     }
 
@@ -249,12 +264,15 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
 
     @Override
     public void close() {
-        synchronized (lock) {
+        lock.lock();
+        try {
             if (closed) {
                 return;
             }
             closed = true;
             child.close();
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -285,7 +303,7 @@ public final class JlamaLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     private static ObjectMapper configuredMapper() {
-        return new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+        return Protocol.strictMapper();
     }
 
     private record ParsedOutput(

@@ -2,7 +2,6 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.inference.InferenceFact;
 import io.github.kalayciburak.stackmate.inference.InferenceFailure;
@@ -27,8 +26,7 @@ class JlamaLocalInferenceEngineTest {
             "{\"language\":\"ENGLISH\",\"summary\":\"Evidence only\",\"causes\":[],\"checks\":[]}";
 
     @TempDir Path temporaryDirectory;
-    private final ObjectMapper mapper =
-            new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+    private final ObjectMapper mapper = Protocol.strictMapper();
 
     @Test
     void reusesOneLongLivedChildAndClosesGracefully() throws Exception {
@@ -333,6 +331,60 @@ class JlamaLocalInferenceEngineTest {
         engine.close();
     }
 
+    @Test
+    void waitingCallerCanBeInterruptedWithoutWaitingForActiveInference() throws Exception {
+        CountDownLatch received = new CountDownLatch(1);
+        JlamaLocalInferenceEngine engine =
+                engine(
+                        Duration.ofSeconds(10),
+                        command ->
+                                new ScriptedProcess(
+                                        (input, output) -> {
+                                            Protocol.readFrame(
+                                                    new DataInputStream(input),
+                                                    Protocol.Request.class,
+                                                    mapper,
+                                                    Protocol.MAXIMUM_REQUEST_BYTES);
+                                            received.countDown();
+                                            new CountDownLatch(1).await();
+                                        }));
+        Thread active =
+                Thread.ofPlatform()
+                        .start(
+                                () -> {
+                                    try {
+                                        engine.infer(request());
+                                    } catch (InterruptedException exception) {
+                                        Thread.currentThread().interrupt();
+                                    }
+                                });
+        assertThat(received.await(1, TimeUnit.SECONDS)).isTrue();
+
+        AtomicBoolean caught = new AtomicBoolean();
+        AtomicBoolean interruptPreserved = new AtomicBoolean();
+        Thread waiting =
+                Thread.ofPlatform()
+                        .start(
+                                () -> {
+                                    try {
+                                        engine.infer(request());
+                                    } catch (InterruptedException exception) {
+                                        caught.set(true);
+                                        interruptPreserved.set(
+                                                Thread.currentThread().isInterrupted());
+                                    }
+                                });
+        awaitWaiting(waiting);
+        waiting.interrupt();
+        waiting.join(2_000);
+
+        assertThat(caught).isTrue();
+        assertThat(interruptPreserved).isTrue();
+        active.interrupt();
+        active.join(2_000);
+        engine.close();
+    }
+
     private JlamaLocalInferenceEngine engine(Duration timeout, ChildProcessLauncher launcher)
             throws Exception {
         return engine(timeout, 1, launcher);
@@ -430,5 +482,15 @@ class JlamaLocalInferenceEngineTest {
 
     private static InferenceFailure failure(InferenceResult result) {
         return ((InferenceResult.Failed) result).failure();
+    }
+
+    private static void awaitWaiting(Thread thread) throws InterruptedException {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(1);
+        while (thread.getState() != Thread.State.WAITING
+                && thread.getState() != Thread.State.TIMED_WAITING
+                && System.nanoTime() < deadline) {
+            Thread.onSpinWait();
+        }
+        assertThat(thread.getState()).isIn(Thread.State.WAITING, Thread.State.TIMED_WAITING);
     }
 }

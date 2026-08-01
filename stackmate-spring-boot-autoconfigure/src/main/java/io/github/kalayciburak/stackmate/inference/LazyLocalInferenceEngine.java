@@ -16,12 +16,12 @@ public final class LazyLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     /** Initializes once while containing setup failures inside the optional inference boundary. */
-    public synchronized void initialize() {
+    public void initialize() {
         delegate();
     }
 
     @Override
-    public synchronized InferenceAvailability availability() {
+    public InferenceAvailability availability() {
         LocalInferenceEngine engine = delegate();
         if (engine == null) {
             return new InferenceAvailability(
@@ -37,7 +37,7 @@ public final class LazyLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     @Override
-    public synchronized ModelDescriptor model() {
+    public ModelDescriptor model() {
         LocalInferenceEngine engine = delegate();
         if (engine == null) {
             throw new IllegalStateException("local model is unavailable");
@@ -46,8 +46,7 @@ public final class LazyLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     @Override
-    public synchronized InferenceResult infer(InferenceRequest request)
-            throws InterruptedException {
+    public InferenceResult infer(InferenceRequest request) throws InterruptedException {
         LocalInferenceEngine engine = delegate();
         if (engine == null) {
             return new InferenceResult.Failed(
@@ -59,7 +58,7 @@ public final class LazyLocalInferenceEngine implements LocalInferenceEngine {
         return engine.infer(request);
     }
 
-    private LocalInferenceEngine delegate() {
+    private synchronized LocalInferenceEngine delegate() {
         if (closed || initializationFailed) {
             return null;
         }
@@ -74,13 +73,17 @@ public final class LazyLocalInferenceEngine implements LocalInferenceEngine {
     }
 
     @Override
-    public synchronized void close() {
-        if (closed) {
-            return;
+    public void close() {
+        LocalInferenceEngine engine;
+        synchronized (this) {
+            if (closed) {
+                return;
+            }
+            closed = true;
+            engine = delegate;
         }
-        closed = true;
-        if (delegate != null) {
-            delegate.close();
+        if (engine != null) {
+            engine.close();
         }
     }
 }

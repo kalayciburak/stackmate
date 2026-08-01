@@ -20,9 +20,11 @@ import java.util.stream.Stream;
 final class ModelDirectory {
     private static final long MAXIMUM_CONFIG_BYTES = 2L * 1024 * 1024;
     private static final long MAXIMUM_TOKENIZER_BYTES = 64L * 1024 * 1024;
-    private static final long MAXIMUM_TENSOR_BYTES = 4L * 1024 * 1024 * 1024;
-    private static final long MAXIMUM_TOTAL_TENSOR_BYTES = 4L * 1024 * 1024 * 1024;
-    private static final long MAXIMUM_TENSOR_HEADER_BYTES = 100L * 1024 * 1024;
+    private static final long MAXIMUM_TENSOR_BYTES = 1_500_000_000L;
+    private static final long MAXIMUM_TOTAL_TENSOR_BYTES = 1_500_000_000L;
+    private static final long MAXIMUM_TENSOR_HEADER_BYTES = 16L * 1024 * 1024;
+    private static final int MAXIMUM_TENSORS = 100_000;
+    private static final long MAXIMUM_TENSOR_ELEMENTS = 2_000_000_000L;
     private static final Pattern SAFE_WEIGHT_NAME =
             Pattern.compile("[A-Za-z0-9._-]+\\.safetensors");
 
@@ -55,6 +57,7 @@ final class ModelDirectory {
             if (!"qwen2".equals(modelType)) {
                 throw new IllegalArgumentException("only Qwen2-compatible models are supported");
             }
+            validateModelDimensions(configJson);
             JsonNode tokenizerJson = readObject(tokenizer, mapper, "tokenizer.json");
             if (!tokenizerJson.path("model").isObject()) {
                 throw new IllegalArgumentException("tokenizer.json is missing model metadata");
@@ -173,9 +176,99 @@ final class ModelDirectory {
                 throw new IllegalArgumentException("invalid SafeTensors header length");
             }
             byte[] header = input.readNBytes((int) headerLength);
-            if (header.length != (int) headerLength || !mapper.readTree(header).isObject()) {
+            JsonNode metadata =
+                    header.length == (int) headerLength ? mapper.readTree(header) : null;
+            if (metadata == null || !metadata.isObject()) {
                 throw new IllegalArgumentException("malformed SafeTensors metadata");
             }
+            validateTensorMetadata(metadata, fileSize - Long.BYTES - headerLength);
+        }
+    }
+
+    private static void validateModelDimensions(JsonNode config) {
+        int hiddenSize = requiredInt(config, "hidden_size", 64, 8_192);
+        requiredInt(config, "intermediate_size", 64, 65_536);
+        requiredInt(config, "num_hidden_layers", 1, 128);
+        int attentionHeads = requiredInt(config, "num_attention_heads", 1, 128);
+        int keyValueHeads = requiredInt(config, "num_key_value_heads", 1, attentionHeads);
+        requiredInt(config, "vocab_size", 256, 1_000_000);
+        requiredInt(config, "max_position_embeddings", 128, 1_000_000);
+        if (hiddenSize % attentionHeads != 0 || attentionHeads % keyValueHeads != 0) {
+            throw new IllegalArgumentException("model attention dimensions are inconsistent");
+        }
+    }
+
+    private static int requiredInt(JsonNode node, String field, int minimum, int maximum) {
+        JsonNode value = node.path(field);
+        if (!value.isIntegralNumber() || !value.canConvertToInt()) {
+            throw new IllegalArgumentException("config.json has an invalid " + field);
+        }
+        int number = value.intValue();
+        if (number < minimum || number > maximum) {
+            throw new IllegalArgumentException("config.json has an unsafe " + field);
+        }
+        return number;
+    }
+
+    private static void validateTensorMetadata(JsonNode metadata, long dataBytes) {
+        if (metadata.size() > MAXIMUM_TENSORS + 1) {
+            throw new IllegalArgumentException("SafeTensors metadata contains too many tensors");
+        }
+        int tensorCount = 0;
+        for (var entry : metadata.properties()) {
+            if ("__metadata__".equals(entry.getKey())) {
+                if (!entry.getValue().isObject()) {
+                    throw new IllegalArgumentException(
+                            "SafeTensors __metadata__ must be an object");
+                }
+                continue;
+            }
+            validateTensorEntry(entry.getValue(), dataBytes);
+            tensorCount++;
+        }
+        if (tensorCount == 0) {
+            throw new IllegalArgumentException("SafeTensors metadata contains no tensors");
+        }
+    }
+
+    private static void validateTensorEntry(JsonNode tensor, long dataBytes) {
+        if (!tensor.isObject()
+                || !tensor.path("dtype").isTextual()
+                || !tensor.path("shape").isArray()
+                || !tensor.path("data_offsets").isArray()
+                || tensor.path("data_offsets").size() != 2) {
+            throw new IllegalArgumentException("SafeTensors tensor metadata is incomplete");
+        }
+        JsonNode shape = tensor.path("shape");
+        if (shape.size() > 8) {
+            throw new IllegalArgumentException("SafeTensors tensor rank is too large");
+        }
+        long elements = 1;
+        for (JsonNode dimension : shape) {
+            if (!dimension.isIntegralNumber()
+                    || !dimension.canConvertToLong()
+                    || dimension.longValue() < 1
+                    || dimension.longValue() > 1_000_000) {
+                throw new IllegalArgumentException("SafeTensors tensor dimension is invalid");
+            }
+            try {
+                elements = Math.multiplyExact(elements, dimension.longValue());
+            } catch (ArithmeticException overflow) {
+                throw new IllegalArgumentException(
+                        "SafeTensors tensor dimensions overflow", overflow);
+            }
+            if (elements > MAXIMUM_TENSOR_ELEMENTS) {
+                throw new IllegalArgumentException("SafeTensors tensor is too large");
+            }
+        }
+        JsonNode offsets = tensor.path("data_offsets");
+        if (!offsets.get(0).isIntegralNumber() || !offsets.get(1).isIntegralNumber()) {
+            throw new IllegalArgumentException("SafeTensors data offsets are invalid");
+        }
+        long start = offsets.get(0).longValue();
+        long end = offsets.get(1).longValue();
+        if (start < 0 || end < start || end > dataBytes) {
+            throw new IllegalArgumentException("SafeTensors data offsets escape the file");
         }
     }
 

@@ -7,6 +7,9 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.concurrent.TimeoutException;
 
 final class ManagedChild implements AutoCloseable {
     private static final int MAXIMUM_LAUNCHES = 3;
+    private static final int MAXIMUM_STDERR_CHARACTERS = 4_096;
     private static final Duration CLOSE_TIMEOUT = Duration.ofSeconds(2);
 
     private final Path modelDirectory;
@@ -34,6 +38,8 @@ final class ManagedChild implements AutoCloseable {
     private Process process;
     private DataInputStream input;
     private DataOutputStream output;
+    private Thread stderrDrainer;
+    private final StringBuilder stderrTail = new StringBuilder();
     private int launches;
     private boolean closed;
     private String lastFailure = "";
@@ -118,7 +124,7 @@ final class ManagedChild implements AutoCloseable {
             Thread.currentThread().interrupt();
             throw exception;
         } catch (ExecutionException exception) {
-            failProcess(expected, Protocol.boundedError(exception.getCause()));
+            failProcess(expected, failureDetail(exception.getCause()));
             Throwable cause = exception.getCause();
             if (cause instanceof IOException ioException) {
                 throw ioException;
@@ -127,7 +133,7 @@ final class ManagedChild implements AutoCloseable {
         } catch (ChildFailureException exception) {
             throw exception;
         } catch (IOException | RuntimeException exception) {
-            failProcess(expected, Protocol.boundedError(exception));
+            failProcess(expected, failureDetail(exception));
             throw exception;
         }
     }
@@ -152,6 +158,7 @@ final class ManagedChild implements AutoCloseable {
         }
         input = new DataInputStream(new BufferedInputStream(process.getInputStream()));
         output = new DataOutputStream(new BufferedOutputStream(process.getOutputStream()));
+        startStderrDrainer(process);
     }
 
     private boolean isRunning() {
@@ -183,9 +190,64 @@ final class ManagedChild implements AutoCloseable {
     }
 
     private void clearProcess() {
+        Thread drainer = stderrDrainer;
+        stderrDrainer = null;
+        if (drainer != null) {
+            drainer.interrupt();
+        }
         process = null;
         input = null;
         output = null;
+    }
+
+    private void startStderrDrainer(Process startedProcess) {
+        synchronized (stderrTail) {
+            stderrTail.setLength(0);
+        }
+        stderrDrainer =
+                Thread.ofVirtual()
+                        .name("stackmate-inference-stderr")
+                        .start(() -> drainStderr(startedProcess));
+    }
+
+    private void drainStderr(Process startedProcess) {
+        char[] buffer = new char[1_024];
+        try (Reader reader =
+                new InputStreamReader(startedProcess.getErrorStream(), StandardCharsets.UTF_8)) {
+            int read;
+            while ((read = reader.read(buffer)) >= 0) {
+                if (read == 0) {
+                    continue;
+                }
+                synchronized (stderrTail) {
+                    stderrTail.append(buffer, 0, read);
+                    int excess = stderrTail.length() - MAXIMUM_STDERR_CHARACTERS;
+                    if (excess > 0) {
+                        stderrTail.delete(0, excess);
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+            // Process termination closes the pipe. The protocol result remains authoritative.
+        }
+    }
+
+    private String failureDetail(Throwable failure) {
+        String protocolFailure = Protocol.boundedError(failure);
+        Process current = process;
+        if (current != null && !current.isAlive()) {
+            protocolFailure = protocolFailure + "; child exit code: " + current.exitValue();
+        }
+        String childError;
+        synchronized (stderrTail) {
+            childError = stderrTail.toString();
+        }
+        if (childError.isBlank()) {
+            return protocolFailure;
+        }
+        String sanitizedChildError = Protocol.boundedError(new IOException(childError));
+        String combined = protocolFailure + "; child stderr: " + sanitizedChildError;
+        return combined.substring(0, Math.min(combined.length(), 400));
     }
 
     @Override

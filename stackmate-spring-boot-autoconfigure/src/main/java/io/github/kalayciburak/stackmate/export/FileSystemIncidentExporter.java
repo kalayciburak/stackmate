@@ -135,7 +135,7 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
         }
         Files.writeString(
                 file,
-                sanitizer.sanitize(content),
+                content,
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE_NEW,
                 StandardOpenOption.WRITE);
@@ -223,26 +223,26 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
                 .append("`\n")
                 .append("- Source: deterministic StackMate rules\n\n")
                 .append("## Summary\n\n")
-                .append(primary.title())
+                .append(safe("causeTitle", primary.title()))
                 .append("\n\n")
-                .append(primary.explanation())
+                .append(safe("causeExplanation", primary.explanation()))
                 .append("\n\n")
                 .append("## First checks\n\n");
         for (CheckCandidate check : result.diagnosis().checks()) {
             markdown.append("- ")
-                    .append(check.instruction())
+                    .append(safe("checkInstruction", check.instruction()))
                     .append(" (`")
-                    .append(check.id())
+                    .append(safe("checkId", check.id()))
                     .append("`)\n");
         }
         markdown.append("\n## Evidence\n\n");
         for (EvidenceItem item : result.diagnosis().evidence()) {
             markdown.append("- `")
-                    .append(item.id())
+                    .append(safe("evidenceId", item.id()))
                     .append("` ")
                     .append(item.type())
                     .append(": ")
-                    .append(item.value())
+                    .append(safe("evidenceValue", item.value()))
                     .append("\n");
         }
         return markdown.toString();
@@ -254,16 +254,16 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
             if (!trace.isEmpty()) {
                 trace.append("Caused by: ");
             }
-            trace.append(node.type());
+            trace.append(safe("throwableType", node.type()));
             if (!node.message().isBlank()) {
-                trace.append(": ").append(node.message());
+                trace.append(": ").append(safe("throwableMessage", node.message()));
             }
             trace.append('\n');
             for (StackFrameSnapshot frame : node.frames()) {
                 trace.append("\tat ")
-                        .append(frame.className())
+                        .append(safe("className", frame.className()))
                         .append('.')
-                        .append(frame.methodName())
+                        .append(safe("methodName", frame.methodName()))
                         .append('(')
                         .append(location(frame))
                         .append(")\n");
@@ -282,7 +282,7 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
                 .append(
                         "This bundle contains sanitized runtime evidence only; no source file was copied.\n\n")
                 .append("## What happened\n\n")
-                .append(primary.title())
+                .append(safe("causeTitle", primary.title()))
                 .append("\n\n")
                 .append("Deterministic category: `")
                 .append(primary.category())
@@ -295,9 +295,9 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
         } else {
             for (StackFrameSnapshot frame : result.incident().applicationFrames()) {
                 prompt.append("- `")
-                        .append(frame.className())
+                        .append(safe("className", frame.className()))
                         .append('#')
-                        .append(frame.methodName())
+                        .append(safe("methodName", frame.methodName()))
                         .append('(')
                         .append(location(frame))
                         .append(")`\n");
@@ -314,7 +314,7 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
     }
 
     private String json(String value) {
-        String sanitized = sanitizer.sanitize(Objects.requireNonNull(value, "value"));
+        String sanitized = safe("exportJsonValue", Objects.requireNonNull(value, "value"));
         StringBuilder escaped = new StringBuilder(sanitized.length() + 2).append('"');
         for (int index = 0; index < sanitized.length(); index++) {
             char character = sanitized.charAt(index);
@@ -341,8 +341,12 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
             return "Unknown Source";
         }
         return frame.lineNumber() > 0
-                ? frame.fileName() + ":" + frame.lineNumber()
-                : frame.fileName();
+                ? safe("fileName", frame.fileName()) + ":" + frame.lineNumber()
+                : safe("fileName", frame.fileName());
+    }
+
+    private String safe(String fieldName, String value) {
+        return sanitizer.sanitize(fieldName, Objects.requireNonNull(value, fieldName));
     }
 
     private String incidentId(DeterministicResult result) {

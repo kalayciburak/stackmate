@@ -2,6 +2,7 @@ package io.github.kalayciburak.stackmate.inference.jvm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -23,5 +24,7 @@ class ChildProcessLauncherTest {
 
         assertThat(process.waitFor(10, TimeUnit.SECONDS)).isTrue();
         assertThat(process.exitValue()).isZero();
+        assertThat(new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8))
+                .containsIgnoringCase("version");
     }
 }

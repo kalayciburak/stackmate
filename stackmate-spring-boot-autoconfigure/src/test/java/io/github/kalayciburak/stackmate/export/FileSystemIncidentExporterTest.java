@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -64,6 +65,23 @@ class FileSystemIncidentExporterTest {
             assertThat(entries.map(path -> path.getFileName().toString()))
                     .noneMatch(name -> name.startsWith(".stackmate-export-"));
         }
+    }
+
+    @Test
+    void doesNotTruncateTheStructuredBundleAtThePerValueSanitizerLimit() throws IOException {
+        Path root = temporaryDirectory.resolve("bounded-values");
+        var sanitizer =
+                new DefaultSanitizer(
+                        new SanitizerConfig(
+                                64, "[REDACTED]", true, true, true, Set.of(), List.of()));
+        var exporter = new FileSystemIncidentExporter(root, 10, sanitizer);
+
+        Path directory =
+                ((IncidentExportResult.Exported) exporter.export(result('9', "x".repeat(256))))
+                        .directory();
+        String json = Files.readString(directory.resolve("incident.json"));
+
+        assertThat(json).contains("\"evidence\"").endsWith("}\n").hasSizeGreaterThan(64);
     }
 
     @Test

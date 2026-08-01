@@ -110,7 +110,11 @@ public class InferenceProperties {
     }
 
     public void setTimeout(Duration timeout) {
-        this.timeout = PropertyValidation.positive(timeout, "inference.timeout");
+        Duration validated = PropertyValidation.positive(timeout, "inference.timeout");
+        if (validated.compareTo(Duration.ofHours(1)) > 0) {
+            throw new IllegalArgumentException("inference.timeout must not exceed one hour");
+        }
+        this.timeout = validated;
     }
 
     public int getRepairAttempts() {
@@ -149,7 +153,11 @@ public class InferenceProperties {
         }
 
         public void setThreads(int threads) {
-            this.threads = PropertyValidation.range(threads, 1, 32, "inference.executor.threads");
+            if (threads != 1) {
+                throw new IllegalArgumentException(
+                        "inference.executor.threads must be 1 for the serialized CPU engine");
+            }
+            this.threads = 1;
         }
 
         public int getQueueCapacity() {

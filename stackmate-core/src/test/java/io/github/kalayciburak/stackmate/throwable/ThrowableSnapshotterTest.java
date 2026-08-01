@@ -226,9 +226,10 @@ class ThrowableSnapshotterTest {
                         .capture(exception)
                         .outer();
 
-        assertThat(throwing.type()).isEqualTo(RuntimeException.class.getName());
+        assertThat(throwing.type()).isEqualTo("unknown.throwable");
         assertThat(throwing.captureFailures()).isEmpty();
-        assertThat(nullType.type()).isEqualTo(RuntimeException.class.getName());
+        assertThat(nullType.type()).isEqualTo("unknown.throwable");
+        assertThat(nullType.captureFailures()).contains("type:empty-sanitizer-result");
     }
 
     @Test

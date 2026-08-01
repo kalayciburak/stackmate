@@ -1,8 +1,13 @@
 package io.github.kalayciburak.stackmate.inference.jvm;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.StreamReadConstraints;
+import com.fasterxml.jackson.core.StreamReadFeature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.inference.InferenceRequest;
+import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -14,6 +19,27 @@ final class Protocol {
     static final int MAXIMUM_RESPONSE_BYTES = 32_768;
 
     private Protocol() {}
+
+    static ObjectMapper strictMapper() {
+        StreamReadConstraints constraints =
+                StreamReadConstraints.builder()
+                        .maxNestingDepth(64)
+                        .maxDocumentLength(64L * 1024 * 1024)
+                        .maxStringLength(64 * 1024 * 1024)
+                        .maxNameLength(512)
+                        .maxNumberLength(128)
+                        .build();
+        JsonFactory factory =
+                JsonFactory.builder()
+                        .streamReadConstraints(constraints)
+                        .enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION)
+                        .build();
+        return new ObjectMapper(factory)
+                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY)
+                .enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+    }
 
     static void writeFrame(
             DataOutputStream output, Object value, ObjectMapper mapper, int maximumBytes)
@@ -55,8 +81,11 @@ final class Protocol {
         if (message == null || message.isBlank()) {
             message = failure.getClass().getSimpleName();
         }
-        message = message.replaceAll("[\\p{Cc}&&[^\\t]]", " ").strip();
-        return message.substring(0, Math.min(message.length(), 400));
+        String sanitized = DefaultSanitizer.defaults().sanitize("processError", message).strip();
+        if (sanitized.isBlank()) {
+            sanitized = "local inference process failed";
+        }
+        return sanitized.substring(0, Math.min(sanitized.length(), 400));
     }
 
     record Request(int version, String operation, String requestId, JsonNode payload) {}
