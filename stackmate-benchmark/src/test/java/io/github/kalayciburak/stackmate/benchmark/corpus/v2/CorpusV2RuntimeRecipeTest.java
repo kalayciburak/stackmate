@@ -65,7 +65,7 @@ class CorpusV2RuntimeRecipeTest {
                 .isEqualTo(benchmarkCase.expectedRootType());
     }
 
-    private Throwable execute(String recipe) throws Exception {
+    Throwable execute(String recipe) throws Exception {
         if (recipe.startsWith("java.")) {
             return javaFailure(recipe);
         }

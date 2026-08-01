@@ -212,3 +212,33 @@ No production analyzer or inference-contract code changed before the freeze comm
 
 Evaluate the unchanged deterministic pipeline against frozen V2, report development and holdout results separately,
 then classify failures before changing any analyzer behavior.
+
+## Phase 3 - unchanged deterministic evaluation on corpus V2
+
+Status: completed
+
+### Actual result
+
+- Category accuracy: 59/80 (73.75%); development 43/60 (71.67%), holdout 16/20 (80.00%).
+- Root type: 80/80; controlled application-frame retention: 80/80.
+- Annotated fact precision: 27/30 (90.00%); recall: 27/46 (58.70%).
+- Unknown restraint: 8/8; false certainty: 0.
+- Sanitization failures and secret leakages: 0.
+- Fingerprint stability: 80/80, including volatile UUID/numeric values; two compatible cross-case collision groups and
+  zero conflicting-category groups.
+- Warm in-test observation: median 66 microseconds, P95 218 microseconds across 2,000 samples. This is not a JMH claim.
+
+The 32 non-passing cases classified as 14 incorrect classifications, 7 unsupported categories, and 11 missing evidence
+extractions. Detailed case output and metric semantics are in `docs/benchmark-v2-results.md`.
+
+### Verification
+
+| Command | Result |
+|---|---|
+| First focused evaluation compile | Failed: a lambda parameter shadowed the actual-category local |
+| Final focused evaluation | Success in 8.693 s; reports written, safety invariants passed |
+
+### Next phase
+
+Redesign inference schema and prompts so the local model can only explain and rank deterministic facts. Then add the
+evidence-aware policy; deterministic V2 gaps remain visible and will not be hidden by model output.
