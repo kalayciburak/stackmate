@@ -1,0 +1,1997 @@
+{
+  "schemaVersion": "2",
+  "corpusId": "stackmate-corpus-v2",
+  "frozenAt": "2026-08-01",
+  "frameworks": {
+    "springBoot": "4.1.0",
+    "springFramework": "7.0.8",
+    "jacksonDatabind": "2.21.4",
+    "h2": "2.4.240",
+    "java": "21"
+  },
+  "cases": [
+    {
+      "caseId": "JAVA-NPE-001",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.null-dereference",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.NullPointerException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.NullPointerException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_NPE_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_NPE_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-ARG-002",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.illegal-argument",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.IllegalArgumentException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_ARG_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_ARG_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-STATE-003",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.illegal-state",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.IllegalStateException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_STATE_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_STATE_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-NUM-004",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.number-format",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.NumberFormatException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.NumberFormatException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_NUM_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_NUM_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "JAVA-INDEX-005",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.index-out-of-bounds",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.ArrayIndexOutOfBoundsException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.ArrayIndexOutOfBoundsException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_INDEX_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_INDEX_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-CAST-006",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.class-cast",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.ClassCastException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "java.lang.ClassCastException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_CAST_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_CAST_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-COMPLETION-007",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.completion-wrapper",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "java.util.concurrent.CompletionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_COMPLETION_007"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_COMPLETION_007"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-EXECUTION-008",
+      "domain": "GENERAL_JAVA",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "java.execution-wrapper",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.NumberFormatException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "java.util.concurrent.ExecutionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_JAVA_EXECUTION_008"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_JAVA_EXECUTION_008"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "JAVA-HOSTILE-009",
+      "domain": "GENERAL_JAVA",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "java.hostile-throwable",
+      "category": "UNKNOWN",
+      "expectedRootType": "unknown.throwable",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "JAVA-UNKNOWN-010",
+      "domain": "GENERAL_JAVA",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "java.unknown-runtime",
+      "category": "UNKNOWN",
+      "expectedRootType": "com.acme.runtime.UnmappedFailure",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-MISSING-BEAN-001",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.missing-bean",
+      "category": "SPRING_DEPENDENCY_INJECTION",
+      "expectedRootType": "org.springframework.beans.factory.NoSuchBeanDefinitionException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "org.springframework.beans.factory.NoSuchBeanDefinitionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_MISSING_BEAN_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_MISSING_BEAN_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-NONUNIQUE-002",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.nonunique-bean",
+      "category": "SPRING_DEPENDENCY_INJECTION",
+      "expectedRootType": "org.springframework.beans.factory.NoUniqueBeanDefinitionException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "org.springframework.beans.factory.NoUniqueBeanDefinitionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_NONUNIQUE_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_NONUNIQUE_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "SPRING-CREATION-003",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.bean-creation",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "org.springframework.beans.factory.BeanCreationException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_CREATION_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_CREATION_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-CIRCULAR-004",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.circular-bean",
+      "category": "SPRING_DEPENDENCY_INJECTION",
+      "expectedRootType": "org.springframework.beans.factory.BeanCurrentlyInCreationException",
+      "expectedFacts": [
+        {
+          "type": "EXCEPTION_CLASS",
+          "value": "org.springframework.beans.factory.BeanCurrentlyInCreationException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_CIRCULAR_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_CIRCULAR_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-PLACEHOLDER-005",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.missing-placeholder",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "org.springframework.util.PlaceholderResolutionException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "sample.required-url"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_PLACEHOLDER_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_PLACEHOLDER_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-CONVERSION-006",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.type-conversion",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "java.lang.NumberFormatException",
+      "expectedFacts": [
+        {
+          "type": "EXPECTED_TYPE",
+          "value": "java.lang.Integer"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_CONVERSION_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_CONVERSION_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "SPRING-PROPERTY-007",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.invalid-property",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "org.springframework.beans.NotWritablePropertyException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "missingField"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_PROPERTY_007"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_PROPERTY_007"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-FACTORY-008",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "spring.factory-method",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "org.springframework.beans.factory.BeanCreationException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_FACTORY_008"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_FACTORY_008"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-UNSATISFIED-009",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "spring.unsatisfied-wrapper",
+      "category": "SPRING_DEPENDENCY_INJECTION",
+      "expectedRootType": "org.springframework.beans.factory.NoSuchBeanDefinitionException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "org.springframework.beans.factory.UnsatisfiedDependencyException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_UNSATISFIED_009"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_UNSATISFIED_009"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-BIND-010",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "spring.bind-wrapper",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "org.springframework.boot.context.properties.bind.BindException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "sample.port"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_BIND_010"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_BIND_010"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "SPRING-CONDITION-011",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "spring.condition-wrapper",
+      "category": "SPRING_CONFIGURATION",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "MESSAGE_PATTERN",
+          "value": "error processing condition"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SPRING_CONDITION_011"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SPRING_CONDITION_011"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SPRING-UNKNOWN-012",
+      "domain": "SPRING_CONFIGURATION",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "spring.unknown-wrapper",
+      "category": "UNKNOWN",
+      "expectedRootType": "com.example.spring.UnknownBootstrapFailure",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-MALFORMED-001",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.malformed-json",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "tools.jackson.core.exc.StreamReadException",
+      "expectedFacts": [
+        {
+          "type": "HANDLER_METHOD",
+          "value": "malformed"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_MALFORMED_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_MALFORMED_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-MISSING-PARAM-002",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.missing-parameter",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "page"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_MISSING_PARAM_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_MISSING_PARAM_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "MVC-TYPE-MISMATCH-003",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.type-mismatch",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "java.lang.NumberFormatException",
+      "expectedFacts": [
+        {
+          "type": "EXPECTED_TYPE",
+          "value": "java.lang.Integer"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_TYPE_MISMATCH_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_TYPE_MISMATCH_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-INVALID-ENUM-004",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.invalid-enum",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "EXPECTED_TYPE",
+          "value": "com.example.api.OrderState"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_INVALID_ENUM_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_INVALID_ENUM_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-MEDIA-005",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.unsupported-media",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "org.springframework.web.HttpMediaTypeNotSupportedException",
+      "expectedFacts": [
+        {
+          "type": "REQUEST_PATH",
+          "value": "/orders"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_MEDIA_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_MEDIA_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-METHOD-006",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.unsupported-method",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "org.springframework.web.HttpRequestMethodNotSupportedException",
+      "expectedFacts": [
+        {
+          "type": "REQUEST_PATH",
+          "value": "/orders"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_METHOD_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_METHOD_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "MVC-VALIDATION-007",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.bean-validation",
+      "category": "VALIDATION",
+      "expectedRootType": "org.springframework.web.bind.MethodArgumentNotValidException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "quantity"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_VALIDATION_007"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_VALIDATION_007"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-MISSING-BODY-008",
+      "domain": "MVC",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "mvc.missing-body",
+      "category": "WEB_REQUEST",
+      "expectedRootType": "org.springframework.http.converter.HttpMessageNotReadableException",
+      "expectedFacts": [
+        {
+          "type": "HANDLER_METHOD",
+          "value": "create"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_MISSING_BODY_008"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_MISSING_BODY_008"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-HANDLER-VALIDATION-009",
+      "domain": "MVC",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "mvc.handler-method-validation",
+      "category": "VALIDATION",
+      "expectedRootType": "org.springframework.web.method.annotation.HandlerMethodValidationException",
+      "expectedFacts": [
+        {
+          "type": "HANDLER_METHOD",
+          "value": "create"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_HANDLER_VALIDATION_009"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_HANDLER_VALIDATION_009"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-CONSTRAINT-010",
+      "domain": "MVC",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "mvc.constraint-violation",
+      "category": "VALIDATION",
+      "expectedRootType": "jakarta.validation.ConstraintViolationException",
+      "expectedFacts": [
+        {
+          "type": "PROPERTY_NAME",
+          "value": "email"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_CONSTRAINT_010"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_CONSTRAINT_010"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "MVC-SERIALIZE-011",
+      "domain": "MVC",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "mvc.serialization-failure",
+      "category": "SERIALIZATION",
+      "expectedRootType": "com.fasterxml.jackson.databind.JsonMappingException",
+      "expectedFacts": [
+        {
+          "type": "HANDLER_METHOD",
+          "value": "find"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_MVC_SERIALIZE_011"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_MVC_SERIALIZE_011"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "MVC-UNKNOWN-012",
+      "domain": "MVC",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "mvc.unknown-resolved",
+      "category": "UNKNOWN",
+      "expectedRootType": "com.example.web.CustomResolvedException",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-UNIQUE-001",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.unique",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23505"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_UNIQUE_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_UNIQUE_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-NOTNULL-002",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.not-null",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23502"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_NOTNULL_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_NOTNULL_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "DB-H2-FK-003",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.foreign-key",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23506"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_FK_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_FK_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-TABLE-004",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.missing-table",
+      "category": "DATABASE_SCHEMA",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLSyntaxErrorException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "42S02"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_TABLE_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_TABLE_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-COLUMN-005",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.missing-column",
+      "category": "DATABASE_SCHEMA",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLSyntaxErrorException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "42S22"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_COLUMN_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_COLUMN_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-SYNTAX-006",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.syntax",
+      "category": "DATABASE_SCHEMA",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLSyntaxErrorException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "42000"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_SYNTAX_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_SYNTAX_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "DB-H2-CONVERSION-007",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.data-conversion",
+      "category": "DATABASE",
+      "expectedRootType": "java.lang.NumberFormatException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "22018"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_CONVERSION_007"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_CONVERSION_007"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-LOCK-008",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.lock-timeout",
+      "category": "DATABASE_LOCKING",
+      "expectedRootType": "org.h2.mvstore.MVStoreException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_LOCK_008"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_LOCK_008"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-TRANSACTION-009",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.transaction-state",
+      "category": "DATABASE_TRANSACTION",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLNonTransientException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_TRANSACTION_009"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_TRANSACTION_009"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-H2-DUPLICATE-010",
+      "domain": "DATABASE",
+      "provenance": "REAL_INTEGRATION",
+      "recipe": "h2.duplicate-variant",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23505"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_H2_DUPLICATE_010"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_H2_DUPLICATE_010"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "DB-PG-UNIQUE-011",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "postgres.unique-localized",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "java.sql.SQLException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23505"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_PG_UNIQUE_011"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_PG_UNIQUE_011"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-PG-FK-012",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "postgres.foreign-key",
+      "category": "DATABASE_CONSTRAINT",
+      "expectedRootType": "java.sql.SQLException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "23503"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_PG_FK_012"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_PG_FK_012"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-PG-TABLE-013",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "postgres.missing-table",
+      "category": "DATABASE_SCHEMA",
+      "expectedRootType": "java.sql.SQLException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "42P01"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_PG_TABLE_013"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_PG_TABLE_013"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-PG-COLUMN-014",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "postgres.missing-column",
+      "category": "DATABASE_SCHEMA",
+      "expectedRootType": "java.sql.SQLException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "42703"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_PG_COLUMN_014"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_PG_COLUMN_014"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "DB-PG-DEADLOCK-015",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "postgres.deadlock",
+      "category": "DATABASE_LOCKING",
+      "expectedRootType": "java.sql.SQLException",
+      "expectedFacts": [
+        {
+          "type": "SQL_STATE",
+          "value": "40P01"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_PG_DEADLOCK_015"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_PG_DEADLOCK_015"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-GENERIC-CONNECT-016",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "jdbc.connection-refused",
+      "category": "DATABASE_CONNECTION",
+      "expectedRootType": "java.net.ConnectException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_GENERIC_CONNECT_016"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_GENERIC_CONNECT_016"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-POOL-TIMEOUT-017",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "pool.timeout-classname",
+      "category": "DATABASE_CONNECTION",
+      "expectedRootType": "java.sql.SQLTransientConnectionException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_POOL_TIMEOUT_017"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_POOL_TIMEOUT_017"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-OPTIMISTIC-018",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "persistence.optimistic-lock",
+      "category": "PERSISTENCE_STATE",
+      "expectedRootType": "jakarta.persistence.OptimisticLockException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_OPTIMISTIC_018"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_OPTIMISTIC_018"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "DB-LAZY-019",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "hibernate.lazy-initialization",
+      "category": "PERSISTENCE_STATE",
+      "expectedRootType": "org.hibernate.LazyInitializationException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_DB_LAZY_019"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_DB_LAZY_019"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "DB-UNKNOWN-020",
+      "domain": "DATABASE",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "database.unknown-vendor",
+      "category": "UNKNOWN",
+      "expectedRootType": "com.vendor.jdbc.StrangeDatabaseException",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-DENIED-001",
+      "domain": "SECURITY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "security.access-control",
+      "category": "AUTHORIZATION",
+      "expectedRootType": "java.security.AccessControlException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_DENIED_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_DENIED_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-GENERIC-002",
+      "domain": "SECURITY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "security.security-exception",
+      "category": "AUTHORIZATION",
+      "expectedRootType": "java.lang.SecurityException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_GENERIC_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_GENERIC_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "SECURITY-SIGNATURE-003",
+      "domain": "SECURITY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "security.signature",
+      "category": "AUTHENTICATION",
+      "expectedRootType": "java.security.SignatureException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_SIGNATURE_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_SIGNATURE_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-CERT-004",
+      "domain": "SECURITY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "security.expired-certificate",
+      "category": "AUTHENTICATION",
+      "expectedRootType": "java.security.cert.CertificateExpiredException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_CERT_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_CERT_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-SPRING-DENIED-005",
+      "domain": "SECURITY",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "spring-security.access-denied",
+      "category": "AUTHORIZATION",
+      "expectedRootType": "org.springframework.security.access.AccessDeniedException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_SPRING_DENIED_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_SPRING_DENIED_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-CREDENTIALS-006",
+      "domain": "SECURITY",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "spring-security.bad-credentials",
+      "category": "AUTHENTICATION",
+      "expectedRootType": "org.springframework.security.authentication.BadCredentialsException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_CREDENTIALS_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_CREDENTIALS_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "SECURITY-JWT-007",
+      "domain": "SECURITY",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "security.expired-token-message",
+      "category": "AUTHENTICATION",
+      "expectedRootType": "com.example.security.TokenValidationException",
+      "expectedFacts": [
+        {
+          "type": "MESSAGE_PATTERN",
+          "value": "token has expired"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_SECURITY_JWT_007"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_SECURITY_JWT_007"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "SECURITY-UNKNOWN-008",
+      "domain": "SECURITY",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "security.unknown",
+      "category": "UNKNOWN",
+      "expectedRootType": "com.example.security.PolicyEvaluationException",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-SOCKET-REFUSED-001",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.socket-refused",
+      "category": "NETWORK_CONNECTION",
+      "expectedRootType": "java.net.ConnectException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_SOCKET_REFUSED_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_SOCKET_REFUSED_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-HTTP-REFUSED-002",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.http-refused",
+      "category": "NETWORK_CONNECTION",
+      "expectedRootType": "java.nio.channels.ClosedChannelException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_HTTP_REFUSED_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_HTTP_REFUSED_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "NET-READ-TIMEOUT-003",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.socket-read-timeout",
+      "category": "TIMEOUT",
+      "expectedRootType": "java.net.SocketTimeoutException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_READ_TIMEOUT_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_READ_TIMEOUT_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-TLS-PLAIN-004",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.tls-to-plain",
+      "category": "TLS",
+      "expectedRootType": "java.net.SocketException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_TLS_PLAIN_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_TLS_PLAIN_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-UNKNOWN-ADDRESS-005",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.invalid-address-bytes",
+      "category": "DNS",
+      "expectedRootType": "java.net.UnknownHostException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_UNKNOWN_ADDRESS_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_UNKNOWN_ADDRESS_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-UNRESOLVED-006",
+      "domain": "NETWORK",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "network.unresolved-socket-address",
+      "category": "DNS",
+      "expectedRootType": "java.nio.channels.UnresolvedAddressException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_UNRESOLVED_006"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_UNRESOLVED_006"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "NET-MALFORMED-URL-007",
+      "domain": "NETWORK",
+      "provenance": "SYNTHETIC_EDGE_CASE",
+      "recipe": "network.malformed-url",
+      "category": "UNKNOWN",
+      "expectedRootType": "java.net.MalformedURLException",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "NET-RESET-008",
+      "domain": "NETWORK",
+      "provenance": "SYNTHETIC_WRAPPER",
+      "recipe": "network.connection-reset",
+      "category": "NETWORK_CONNECTION",
+      "expectedRootType": "java.net.SocketException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_NET_RESET_008"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_NET_RESET_008"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "CONC-COMPLETION-001",
+      "domain": "CONCURRENCY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "concurrency.completion",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "java.util.concurrent.CompletionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_CONC_COMPLETION_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_CONC_COMPLETION_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "CONC-EXECUTION-002",
+      "domain": "CONCURRENCY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "concurrency.execution",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "WRAPPER_TYPE",
+          "value": "java.util.concurrent.ExecutionException"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_CONC_EXECUTION_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_CONC_EXECUTION_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "CONC-TIMEOUT-003",
+      "domain": "CONCURRENCY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "concurrency.future-timeout",
+      "category": "TIMEOUT",
+      "expectedRootType": "java.util.concurrent.TimeoutException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_CONC_TIMEOUT_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_CONC_TIMEOUT_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "CONC-REJECTED-004",
+      "domain": "CONCURRENCY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "concurrency.executor-rejected",
+      "category": "RESOURCE_EXHAUSTION",
+      "expectedRootType": "java.util.concurrent.RejectedExecutionException",
+      "expectedFacts": [],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_CONC_REJECTED_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_CONC_REJECTED_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "CONC-CANCEL-005",
+      "domain": "CONCURRENCY",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "concurrency.cancelled-future",
+      "category": "UNKNOWN",
+      "expectedRootType": "java.util.concurrent.CancellationException",
+      "expectedFacts": [],
+      "expectedDisposition": "RESTRAIN",
+      "expectedCauseKeys": [],
+      "expectedCheckKeys": [],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "ADV-SECRET-001",
+      "domain": "ADVERSARIAL",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "adversarial.secret-message",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "REDACTION_SENTINEL",
+          "value": "benchmark-secret-do-not-leak"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_ADV_SECRET_001"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_ADV_SECRET_001"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    },
+    {
+      "caseId": "ADV-INJECTION-002",
+      "domain": "ADVERSARIAL",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "adversarial.prompt-injection",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "PROMPT_SENTINEL",
+          "value": "BENCHMARK_INJECTION_ACCEPTED"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_ADV_INJECTION_002"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_ADV_INJECTION_002"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "ADV-TERMINAL-003",
+      "domain": "ADVERSARIAL",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "adversarial.terminal-escape",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "CONTROL_SEQUENCE",
+          "value": "ESC"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_ADV_TERMINAL_003"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_ADV_TERMINAL_003"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "ADV-UNICODE-004",
+      "domain": "ADVERSARIAL",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "adversarial.unicode-bidi-zero-width",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalArgumentException",
+      "expectedFacts": [
+        {
+          "type": "UNICODE_POLICY",
+          "value": "BIDI_AND_ZERO_WIDTH"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_ADV_UNICODE_004"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_ADV_UNICODE_004"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "DEVELOPMENT"
+    },
+    {
+      "caseId": "ADV-VOLATILE-005",
+      "domain": "ADVERSARIAL",
+      "provenance": "REAL_RUNTIME",
+      "recipe": "adversarial.uuid-numeric-volatility",
+      "category": "GENERAL_JAVA",
+      "expectedRootType": "java.lang.IllegalStateException",
+      "expectedFacts": [
+        {
+          "type": "FINGERPRINT_GROUP",
+          "value": "VOLATILE_VALUES"
+        }
+      ],
+      "expectedDisposition": "DIAGNOSE",
+      "expectedCauseKeys": [
+        "GT_ADV_VOLATILE_005"
+      ],
+      "expectedCheckKeys": [
+        "CHECK_ADV_VOLATILE_005"
+      ],
+      "forbiddenClaims": [
+        "source code was inspected",
+        "definitive root cause",
+        "InventedSource.java:42"
+      ],
+      "split": "HOLDOUT"
+    }
+  ]
+}
