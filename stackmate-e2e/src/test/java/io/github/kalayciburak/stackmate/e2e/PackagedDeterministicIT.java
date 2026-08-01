@@ -56,6 +56,20 @@ class PackagedDeterministicIT {
     }
 
     @Test
+    void rendersUnknownExceptionsWithoutInventingAResolution() throws Exception {
+        int mark = sample.mark();
+
+        PackagedSample.Response response = sample.get("/demo/unknown");
+        sample.awaitOutputSince(mark, "Category: UNKNOWN");
+
+        assertThat(response.status()).isEqualTo(500);
+        assertThat(response.body()).contains("\"status\":500");
+        assertThat(sample.outputSince(mark))
+                .contains("Evidence: UNKNOWN", "No supported deterministic pattern matched")
+                .doesNotContain("StackMate Local Explanation");
+    }
+
+    @Test
     void redactsStackMateOutputAndReusesDuplicateDiagnosis() throws Exception {
         int redactionMark = sample.mark();
         PackagedSample.Response redaction = sample.get("/demo/redaction");
