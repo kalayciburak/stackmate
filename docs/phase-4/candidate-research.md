@@ -62,6 +62,13 @@ exists in the ignored Phase 3 research cache. The third-party artifacts are suit
 only for feasibility screening: their cards do not cryptographically bind the GGUF
 bytes to the official upstream revision.
 
+The machine-readable candidate inventory is
+`stackmate-benchmark/src/main/resources/phase4-candidates/manifest.json`, SHA-256
+`a79c5f359b4bcb05f927eb8921f5fc32109db9abc6c3b9b706a47590ad0f68d2`. Its strict
+loader rejects unknown fields, duplicate IDs, unsafe filenames, mutable-looking
+revisions, unpinned checksums, non-Apache licenses, and eligible entries above the
+parameter cap.
+
 ## Runtime pin
 
 The isolated screen uses official llama.cpp release `b10221`, commit
@@ -110,3 +117,18 @@ control. Every role receives the frozen 20-case V3 screen, at most two bounded
 generation profiles, strict grammar, and unchanged Phase 2 semantic validation. A
 profile must return 20/20 valid trusted outputs to advance. The control is reported
 but cannot advance because of the parameter-cap violation.
+
+## Local artifact verification
+
+The machine had 590,282,543,104 bytes free before Phase 4 downloads. The three new
+model downloads total 1,872,131,936 bytes. Every activated local file matched the
+expected byte count and SHA-256 above. The b10221 archive also matched its expected
+18,352,727 bytes and checksum; the extracted CLI reported:
+
+```text
+version: 10221 (815a2a591)
+built with Clang 20.1.8 for Windows x86_64
+```
+
+All files remain under ignored `.stackmate/phase4/` research paths. No model or
+native binary is tracked, packaged, provisioned, or downloaded by library code.

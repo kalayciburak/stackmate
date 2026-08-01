@@ -74,4 +74,43 @@ class ScreeningCorpusManifestTest {
                         ScreeningCase.Purpose.UNSUPPORTED_CLAIM_TRAP,
                         ScreeningCase.Purpose.FABRICATED_SOURCE_TRAP);
     }
+
+    @Test
+    void admits_only_three_candidates_below_the_total_parameter_cap() {
+        ScreeningCandidateManifest manifest = ScreeningCandidateManifest.load();
+
+        assertThat(manifest.maximumTotalParameters()).isEqualTo(2_000_000_000L);
+        assertThat(manifest.candidates()).filteredOn(ScreeningCandidate::eligible).hasSize(3);
+        assertThat(manifest.candidates())
+                .filteredOn(ScreeningCandidate::eligible)
+                .allSatisfy(
+                        candidate ->
+                                assertThat(candidate.totalParameters())
+                                        .isLessThanOrEqualTo(manifest.maximumTotalParameters()));
+        assertThat(manifest.requireCandidate("qwen3.5-2b-q4km-control"))
+                .satisfies(
+                        candidate -> {
+                            assertThat(candidate.eligible()).isFalse();
+                            assertThat(candidate.totalParameters())
+                                    .isGreaterThan(manifest.maximumTotalParameters());
+                        });
+    }
+
+    @Test
+    void pins_candidate_artifacts_and_the_screening_runtime() {
+        ScreeningCandidateManifest manifest = ScreeningCandidateManifest.load();
+
+        assertThat(manifest.runtime().release()).isEqualTo("b10221");
+        assertThat(manifest.runtime().commit()).hasSize(40);
+        assertThat(manifest.runtime().sha256()).hasSize(64);
+        assertThat(manifest.candidates())
+                .allSatisfy(
+                        candidate -> {
+                            assertThat(candidate.officialRevision()).hasSize(40);
+                            assertThat(candidate.ggufRevision()).hasSize(40);
+                            assertThat(candidate.sha256()).hasSize(64);
+                            assertThat(candidate.quantization()).isEqualTo("Q4_K_M");
+                            assertThat(candidate.license()).isEqualTo("Apache-2.0");
+                        });
+    }
 }

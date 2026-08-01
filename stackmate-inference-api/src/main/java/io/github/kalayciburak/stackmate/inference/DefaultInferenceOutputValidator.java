@@ -352,6 +352,9 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
     }
 
     private static boolean appearsNonEnglish(String text) {
+        if (containsLetterOutsideLatinScript(text)) {
+            return true;
+        }
         String[] words = text.toLowerCase(Locale.ROOT).split("[^\\p{L}]+");
         int englishCount = 0;
         int nonEnglishCount = 0;
@@ -364,6 +367,13 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
             }
         }
         return englishCount == 0 && nonEnglishCount >= 2;
+    }
+
+    private static boolean containsLetterOutsideLatinScript(String text) {
+        return text.codePoints()
+                .filter(Character::isLetter)
+                .mapToObj(Character.UnicodeScript::of)
+                .anyMatch(script -> script != Character.UnicodeScript.LATIN);
     }
 
     private static void validateReferences(

@@ -94,3 +94,27 @@ Status: in progress on 2026-08-02
 Check disk capacity, download and verify only the three new pinned Q4_K_M research
 artifacts and the pinned runtime, then execute the frozen screen in ascending model
 size order.
+
+### Artifact and harness verification
+
+- Confirmed 549.74 GiB free before downloading 1.76 GiB of new artifacts.
+- Verified and activated all three eligible Q4_K_M artifacts by exact size and
+  SHA-256 under ignored `.stackmate/phase4/models/` paths.
+- Verified the official b10221 Windows archive and executed
+  `llama-completion 10221 (815a2a591)` built with Clang 20.1.8.
+- Added a strict candidate manifest and parameter-cap validation. Its SHA-256 is
+  `a79c5f359b4bcb05f927eb8921f5fc32109db9abc6c3b9b706a47590ad0f68d2`.
+- Updated the isolated lab to consume the frozen 20-case V3 corpus, use per-request
+  JSON schema plus Phase 2 semantic validation, preserve one bounded repair, detect
+  safety failures across both attempts, and emit manual-review material.
+- Added a validator regression for non-Latin output after a real COMPACT result
+  included Chinese characters in otherwise English prose.
+
+### Verification so far
+
+- Candidate/corpus manifest tests: 6 passed.
+- Inference output-validator tests: 12 passed.
+- Candidate MICRO smoke: one real-model case passed schema, selection, and validator
+  checks.
+- Spotless check: passed for all affected reactor modules without applying a
+  formatter.

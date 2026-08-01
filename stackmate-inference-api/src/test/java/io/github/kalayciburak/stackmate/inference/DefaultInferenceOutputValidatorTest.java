@@ -211,6 +211,20 @@ class DefaultInferenceOutputValidatorTest {
         assertCodes(
                 validator.validate(request(2_000), nonEnglish),
                 OutputValidationIssue.Code.OUTPUT_NOT_ENGLISH);
+
+        StructuredInferenceOutput mixedScript =
+                new StructuredInferenceOutput(
+                        "2",
+                        "The available evidence is too通用 for a specific cause.",
+                        "This operation needs more runtime evidence.",
+                        List.of(),
+                        List.of(),
+                        List.of(),
+                        List.of());
+
+        assertCodes(
+                validator.validate(request(2_000), mixedScript),
+                OutputValidationIssue.Code.OUTPUT_NOT_ENGLISH);
     }
 
     @Test
