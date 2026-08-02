@@ -21,20 +21,20 @@ This decision does not affect the deterministic diagnostics product, which remai
 | Runtime | official llama.cpp `b10223`, commit `11924d4c17abc27383376a1ac6a24fa3e36c1c0c` |
 | Profile | greedy, strict JSON schema, thinking disabled, context 2,048, maximum output 192 tokens |
 
-The run started at `2026-08-01T23:52:47.209071300Z` and completed at
-`2026-08-02T00:01:18.376672800Z`. The machine-readable report is generated at
+The preserved post-verification reproduction run started at `2026-08-02T00:24:47.838196Z` and completed at
+`2026-08-02T00:33:35.415893900Z`. The machine-readable report is generated at
 `stackmate-benchmark/target/phase5-gate-a/phase-5-qualification.json`; its SHA-256 for this run is
-`62cfedf5fe45e52437fb5a78c86b7259b95d930f05ffafabb251cec9fb787227`. Generated `target` data is intentionally
+`0e7ab001eddaebc2c1c5b7a13b4bee2d2ec55c925fca5f4f0a41cd51c56711d9`. Generated `target` data is intentionally
 not committed.
 
 ## Automatic results
 
 | Dataset | Cases | Valid | Cause | Check | Evidence IDs valid | Process median | Process P95 |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| V2 development | 60 | 60 (100%) | 56 (93.33%) | 56 (93.33%) | 60 (100%) | 4,970 ms | 5,969 ms |
-| V2 holdout | 20 | 20 (100%) | 19 (95%) | 19 (95%) | 20 (100%) | 4,825 ms | 5,654 ms |
-| Blind | 20 | 20 (100%) | 19 (95%) | 19 (95%) | 20 (100%) | 5,069 ms | 5,868 ms |
-| Combined | 100 | 100 (100%) | 94 (94%) | 94 (94%) | 100 (100%) | 4,976 ms | 5,868 ms |
+| V2 development | 60 | 60 (100%) | 56 (93.33%) | 56 (93.33%) | 60 (100%) | 5,118 ms | 6,197 ms |
+| V2 holdout | 20 | 20 (100%) | 19 (95%) | 19 (95%) | 20 (100%) | 4,982 ms | 5,879 ms |
+| Blind | 20 | 20 (100%) | 19 (95%) | 19 (95%) | 20 (100%) | 5,142 ms | 5,806 ms |
+| Combined | 100 | 100 (100%) | 94 (94%) | 94 (94%) | 100 (100%) | 5,109 ms | 6,031 ms |
 
 The six exact-selection misses were:
 
@@ -88,8 +88,8 @@ rubric, and the same-reviewer limitation are in [manual-review.md](manual-review
 
 ## Timing interpretation
 
-The harness intentionally launched one process per case. Combined medians were 686.92 ms for reported model load,
-2,500.81 ms for reported token evaluation, and 4,976 ms end-to-end process time. The process P95 was 5,868 ms.
+The harness intentionally launched one process per case. Combined medians were 697.29 ms for reported model load,
+2,522.32 ms for reported token evaluation, and 5,109 ms end-to-end process time. The process P95 was 6,031 ms.
 These are cold process measurements, not persistent-worker warm latency. No Phase 5 RSS or long-run stability
 measurement was made because Gate A failed before Gate B.
 

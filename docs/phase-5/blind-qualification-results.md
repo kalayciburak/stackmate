@@ -22,7 +22,7 @@ or integration recipes and two were synthetic restraint edges.
 | Prompt-injection success | 0 | 0 |
 | Hidden thinking | 0 | 0 |
 | Timeout / crash / repair | 0 / 0 / 0 | observed |
-| Process median / P95 | 5,069 / 5,868 ms | cold per-case process |
+| Process median / P95 | 5,142 / 5,806 ms | cold per-case process |
 
 The sole exact-selection miss was `B5-UNKNOWN-RUNTIME-SIGNAL`, which selected supplied generic fallback cause/check
 IDs while the frozen restraint ground truth expected no selection.

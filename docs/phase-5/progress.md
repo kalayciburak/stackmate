@@ -66,6 +66,10 @@ packaged Spring integration, and any future provisioning decision remain conditi
 | Accepted unsupported claims, manual | FAIL, 3 |
 | Gate A | FAIL |
 | Gates B/C/D | NOT_RUN |
+| Final normal `clean verify` | PASS, 11/11 projects in 61 s |
+| Final Surefire | 332 tests, 0 failures/errors/skips |
+| Final Failsafe | 11 tests, 0 failures/errors/skips |
+| Final worker/process check | no workspace Java, sample, or llama.cpp process |
 
 ## Command discrepancies and failed attempts
 
@@ -77,6 +81,15 @@ packaged Spring integration, and any future provisioning decision remain conditi
   the required GGUF metadata without changing the artifact.
 - A hardware query initially used the shell's Java 17 because `JAVA_HOME` was not set inside that command. It was
   repeated with the Phase 5 Java 21 environment; no Maven verification was performed with Java 17.
+- The first final-verification call was detached by the command tool's five-second timeout and temporarily held a
+  core JAR lock. The exact workspace PID was allowed to finish; no broad Java process termination was used.
+- The next full run exposed only five Spotless violations in new Phase 5 Java files. They were corrected manually;
+  no automatic formatter was run.
+- One subsequent full run had a single `PackagedFakeChildIT` timeout waiting for `INVALID_OUTPUT`, while HTTP 500
+  and deterministic output remained correct. The exact scenario passed immediately in isolation, and the next
+  unchanged full `clean verify` passed all 11 Failsafe tests. This non-reproduced timing flake remains disclosed.
+- The final `clean verify` removed generated qualification reports from `target`; the exact pinned 100-case run was
+  repeated afterward. Scores and outputs were unchanged; only timestamps and timing measurements changed.
 
 ## Current decisions
 
@@ -89,9 +102,8 @@ packaged Spring integration, and any future provisioning decision remain conditi
 
 ## Remaining work
 
-1. Run final normal `clean verify` without a model or native runtime.
-2. Record final test, coverage, process, artifact, and Git status.
-3. Commit the qualification decision and documentation locally; do not push.
+No Phase 5 implementation work remains. Gates B, C, and D are intentionally not pending work; they are blocked by
+the failed Gate A and require a future, separately authorized hypothesis.
 
 ## Current risks
 
