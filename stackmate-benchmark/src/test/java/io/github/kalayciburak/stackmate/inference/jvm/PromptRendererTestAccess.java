@@ -8,6 +8,14 @@ public final class PromptRendererTestAccess {
 
     private PromptRendererTestAccess() {}
 
+    public static String system() {
+        return new PromptRenderer(new ObjectMapper()).systemPrompt();
+    }
+
+    public static String repairSystem() {
+        return new PromptRenderer(new ObjectMapper()).repairSystemPrompt();
+    }
+
     public static RenderedPrompt initial(InferenceRequest request) {
         PromptRenderer renderer = new PromptRenderer(new ObjectMapper());
         return new RenderedPrompt(renderer.systemPrompt(), renderer.userPrompt(request));

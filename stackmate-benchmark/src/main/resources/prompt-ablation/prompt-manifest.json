@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1",
+  "estimateMethod": "ceil(characters/4)",
+  "maximumCharacters": 4000,
+  "variants": [
+    {
+      "id": "P0",
+      "version": "phase5-schema-v2",
+      "resource": "/prompt-ablation/prompts/p0-phase5-baseline.txt",
+      "sha256": "3362afedc99b7c930a8423a33d011bb8b8a026d7072befef6041f6629b36fa03",
+      "characters": 1270,
+      "estimatedTokens": 318,
+      "negativeExamples": 0,
+      "historicalControl": true
+    },
+    {
+      "id": "P1",
+      "version": "phase5.1-p1-v1",
+      "resource": "/prompt-ablation/prompts/p1-abstention-first.txt",
+      "sha256": "18bb858befb6e9ce78286d6e751b197d5da6ee737c5671a78fb47f4b8d6a6f24",
+      "characters": 1948,
+      "estimatedTokens": 487,
+      "negativeExamples": 0,
+      "historicalControl": false
+    },
+    {
+      "id": "P2",
+      "version": "phase5.1-p2-v1",
+      "resource": "/prompt-ablation/prompts/p2-closed-world.txt",
+      "sha256": "9f40df4491fcb5a009b05d94c505bb4f1105e34f0fd48c7231bbae78fdd7e213",
+      "characters": 2243,
+      "estimatedTokens": 561,
+      "negativeExamples": 0,
+      "historicalControl": false
+    },
+    {
+      "id": "P3",
+      "version": "phase5.1-p3-v1",
+      "resource": "/prompt-ablation/prompts/p3-closed-world-negative-examples.txt",
+      "sha256": "d5117da41bd8af64982035fb75dbac91968249ea48fd02f120c532755074bf7f",
+      "characters": 3259,
+      "estimatedTokens": 815,
+      "negativeExamples": 4,
+      "historicalControl": false
+    }
+  ]
+}
