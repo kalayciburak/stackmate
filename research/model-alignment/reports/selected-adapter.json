@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1",
+  "adapterId": "F1-qlora-r8",
+  "baseModelRepository": "Qwen/Qwen3.5-2B",
+  "baseModelRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "adapterPath": "<WSL_CACHE>/adapters/phase-5-2/F1-qlora-r8",
+  "adapterSha256": "6642b7e3bad7eb64c6199d56db60935aabda54b5a2c26f33af4e79bc8d5ab6ca",
+  "trainingConfigSha256": "15cd5a948c78ef20e8799da57eea1ca63adef2f622b617d7e59ae02403d6a6e5",
+  "datasetManifestSha256": "b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2",
+  "selectionCommit": "0a6c1f27a086457079d5011e4451a8810fabb21a",
+  "selectionRule": [
+    "zero validation unsupported claims",
+    "strong validation abstention",
+    "zero generic fallback misuse",
+    "cause accuracy",
+    "check accuracy",
+    "valid JSON",
+    "useful explanation",
+    "lower confusion",
+    "smaller adapter"
+  ],
+  "selectionMetrics": {
+    "validJson": {"matched": 200, "total": 200},
+    "validStructured": {"matched": 200, "total": 200},
+    "causeAccuracy": {"matched": 200, "total": 200},
+    "checkAccuracy": {"matched": 200, "total": 200},
+    "abstention": {"matched": 50, "total": 50},
+    "unsupportedClaims": 0,
+    "unknownIds": 0,
+    "genericFallbackMisuse": 0,
+    "usefulExplanation": {"matched": 200, "total": 200},
+    "confusion": 0,
+    "adapterSizeBytes": 53703972,
+    "validationReport": "reports/F1-validation.json"
+  },
+  "rejectedRun": {
+    "adapterId": "F2-qlora-r16",
+    "adapterSha256": "6bb781fcc8227ea94cd31f208bd48c6a3144b95d9b0be1c90c7d7c8db265d724",
+    "trainingConfigSha256": "3576ee8d64099b80d8b9fdaaac4b3b10eacd404f456860e1eae660e6cca76e03",
+    "adapterSizeBytes": 87342877,
+    "validationReport": "reports/F2-validation.json",
+    "reason": "Validation metrics tied; F2 adapter is larger."
+  }
+}
