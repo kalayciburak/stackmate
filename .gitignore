@@ -13,9 +13,10 @@ target/
 *.bin
 *.pt
 *.pth
+__pycache__/
+*.py[cod]
 hs_err_pid*
 replay_pid*
 dependency-reduced-pom.xml
 stackmate-benchmark/target/stackmate-benchmark-report.json
 stackmate-benchmark/target/stackmate-benchmark-report.md
-
