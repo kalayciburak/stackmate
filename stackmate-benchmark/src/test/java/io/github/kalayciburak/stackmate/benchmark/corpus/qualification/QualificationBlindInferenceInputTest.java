@@ -15,9 +15,7 @@ import org.junit.jupiter.api.Test;
 class QualificationBlindInferenceInputTest {
 
     private static final List<String> CONTROLLED_SECRETS =
-            List.of(
-                    "phase5-ultra-secret",
-                    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJidXJhayJ9.signature");
+            List.of("phase5-ultra-secret", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJidXJhayJ9.signature");
 
     private final DeterministicDiagnosticEngine engine =
             new DeterministicDiagnosticEngine(

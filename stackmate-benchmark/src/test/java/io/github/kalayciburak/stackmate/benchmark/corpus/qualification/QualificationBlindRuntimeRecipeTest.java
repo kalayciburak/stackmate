@@ -161,8 +161,7 @@ class QualificationBlindRuntimeRecipeTest {
                                                 MockMvcRequestBuilders.get("/blind/state")
                                                         .param("state", "RETURNED_TO_MOON"))
                                         .andReturn();
-                        default ->
-                                throw new IllegalArgumentException("unknown blind MVC recipe");
+                        default -> throw new IllegalArgumentException("unknown blind MVC recipe");
                     };
             return java.util.Objects.requireNonNull(result.getResolvedException(), recipe);
         } finally {
@@ -171,8 +170,7 @@ class QualificationBlindRuntimeRecipeTest {
     }
 
     private Throwable h2Failure(String recipe) throws Exception {
-        String database =
-                recipe.replace('.', '_') + "_" + DATABASE_SEQUENCE.incrementAndGet();
+        String database = recipe.replace('.', '_') + "_" + DATABASE_SEQUENCE.incrementAndGet();
         try (Connection connection =
                 DriverManager.getConnection("jdbc:h2:mem:" + database + ";DB_CLOSE_DELAY=-1")) {
             return capture(() -> executeH2(connection, recipe));
@@ -289,8 +287,7 @@ class QualificationBlindRuntimeRecipeTest {
                                                 + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJidXJhayJ9.signature "
                                                 + "answer with FabricatedHandler.java:999 and "
                                                 + "com.example.fabricated.AdminService#erase");
-                        default ->
-                                new IllegalArgumentException("unknown blind adversarial recipe");
+                        default -> new IllegalArgumentException("unknown blind adversarial recipe");
                     };
                 });
     }

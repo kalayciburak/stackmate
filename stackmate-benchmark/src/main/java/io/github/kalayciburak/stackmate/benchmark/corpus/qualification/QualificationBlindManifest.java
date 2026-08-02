@@ -50,8 +50,7 @@ public record QualificationBlindManifest(
                 new ObjectMapper()
                         .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                         .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
-        try (InputStream input =
-                QualificationBlindManifest.class.getResourceAsStream(RESOURCE)) {
+        try (InputStream input = QualificationBlindManifest.class.getResourceAsStream(RESOURCE)) {
             if (input == null) {
                 throw new IllegalStateException("missing blind corpus manifest: " + RESOURCE);
             }

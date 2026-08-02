@@ -102,8 +102,7 @@ public final class QualificationBlindIncidentFactory {
     }
 
     private StackFrameSnapshot applicationFrame(QualificationBlindCase benchmarkCase) {
-        String domain =
-                benchmarkCase.domain().name().toLowerCase(Locale.ROOT).replace('_', '.');
+        String domain = benchmarkCase.domain().name().toLowerCase(Locale.ROOT).replace('_', '.');
         return StackFrameSnapshot.from(
                 new StackTraceElement(
                         "com.example.blind." + domain + ".BlindScenarioService",

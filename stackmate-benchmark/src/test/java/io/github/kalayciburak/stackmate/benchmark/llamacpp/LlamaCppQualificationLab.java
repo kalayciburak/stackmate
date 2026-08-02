@@ -146,11 +146,15 @@ class LlamaCppQualificationLab {
         InferenceRequest request = requestFactory.create(deterministic, 16_000, 8_192);
         List<String> expectedCauses =
                 expectedSelections(
-                        input, input.expectedCauseSelections(), request.candidateCauses(),
+                        input,
+                        input.expectedCauseSelections(),
+                        request.candidateCauses(),
                         InferenceCauseCandidate::id);
         List<String> expectedChecks =
                 expectedSelections(
-                        input, input.expectedCheckSelections(), request.candidateChecks(),
+                        input,
+                        input.expectedCheckSelections(),
+                        request.candidateChecks(),
                         InferenceCheckCandidate::id);
         PromptRendererTestAccess.RenderedPrompt initialPrompt =
                 PromptRendererTestAccess.initial(request);
@@ -294,7 +298,8 @@ class LlamaCppQualificationLab {
             String attempt)
             throws Exception {
         Path runDirectory =
-                Files.createTempDirectory(configuration.outputDirectory(), "llama-" + attempt + "-");
+                Files.createTempDirectory(
+                        configuration.outputDirectory(), "llama-" + attempt + "-");
         try {
             Path promptFile = runDirectory.resolve("prompt.txt");
             Path schemaFile = runDirectory.resolve("schema.json");
@@ -350,8 +355,7 @@ class LlamaCppQualificationLab {
                 process.waitFor(5, TimeUnit.SECONDS);
             }
             int exitCode = finished ? process.exitValue() : -1;
-            long processMillis =
-                    TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started);
+            long processMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started);
             long outputSize = Files.exists(outputFile) ? Files.size(outputFile) : 0;
             boolean oversized = outputSize > MAXIMUM_MODEL_OUTPUT_BYTES;
             String output =
@@ -485,15 +489,13 @@ class LlamaCppQualificationLab {
                             benchmarkCase.expectedCauseKeys().size(),
                             benchmarkCase.expectedCheckKeys().size(),
                             benchmarkCase.forbiddenClaims(),
-                            benchmarkCase.expectedDisposition()
-                                            == CorpusV2Case.Disposition.RESTRAIN
+                            benchmarkCase.expectedDisposition() == CorpusV2Case.Disposition.RESTRAIN
                                     ? "State that evidence is insufficient without inventing a remedy."
                                     : "Explain the supplied facts and prioritize the supplied IDs.",
                             benchmarkCase.domain() == CorpusV2Case.Domain.ADVERSARIAL,
                             v2Incidents.create(benchmarkCase)));
         }
-        for (QualificationBlindCase benchmarkCase :
-                QualificationBlindManifest.load().cases()) {
+        for (QualificationBlindCase benchmarkCase : QualificationBlindManifest.load().cases()) {
             inputs.add(
                     new QualificationInput(
                             benchmarkCase.caseId(),
@@ -522,8 +524,7 @@ class LlamaCppQualificationLab {
     }
 
     private void verifyManifestHashes() throws Exception {
-        assertThat(sha256(resourcePath(CorpusV2Manifest.RESOURCE)))
-                .isEqualTo(V2_MANIFEST_SHA256);
+        assertThat(sha256(resourcePath(CorpusV2Manifest.RESOURCE))).isEqualTo(V2_MANIFEST_SHA256);
         assertThat(sha256(resourcePath(QualificationBlindManifest.RESOURCE)))
                 .isEqualTo(BLIND_MANIFEST_SHA256);
     }
@@ -797,7 +798,8 @@ class LlamaCppQualificationLab {
                                 try {
                                     Files.deleteIfExists(path);
                                 } catch (IOException ignored) {
-                                    // The bounded lab output is still safe when Windows retains a file briefly.
+                                    // The bounded lab output is still safe when Windows retains a
+                                    // file briefly.
                                 }
                             });
         } catch (IOException ignored) {
@@ -816,9 +818,7 @@ class LlamaCppQualificationLab {
 
         private static Configuration fromSystemProperties() throws IOException {
             Path output =
-                    Path.of(
-                                    System.getProperty(
-                                            "stackmate.llamacpp.output", "target/phase5"))
+                    Path.of(System.getProperty("stackmate.llamacpp.output", "target/phase5"))
                             .toAbsolutePath()
                             .normalize();
             Files.createDirectories(output);
@@ -830,16 +830,13 @@ class LlamaCppQualificationLab {
                             Long.parseLong(
                                     System.getProperty(
                                             "stackmate.llamacpp.timeout-seconds", "120"))),
+                    Integer.parseInt(System.getProperty("stackmate.llamacpp.context-size", "2048")),
                     Integer.parseInt(
-                            System.getProperty("stackmate.llamacpp.context-size", "2048")),
-                    Integer.parseInt(
-                            System.getProperty(
-                                    "stackmate.llamacpp.maximum-output-tokens", "192")),
+                            System.getProperty("stackmate.llamacpp.maximum-output-tokens", "192")),
                     Integer.parseInt(
                             System.getProperty(
                                     "stackmate.llamacpp.threads",
-                                    Integer.toString(
-                                            Math.max(1, Math.min(16, processors / 2))))),
+                                    Integer.toString(Math.max(1, Math.min(16, processors / 2))))),
                     output);
         }
 
