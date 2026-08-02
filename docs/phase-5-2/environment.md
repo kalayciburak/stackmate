@@ -31,9 +31,11 @@ will be made by this experiment.
 | WSL memory | 30 GiB total plus 8 GiB swap |
 | WSL root disk | 1,007 GiB total / 942 GiB available |
 | Python | 3.10.12 |
-| uv | not initially installed |
+| uv | 0.12.1, installed for the WSL user |
 | CUDA toolkit / nvcc | not initially installed |
-| PyTorch / Transformers / PEFT | not initially installed |
+| PyTorch | 2.13.0+cu130 |
+| Transformers / PEFT / Accelerate | 5.14.1 / 0.20.0 / 1.14.0 |
+| bitsandbytes / gguf | 0.50.0 / 0.19.0 |
 | Official Qwen3.5-2B HF cache | absent |
 
 WSL2 is the selected research environment. The training environment will be
@@ -53,5 +55,25 @@ Ada GPU exceeds the hardware requirement. A pinned PyTorch CUDA wheel may provid
 its own CUDA runtime; absence of host `nvcc` is therefore recorded but is not by
 itself treated as a QLoRA blocker.
 
-No training claim is made until the pinned environment passes an actual CUDA,
-4-bit-load, adapter-reload, and JSON-generation smoke test.
+The locked environment contains 62 resolved packages in an isolated
+`$HOME/.cache/stackmate-phase5-2-venv`; no dependency enters Maven or a product
+artifact. CUDA tensor execution passed, Torch reported CUDA 13.0, BF16 support,
+compute capability 8.9, and 17,170,956,288 bytes of device memory.
+
+## Gate B blocker
+
+The preflight passed package, CUDA, dataset-lock, and challenge-lock checks but
+stopped with `BASE_MODEL_PATH_NOT_SET`. The required official safetensors
+checkpoint is not cached anywhere in the inspected Windows/WSL locations, and
+Phase 5.2 explicitly excludes model download.
+
+The existing Q4_K_M GGUF cannot substitute safely. Its metadata reports
+architecture `qwen35`, but Transformers 5.14.1 returns `GGUF model with
+architecture qwen35 is not supported yet` after a diagnostic process-local fix
+for its separate `gguf` version-detection bug. It is also a third-party lossy
+quantization, not the official base checkpoint required by the experiment.
+
+Therefore the environment itself is CUDA-capable, but the controlled training
+input is unavailable. Four-bit load, target-module inspection, chat-template
+statistics, checkpoint save/reload, loss, and JSON-generation smoke tests were
+not run.

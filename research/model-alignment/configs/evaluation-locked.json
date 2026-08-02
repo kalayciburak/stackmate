@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1",
+  "evaluationId": "stackmate-phase-5-2-locked-v1",
+  "adapterLock": "reports/selected-adapter.json",
+  "developmentInputs": ["datasets/validation.jsonl"],
+  "lockedStages": [
+    {
+      "order": 1,
+      "name": "benchmark-v2-holdout",
+      "cases": 20,
+      "manifestSha256": "292b395f6024837a52878b38a6c0170a62cb29fdfcc89df68b845ced7732f294"
+    },
+    {
+      "order": 2,
+      "name": "phase-5-blind",
+      "cases": 20,
+      "manifestSha256": "eeab25e72c2a63785d45381681bdfb9f850c2e17e721c79750b4d576e6aba52a"
+    },
+    {
+      "order": 3,
+      "name": "post-training-challenge",
+      "cases": 30,
+      "manifestSha256": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1"
+    }
+  ],
+  "maximumLockedExecutions": 1,
+  "selectionMayUseLockedResults": false
+}

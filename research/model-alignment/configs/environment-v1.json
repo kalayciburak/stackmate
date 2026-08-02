@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1",
+  "environmentId": "stackmate-alignment-wsl2-v1",
+  "python": "3.10",
+  "uv": "0.12.1",
+  "platform": "WSL2 Ubuntu 22.04",
+  "baseModel": {
+    "repository": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "localPathEnvironment": "STACKMATE_BASE_MODEL_DIR",
+    "networkAccessDuringTraining": false,
+    "requireHuggingFaceSnapshotRevision": true,
+    "requiredFiles": [
+      "config.json",
+      "model.safetensors.index.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ]
+  },
+  "datasetLock": "datasets/lock.json",
+  "datasetManifestSha256": "b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2",
+  "challengeManifestSha256": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1",
+  "maximumSequenceLength": 2048,
+  "seed": 520021
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1",
+  "runId": "F1-qlora-r8",
+  "environment": "configs/environment-v1.json",
+  "method": "QLORA",
+  "rank": 8,
+  "alpha": 16,
+  "dropout": 0.05,
+  "targetModulesSource": "reports/model-architecture.json",
+  "quantization": {
+    "bits": 4,
+    "type": "nf4",
+    "doubleQuantization": true,
+    "computeDtype": "bfloat16"
+  },
+  "epochs": 2,
+  "learningRate": 0.0001,
+  "perDeviceTrainBatchSize": 1,
+  "perDeviceValidationBatchSize": 1,
+  "gradientAccumulationSteps": 16,
+  "gradientCheckpointing": true,
+  "maximumSequenceLength": 2048,
+  "seed": 520021,
+  "outputDirectory": "artifacts/F1-qlora-r8"
+}
