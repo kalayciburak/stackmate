@@ -75,6 +75,13 @@ Qwen2.5-1.5B missed validity and selection gates. The Qwen3.5-2B control passed 
 English screen but its official 2,274,069,824 total parameters exceed the hard cap.
 There is no Phase 4 winner or supported GGUF configuration to point at the starter.
 
+Phase 5 removed the parameter cap and qualified the pinned Qwen3.5-2B Q4_K_M control
+against 100 cases. Although structural output and ID-selection targets passed, the
+model failed strict unknown-case restraint and manual semantic safety. There is still
+no supported llama.cpp worker, runtime path property, or GGUF model path for the
+starter. Do not point `stackmate.inference.model-path` at the Phase 5 GGUF; that
+property belongs to the retained experimental Jlama SafeTensors adapter.
+
 To reproduce the Phase 3 lab, first review
 `docs/phase-3/model-runtime-research.md`, provision the exact ignored files yourself,
 and run the explicit `LlamaCppScreeningLab` test with its documented system

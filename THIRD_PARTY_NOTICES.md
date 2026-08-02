@@ -80,6 +80,23 @@ The verified official Windows CPU x64 archive was 18,352,727 bytes with SHA-256
 The lab excluded server and RPC paths. None of these artifacts passed into a
 production dependency or normal CI.
 
+## Phase 5 qualification artifacts
+
+Phase 5 reused only the Qwen3.5-2B Q4_K_M GGUF identity listed above and did not
+distribute or track its bytes. The official upstream model revision is
+`15852e8c16360a2fea060d615a32b45270f8a8fc`; the third-party GGUF repository revision
+is `7d26695454df6de5fbcce2e58681e62dae06ce43`. The artifact is 1,396,198,496 bytes
+with SHA-256 `57a1085840f497d764a7fc5d346922dbde961efb54cc792ea81d694fd846a1d8`.
+Both upstream model and llama.cpp are Apache-2.0 licensed.
+
+Qualification used the official llama.cpp Windows CPU x64 release `b10223`, commit
+`11924d4c17abc27383376a1ac6a24fa3e36c1c0c`. The official archive is 18,352,859
+bytes with SHA-256 `74c1ded0512818d98b51940bf9150e16da8ed79cf0cbe8d85788e01cdd00ff67`;
+the executed `llama-completion.exe` SHA-256 is
+`4208fb923f6109143d47035aee315295c1c1ce87a062a8cfbbcb02a4d8a3fee2`.
+No native or model artifact entered a Maven module, starter JAR, normal CI, or Git.
+Gate A failed, so no persistent worker or production llama.cpp dependency was added.
+
 ## Development and test dependencies
 
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the

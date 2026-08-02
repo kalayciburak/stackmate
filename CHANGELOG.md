@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5 replaces the tournament's strict parameter cap with measured resource budgets, while retaining mandatory
+  semantic, safety, isolation, and lifecycle gates.
+- The exact pinned Qwen3.5-2B Q4_K_M candidate remains `NOT_VIABLE` after full 80-case V2 plus 20-case blind
+  qualification: structural and selection metrics passed, but strict restraint and manual semantic safety did not.
+
 - Phase 4 makes StackMate-generated runtime diagnostics and model evaluation English-only while retaining the full
   Turkish usage/development guide in `README.tr.md`.
 - Local-model readiness now requires the smallest eligible candidate to pass strict aggregate and holdout gates
@@ -24,6 +29,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   inference benchmark mode, and tests whose only purpose was runtime localization.
 
 ### Added
+
+- A frozen 20-case Phase 5 blind qualification corpus with 18 real runtime/integration captures, independent
+  ground truth, pre-model manifest hashing, and input/candidate validation.
+- An explicit 100-case llama.cpp qualification lab pinned to official `b10223`, plus generated machine-readable
+  results and two-pass manual usefulness/semantic-safety review.
+- Phase 5 provenance, qualification, negative gate decision, and native/GGUF research threat-model documentation.
 
 - A frozen 20-case English V3 tournament corpus with a 10-case holdout split, 16 real runtime/integration captures,
   independent ground truth, pinned candidate manifest, and unchanged schema-v2 semantic validation.

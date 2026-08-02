@@ -13,11 +13,12 @@ kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştirem
 StackMate çalışma zamanı tanılarını şu anda İngilizce üretir. Bu dosya Türkçe kullanım ve geliştirme
 dokümantasyonudur; Türkçe çalışma zamanı çıktısı anlamına gelmez.
 
-Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Phase 4'te toplam
-parametre sayısı iki milyarın altında olan üç uygun İngilizce instruction model, pinned llama.cpp ile test edildi.
-Hiçbiri zorunlu holdout, yararlılık ve geçerlilik kapılarının tamamını geçemedi; geçen tek kontrol modeli ise sert
-parametre sınırını aştı. Production llama.cpp adapter'ı veya otomatik provisioning uygulanmadı. Yerel SPI araştırma
-ve güvenli fallback testleri için korunur. StackMate production-ready olarak sunulmaz ve Maven Central'da yayımlanmaz.
+Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Phase 5, eski
+parametre sınırını kaldırarak exact pinned Qwen3.5-2B Q4_K_M adayını mevcut 80 ve yeni 20 blind vaka üzerinde
+değerlendirdi. Model 100/100 geçerli çıktı ve 94/100 exact neden/kontrol seçimine ulaştı; ancak zorunlu ölçülülük ve
+manuel semantik güvenlik kapılarını geçemedi. Persistent llama.cpp worker, production adapter veya otomatik
+provisioning uygulanmadı. Yerel SPI araştırma ve güvenli fallback testleri için korunur. StackMate production-ready
+olarak sunulmaz ve Maven Central'da yayımlanmaz.
 
 İngilizce dokümantasyon: [README.md](README.md)
 
@@ -358,6 +359,13 @@ geçerli çıktı üretti ve seçim kapılarını kaçırdı. Qwen3.5-2B kontrol
 2.274.069.824 parametre olduğu için sert sınırın dışındadır. Hiçbir uygun model tam V2 benchmark veya persistent
 worker aşamasına geçmedi. Ayrıntılar [Phase 4 tarama raporundadır](docs/phase-4/screening-results.md).
 
+Phase 5 sert parametre sınırını kaldırdı ve aynı Qwen3.5-2B Q4_K_M kontrolünü 80 Benchmark V2 vakası ile yeni,
+dondurulmuş 20 vakalık blind corpus üzerinde çalıştırdı. Model 100/100 geçerli JSON ve 94/100 exact neden/kontrol
+seçimi üretti; holdout ve blind seçimleri ayrı ayrı 19/20 oldu. Manuel inceleme, kabul edilmiş üç desteklenmeyen
+alternatif buldu; bilinmeyen/yetersiz kanıt vakalarının yalnız 1/11'i önceden tanımlanan yapılandırılmış ölçülülük
+kuralını karşıladı. Gate A bu nedenle persistent worker, adapter ve paketlenmiş-model çalışmasından önce başarısız
+oldu. Ayrıntılar [Phase 5 qualification raporundadır](docs/phase-5/full-qualification-results.md).
+
 Modelsiz normal doğrulama:
 
 ```bash
@@ -393,7 +401,7 @@ ve model ağırlığı indirmez.
 - Uygulama, değiştirilmemiş ham loglarında hassas metni yine açığa çıkarabilir.
 - Opsiyonel framework tanıma, derin framework state yerine güvenli class-name/message incelemesi kullanır.
 - Değerlendirilen yerel inference `NOT_VIABLE`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
-- Phase 3 ve Phase 4 llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
+- Phase 3 ile Phase 5 arasındaki llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
   provisioning yoktur.
 - İşletim sistemi düzeyinde ağ veya model-process sandbox'ı yoktur.
 - `lazy-load=false` adapter metadata'sını başlangıçta doğrular; Jlama ağırlıkları yine ilk inference'ta yükler.
@@ -406,9 +414,9 @@ ve model ağırlığı indirmez.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-[konsol galerisi](docs/console-gallery.md), [Phase 4 konsol galerisi](docs/phase-4/console-gallery.md),
-[Phase 4 tarama raporu](docs/phase-4/screening-results.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md) ve [Phase 4 ilerleme kaydı](docs/phase-4/progress.md) belgelerine bakın.
+[konsol galerisi](docs/console-gallery.md), [Phase 5 qualification raporu](docs/phase-5/full-qualification-results.md),
+[Phase 5 manuel incelemesi](docs/phase-5/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+[troubleshooting.md](docs/troubleshooting.md) ve [Phase 5 ilerleme kaydı](docs/phase-5/progress.md) belgelerine bakın.
 Güvenlik bildirimleri
 [SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
 

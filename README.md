@@ -13,11 +13,12 @@ add or override a category, root type, evidence item, or source location.
 StackMate currently generates runtime diagnostics in English. `README.tr.md` is complete Turkish documentation for
 Turkish-speaking developers; it does not imply Turkish runtime output.
 
-Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 4 tested three
-eligible English instruction models below two billion total parameters through pinned llama.cpp. None passed every
-mandatory holdout, usefulness, and validity gate; the only passing control exceeded the hard parameter cap. No
-production llama.cpp adapter or automatic provisioning was built. The local SPI remains for research and
-safe-fallback testing. StackMate is not presented as production-ready or published to Maven Central.
+Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 5 removed the old
+parameter cap and qualified the exact pinned Qwen3.5-2B Q4_K_M candidate against 80 existing and 20 new blind cases.
+It reached 100/100 valid output and 94/100 exact cause/check selection, but failed mandatory restraint and manual
+semantic-safety gates. No persistent llama.cpp worker, production adapter, or automatic provisioning was built.
+The local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
+published to Maven Central.
 
 Turkish documentation: [README.tr.md](README.tr.md)
 
@@ -355,6 +356,13 @@ produced 19/20 valid outputs and missed the selection gates. The Qwen3.5-2B cont
 official total is 2,274,069,824 parameters, above the hard cap. No eligible model advanced to the full V2 benchmark
 or persistent-worker work. See the [Phase 4 screening report](docs/phase-4/screening-results.md).
 
+Phase 5 removed the strict parameter cap and ran the exact Qwen3.5-2B Q4_K_M control over all 80 Benchmark V2 cases
+plus a new frozen 20-case blind corpus. It produced 100/100 valid JSON and 94/100 exact cause/check selections;
+holdout and blind selection were each 19/20. Manual review found three accepted unsupported alternatives, and only
+1/11 unknown/insufficient cases satisfied the predeclared structured-restraint rule. Gate A therefore failed before
+persistent-worker, adapter, or packaged-model work. See the
+[Phase 5 qualification report](docs/phase-5/full-qualification-results.md).
+
 Run normal verification without a model:
 
 ```bash
@@ -390,7 +398,7 @@ CI and does not download weights.
 - The application may still expose sensitive text in its unchanged raw logs.
 - Optional framework recognition uses safe class-name/message inspection, not deep framework state.
 - Evaluated local inference is `NOT_VIABLE`; real-model runs exist only on Windows and no model is recommended.
-- Phase 3 and Phase 4 llama.cpp/GGUF code is explicit benchmark-lab code only; no automatic model or native-runtime
+- Phase 3 through Phase 5 llama.cpp/GGUF code is explicit benchmark-lab code only; no automatic model or native-runtime
   provisioning exists.
 - No OS-level network or model-process sandbox is installed.
 - `lazy-load=false` eagerly validates adapter metadata but Jlama weights are still loaded on first inference.
@@ -403,9 +411,9 @@ CI and does not download weights.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-See the [console gallery](docs/console-gallery.md), [Phase 4 console gallery](docs/phase-4/console-gallery.md),
-[Phase 4 screening report](docs/phase-4/screening-results.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md), and [Phase 4 progress](docs/phase-4/progress.md). Security reports
+See the [console gallery](docs/console-gallery.md), [Phase 5 qualification report](docs/phase-5/full-qualification-results.md),
+[Phase 5 manual review](docs/phase-5/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+[troubleshooting.md](docs/troubleshooting.md), and [Phase 5 progress](docs/phase-5/progress.md). Security reports
 should follow [SECURITY.md](SECURITY.md).
 
 ## Roadmap

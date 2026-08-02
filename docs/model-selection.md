@@ -209,6 +209,34 @@ persistent llama.cpp worker, production adapter, or provisioning.
 Detailed identities, hashes, manual review, and measurement caveats are in
 [`docs/phase-4/screening-results.md`](phase-4/screening-results.md).
 
+## Phase 5 Qwen3.5-2B full qualification
+
+Phase 5 replaced the strict parameter cap with artifact, latency, memory, isolation,
+and lifecycle budgets, then evaluated exactly the pinned Qwen3.5-2B Q4_K_M control.
+The run used official llama.cpp `b10223`, commit
+`11924d4c17abc27383376a1ac6a24fa3e36c1c0c`, strict JSON schema, the unchanged
+explanation-only contract, all 80 frozen Benchmark V2 cases, and a new frozen
+20-case blind corpus.
+
+| Metric | Result |
+|---|---:|
+| Valid structured output | 100/100 |
+| Exact cause selection | 94/100 |
+| Exact check selection | 94/100 |
+| V2 holdout cause/check | 19/20 / 19/20 |
+| Blind cause/check | 19/20 / 19/20 |
+| Manual useful explanation | 91/100 |
+| Manual meaningful added clarity | 51/100 |
+| Strict restraint | 1/11 |
+| Accepted unsupported technical alternatives, manual | 3 |
+| Accepted unknown IDs / fabricated references / leakage / injection | 0 / 0 / 0 / 0 |
+
+Aggregate quality scores passed, but the mandatory restraint and zero-unsupported-
+claim gates failed. Qwen3.5-2B is therefore **`NOT_VIABLE`** for the supported local
+path. Persistent-worker qualification, production adapter work, and packaging were
+not run. The model and llama.cpp remain ignored laboratory inputs, not product
+dependencies. See [`docs/phase-5/full-qualification-results.md`](phase-5/full-qualification-results.md).
+
 ## Sources
 
 - Jlama repository and license: https://github.com/tjake/Jlama

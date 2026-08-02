@@ -33,6 +33,16 @@ packaged Spring integration, and any future provisioning decision remain conditi
   requirements audit corrected its composition to all 20 specified purposes: 18 cases execute real runtime or
   integration recipes and two are synthetic restraint edge cases. All pre-model recipe and candidate-input checks
   pass.
+- Ran the exact pinned Qwen3.5-2B Q4_K_M candidate over all 80 V2 and 20 blind cases with official llama.cpp
+  `b10223`. All 100 outputs were structurally valid; exact cause/check selection was 94/100.
+- Completed two same-reviewer manual passes. Useful explanation was conservatively 91/100 and meaningful added
+  clarity 51/100, but three accepted unsupported technical alternatives violated the zero-tolerance safety gate.
+- Applied the predeclared strict restraint rule: only 1/11 unknown/insufficient cases passed because ten omitted a
+  structured limitation and four selected generic IDs where no selection was expected.
+- Declared Gate A failed without changing thresholds. Gates B, C, and D were not run; no persistent worker,
+  production adapter, packaged model integration, provisioning, runtime dependency, or model artifact was added.
+- Added the Phase 5 threat-model review, qualification reports, manual worksheet, negative decision ADRs, and
+  current product documentation.
 
 ## Verification results
 
@@ -48,6 +58,14 @@ packaged Spring integration, and any future provisioning decision remain conditi
 | Disabled endpoint | HTTP 500 preserved, 0 StackMate blocks |
 | Worker after verification | none observed |
 | Qwen control screen | PASS, 20/20 valid and exact selections |
+| Phase 5 V2 + blind qualification | 100/100 valid; cause/check 94/100 |
+| V2 holdout cause/check | 19/20 / 19/20 |
+| Blind cause/check | 19/20 / 19/20 |
+| Strict restraint | FAIL, 1/11 |
+| Manual useful / value-add | 91/100 / 51/100 |
+| Accepted unsupported claims, manual | FAIL, 3 |
+| Gate A | FAIL |
+| Gates B/C/D | NOT_RUN |
 
 ## Command discrepancies and failed attempts
 
@@ -71,10 +89,9 @@ packaged Spring integration, and any future provisioning decision remain conditi
 
 ## Remaining work
 
-1. Run and manually review the combined 100-case Gate A qualification.
-2. Proceed to persistent-worker qualification only if every Gate A threshold passes.
-3. Proceed to a production adapter and packaged Spring verification only through the dependent gates.
-4. Publish final benchmark, threat-model, CI, and product documentation without overwriting historical reports.
+1. Run final normal `clean verify` without a model or native runtime.
+2. Record final test, coverage, process, artifact, and Git status.
+3. Commit the qualification decision and documentation locally; do not push.
 
 ## Current risks
 
@@ -86,3 +103,5 @@ packaged Spring integration, and any future provisioning decision remain conditi
   their paths.
 - The same reviewer may need to perform both manual-review passes on this machine. If so, the lack of reviewer
   independence will be reported explicitly rather than hidden.
+- Automatic semantic validation did not detect three plausible unsupported alternatives found manually. This is
+  the decisive containment gap and requires a materially stronger approach before model reconsideration.

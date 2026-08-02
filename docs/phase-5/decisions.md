@@ -35,3 +35,9 @@ production analyzer constants or derive expected answers from production output.
 
 Even if all gates pass, the first production adapter uses explicit local executable and GGUF paths. Downloading,
 catalog activation, cache management, or zero-friction provisioning remains a later, evidence-dependent decision.
+
+## D7: Gate A fails without threshold adjustment
+
+The candidate passed automatic validity and selection thresholds but failed the strict restraint contract (1/11)
+and manual zero-unsupported-claim gate (three accepted alternatives). The candidate is `NOT_VIABLE`; Gates B, C,
+and D are not run. No prompt, validator, corpus ground truth, or threshold is changed after the result.
