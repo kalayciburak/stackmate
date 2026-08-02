@@ -228,6 +228,51 @@ class DefaultInferenceOutputValidatorTest {
     }
 
     @Test
+    void requiresAnExplicitLimitationWhenSelectionsAreEmpty() {
+        StructuredInferenceOutput missingLimitation =
+                new StructuredInferenceOutput(
+                        "2",
+                        "The supplied evidence is insufficient.",
+                        "No specific cause can be selected.",
+                        List.of(),
+                        List.of(),
+                        List.of("fact.one"),
+                        List.of());
+        StructuredInferenceOutput explicitLimitation =
+                new StructuredInferenceOutput(
+                        "2",
+                        "The supplied evidence is insufficient.",
+                        "No specific cause can be selected.",
+                        List.of(),
+                        List.of(),
+                        List.of("fact.one"),
+                        List.of("EVIDENCE_INSUFFICIENT"));
+
+        assertCodes(
+                validator.validate(request(2_000), missingLimitation),
+                OutputValidationIssue.Code.MISSING_LIMITATION);
+        assertThat(validator.validate(request(2_000), explicitLimitation))
+                .isInstanceOf(OutputValidationResult.Valid.class);
+    }
+
+    @Test
+    void rejectsSelectionsThatContradictAnInsufficientEvidenceClaim() {
+        StructuredInferenceOutput output =
+                new StructuredInferenceOutput(
+                        "2",
+                        "No supported cause or check can be selected.",
+                        "Evidence does not support any specific cause.",
+                        List.of("cause.one"),
+                        List.of("check.one"),
+                        List.of("fact.one"),
+                        List.of());
+
+        assertCodes(
+                validator.validate(request(2_000), output),
+                OutputValidationIssue.Code.CONTRADICTORY_SELECTION);
+    }
+
+    @Test
     void rejectsDuplicateSelectionsAtTheUntrustedOutputBoundary() {
         assertThatThrownBy(
                         () ->

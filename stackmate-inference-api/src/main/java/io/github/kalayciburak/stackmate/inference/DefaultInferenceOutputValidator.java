@@ -52,6 +52,9 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
     private static final Pattern DESTRUCTIVE_COMMAND =
             Pattern.compile(
                     "(?iu)(?:rm\\s+-rf|remove-item(?:\\s+-recurse)?|drop\\s+(?:table|database)|format\\s+[a-z]:|del\\s+/[sfq]|shutdown\\s+(?:/s|-h))");
+    private static final Pattern INSUFFICIENT_SELECTION_CLAIM =
+            Pattern.compile(
+                    "(?iu)(?:\\bno\\s+(?:specific|supported|supplied)\\s+cause\\b|\\bno\\s+supported\\s+cause\\s+or\\s+check\\b|\\bevidence\\s+does\\s+not\\s+support\\s+any\\s+specific\\s+cause\\b)");
     private static final Set<String> ENGLISH_MARKERS =
             Set.of(
                     "a",
@@ -169,6 +172,7 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
         validateDuplicateSelections(output.selectedCheckIds(), "selectedCheckIds", issues);
         validateDuplicateSelections(output.usedEvidenceIds(), "usedEvidenceIds", issues);
         validateCandidateSupport(request, output, issues);
+        validateRestraintContract(output, issues);
 
         validateText(output.summary(), "summary", request, allowedText, issues);
         validateText(output.explanation(), "explanation", request, allowedText, issues);
@@ -218,6 +222,33 @@ public final class DefaultInferenceOutputValidator implements InferenceOutputVal
                                         OutputValidationIssue.Code.UNSUPPORTED_REFERENCE,
                                         "selectedCheckIds",
                                         "selected check has no used supporting evidence"));
+    }
+
+    private void validateRestraintContract(
+            StructuredInferenceOutput output, List<OutputValidationIssue> issues) {
+        boolean emptySelection =
+                output.selectedCauseIds().isEmpty() && output.selectedCheckIds().isEmpty();
+        if (emptySelection && output.limitations().isEmpty()) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.MISSING_LIMITATION,
+                    "limitations",
+                    "empty selections require an explicit limitation");
+        }
+        if (!emptySelection
+                && (output.limitations().stream()
+                                .anyMatch(value -> value.equalsIgnoreCase("EVIDENCE_INSUFFICIENT"))
+                        || INSUFFICIENT_SELECTION_CLAIM.matcher(combinedText(output)).find())) {
+            issue(
+                    issues,
+                    OutputValidationIssue.Code.CONTRADICTORY_SELECTION,
+                    "$",
+                    "selected IDs contradict an insufficient-evidence claim");
+        }
+    }
+
+    private static String combinedText(StructuredInferenceOutput output) {
+        return output.summary() + ' ' + output.explanation();
     }
 
     private void validateText(

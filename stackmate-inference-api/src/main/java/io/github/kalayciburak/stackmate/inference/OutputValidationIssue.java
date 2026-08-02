@@ -12,6 +12,8 @@ public record OutputValidationIssue(Code code, String path, String message) {
         UNKNOWN_CAUSE_ID,
         UNKNOWN_CHECK_ID,
         UNSUPPORTED_REFERENCE,
+        MISSING_LIMITATION,
+        CONTRADICTORY_SELECTION,
         EXCESSIVE_LENGTH,
         CONTROL_CHARACTER,
         SENSITIVE_VALUE,
