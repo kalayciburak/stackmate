@@ -31,3 +31,10 @@ This phase does not implement a persistent worker, production llama.cpp adapter,
 model/runtime provisioning, download, packaging, or Spring integration. A passing
 prompt can produce only a `READY_CANDIDATE` verdict for the next separately
 authorized qualification phase.
+
+## D6: The split is frozen before prompt variants
+
+The first 40 V2 development cases in manifest order form prompt development; the
+remaining 20 V2 development cases form selection validation. Existing 20-case V2
+holdout and 20-case blind corpora form the locked final. The split manifest digest is
+`147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07`.

@@ -33,10 +33,20 @@ primary-comparison validator.
 - No repair, timeout, crash, leakage, injection success, unknown ID, fabricated
   reference, hidden thinking, or residual workspace process occurred.
 
+## Frozen prompt-development split
+
+- Prompt development: 40 V2 development cases.
+- Selection validation: remaining 20 V2 development cases.
+- Locked final: 20 existing V2 holdout plus 20 existing blind cases.
+- Split SHA-256:
+  `147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07`.
+- Combined source-ground-truth SHA-256:
+  `0a5c9c748e187fdd2c52d506f592d30b04606d59242e3660b7a15f1f7d829d6a`.
+
 ## Current gate
 
-The current English system and repair prompts are being audited before the frozen
-development/selection/locked split and P1-P3 resources are created.
+The split and current-prompt audit are frozen. P0-P3 resources and the ablation
+harness can now be implemented without opening the locked final set.
 
 ## Out-of-scope status
 
