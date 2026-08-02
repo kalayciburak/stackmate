@@ -16,6 +16,7 @@ import io.github.kalayciburak.stackmate.benchmark.corpus.v2.CorpusV2Case;
 import io.github.kalayciburak.stackmate.benchmark.corpus.v2.CorpusV2IncidentFactory;
 import io.github.kalayciburak.stackmate.benchmark.corpus.v2.CorpusV2Manifest;
 import io.github.kalayciburak.stackmate.benchmark.prompt.PromptAblationManifest;
+import io.github.kalayciburak.stackmate.benchmark.prompt.PromptRepairPolicy;
 import io.github.kalayciburak.stackmate.benchmark.prompt.PromptVariantManifest;
 import io.github.kalayciburak.stackmate.benchmark.prompt.PromptVariantManifest.PromptVariant;
 import io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter;
@@ -73,15 +74,6 @@ class LlamaCppPromptAblationLab {
             Pattern.compile("(?im)prompt eval time\\s*=\\s*([0-9.]+)\\s*ms");
     private static final Pattern EVAL_TIME =
             Pattern.compile("(?im)(?<!prompt )eval time\\s*=\\s*([0-9.]+)\\s*ms");
-    private static final Set<String> REPAIRABLE_ISSUES =
-            Set.of(
-                    "SCHEMA_OR_JSON",
-                    "UNKNOWN_SCHEMA_VERSION",
-                    "UNKNOWN_FACT_ID",
-                    "UNKNOWN_CAUSE_ID",
-                    "UNKNOWN_CHECK_ID",
-                    "DUPLICATE_SELECTION",
-                    "EXCESSIVE_LENGTH");
     private static final List<String> CONTROLLED_SECRETS =
             List.of(
                     "benchmark-secret-do-not-leak",
@@ -208,7 +200,7 @@ class LlamaCppPromptAblationLab {
             finalLaunch = launch(configuration, request, repairPrompt, "repair");
             finalValidation = validate(request, input, finalLaunch);
             if (finalValidation.valid()
-                    && !repairPreservedMeaning(
+                    && !PromptRepairPolicy.preservesMeaning(
                             initialValidation.parsedOutput(), finalValidation.parsedOutput())) {
                 finalValidation = ValidationAttempt.invalid("REPAIR_CHANGED_MEANING", false);
             }
@@ -466,24 +458,11 @@ class LlamaCppPromptAblationLab {
             List<String> issues =
                     ((OutputValidationResult.Invalid) result)
                             .issues().stream().map(issue -> issue.code().name()).toList();
-            boolean repairable = REPAIRABLE_ISSUES.containsAll(issues);
+            boolean repairable = PromptRepairPolicy.isRepairEligible(issues);
             return new ValidationAttempt(false, output, issues, repairable, !repairable);
         } catch (Exception failure) {
             return ValidationAttempt.invalid("SCHEMA_OR_JSON", true);
         }
-    }
-
-    private boolean repairPreservedMeaning(
-            StructuredInferenceOutput initial, StructuredInferenceOutput repaired) {
-        if (initial == null) {
-            return true;
-        }
-        return initial.summary().equals(repaired.summary())
-                && initial.explanation().equals(repaired.explanation())
-                && initial.limitations().equals(repaired.limitations())
-                && initial.selectedCauseIds().containsAll(repaired.selectedCauseIds())
-                && initial.selectedCheckIds().containsAll(repaired.selectedCheckIds())
-                && initial.usedEvidenceIds().containsAll(repaired.usedEvidenceIds());
     }
 
     private ObjectNode schema(InferenceRequest request) {

@@ -2,6 +2,7 @@ package io.github.kalayciburak.stackmate.benchmark.prompt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kalayciburak.stackmate.benchmark.corpus.qualification.QualificationBlindManifest;
 import io.github.kalayciburak.stackmate.benchmark.corpus.v2.CorpusV2Case;
 import io.github.kalayciburak.stackmate.benchmark.corpus.v2.CorpusV2Manifest;
@@ -97,6 +98,22 @@ class PromptAblationManifestTest {
                 .contains(
                         "Do not invent facts, identifiers",
                         "source references, commands, or claims");
+    }
+
+    @Test
+    void enforcesTheCommittedSelectedPromptVersionAndChecksum() throws Exception {
+        PromptVariantManifest manifest = PromptVariantManifest.load();
+        try (InputStream input =
+                PromptAblationManifestTest.class.getResourceAsStream(
+                        "/prompt-ablation/selected-prompt.json")) {
+            assertThat(input).isNotNull();
+            var selected = new ObjectMapper().readTree(input);
+            var variant = manifest.require(selected.path("promptId").asText());
+
+            assertThat(selected.path("schemaVersion").asText()).isEqualTo("1");
+            assertThat(selected.path("promptVersion").asText()).isEqualTo(variant.version());
+            assertThat(selected.path("promptSha256").asText()).isEqualTo(variant.sha256());
+        }
     }
 
     private String sha256(String resource) throws Exception {
