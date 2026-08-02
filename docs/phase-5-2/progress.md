@@ -29,12 +29,13 @@ Date: 2026-08-02
   32-family train and 8-family validation split.
 - Passed the locked-corpus leakage audit with zero prohibited overlap.
 - Passed five Python dataset tests and four Java fixture tests.
+- Reproduced P0/P3 on all 40 development cases with pinned model/runtime/split
+  hashes; P3 matched historical validity, accuracy, and restraint exactly.
 
 ## Next controlled actions
 
-1. Commit the complete Gate A evidence before loading any training weights.
-2. Reproduce the bounded P0/P3 Phase 5.1 development baseline.
-3. Create the pinned WSL2 environment and run CUDA, tokenizer, chat-template,
+1. Commit the P0/P3 reproduction evidence before loading training weights.
+2. Create the pinned WSL2 environment and run CUDA, tokenizer, chat-template,
    4-bit-load, adapter-reload and JSON-generation smoke tests.
 
 Historical Phase 4, Phase 5 and Phase 5.1 reports remain unchanged.

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1",
+  "dataset": "PROMPT_DEVELOPMENT",
+  "executedPrompts": ["P0", "P1", "P2", "P3"],
+  "reasonAllPromptsExecuted": "The frozen Phase 5.1 primary-development harness rejects prompt subsets.",
+  "caseCountPerPrompt": 40,
+  "modelSha256": "57a1085840f497d764a7fc5d346922dbde961efb54cc792ea81d694fd846a1d8",
+  "executableSha256": "4208fb923f6109143d47035aee315295c1c1ce87a062a8cfbbcb02a4d8a3fee2",
+  "splitManifestSha256": "147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07",
+  "generatedReportSha256": "4ac7dbbf9d0db8ff2a3ada1652d7314f47a98218662d2ca72fefc4829c3bfebf",
+  "p0": {
+    "promptSha256": "3362afedc99b7c930a8423a33d011bb8b8a026d7072befef6041f6629b36fa03",
+    "valid": 38,
+    "causeCorrect": 39,
+    "checkCorrect": 39,
+    "strictAbstentions": 1,
+    "abstentionCases": 4,
+    "explicitLimitations": 1,
+    "genericFallbackMisuse": 1,
+    "semanticRejections": 2,
+    "medianProcessMillis": 5256,
+    "p95ProcessMillis": 6038
+  },
+  "p3": {
+    "promptSha256": "d5117da41bd8af64982035fb75dbac91968249ea48fd02f120c532755074bf7f",
+    "valid": 40,
+    "causeCorrect": 36,
+    "checkCorrect": 36,
+    "strictAbstentions": 4,
+    "abstentionCases": 4,
+    "explicitLimitations": 4,
+    "genericFallbackMisuse": 0,
+    "semanticRejections": 0,
+    "medianProcessMillis": 5174,
+    "p95ProcessMillis": 6133
+  },
+  "testResult": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "mavenElapsed": "14:15"
+  }
+}
