@@ -275,7 +275,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                         List.of(),
                         List.of(),
                         List.of(request.facts().getFirst().id()),
-                        List.of()),
+                        List.of("EVIDENCE_INSUFFICIENT")),
                 Duration.ofMillis(5));
     }
 
