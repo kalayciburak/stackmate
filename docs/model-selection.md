@@ -237,6 +237,31 @@ path. Persistent-worker qualification, production adapter work, and packaging we
 not run. The model and llama.cpp remain ignored laboratory inputs, not product
 dependencies. See [`docs/phase-5/full-qualification-results.md`](phase-5/full-qualification-results.md).
 
+## Phase 5.1 prompt-ablation result
+
+Phase 5.1 kept the Phase 5 model, GGUF, Q4_K_M quantization, official llama.cpp
+`b10223`, corpus, ground truth, schema, context, output limit, generation profile,
+hardware, timeout, and scoring fixed while comparing exactly four system prompts.
+The locked P3 prompt used an abstention-first closed world and four abstract negative
+examples.
+
+| Metric | Phase 5 P0 | P3 observed across disjoint gates |
+|---|---:|---:|
+| Valid output | 100/100 | 100/100 |
+| Cause/check accuracy | 94/100 / 94/100 | 88/100 / 88/100 |
+| Strict abstention | 1/11 | 11/11 |
+| Generic fallback misuse | 4 | 0 |
+| Accepted unsupported claims, manual | 3 | 1 |
+| Locked V2 holdout | 19/20 / 19/20 | 16/20 / 16/20 |
+| Locked blind | 19/20 / 19/20 | 18/20 / 18/20 |
+
+The prompt fixed the known restraint behavior but did not meet the complete product
+standard. The locked holdout missed the 85% gate, the required second manual pass
+found one unsupported rate claim, and Gate C was skipped. The Phase 5.1 verdict is
+**`EXPERIMENTAL`**, not ready and not a reversal of the Phase 5 evidence. No worker,
+adapter, or provisioning work is authorized. See
+[`docs/phase-5-1/locked-final-results.md`](phase-5-1/locked-final-results.md).
+
 ## Sources
 
 - Jlama repository and license: https://github.com/tjake/Jlama

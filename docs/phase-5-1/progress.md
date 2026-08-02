@@ -52,16 +52,45 @@ primary-comparison validator.
   misuse.
 - Selection validation completed for 80 outputs. P3 achieved 20/20 valid, 18/20
   exact cause/check selection, 4/4 strict abstention, and zero fallback misuse.
-- The selection-time manual pass found the known unsupported driver alternative
-  only in P0. The automatic unsupported-claim counter remained zero and is not
-  treated as proof of semantic safety.
-- P3 is the predeclared-priority winner and will be checksum-locked before any
-  locked-final execution.
+- The first selection-time manual pass missed one unsupported `high rejection rate`
+  claim in P1 and P3. The reverse-order pass corrected this after Gate B without
+  changing the prompt or ground truth.
+- P3 was checksum-locked and remained the only Gate B prompt.
 
-## Current gate
+## Locked and follow-up results
 
-Gate A is complete. The P3 lock and selection record must be committed before
-Gate B can access the 20 holdout and 20 blind cases.
+- Gate B ran once: 40/40 valid, 34/40 exact cause/check, and 3/3 strict locked
+  abstentions.
+- V2 holdout was 16/20 (80%) and failed the mandatory 85% gate. Blind was 18/20
+  (90%). Gate C was therefore skipped by protocol.
+- The complete second manual pass found one P3 accepted unsupported claim across
+  the already-observed 100 disjoint outputs.
+- Production restraint validation rejects seven Phase 5 empty-selection outputs
+  lacking a limitation. A research-only lexical check catches the three known
+  Phase 5 claims but creates seven false or over-conservative rejections and is not
+  adopted.
+- The separate eight-case adversarial suite produced 8/8 valid outputs, zero
+  injection success, leakage, unknown IDs, source claims, or hidden thinking, but
+  over-abstained in three cases.
+- Clause-level evidence objects preserved 20/20 validity and 18/20 selection on
+  selection validation, but retained the unsupported claim and increased latency.
+
+## Final state
+
+Phase 5.1 is `PARTIAL`. Prompt restraint improved materially, but no prompt passed
+all development gates and locked holdout accuracy failed. Qwen3.5-2B is
+`EXPERIMENTAL`, not ready for worker or product integration.
+
+## Final verification
+
+- Java 21 `mvnw verify`: 11/11 reactor projects passed.
+- Surefire: 346; Failsafe: 11; total: 357; failures/errors/skips: 0/0/0.
+- Spotless ran in check-only mode; no formatter apply command was used.
+- The first final verify exposed one obsolete coordinator fixture whose empty
+  selection lacked the newly required limitation. The fixture was corrected to
+  state `EVIDENCE_INSUFFICIENT`; the targeted test and full verify then passed.
+- Normal verification used fixture outputs only and did not execute or download a
+  real model/native runtime.
 
 ## Out-of-scope status
 

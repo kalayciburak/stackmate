@@ -13,12 +13,11 @@ kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştirem
 StackMate çalışma zamanı tanılarını şu anda İngilizce üretir. Bu dosya Türkçe kullanım ve geliştirme
 dokümantasyonudur; Türkçe çalışma zamanı çıktısı anlamına gelmez.
 
-Güncel durum: **güçlendirilmiş deterministik MVP; değerlendirilen yerel inference NOT_VIABLE**. Phase 5, eski
-parametre sınırını kaldırarak exact pinned Qwen3.5-2B Q4_K_M adayını mevcut 80 ve yeni 20 blind vaka üzerinde
-değerlendirdi. Model 100/100 geçerli çıktı ve 94/100 exact neden/kontrol seçimine ulaştı; ancak zorunlu ölçülülük ve
-manuel semantik güvenlik kapılarını geçemedi. Persistent llama.cpp worker, production adapter veya otomatik
-provisioning uygulanmadı. Yerel SPI araştırma ve güvenli fallback testleri için korunur. StackMate production-ready
-olarak sunulmaz ve Maven Central'da yayımlanmaz.
+Güncel durum: **güçlendirilmiş deterministik MVP; Qwen3.5-2B prompt qualification EXPERIMENTAL**. Phase 5.1 strict
+abstention sonucunu 1/11'den 11/11'e, generic-fallback yanlış kullanımını dörtten sıfıra indirdi; ancak kilitli V2
+holdout neden/kontrol sonucu yalnız 16/20 oldu ve manuel inceleme bir kabul edilmiş desteklenmeyen iddia daha buldu.
+Prompt çalışması `PARTIAL`dır, readiness sonucu değildir. Persistent llama.cpp worker, production adapter veya
+otomatik provisioning uygulanmadı. StackMate production-ready olarak sunulmaz ve Maven Central'da yayımlanmaz.
 
 İngilizce dokümantasyon: [README.md](README.md)
 
@@ -136,9 +135,9 @@ loglar ve denetimi Spring'in mevcut hata işleme akışına bırakır.
 
 ## Yerel model hızlı başlangıcı
 
-Değerlendirilen yerel modeller `NOT_VIABLE` sonucunu aldı. Bu hızlı başlangıç korunan Phase 2 Jlama deneyi ve
-entegrasyon testi içindir, öneri değildir. Phase 3 GGUF/llama.cpp taraması ürüne entegre edilmedi. Base starter
-yerine local starter'ı ekleyin:
+Değerlendirilen hiçbir yerel model ürün kullanımı için önerilmez. Bu hızlı başlangıç korunan Phase 2 Jlama deneyi ve
+entegrasyon testi içindir. Phase 5.1 Qwen3.5-2B prompt'u izole llama.cpp laboratuvar sonucu olarak kaldı ve ürüne
+entegre edilmedi. Base starter yerine local starter'ı ekleyin:
 
 ```xml
 <dependency>
@@ -366,6 +365,12 @@ alternatif buldu; bilinmeyen/yetersiz kanıt vakalarının yalnız 1/11'i önced
 kuralını karşıladı. Gate A bu nedenle persistent worker, adapter ve paketlenmiş-model çalışmasından önce başarısız
 oldu. Ayrıntılar [Phase 5 qualification raporundadır](docs/phase-5/full-qualification-results.md).
 
+Phase 5.1 dört dondurulmuş prompt varyantını karşılaştırdı. Kilitli P3 prompt'u 40/40 geçerli çıktı, 16/20 V2
+holdout ve 18/20 blind neden/kontrol doğruluğu ile 3/3 exact kilitli abstention üretti. Holdout kapısı başarısız oldu;
+zorunlu ikinci manuel geçiş ayrıca selection setinde desteklenmeyen bir `high rejection rate` iddiası buldu. Gate C
+atlanarak model `EXPERIMENTAL` kaldı. Ayrıntılar
+[Phase 5.1 kilitli sonuçlarındadır](docs/phase-5-1/locked-final-results.md).
+
 Modelsiz normal doğrulama:
 
 ```bash
@@ -400,8 +405,8 @@ ve model ağırlığı indirmez.
 - Startup failure analizi araştırıldı ancak bilinçli olarak ertelendi.
 - Uygulama, değiştirilmemiş ham loglarında hassas metni yine açığa çıkarabilir.
 - Opsiyonel framework tanıma, derin framework state yerine güvenli class-name/message incelemesi kullanır.
-- Değerlendirilen yerel inference `NOT_VIABLE`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
-- Phase 3 ile Phase 5 arasındaki llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
+- Qwen3.5-2B `EXPERIMENTAL`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
+- Phase 3 ile Phase 5.1 arasındaki llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
   provisioning yoktur.
 - İşletim sistemi düzeyinde ağ veya model-process sandbox'ı yoktur.
 - `lazy-load=false` adapter metadata'sını başlangıçta doğrular; Jlama ağırlıkları yine ilk inference'ta yükler.
@@ -414,18 +419,17 @@ ve model ağırlığı indirmez.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-[konsol galerisi](docs/console-gallery.md), [Phase 5 qualification raporu](docs/phase-5/full-qualification-results.md),
-[Phase 5 manuel incelemesi](docs/phase-5/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md) ve [Phase 5 ilerleme kaydı](docs/phase-5/progress.md) belgelerine bakın.
+[konsol galerisi](docs/console-gallery.md), [Phase 5.1 sonuçları](docs/phase-5-1/locked-final-results.md),
+[Phase 5.1 manuel incelemesi](docs/phase-5-1/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md) ve
+[troubleshooting.md](docs/troubleshooting.md) belgelerine bakın.
 Güvenlik bildirimleri
 [SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
 
 ## Yol haritası
 
-Önerilen sıradaki yön deterministik ürünün public-alpha hardening çalışmasıdır: API uyumluluğu, daha geniş paketlenmiş
-örnekler, dokümantasyon kullanılabilirliği, provenance/SBOM ve cross-platform CI kanıtı. Yeni bir yerel-model hipotezi,
-deterministik ürünü engellemeden ayrı değerlendirilmelidir. WebFlux, logging adapter'ları, IDE entegrasyonu, JFR
-zenginleştirmesi ve agent handoff gelecek adımlarıdır.
+Önerilen sıradaki yerel-model fazı, yeni ve ayrıca yetkilendirilen bir protokol altında task-specific fine-tuning'dir.
+Phase 5.1 bu kontrollü çalışmadan sonra yeni prompt varyantı eklenmesini yasaklar. Deterministik ürün bağımsız ilerleyebilir;
+WebFlux, logging adapter'ları, IDE entegrasyonu, JFR zenginleştirmesi ve agent handoff gelecek adımlarıdır.
 
 ## Lisans
 

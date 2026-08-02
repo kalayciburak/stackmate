@@ -13,10 +13,10 @@ add or override a category, root type, evidence item, or source location.
 StackMate currently generates runtime diagnostics in English. `README.tr.md` is complete Turkish documentation for
 Turkish-speaking developers; it does not imply Turkish runtime output.
 
-Current status: **hardened deterministic MVP; evaluated local inference is NOT_VIABLE**. Phase 5 removed the old
-parameter cap and qualified the exact pinned Qwen3.5-2B Q4_K_M candidate against 80 existing and 20 new blind cases.
-It reached 100/100 valid output and 94/100 exact cause/check selection, but failed mandatory restraint and manual
-semantic-safety gates. No persistent llama.cpp worker, production adapter, or automatic provisioning was built.
+Current status: **hardened deterministic MVP; Qwen3.5-2B prompt qualification is EXPERIMENTAL**. Phase 5.1 improved
+strict abstention from 1/11 to 11/11 and generic-fallback misuse from four to zero, but the locked V2 holdout scored
+only 16/20 cause/check and manual review still found one accepted unsupported claim. The prompt study is `PARTIAL`,
+not a readiness result. No persistent llama.cpp worker, production adapter, or automatic provisioning was built.
 The local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
 published to Maven Central.
 
@@ -135,9 +135,9 @@ and then returns control to Spring's existing error handling.
 
 ## Local-model quickstart
 
-The evaluated local models are `NOT_VIABLE`; this quickstart describes the retained Phase 2 Jlama experiment and
-integration testing, not a recommendation. Phase 3 GGUF/llama.cpp screening was not integrated. Add the local starter
-instead of the base starter:
+No evaluated local model is recommended for product use; this quickstart describes the retained Phase 2 Jlama
+experiment and integration testing. The Phase 5.1 Qwen3.5-2B prompt remains an isolated llama.cpp laboratory result
+and was not integrated. Add the local starter instead of the base starter:
 
 ```xml
 <dependency>
@@ -363,6 +363,12 @@ holdout and blind selection were each 19/20. Manual review found three accepted 
 persistent-worker, adapter, or packaged-model work. See the
 [Phase 5 qualification report](docs/phase-5/full-qualification-results.md).
 
+Phase 5.1 then compared four frozen prompt variants. The locked P3 prompt produced 40/40 valid outputs, 16/20 V2
+holdout and 18/20 blind cause/check accuracy, and 3/3 exact locked abstentions. The holdout gate failed; a required
+second manual pass also found one unsupported `high rejection rate` claim in the selection set. Gate C was skipped,
+and the model is `EXPERIMENTAL`, not ready. See the
+[Phase 5.1 locked report](docs/phase-5-1/locked-final-results.md).
+
 Run normal verification without a model:
 
 ```bash
@@ -397,8 +403,8 @@ CI and does not download weights.
 - Startup failure analysis was investigated but intentionally deferred.
 - The application may still expose sensitive text in its unchanged raw logs.
 - Optional framework recognition uses safe class-name/message inspection, not deep framework state.
-- Evaluated local inference is `NOT_VIABLE`; real-model runs exist only on Windows and no model is recommended.
-- Phase 3 through Phase 5 llama.cpp/GGUF code is explicit benchmark-lab code only; no automatic model or native-runtime
+- Qwen3.5-2B is `EXPERIMENTAL`; real-model runs exist only on Windows and no model is recommended.
+- Phase 3 through Phase 5.1 llama.cpp/GGUF code is explicit benchmark-lab code only; no automatic model or native-runtime
   provisioning exists.
 - No OS-level network or model-process sandbox is installed.
 - `lazy-load=false` eagerly validates adapter metadata but Jlama weights are still loaded on first inference.
@@ -411,17 +417,18 @@ CI and does not download weights.
 ./mvnw -pl stackmate-benchmark -am test
 ```
 
-See the [console gallery](docs/console-gallery.md), [Phase 5 qualification report](docs/phase-5/full-qualification-results.md),
-[Phase 5 manual review](docs/phase-5/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md),
-[troubleshooting.md](docs/troubleshooting.md), and [Phase 5 progress](docs/phase-5/progress.md). Security reports
+See the [console gallery](docs/console-gallery.md), [Phase 5.1 results](docs/phase-5-1/locked-final-results.md),
+[Phase 5.1 manual review](docs/phase-5-1/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md), and
+[troubleshooting.md](docs/troubleshooting.md). Security reports
 should follow [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
-The recommended next direction is public-alpha hardening of the deterministic product: API compatibility, wider
-packaged examples, documentation usability, provenance/SBOM work, and cross-platform CI evidence. A new local-model
-hypothesis should be evaluated separately rather than blocking the deterministic product. WebFlux, logging adapters,
-IDE integration, JFR enrichment, and agent handoff remain future milestones.
+The recommended next local-model phase is task-specific fine-tuning under a new,
+separately authorized protocol. Phase 5.1 forbids further prompt variants after this
+controlled study. The deterministic product can continue independently; WebFlux,
+logging adapters, IDE integration, JFR enrichment, and agent handoff remain future
+milestones.
 
 ## License
 

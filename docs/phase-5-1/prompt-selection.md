@@ -63,3 +63,18 @@ unrelated insufficient-evidence category. The examples contain no benchmark case
 ID, exact exception message, or exact expected candidate text. Generalization must
 be demonstrated on the still-unseen locked holdout and blind sets; the prompt will
 not be edited after that result.
+
+## Post-lock audit correction
+
+The selection decision above records what was known when the lock was committed.
+It is not the final semantic verdict. The required second manual pass later found
+that P3's `CONC-REJECTED-004` output said `high rejection rate`, although the
+supplied evidence established only that an executor rejected work. P1 made the
+same unsupported addition. The first pass incorrectly classified both as grounded.
+
+This was a reviewer error on the already-open selection-validation set, not a
+locked-final leak. Prompt bytes, expected answers, and the P3 lock were not changed.
+P3 therefore remained the sole Gate B prompt, but it no longer has a valid claim
+to Gate A's zero-unsupported criterion. P2 is not a retroactive winner: its 53/60
+exact cause/check result remains below the 90% quality gate. No fifth prompt or
+post-lock replacement run was introduced.

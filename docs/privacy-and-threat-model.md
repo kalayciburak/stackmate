@@ -1,6 +1,6 @@
 # Privacy and threat model
 
-Status: implemented controls and the Phase 5 qualification boundary reviewed against the
+Status: implemented controls and the Phase 5.1 prompt-qualification boundary reviewed against the
 0.1.0-SNAPSHOT architecture on 2026-08-02.
 
 ## Scope and security objectives
@@ -16,10 +16,10 @@ optional filesystem exporter. The application's own logging configuration is out
 StackMate intentionally preserves normal logging, the application's raw stack trace can still disclose a secret
 that the application placed in an exception message.
 
-Phase 5 assumes a local developer checkout on a machine where application request
+Phase 5.1 assumes a local developer checkout on a machine where application request
 data can influence exception text, while model/runtime paths and research commands
 remain operator-controlled. Its pinned llama.cpp binary and GGUF files are an
-ignored, explicit laboratory boundary only. Gate A failed, so Gate B was not run and no native runtime,
+ignored, explicit laboratory boundary only. Prompt qualification remained partial, so no native runtime,
 GGUF parser, model catalog, downloader, cache, mirror, or background provisioning was
 added to the Spring product. The product data flow below therefore remains unchanged.
 
@@ -80,7 +80,7 @@ process command line is already inside the deployment trust boundary.
 | Malicious or oversized model | Crafted metadata/weights cause traversal, excessive allocation, unsafe deserialization, or runtime crash | Explicit local path only; no download or remote code; normalized path and symbolic-link checks; required SafeTensors/tokenizer metadata; regular-file checks; bounded aggregate weight size; Qwen dimension bounds; known dtype and exact shape-byte validation; non-overlapping/gap-free/fully-indexed tensor ranges; managed child JVM isolates crashes; parent timeout/circuit breaker/fallback | Jlama parses complex attacker-supplied files and is not an adversarial model sandbox; child currently has the user's filesystem permissions and no hard RSS/CPU limit |
 | Native inference crash | JNI/vector/native defect terminates inference or corrupts memory | Production MVP uses Jlama's Java path in a separate JVM; no vendor types cross the API; child exit is a failure result and deterministic mode continues | JVM/JIT/vector defects can still crash the child; parent process creation consumes OS resources |
 | Research GGUF/native compromise | A replaced or malicious GGUF exploits the llama.cpp parser, or a replaced native executable runs with the user's permissions | Phase 5 lab pins official model identity, GGUF/runtime revisions, sizes, and SHA-256; uses reviewed llama.cpp `b10223`; excludes RPC/server paths; keeps paths operator-controlled and artifacts ignored; no native component ships or enters application runtime | Third-party GGUF provenance is not cryptographically tied to official weights; native parsing is memory-unsafe; no OS sandbox limits a manually run lab process |
-| Semantically unsupported model advice | Grammar-valid prose adds a plausible but unevidenced cause that bypasses identifier checks | Deterministic facts remain authoritative; output validator, frozen adversarial corpus, and mandatory manual semantic review gate product integration | Phase 5 found three accepted unsupported alternatives; Gate A failed and no model output path was integrated |
+| Semantically unsupported model advice | Grammar-valid prose adds a plausible but unevidenced cause that bypasses identifier checks | Deterministic facts remain authoritative; empty selections require limitations; contradictory selection/limitation states are rejected; frozen adversarial corpus and mandatory two-pass manual review gate integration | Phase 5.1 reduced three accepted alternatives to one, but lexical containment was too imprecise and locked selection quality failed; no model output path was integrated |
 | Unsafe future provisioning | Redirect, mirror, race, partial download, or mutable identity activates attacker bytes | Not implemented because Gate A failed; no URL, cache, catalog, lock, download, or activation surface exists | Any future implementation requires a new threat-model review before network or native execution is enabled |
 | Stdio protocol abuse | Child emits huge, malformed, delayed, or unsolicited frames | Version-2 length-prefixed bounded protocol; strict duplicate/depth/UTF-8/message checks; request/response IDs; one response per request; sanitized failure kinds; parent timeout; invalid output rejected; no shell interpolation or network socket | A wedged child may require forcible termination; operating-system process semantics vary |
 | Unsafe export path / symlink attack | Configured path escapes, follows a link, overwrites files, or retention deletes user content | Export disabled by default; normalized absolute root; existing path-component and target symlink rejection; fixed digest-derived incident directory; four fixed filenames; `CREATE_NEW`; temporary sibling directory plus atomic move; retention considers only `STM-XXXXXXXX` directories and refuses unknown/symlink entries; no recursive delete | A privileged attacker can race path components on filesystems without stronger directory-handle APIs; filesystem may not support atomic directory moves, in which case export fails |
@@ -142,6 +142,15 @@ schema-valid unsupported technical alternatives, and strict unknown/insufficient
 restraint passed only 1/11. Gate A failed; persistent-worker, adapter, packaged-model,
 and provisioning surfaces were not implemented. Only Windows x86_64 was executed.
 
+Phase 5.1 held the artifact/runtime/corpus controls fixed and varied only four
+system prompts. The selected closed-world prompt achieved 11/11 strict abstention
+and zero generic fallback misuse, but manual review retained one unsupported rate
+claim and V2 locked holdout selection fell to 16/20. A separate eight-attack suite
+had zero prompt-injection success, leakage, unknown IDs, source claims, or hidden
+thinking, while three attacks caused safe over-abstention. Clause-level evidence
+IDs improved auditability without eliminating the unsupported claim. The model is
+`EXPERIMENTAL`; worker, adapter, and provisioning surfaces remain absent.
+
 ## Remaining high-priority mitigations
 
 1. Add an explicit Windows/Linux/macOS runtime traffic test or documented packet-capture procedure.
@@ -150,7 +159,7 @@ and provisioning surfaces were not implemented. Only Windows x86_64 was executed
 4. Document recommended filesystem permissions for exported incidents and local model directories.
 5. Add sustained property-based fuzzing for the stdio decoder, sanitizer, and SafeTensors metadata beyond the current
    targeted adversarial suite.
-6. Keep real inference opt-in and `NOT_VIABLE` until a materially new containment hypothesis passes frozen
+6. Keep real inference opt-in and unintegrated while `EXPERIMENTAL` until a materially new containment hypothesis passes frozen
    aggregate, holdout, blind, restraint, and manual semantic-safety gates.
 7. If native inference is reconsidered, require reproducible first-party model
    provenance, a pinned source-built runtime, platform-specific process containment,

@@ -39,10 +39,39 @@ remaining 20 V2 development cases form selection validation. Existing 20-case V2
 holdout and 20-case blind corpora form the locked final. The split manifest digest is
 `147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07`.
 
-## D7: P3 wins Gate A under the frozen priority order
+## D7: P3 was locked under the first-pass Gate A review
 
-P3 is selected because it has zero manually accepted unsupported claims, 8/8
-strict abstention, zero generic-fallback misuse, 60/60 validity, and 54/60 exact
-cause/check selection across development and selection validation. P0 fails the
-primary safety criterion; P1 misses one abstention and one valid output; P2 falls
-below 90% exact selection. No prompt was edited after either result was observed.
+P3 was selected with 8/8 strict abstention, zero generic-fallback misuse, 60/60
+validity, and 54/60 exact cause/check selection. The first pass incorrectly recorded
+zero unsupported claims. A later reverse-order pass found one unsupported `high
+rejection rate` claim in the selection set. The lock remains immutable; the error
+is reported and P3 is not replaced after Gate B.
+
+## D8: No prompt passes the final Gate A audit
+
+P0, P1, and P3 each contain an accepted unsupported claim. P2 remains at 53/60
+exact cause/check selection, below 90%. The controlled study therefore cannot claim
+that a reasonable prompt passed all development gates.
+
+## D9: Gate C is skipped after Gate B failure
+
+P3 scored 16/20 cause/check on V2 holdout, below the mandatory 17/20 floor. The
+separate 100-case Gate C command is not run. The 100 outputs already observed over
+the three disjoint gates may be summarized diagnostically, but are not relabeled as
+a full-confirmation run.
+
+## D10: Lexical claim checking is not adopted
+
+A research-only lexical validator catches all three Phase 5 known claims but also
+flags seven other Phase 5 outputs. Combined acceptance falls to 83/100, below the
+98% validity gate. The production validator adopts only general empty-selection
+limitation and contradictory-selection rules; case-independent lexical checking
+remains experimental.
+
+## D11: Clause-level grounding is not adopted
+
+On the 20-case selection-validation set it preserved 20/20 validity and 18/20 exact
+selection, and all clauses carried supplied evidence IDs. It did not remove the
+unsupported `high rejection rate` claim, while median process latency rose from
+4,862 ms to 5,101 ms. Evidence-ID attachment improves auditability but does not
+prove that the clause is semantically entailed.

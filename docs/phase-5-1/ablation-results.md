@@ -48,9 +48,9 @@ fragments.
 | Prompt | Valid | Cause | Check | Strict abstention | Explicit limitation | Fallback misuse | Accepted unsupported, manual | Useful | Adds clarity | Repeats | Confuses | Median | P95 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | P0 | 20/20 | 17/20 | 17/20 | 0/4 | 0/4 | 2 | 0 | 20/20 | 4/20 | 16/20 | 0/20 | 4,742 ms | 5,545 ms |
-| P1 | 20/20 | 18/20 | 18/20 | 4/4 | 4/4 | 0 | 0 | 20/20 | 4/20 | 16/20 | 0/20 | 4,575 ms | 5,536 ms |
+| P1 | 20/20 | 18/20 | 18/20 | 4/4 | 4/4 | 0 | 1 | 19/20 | 3/20 | 17/20 | 1/20 | 4,575 ms | 5,536 ms |
 | P2 | 20/20 | 18/20 | 18/20 | 4/4 | 4/4 | 0 | 0 | 20/20 | 4/20 | 16/20 | 0/20 | 4,794 ms | 5,376 ms |
-| P3 | 20/20 | 18/20 | 18/20 | 4/4 | 4/4 | 0 | 0 | 20/20 | 4/20 | 16/20 | 0/20 | 4,862 ms | 5,043 ms |
+| P3 | 20/20 | 18/20 | 18/20 | 4/4 | 4/4 | 0 | 1 | 19/20 | 3/20 | 17/20 | 1/20 | 4,862 ms | 5,043 ms |
 
 All four variants remained structurally valid on selection validation. P1-P3
 abstained on `SECURITY-SIGNATURE-003` and `SECURITY-CERT-004`, where the frozen
@@ -68,10 +68,17 @@ deterministic fields; confusion means weakening or redirecting the diagnosis.
 
 P0 reproduced the accepted unsupported alternative in `DB-POOL-TIMEOUT-017`:
 `pool exhaustion or driver issues`. P1, P2, and P3 stayed within supplied
-terminology for that case. No manual unsupported alternative was found in the
-other development or selection-validation outputs. The automatic detector
-reported zero for every prompt, so the P0 manual finding remains separate and
-demonstrates the known validator gap.
+terminology for that case. A second reverse-order technical pass, performed after
+the prompt had been locked and Gate B had run, found a selection-time review error:
+P1 and P3 described `CONC-REJECTED-004` as a `high rejection rate`. The supplied
+evidence established rejection, not a measured rate. P2 remained evidence-only.
+The automatic detector reported zero for every prompt, so these manual findings
+remain separate and demonstrate the known validator gap.
+
+The correction does not use locked-final answers and does not alter model output,
+ground truth, or prompt bytes. It changes the authoritative selection-validation
+manual counts shown above. The original selection-time pass is retained as an
+auditable reviewer error rather than silently rewritten.
 
 P2's seven confusing development outputs were two truncated-but-schema-valid
 explanations plus five wrong generic database selections. P3's four confusing
@@ -82,8 +89,39 @@ unsupported external claims.
 ## Selection implication
 
 P0 is excluded by an accepted unsupported claim, 1/8 strict abstention, and three
-generic-fallback misuses. P1 is excluded by 7/8 strict abstention and one invalid
-output. P2 has complete restraint but only 53/60 exact cause/check selections
-(88.33%). P3 has complete restraint, zero fallback misuse, 60/60 validity, no
-manual unsupported claim, and 54/60 exact cause/check selections (90%). Under the
-predeclared priority order, P3 is the selected candidate for locked evaluation.
+generic-fallback misuses. P1 is excluded by an accepted unsupported claim, 7/8
+strict abstention, and one invalid output. P2 has zero manually accepted
+unsupported claims and complete restraint, but only 53/60 exact cause/check
+selections (88.33%). P3 has complete restraint, zero fallback misuse, and 60/60
+validity, but its corrected manual count contains one accepted unsupported claim.
+
+P3 had already been selected and checksum-locked under the erroneous first pass.
+The lock was honored and was not switched after Gate B. In the final audit, no
+variant satisfies every Gate A requirement.
+
+## Clause-level grounding sub-experiment
+
+After the primary prompt comparison, a separate schema ablation replaced the two
+free text fields with `{text, evidenceIds}` objects on the same 20-case
+selection-validation set. The P3 decision rules and all inference controls stayed
+fixed; only the tightly related prompt/schema contract changed.
+
+| Metric | Field-level P3 | Clause-level experiment |
+|---|---:|---:|
+| Prompt characters / estimated tokens | 3,259 / 815 | 3,352 / 838 |
+| Valid output | 20/20 | 20/20 |
+| Cause/check accuracy | 18/20 / 18/20 | 18/20 / 18/20 |
+| Clauses with required supplied evidence IDs | not required | 20/20 |
+| Accepted unsupported claim, manual | 1 | 1 |
+| Average semantic text characters | 126.3 | 118.2 |
+| Median / P95 process latency | 4,862 / 5,043 ms | 5,101 / 5,199 ms |
+| Median generation latency | 1,635.04 ms | 1,920.95 ms |
+
+The report SHA-256 is
+`97a5b85774bf7fed7e55c244417e922def8de0130ae939a7fecf398bd5da88f5`;
+the experiment prompt SHA-256 is
+`168bfb3a6f9eaa5843b1a47d4ae0fe30f2dbd0f237157e54258ac3831ed5f2c1`.
+
+The evidence objects improve auditability without improving selection or semantic
+entailment: the model cited `java.class.0` while still adding `high rejection
+rate`. The schema is not adopted and no ADR is created.
