@@ -38,3 +38,11 @@ The first 40 V2 development cases in manifest order form prompt development; the
 remaining 20 V2 development cases form selection validation. Existing 20-case V2
 holdout and 20-case blind corpora form the locked final. The split manifest digest is
 `147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07`.
+
+## D7: P3 wins Gate A under the frozen priority order
+
+P3 is selected because it has zero manually accepted unsupported claims, 8/8
+strict abstention, zero generic-fallback misuse, 60/60 validity, and 54/60 exact
+cause/check selection across development and selection validation. P0 fails the
+primary safety criterion; P1 misses one abstention and one valid output; P2 falls
+below 90% exact selection. No prompt was edited after either result was observed.

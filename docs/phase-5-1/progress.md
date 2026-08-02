@@ -43,10 +43,25 @@ primary-comparison validator.
 - Combined source-ground-truth SHA-256:
   `0a5c9c748e187fdd2c52d506f592d30b04606d59242e3660b7a15f1f7d829d6a`.
 
+## Prompt ablation
+
+- P0-P3 and the process-per-case ablation harness were committed before model
+  evaluation.
+- Development evaluation completed for 160 outputs. P3 achieved 40/40 valid,
+  36/40 exact cause/check selection, 4/4 strict abstention, and zero fallback
+  misuse.
+- Selection validation completed for 80 outputs. P3 achieved 20/20 valid, 18/20
+  exact cause/check selection, 4/4 strict abstention, and zero fallback misuse.
+- The selection-time manual pass found the known unsupported driver alternative
+  only in P0. The automatic unsupported-claim counter remained zero and is not
+  treated as proof of semantic safety.
+- P3 is the predeclared-priority winner and will be checksum-locked before any
+  locked-final execution.
+
 ## Current gate
 
-The split and current-prompt audit are frozen. P0-P3 resources and the ablation
-harness can now be implemented without opening the locked final set.
+Gate A is complete. The P3 lock and selection record must be committed before
+Gate B can access the 20 holdout and 20 blind cases.
 
 ## Out-of-scope status
 
