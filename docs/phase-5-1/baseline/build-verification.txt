@@ -1,0 +1,16 @@
+Phase 5.1 entry build verification
+Date: 2026-08-02
+Branch: phase-5-1-prompt-alignment
+Baseline commit: d29d789933a6394db942435e2c5ef607cda53f2f
+Java: Amazon Corretto 21.0.12
+Maven wrapper: 3.9.16
+Command: .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
+Reactor projects: 11/11 SUCCESS
+Surefire: 332 tests, 0 failures, 0 errors, 0 skipped
+Failsafe: 11 tests, 0 failures, 0 errors, 0 skipped
+Total: 343 tests
+Maven reported time: 01:01 min
+Workspace Java/llama processes after completion: 0
+
+The first attempted command used the shell's Java 17 and stopped before Maven
+execution because JAVA_HOME was invalid. It is not counted as a baseline run.

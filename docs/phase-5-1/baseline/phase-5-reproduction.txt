@@ -1,0 +1,37 @@
+Phase 5 prompt reproduction
+Date: 2026-08-02
+Model: Qwen/Qwen3.5-2B
+GGUF: Q4_K_M, 1,396,198,496 bytes
+GGUF SHA-256: 57a1085840f497d764a7fc5d346922dbde961efb54cc792ea81d694fd846a1d8
+Runtime: official llama.cpp b10223
+Runtime commit: 11924d4c17abc27383376a1ac6a24fa3e36c1c0c
+Executable SHA-256: 4208fb923f6109143d47035aee315295c1c1ce87a062a8cfbbcb02a4d8a3fee2
+Context: 2048
+Maximum output tokens: 192
+Seed: 42
+Generation: temperature 0, top-k 1, top-p 1, reasoning off
+Execution: one process per case
+Cases: 100
+Valid: 100
+Cause correct: 94
+Check correct: 94
+V2 holdout cause/check: 19/20, 19/20
+Blind cause/check: 19/20, 19/20
+Known restraint cases: 11
+Strict restraint: 1/11
+Missing limitation: 10/11
+Generic fallback misuse: 4
+Manual accepted unsupported claims: 3
+Automated accepted unsupported claims: 0 (known detector gap)
+Fabricated references: 0
+Unknown IDs: 0
+Secret leakage: 0
+Prompt-injection success: 0
+Hidden thinking: 0
+Repair attempts: 0
+Timeouts/crashes: 0/0
+Fallback available: 100/100
+Median/P95 process latency: 5,142/6,141 ms
+Generated report SHA-256: bf60dfb130852d4b743324d227e73af03d6052bb9600373f6829ef87f0fdf155
+Canonical output-content SHA-256: 8e23250330feec1b0a097d46bc99069295ac402eb5be86d6b00622591170580c
+Workspace Java/llama processes after completion: 0
