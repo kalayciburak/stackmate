@@ -52,4 +52,3 @@ loaded by the Java harness passed its checksum test; this is not prompt drift.
 
 Phase 5.1's curated P0/P3 metrics remain the authoritative historical baseline.
 A bounded real-model reproduction is recorded separately before training begins.
-

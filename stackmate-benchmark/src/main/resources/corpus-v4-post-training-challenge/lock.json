@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "1",
+  "manifestResource": "/corpus-v4-post-training-challenge/manifest.json",
+  "manifestSha256": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1",
+  "caseCount": 30,
+  "lockedForTraining": true
+}

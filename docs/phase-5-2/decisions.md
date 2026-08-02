@@ -43,4 +43,3 @@ Status: accepted.
 Schema version 2, the Phase 5.1 validator, English-only output, and P3 remain the
 primary evaluation contract. No persistent worker, production adapter, model
 provisioning, or model publication is part of this phase.
-

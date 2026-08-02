@@ -55,4 +55,3 @@ itself treated as a QLoRA blocker.
 
 No training claim is made until the pinned environment passes an actual CUDA,
 4-bit-load, adapter-reload, and JSON-generation smoke test.
-

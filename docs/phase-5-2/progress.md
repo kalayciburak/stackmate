@@ -6,7 +6,7 @@ Date: 2026-08-02
 
 | Gate | State |
 |---|---|
-| Gate A: data feasibility and leakage control | IN PROGRESS |
+| Gate A: data feasibility and leakage control | IN PROGRESS; challenge frozen |
 | Gate B: bounded adapter training | NOT RUN |
 | Gate C: locked qualification | NOT RUN |
 | Gate D: GGUF compatibility | NOT RUN |
@@ -22,14 +22,15 @@ Date: 2026-08-02
 - Chose isolated WSL2 QLoRA as the provisional environment path.
 - Inspected the official model, Transformers, PEFT, bitsandbytes and PyTorch support
   surfaces before choosing dependency versions.
+- Froze a 30-case post-training challenge before adapter training.
+- Reproduced 20/20 challenge runtime/integration recipes and validated all 30
+  deterministic candidate contracts.
 
 ## Next controlled actions
 
-1. Freeze the 30-case post-training challenge manifest.
-2. Implement deterministic family-split dataset generation.
-3. Run exact, signature, template-family and character n-gram leakage audits.
-4. Commit Gate A evidence before loading any training weights.
-5. Create the pinned WSL2 environment and run a bounded smoke test.
+1. Implement deterministic family-split dataset generation.
+2. Run exact, signature, template-family and character n-gram leakage audits.
+3. Commit remaining Gate A evidence before loading any training weights.
+4. Create the pinned WSL2 environment and run a bounded smoke test.
 
 Historical Phase 4, Phase 5 and Phase 5.1 reports remain unchanged.
-
