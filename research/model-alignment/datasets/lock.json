@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1",
+  "datasetId": "stackmate-alignment-dataset-v1",
+  "datasetManifestSha256": "b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2",
+  "trainSha256": "4c3d7675666212406400884a415a2920be6da36a80c617b55e31896f820cf070",
+  "validationSha256": "4b3d9bb0cd4dcbc79c1764ae2a511e1f2eb007f375cf72b8d5cb193eecef507b",
+  "leakageAuditSha256": "49aaaf88eb8bd3d81fb1bb0329eb0332ba78406c5c3cf9a3522e3692771d712b",
+  "promptSha256": "07713df9cb6c7a12dd1eb9d0a047d3e6acb87c1848ab645c17652e904c9707b7",
+  "challengeManifestSha256": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1",
+  "exampleCount": 1000,
+  "lockedBeforeTraining": true
+}

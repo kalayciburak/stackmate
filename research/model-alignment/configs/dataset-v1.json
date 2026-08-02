@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1",
+  "datasetId": "stackmate-alignment-dataset-v1",
+  "seed": 520021,
+  "prompt": "prompts/t1-closed-world.txt",
+  "trainOutput": "datasets/train.jsonl",
+  "validationOutput": "datasets/validation.jsonl",
+  "manifestOutput": "datasets/manifest.json",
+  "leakageReport": "reports/leakage-audit.json",
+  "characterNgramSize": 5,
+  "nearDuplicateThreshold": 0.88,
+  "families": {
+    "train": {
+      "SUPPORTED": 12,
+      "HARD_NEGATIVE": 8,
+      "ABSTENTION": 8,
+      "SECURITY": 4
+    },
+    "validation": {
+      "SUPPORTED": 3,
+      "HARD_NEGATIVE": 2,
+      "ABSTENTION": 2,
+      "SECURITY": 1
+    }
+  },
+  "examplesPerFamily": {
+    "SUPPORTED": 30,
+    "HARD_NEGATIVE": 25,
+    "ABSTENTION": 25,
+    "SECURITY": 10
+  }
+}

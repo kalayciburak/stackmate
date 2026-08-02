@@ -14,6 +14,7 @@ Date: 2026-08-02
 | Adversarial or insufficient | 5 |
 | Strict-restraint cases | 3 |
 | Manifest SHA-256 | `9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1` |
+| Freeze commit | `730f269` |
 
 The lock resource stores the exact manifest hash and marks the set inaccessible to
 training. Case IDs are disjoint from Benchmark V2 and the Phase 5 blind corpus.

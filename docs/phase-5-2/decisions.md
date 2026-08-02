@@ -43,3 +43,21 @@ Status: accepted.
 Schema version 2, the Phase 5.1 validator, English-only output, and P3 remain the
 primary evaluation contract. No persistent worker, production adapter, model
 provisioning, or model publication is part of this phase.
+
+## D-004: Use a compact synthetic family-split dataset for F1/F2
+
+Status: accepted.
+
+Dataset v1 uses 1,000 controlled synthetic examples across 40 independently
+named template families. Eight families are validation-only. This produces the
+requested 45/25/25/5 behavior distribution without training on locked messages,
+model outputs, private logs, or opaque generated prose.
+
+## D-005: Separate generation from leakage inspection
+
+Status: accepted.
+
+The generator has no locked-corpus dependency. A separate fail-closed audit may
+read frozen manifests and fixture source only to compare hashes, identifiers,
+normalized fields, signatures, families, and character 5-grams. It emits no
+locked content into training data.

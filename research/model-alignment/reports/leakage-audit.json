@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "auditorSha256": "c0e28e3e577006ba04f99d4e9d2b6c2d61ca65c7805b2820cab63be5907d50d5",
+  "configSha256": "607260a9a7e1cd64ed18ed0728dc83817616ae041abb80936ee32e02243bc136",
+  "dataset": {
+    "manifestSha256": "b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2",
+    "trainSha256": "4c3d7675666212406400884a415a2920be6da36a80c617b55e31896f820cf070",
+    "validationSha256": "4b3d9bb0cd4dcbc79c1764ae2a511e1f2eb007f375cf72b8d5cb193eecef507b",
+    "examples": 1000
+  },
+  "lockedSources": {
+    "v2ManifestSha256": "292b395f6024837a52878b38a6c0170a62cb29fdfcc89df68b845ced7732f294",
+    "blindManifestSha256": "eeab25e72c2a63785d45381681bdfb9f850c2e17e721c79750b4d576e6aba52a",
+    "phase51SplitSha256": "147d9a9e7e312d02abbf113ed3fd255bd4a3ee7841413c488f36deb44c016a07",
+    "challengeManifestSha256": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1",
+    "challengeLockEnforced": true,
+    "runtimeSourceFiles": 6
+  },
+  "checks": {
+    "exactNormalizedText": {
+      "prohibitedMatches": []
+    },
+    "exceptionCategory": {
+      "overlap": [
+        "AUTHORIZATION",
+        "DATABASE_CONNECTION",
+        "DATABASE_CONSTRAINT",
+        "DATABASE_SCHEMA",
+        "GENERAL_JAVA",
+        "NETWORK_CONNECTION",
+        "RESOURCE_EXHAUSTION",
+        "SERIALIZATION",
+        "SPRING_CONFIGURATION",
+        "SPRING_DEPENDENCY_INJECTION",
+        "TIMEOUT",
+        "TLS",
+        "UNKNOWN",
+        "VALIDATION",
+        "WEB_REQUEST"
+      ],
+      "policy": "reported; category alone is not leakage"
+    },
+    "evidenceSignature": {
+      "overlap": [],
+      "policy": "reported; signature alone is not leakage"
+    },
+    "candidateSignature": {
+      "overlap": [
+        "selectedCause=0;selectedCheck=0",
+        "selectedCause=1;selectedCheck=1"
+      ],
+      "policy": "reported; signature alone is not leakage"
+    },
+    "templateFamily": {
+      "prohibitedMatches": [],
+      "crossSplitFamilies": []
+    },
+    "lockedIdentifiers": {
+      "prohibitedMatches": []
+    },
+    "characterNgram": {
+      "size": 5,
+      "threshold": 0.88,
+      "topObserved": {
+        "score": 0.24359,
+        "exampleId": "SFT-TRN-HARD-CYCLE-VERSUS-ABSENCE-002",
+        "lockedGroup": "runtimeSource",
+        "lockedCaseId": "PostTrainingChallengeIncidentFactory.java"
+      },
+      "prohibitedMatches": []
+    }
+  },
+  "prohibitedOverlapCount": 0
+}

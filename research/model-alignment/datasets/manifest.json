@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1",
+  "datasetId": "stackmate-alignment-dataset-v1",
+  "seed": 520021,
+  "generator": "scripts/build_dataset.py",
+  "generatorSha256": "5d43128c80d5bf9012d7ff211060b3f3f11d2fdb0b1581e3293cf7d64ad13ad5",
+  "contractSha256": "6374c635c39d01cdd8b48d8f83dbebda0e8a5eca6fed09738154ba9795864e26",
+  "config": "configs/dataset-v1.json",
+  "configSha256": "607260a9a7e1cd64ed18ed0728dc83817616ae041abb80936ee32e02243bc136",
+  "prompt": "prompts/t1-closed-world.txt",
+  "promptSha256": "07713df9cb6c7a12dd1eb9d0a047d3e6acb87c1848ab645c17652e904c9707b7",
+  "counts": {
+    "total": 1000,
+    "train": 800,
+    "validation": 200,
+    "byKind": {
+      "ABSTENTION": 250,
+      "HARD_NEGATIVE": 250,
+      "SECURITY": 50,
+      "SUPPORTED": 450
+    },
+    "trainFamilies": 32,
+    "validationFamilies": 8
+  },
+  "ratios": {
+    "ABSTENTION": 0.25,
+    "HARD_NEGATIVE": 0.25,
+    "SECURITY": 0.05,
+    "SUPPORTED": 0.45
+  },
+  "files": {
+    "train": {
+      "path": "datasets/train.jsonl",
+      "sha256": "4c3d7675666212406400884a415a2920be6da36a80c617b55e31896f820cf070"
+    },
+    "validation": {
+      "path": "datasets/validation.jsonl",
+      "sha256": "4b3d9bb0cd4dcbc79c1764ae2a511e1f2eb007f375cf72b8d5cb193eecef507b"
+    }
+  },
+  "lockedCorpusReadByGenerator": false
+}
