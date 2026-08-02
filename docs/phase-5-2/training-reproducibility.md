@@ -56,3 +56,12 @@ UV_PROJECT_ENVIRONMENT="$HOME/.cache/stackmate-phase5-2-venv" \
 
 Actual preflight result: `BLOCKED`, exit 3, sole failure
 `BASE_MODEL_PATH_NOT_SET`. It attempted no model network access.
+
+## Verification results
+
+- `uv lock --check --python 3.10`: PASS; 64 packages resolved.
+- Python syntax plus isolated research tests: PASS, 10/10.
+- `./mvnw clean verify` under Java 21: PASS, 374 Surefire plus 11
+  Failsafe tests, zero failures/errors/skips, 11 reactor modules, 1:05.
+- Official base-model cache recheck: absent.
+- F1/F2 executions: 0; no training, checkpoint, or inference process remains.

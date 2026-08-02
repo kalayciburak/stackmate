@@ -262,6 +262,21 @@ found one unsupported rate claim, and Gate C was skipped. The Phase 5.1 verdict 
 adapter, or provisioning work is authorized. See
 [`docs/phase-5-1/locked-final-results.md`](phase-5-1/locked-final-results.md).
 
+## Phase 5.2 task-specific alignment feasibility
+
+Phase 5.2 froze a deterministic 800/200 family-split SFT dataset and a new 30-case
+post-training challenge before any training. The leakage audit found zero
+prohibited overlap, and the isolated WSL2 stack passed CUDA/BF16 execution on the
+RTX 4070 Ti SUPER.
+
+Adapter training nevertheless did not start. The pinned official
+`Qwen/Qwen3.5-2B` safetensors checkpoint is absent locally, model download is
+explicitly out of scope, and Transformers 5.14.1 rejects the available GGUF with
+`architecture qwen35 is not supported yet`. The third-party lossy GGUF was not
+silently substituted for the official base. Phase 5.2 is therefore **`PARTIAL` /
+`BLOCKED`**: Qwen3.5-2B remains `EXPERIMENTAL`, no adapter is selected, and no
+fine-tuned GGUF exists. See [`docs/phase-5-2/training-runs.md`](phase-5-2/training-runs.md).
+
 ## Sources
 
 - Jlama repository and license: https://github.com/tjake/Jlama

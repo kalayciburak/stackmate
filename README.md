@@ -13,12 +13,14 @@ add or override a category, root type, evidence item, or source location.
 StackMate currently generates runtime diagnostics in English. `README.tr.md` is complete Turkish documentation for
 Turkish-speaking developers; it does not imply Turkish runtime output.
 
-Current status: **hardened deterministic MVP; Qwen3.5-2B prompt qualification is EXPERIMENTAL**. Phase 5.1 improved
+Current status: **hardened deterministic MVP; Qwen3.5-2B alignment remains EXPERIMENTAL**. Phase 5.1 improved
 strict abstention from 1/11 to 11/11 and generic-fallback misuse from four to zero, but the locked V2 holdout scored
 only 16/20 cause/check and manual review still found one accepted unsupported claim. The prompt study is `PARTIAL`,
-not a readiness result. No persistent llama.cpp worker, production adapter, or automatic provisioning was built.
-The local SPI remains for research and safe-fallback testing. StackMate is not presented as production-ready or
-published to Maven Central.
+not a readiness result. Phase 5.2 froze a leakage-audited 1,000-row alignment dataset and a new 30-case challenge,
+but adapter training was blocked before F1/F2 because the pinned official safetensors checkpoint was absent and
+model download was explicitly out of scope. No adapter, fine-tuned GGUF, persistent llama.cpp worker, production
+adapter, or automatic provisioning was built. The local SPI remains for research and safe-fallback testing.
+StackMate is not presented as production-ready or published to Maven Central.
 
 Turkish documentation: [README.tr.md](README.tr.md)
 

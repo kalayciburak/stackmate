@@ -151,6 +151,16 @@ thinking, while three attacks caused safe over-abstention. Clause-level evidence
 IDs improved auditability without eliminating the unsupported claim. The model is
 `EXPERIMENTAL`; worker, adapter, and provisioning surfaces remain absent.
 
+Phase 5.2 adds only isolated research data/configuration. Its 1,000 committed
+examples are deterministic synthetic text with no production incident, Ministry or
+MHRS data, credential, PII, private path, or model-generated target. A separate
+fail-closed audit found zero prohibited overlap with V2 holdout, blind, Phase 5.1
+locked-final, and the new 30-case challenge. Training libraries live outside the
+Maven graph and model network fallback is disabled. CUDA native-code risk exists
+only in the manually invoked WSL research environment. Training stopped before
+loading weights because the official base was absent; no adapter, merged model,
+new GGUF, locked output, or publication surface exists.
+
 ## Remaining high-priority mitigations
 
 1. Add an explicit Windows/Linux/macOS runtime traffic test or documented packet-capture procedure.
@@ -164,6 +174,8 @@ IDs improved auditability without eliminating the unsupported claim. The model i
 7. If native inference is reconsidered, require reproducible first-party model
    provenance, a pinned source-built runtime, platform-specific process containment,
    and renewed GGUF-parser advisory review before integration.
+8. Do not resume Phase 5.2 training unless the exact official base checkpoint is
+   supplied locally under a separately authorized, checksum-verified workflow.
 
 The repository-grounded boundary, attacker, abuse-path, and risk-priority review is maintained separately in
 `docs/reviews/stackmate-threat-model.md`.

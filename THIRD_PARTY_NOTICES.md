@@ -99,6 +99,25 @@ Gate A failed, so no persistent worker or production llama.cpp dependency was ad
 
 ## Development and test dependencies
 
+Phase 5.2 uses an isolated, non-product WSL research environment. Its direct
+packages are pinned in `research/model-alignment/uv.lock` and are not Maven,
+runtime, published, or distributed dependencies:
+
+| Research package | Version | Declared license metadata |
+|---|---:|---|
+| PyTorch | 2.13.0 | SPDX expression covering Apache-2.0, LLVM exception, BSD, Boost, and MIT components |
+| Transformers | 5.14.1 | Apache-2.0 |
+| PEFT | 0.20.0 | Apache-2.0 |
+| Accelerate | 1.14.0 | Apache-2.0 |
+| bitsandbytes | 0.50.0 | MIT |
+| gguf Python package | 0.19.0 | llama.cpp project package; review upstream notices before redistribution |
+| uv | 0.12.1 | environment tool installed for the WSL user, not distributed |
+
+The resolved PyTorch environment includes NVIDIA CUDA runtime libraries under
+their upstream package terms. StackMate distributes none of these files. No Qwen
+base checkpoint, adapter, merged model, or fine-tuned GGUF was downloaded,
+created, committed, or published in Phase 5.2.
+
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the
 deterministic starter. Their exact resolved versions and licenses are reviewable through the Maven dependency
 tree and generated build reports.

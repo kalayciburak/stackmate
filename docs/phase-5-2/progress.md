@@ -7,7 +7,7 @@ Date: 2026-08-02
 | Gate | State |
 |---|---|
 | Gate A: data feasibility and leakage control | PASS |
-| Gate B: bounded adapter training | NOT RUN |
+| Gate B: bounded adapter training | NOT RUN; environment blocked |
 | Gate C: locked qualification | NOT RUN |
 | Gate D: GGUF compatibility | NOT RUN |
 
@@ -28,14 +28,20 @@ Date: 2026-08-02
 - Generated and locked 1,000 deterministic schema-v2 chat examples using a
   32-family train and 8-family validation split.
 - Passed the locked-corpus leakage audit with zero prohibited overlap.
-- Passed five Python dataset tests and four Java fixture tests.
+- Passed ten isolated Python dataset/evaluation-contract tests and 28 new Java
+  challenge/dataset fixture tests.
 - Reproduced P0/P3 on all 40 development cases with pinned model/runtime/split
   hashes; P3 matched historical validity, accuracy, and restraint exactly.
+- Locked a 62-package WSL2 Python/CUDA environment; CUDA/BF16 smoke passed.
+- Stopped Gate B because the official base checkpoint is absent, model download
+  is out of scope, and Transformers rejects the existing `qwen35` GGUF loader.
+- Passed the final 11-module Java 21 reactor with 374 Surefire plus 11 Failsafe
+  tests (385 total), zero failures, errors, or skips, and no Python/model input.
 
 ## Next controlled actions
 
-1. Commit the P0/P3 reproduction evidence before loading training weights.
-2. Create the pinned WSL2 environment and run CUDA, tokenizer, chat-template,
-   4-bit-load, adapter-reload and JSON-generation smoke tests.
+No dependent Phase 5.2 action remains. F1/F2, adapter selection, locked
+evaluation, full confirmation, merge, quantization, and GGUF qualification are
+not run under the stop rule.
 
 Historical Phase 4, Phase 5 and Phase 5.1 reports remain unchanged.

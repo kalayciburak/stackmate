@@ -13,11 +13,14 @@ kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştirem
 StackMate çalışma zamanı tanılarını şu anda İngilizce üretir. Bu dosya Türkçe kullanım ve geliştirme
 dokümantasyonudur; Türkçe çalışma zamanı çıktısı anlamına gelmez.
 
-Güncel durum: **güçlendirilmiş deterministik MVP; Qwen3.5-2B prompt qualification EXPERIMENTAL**. Phase 5.1 strict
+Güncel durum: **güçlendirilmiş deterministik MVP; Qwen3.5-2B alignment hâlâ EXPERIMENTAL**. Phase 5.1 strict
 abstention sonucunu 1/11'den 11/11'e, generic-fallback yanlış kullanımını dörtten sıfıra indirdi; ancak kilitli V2
 holdout neden/kontrol sonucu yalnız 16/20 oldu ve manuel inceleme bir kabul edilmiş desteklenmeyen iddia daha buldu.
-Prompt çalışması `PARTIAL`dır, readiness sonucu değildir. Persistent llama.cpp worker, production adapter veya
-otomatik provisioning uygulanmadı. StackMate production-ready olarak sunulmaz ve Maven Central'da yayımlanmaz.
+Prompt çalışması `PARTIAL`dır, readiness sonucu değildir. Phase 5.2 sızıntı denetimli 1.000 satırlık alignment
+verisini ve 30 vakalık yeni challenge setini dondurdu; ancak pinned resmî safetensors checkpoint'i yerelde olmadığı
+ve model indirme açıkça kapsam dışı olduğu için F1/F2 başlamadan training bloke oldu. Adapter, fine-tuned GGUF,
+persistent llama.cpp worker, production adapter veya otomatik provisioning uygulanmadı. StackMate production-ready
+olarak sunulmaz ve Maven Central'da yayımlanmaz.
 
 İngilizce dokümantasyon: [README.md](README.md)
 

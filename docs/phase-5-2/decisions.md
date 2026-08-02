@@ -61,3 +61,12 @@ The generator has no locked-corpus dependency. A separate fail-closed audit may
 read frozen manifests and fixture source only to compare hashes, identifiers,
 normalized fields, signatures, families, and character 5-grams. It emits no
 locked content into training data.
+
+## D-006: Do not substitute the existing GGUF for the official training base
+
+Status: accepted.
+
+The required official safetensors checkpoint is absent and model download is out
+of scope. Transformers also rejects the local GGUF architecture for training.
+Using dequantized third-party Q4_K_M weights would change the controlled base and
+make later adapter merge semantics ambiguous. Gate B stops without F1/F2.

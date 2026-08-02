@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.2 freezes a 1,000-row deterministic family-split alignment dataset and
+  a new 30-case post-training challenge, but ends `PARTIAL/BLOCKED` before adapter
+  training because the official base checkpoint is absent and model download is
+  out of scope. Qwen3.5-2B remains `EXPERIMENTAL`.
 - Phase 5.1 runs a controlled P0-P3 prompt ablation for the pinned Qwen3.5-2B artifact. The selected P3 prompt fixes
   all 11 known abstentions and removes generic fallback misuse, but remains `EXPERIMENTAL`: V2 locked holdout is
   16/20 and the final manual pass finds one accepted unsupported claim.
@@ -36,6 +40,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- An isolated, locked WSL2 PyTorch/Transformers/PEFT/bitsandbytes research
+  environment; deterministic alignment data generator; locked-corpus leakage
+  audit; offline preflight; F1/F2 configs; and fail-closed evaluation manifests.
 - Versioned P0-P3 prompt resources, a frozen 40/20/40 split, prompt-ablation and validator-replay labs, an eight-case
   adversarial prompt suite, and a non-adopted clause-level evidence-grounding experiment.
 - Phase 5.1 baseline, prompt audit, ablation, selection, locked-result, manual-review, security, and partial-decision
@@ -98,6 +105,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   rejected java-llama.cpp's older embedded runtime and excluded llama.cpp RPC from the experiment.
 
 ### Known limitations
+
+- Phase 5.2 did not train F1/F2, select an adapter, run locked evaluation, merge a
+  model, or create a fine-tuned GGUF. Transformers 5.14.1 also does not support
+  loading the available `qwen35` GGUF architecture for training.
 
 - Phase 5.1 is `PARTIAL`, Qwen3.5-2B is `EXPERIMENTAL`, and no persistent worker, production llama.cpp adapter,
   provisioning, or packaged model was implemented. The recommended next local-model research phase is task-specific
