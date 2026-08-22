@@ -201,6 +201,15 @@ production model path was activated. This continuation does not change the
 existing rule that the normal Java product has no model downloader, telemetry,
 cloud inference, or Python/ML runtime dependency.
 
+## Phase 5.4 precision-gate stop
+
+The Phase 5.4 smoke and precision diagnostics remained local and offline. BF16 LoRA
+was rejected for reserved-VRAM headroom, and NF4 was rejected for restraint and
+fallback degradation before any real training. No final-family access control claim
+was exercised because the final set remained sealed. The smoke adapter and
+checkpoint are ignored WSL artifacts and were not selected, uploaded, merged, or
+published.
+
 ## Phase 5.3 evaluation and corpus boundary
 
 Phase 5.3 adds controlled local test fixtures and committed synthetic/runtime

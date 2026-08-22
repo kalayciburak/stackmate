@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1",
+  "runId": "P5.4-T1-real-world-r8",
+  "environment": "configs/environment-v1.json",
+  "method": "LORA_BF16_WITH_NF4_FALLBACK",
+  "precision": "BF16_LORA",
+  "rank": 8,
+  "alpha": 16,
+  "dropout": 0.05,
+  "targetModulesSource": "reports/model-architecture.json",
+  "targetModules": [
+    "down_proj",
+    "gate_proj",
+    "in_proj_a",
+    "in_proj_b",
+    "in_proj_qkv",
+    "in_proj_z",
+    "k_proj",
+    "o_proj",
+    "out_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "quantization": null,
+  "fallbackQuantization": {
+    "bits": 4,
+    "type": "nf4",
+    "doubleQuantization": true,
+    "computeDtype": "bfloat16"
+  },
+  "epochs": 6,
+  "learningRate": 0.0001,
+  "perDeviceTrainBatchSize": 1,
+  "perDeviceValidationBatchSize": 1,
+  "gradientAccumulationSteps": 16,
+  "gradientCheckpointing": true,
+  "maximumSequenceLength": 2048,
+  "seed": 520021,
+  "dataset": {
+    "train": "datasets/real-world-v1/train.jsonl",
+    "validation": "datasets/real-world-v1/validation.jsonl",
+    "manifest": "datasets/real-world-v1/manifest.json",
+    "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee",
+    "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+    "manifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2"
+  },
+  "contract": "T1_SELECTION_ONLY_ORDINAL",
+  "outputDirectoryName": "P5.4-T1-real-world-r8",
+  "maximumLockedExecutions": 1
+}

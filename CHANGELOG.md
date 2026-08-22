@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.4 verified the frozen corpus and official base, then stopped at the
+  precision gate: BF16 LoRA smoke was finite and reloadable but exceeded the
+  reserved-VRAM safety headroom, while NF4 materially degraded restraint and
+  introduced fallback/index failures. No real run, final qualification, merge or
+  GGUF export was performed; the Phase 5.4 adapter is `NOT_VIABLE`.
 - Phase 5.3 bounds the Transformers/llama.cpp discrepancy, selects a future
   ordinal selection-only contract, and freezes a reviewed 120-family controlled
   real-world corpus with zero prohibited leakage. The unchanged F1 adapter reaches

@@ -22,3 +22,10 @@ metadata before opening LOCKED_FINAL.
 
 The model emits only T1 local indexes and limitation. Java remains responsible for
 index bounds, trusted-object mapping, evidence semantics, and prose.
+
+## D5: Stop after precision guard failure
+
+BF16 LoRA failed the one-GiB practical VRAM-headroom requirement. NF4 failed the
+pre-training base guard because restraint and fallback safety degraded. Do not spend
+the one permitted real training run on either path; preserve Phase 5.3 and classify
+the Phase 5.4 adapter as `NOT_VIABLE` without opening LOCKED_FINAL.

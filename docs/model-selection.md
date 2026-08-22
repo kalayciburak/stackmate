@@ -310,6 +310,16 @@ unrounded accuracy and structured-output gates failed. The adapter is therefore
 `EXPERIMENTAL`; no full confirmation, merge, GGUF, persistent worker, or production
 integration was authorized.
 
+## Phase 5.4 one-shot real-world alignment
+
+Phase 5.4 verified the exact official Transformers checkpoint and frozen
+`stackmate-real-world-v1` corpus, then performed the required BF16 LoRA smoke and
+BF16/NF4 base T1 guard. BF16 save/reload and finite-loss checks passed, but reserved
+VRAM left insufficient practical headroom. NF4 reduced joint validation accuracy
+from 33/40 to 29/40 and strict restraint from 22/22 to 18/22, with unknown-index
+and generic-fallback failures. The only permitted real alignment run was therefore
+not started. Qwen3.5-2B remains `EXPERIMENTAL`; no Phase 5.4 adapter or GGUF exists.
+
 ## Phase 5.3 evaluation parity and future boundary
 
 Phase 5.3 did not select or train another model. It kept the exact official
