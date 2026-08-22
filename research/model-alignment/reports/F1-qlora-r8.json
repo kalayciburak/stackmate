@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "runId": "F1-qlora-r8",
+  "smoke": false,
+  "resumedFromCheckpoint": "<WSL_CACHE>/training/phase-5-2/F1-qlora-r8/checkpoint-50",
+  "startTimeUtc": "2026-08-02T19:55:29+00:00",
+  "finishTimeUtc": "2026-08-02T20:50:52+00:00",
+  "durationSeconds": 3323.43,
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "baseModelPath": "<WSL_HF_CACHE>/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "configurationSha256": "15cd5a948c78ef20e8799da57eea1ca63adef2f622b617d7e59ae02403d6a6e5",
+  "environmentSha256": "b81c1ca678e7a8c30ad8b2906bd571416baf5a5b47af31ab7a61c1c01025d91a",
+  "datasetLockSha256": "5b9d518b79c2616f4a5c0feac493495810f01b13767234728967eef6a4f868d4",
+  "datasetManifestSha256": "b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2",
+  "baseModelManifestSha256": "1dc49db3fd0a49ee7bf33190b04c1bac5d1ed489e87855a81c64ac7344571981",
+  "modelArchitectureSha256": "bbc77177898f6de14dd26f96f7e6315c52b7c9fc16ee0b0ab13510f20909810f",
+  "seed": 520021,
+  "targetModules": [
+    "down_proj",
+    "gate_proj",
+    "in_proj_a",
+    "in_proj_b",
+    "in_proj_qkv",
+    "in_proj_z",
+    "k_proj",
+    "o_proj",
+    "out_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "quantization": {
+    "bits": 4,
+    "type": "nf4",
+    "doubleQuantization": true,
+    "computeDtype": "bfloat16"
+  },
+  "computeDtype": "bfloat16",
+  "trainableParameters": 8409600,
+  "totalParameters": 2213241664,
+  "loadedParameterCount": 1371714880,
+  "trainablePercentage": 0.37996754429434054,
+  "trainExamples": 800,
+  "validationExamples": 200,
+  "trainTokensPerEpoch": 332496,
+  "validationTokens": 83465,
+  "trainingSteps": 100,
+  "epochs": 2.0,
+  "learningRate": 0.0001,
+  "trainingMetrics": {
+    "train_runtime": 3109.6666,
+    "train_samples_per_second": 0.515,
+    "train_steps_per_second": 0.032,
+    "total_flos": 6825740990754816.0,
+    "train_loss": 0.0001428978843614459,
+    "init_mem_cpu_alloc_delta": 53248,
+    "init_mem_gpu_alloc_delta": 0,
+    "init_mem_cpu_peaked_delta": 0,
+    "init_mem_gpu_peaked_delta": 0,
+    "train_mem_cpu_alloc_delta": 916209664,
+    "train_mem_gpu_alloc_delta": 35011072,
+    "train_mem_cpu_peaked_delta": 0,
+    "train_mem_gpu_peaked_delta": 2462950400,
+    "before_init_mem_cpu": 1238867968,
+    "before_init_mem_gpu": 2977242624,
+    "epoch": 2.0
+  },
+  "validationMetrics": {
+    "eval_loss": 0.29345792531967163,
+    "eval_runtime": 209.2656,
+    "eval_samples_per_second": 0.956,
+    "eval_steps_per_second": 0.956,
+    "epoch": 2.0,
+    "eval_mem_cpu_alloc_delta": 0,
+    "eval_mem_gpu_alloc_delta": 0,
+    "eval_mem_cpu_peaked_delta": 0,
+    "eval_mem_gpu_peaked_delta": 1288576000
+  },
+  "lossHistory": [
+    {
+      "epoch": 0.02,
+      "grad_norm": 5.7168989181518555,
+      "learning_rate": 0.0001,
+      "loss": 1.7485806941986084,
+      "step": 1
+    },
+    {
+      "epoch": 0.2,
+      "grad_norm": 6.087249279022217,
+      "learning_rate": 9.1e-05,
+      "loss": 0.5591069857279459,
+      "step": 10
+    },
+    {
+      "epoch": 0.4,
+      "grad_norm": 0.6942092180252075,
+      "learning_rate": 8.1e-05,
+      "loss": 0.08360599279403687,
+      "step": 20
+    },
+    {
+      "epoch": 0.6,
+      "grad_norm": 0.6560813188552856,
+      "learning_rate": 7.1e-05,
+      "loss": 0.025867122411727905,
+      "step": 30
+    },
+    {
+      "epoch": 0.8,
+      "grad_norm": 0.3304157853126526,
+      "learning_rate": 6.1e-05,
+      "loss": 0.008139153569936752,
+      "step": 40
+    },
+    {
+      "epoch": 1.0,
+      "grad_norm": 0.09808016568422318,
+      "learning_rate": 5.1000000000000006e-05,
+      "loss": 0.002908662147819996,
+      "step": 50
+    },
+    {
+      "epoch": 1.0,
+      "eval_loss": 0.22469310462474823,
+      "eval_runtime": 214.8251,
+      "eval_samples_per_second": 0.931,
+      "eval_steps_per_second": 0.931,
+      "step": 50
+    },
+    {
+      "loss": 0.000568879721686244,
+      "grad_norm": 0.020482288673520088,
+      "learning_rate": 4.1e-05,
+      "epoch": 1.2,
+      "step": 60
+    },
+    {
+      "loss": 0.0002905743662267923,
+      "grad_norm": 0.024917948991060257,
+      "learning_rate": 3.1e-05,
+      "epoch": 1.4,
+      "step": 70
+    },
+    {
+      "loss": 0.00020828675478696824,
+      "grad_norm": 0.008038326166570187,
+      "learning_rate": 2.1e-05,
+      "epoch": 1.6,
+      "step": 80
+    },
+    {
+      "loss": 0.0001885473495349288,
+      "grad_norm": 0.00868166796863079,
+      "learning_rate": 1.1000000000000001e-05,
+      "epoch": 1.8,
+      "step": 90
+    },
+    {
+      "loss": 0.00017269065137952565,
+      "grad_norm": 0.004949105437844992,
+      "learning_rate": 1.0000000000000002e-06,
+      "epoch": 2.0,
+      "step": 100
+    },
+    {
+      "eval_loss": 0.29345792531967163,
+      "eval_runtime": 207.8894,
+      "eval_samples_per_second": 0.962,
+      "eval_steps_per_second": 0.962,
+      "epoch": 2.0,
+      "step": 100
+    },
+    {
+      "eval_loss": 0.29345792531967163,
+      "eval_runtime": 209.2656,
+      "eval_samples_per_second": 0.956,
+      "eval_steps_per_second": 0.956,
+      "epoch": 2.0,
+      "step": 100
+    }
+  ],
+  "gradientNormHistory": [
+    5.7168989181518555,
+    6.087249279022217,
+    0.6942092180252075,
+    0.6560813188552856,
+    0.3304157853126526,
+    0.09808016568422318,
+    0.020482288673520088,
+    0.024917948991060257,
+    0.008038326166570187,
+    0.00868166796863079,
+    0.004949105437844992
+  ],
+  "tokensPerSecond": 213.84671913059748,
+  "peakGpuVramBytes": 4300829696,
+  "systemMemory": {
+    "totalBytes": 33201803264,
+    "availableBytesAtFinish": 30285873152
+  },
+  "checkpointSizes": {
+    "checkpoint-100": {
+      "sizeBytes": 72124387,
+      "sha256": "44a115d2a527f17345f3fd9e5a22ddadd64f9b56313e9f8f6b62e930f899c12b"
+    },
+    "checkpoint-50": {
+      "sizeBytes": 71249661,
+      "sha256": "6809cf1e73ab38f6422537bf8d19ea712e387712c0b95c409ba1ca3238f21896"
+    }
+  },
+  "adapterPath": "<WSL_CACHE>/adapters/phase-5-2/F1-qlora-r8",
+  "adapterSizeBytes": 53703972,
+  "adapterSha256": "6642b7e3bad7eb64c6199d56db60935aabda54b5a2c26f33af4e79bc8d5ab6ca",
+  "warnings": [
+    "flash-linear-attention and causal-conv1d fast paths were not installed; Transformers used the torch implementation."
+  ],
+  "networkAccessDuringTraining": false,
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "python": "3.10.12",
+  "packages": {
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.50.0",
+    "peft": "0.20.0",
+    "torch": "2.13.0",
+    "transformers": "5.14.1"
+  }
+}

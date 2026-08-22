@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "tokenizerClass": "Qwen2Tokenizer",
+  "tokenizerRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "maximumSequenceLength": 2048,
+  "splits": {
+    "train": {
+      "inputTokens": {
+        "examples": 800,
+        "average": 359.98875,
+        "p95": 378,
+        "maximum": 389
+      },
+      "outputTokens": {
+        "examples": 800,
+        "average": 55.63125,
+        "p95": 57,
+        "maximum": 58
+      },
+      "totalTokens": {
+        "examples": 800,
+        "average": 415.62,
+        "p95": 434,
+        "maximum": 443
+      }
+    },
+    "validation": {
+      "inputTokens": {
+        "examples": 200,
+        "average": 361.3,
+        "p95": 379,
+        "maximum": 383
+      },
+      "outputTokens": {
+        "examples": 200,
+        "average": 56.025,
+        "p95": 57,
+        "maximum": 57
+      },
+      "totalTokens": {
+        "examples": 200,
+        "average": 417.325,
+        "p95": 436,
+        "maximum": 437
+      }
+    }
+  },
+  "truncationCount": 0,
+  "unknownTokenBehavior": {
+    "unknownTokenId": null,
+    "unknownTokenCount": 0,
+    "examplesWithUnknownToken": 0
+  },
+  "bosEosBehavior": {
+    "bosTokenId": null,
+    "eosTokenId": 248046,
+    "maximumBosPerExample": 0,
+    "totalEosTokens": 3000,
+    "examplesEndingWithEos": 0,
+    "exampleCount": 1000
+  },
+  "padding": {
+    "paddingSide": "right",
+    "truncationSide": "right",
+    "padTokenId": 248044,
+    "padToken": "<|endoftext|>"
+  },
+  "assistantOnlyLabels": {
+    "enabled": true,
+    "promptTokensMasked": 360251,
+    "targetTokensUnmasked": 55710,
+    "boundaryVerified": true
+  },
+  "duplicatedBosEos": false
+}
