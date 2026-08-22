@@ -10,6 +10,7 @@
   "sourceCheckpoint": "checkpoint-18",
   "sourceCheckpointDirectorySha256": "fd136663aed59a4d9487fc276e85e1d3a24ddc13dfa5e037ecfe59868f733bb9",
   "trainingReportSha256": "fb2177281247c1d356c62eea898a03aa6b6da3b55ee9855e19bfdfd6b3566ea3",
+  "selectionValidationReportSha256": "d71d979d0e5964786e90d128a4351289fa2d4db447ad396a293157b824bb6153",
   "configurationSha256": "5e2c6b1657c9f026af44993e84504952ceb0bf8d046883814546c78901bb83b6",
   "memoryAttributionSha256": "7979f032e8e417d3a81858b04375f6dcfb239d87718aacf52de888ff1995a863",
   "dataset": {
@@ -41,7 +42,7 @@
     {"checkpoint": "45", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "2f1b77a5d2dbf1c48e8e9f9ab3c8518a0c662f51163e7a98d35ee014fa1bce1a"},
     {"checkpoint": "54", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "28e1f70881d2519136e16bd701e3af05946bc2a58c79e86d40c58315831b3d49"}
   ],
-  "selectionCommit": "TO_BE_RECORDED_BY_SELECTION_COMMIT",
+  "selectionCommit": "08b5b55adee82a83c3d81e599deca8ca6b3458ca",
   "lockedFinalOpened": false,
   "selectionUsesLockedData": false
 }

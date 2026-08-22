@@ -33,6 +33,8 @@ Path: <WSL_CACHE>/adapters/phase-5-4-1/selected-P5.4-T1-real-world-r8
 SHA-256: 7848c9a140d2616e009b5179aa4a02867590f95dd261154c0b983ee45c187b49
 Size: 53,704,036 bytes
 Source checkpoint directory SHA-256: fd136663aed59a4d9487fc276e85e1d3a24ddc13dfa5e037ecfe59868f733bb9
+Selection validation report SHA-256: d71d979d0e5964786e90d128a4351289fa2d4db447ad396a293157b824bb6153
+Selection commit: 08b5b55adee82a83c3d81e599deca8ca6b3458ca
 ```
 
 The selected copy contains adapter and tokenizer files only; optimizer state,
