@@ -22,7 +22,8 @@ public record RealWorldCorpusManifest(
 
     public static final String RESOURCE = "/corpus-v5-real-world/manifest.json";
     private static final Pattern FAMILY_ID = Pattern.compile("G53-[RS]-[A-Z]{2,3}-[0-9]{3}");
-    private static final Pattern STABLE_TOKEN = Pattern.compile("[A-Za-z0-9][A-Za-z0-9.$_-]{1,159}");
+    private static final Pattern STABLE_TOKEN =
+            Pattern.compile("[A-Za-z0-9][A-Za-z0-9.$_-]{1,159}");
     private static final Pattern PRIVATE_PATH =
             Pattern.compile("(?i)(c:\\\\users\\\\|/home/|/mnt/c/|BEGIN [A-Z ]+PRIVATE KEY)");
 
@@ -53,7 +54,10 @@ public record RealWorldCorpusManifest(
         requireMatrix(families, Split.LOCKED_FINAL, 20, 10);
         long real =
                 families.stream()
-                        .filter(item -> item.classification() != Classification.CONTROLLED_SYNTHETIC)
+                        .filter(
+                                item ->
+                                        item.classification()
+                                                != Classification.CONTROLLED_SYNTHETIC)
                         .count();
         if (real != 90) {
             throw new IllegalArgumentException("real-world corpus must contain 90 real families");
@@ -70,8 +74,7 @@ public record RealWorldCorpusManifest(
                 new ObjectMapper()
                         .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                         .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
-        try (InputStream input =
-                RealWorldCorpusManifest.class.getResourceAsStream(RESOURCE)) {
+        try (InputStream input = RealWorldCorpusManifest.class.getResourceAsStream(RESOURCE)) {
             if (input == null) {
                 throw new IllegalStateException("missing real-world corpus manifest");
             }
@@ -128,7 +131,8 @@ public record RealWorldCorpusManifest(
             expectedHttpBehavior = safeText(expectedHttpBehavior, "expectedHttpBehavior");
             groundTruthReview = Objects.requireNonNull(groundTruthReview, "groundTruthReview");
             if (privateData) {
-                throw new IllegalArgumentException("real-world family must not contain private data");
+                throw new IllegalArgumentException(
+                        "real-world family must not contain private data");
             }
             if (selectionCardinality.causes() != expectedCauseIds.size()
                     || selectionCardinality.checks() != expectedCheckIds.size()) {

@@ -13,15 +13,15 @@
     },
     "newTrain": {
       "path": "research/model-alignment/datasets/real-world-v1/train.jsonl",
-      "sha256": "3cfcb527e5319763b44bf1354b6244f400a854a5ad356deabd80e2a28c271ba0"
+      "sha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93"
     },
     "newValidation": {
       "path": "research/model-alignment/datasets/real-world-v1/validation.jsonl",
-      "sha256": "b71a298bfcb25dccb7a09a01041655d2ac3a9b158741903015fbcc0668abe548"
+      "sha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789"
     },
     "newManifest": {
       "path": "research/model-alignment/datasets/real-world-v1/manifest.json",
-      "sha256": "973f71a655608abd6049db123556aea6e72c1765187fba5fd5398965362fb4f4"
+      "sha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2"
     }
   },
   "oldSynthetic": {
@@ -178,7 +178,7 @@
         "2": 1
       },
       "userPromptCharacters": {
-        "mean": 2147.65,
+        "mean": 2147.85,
         "p95": 2904,
         "maximum": 2970
       },

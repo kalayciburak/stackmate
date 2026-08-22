@@ -28,9 +28,9 @@ indexes plus a limitation. They contain no model-written explanation prose.
 
 | File | Records | Bytes | SHA-256 |
 |---|---:|---:|---|
-| `train.jsonl` | 140 | 4,676,681 | `3cfcb527e5319763b44bf1354b6244f400a854a5ad356deabd80e2a28c271ba0` |
-| `validation.jsonl` | 40 | 1,151,794 | `b71a298bfcb25dccb7a09a01041655d2ac3a9b158741903015fbcc0668abe548` |
-| `manifest.json` | 1 | 1,569 | `973f71a655608abd6049db123556aea6e72c1765187fba5fd5398965362fb4f4` |
+| `train.jsonl` | 140 | 4,676,681 | `ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93` |
+| `validation.jsonl` | 40 | 1,151,826 | `bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789` |
+| `manifest.json` | 1 | 1,569 | `0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2` |
 | `sealed-final-families.json` | 30 descriptors | 3,955 | `53f3ae08ff53bf192da6cd54f3a05de62cc9c3d0ec7fbadedf3b1c2c6caed61e` |
 
 The source catalog SHA-256 is

@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.3 bounds the Transformers/llama.cpp discrepancy, selects a future
+  ordinal selection-only contract, and freezes a reviewed 120-family controlled
+  real-world corpus with zero prohibited leakage. The unchanged F1 adapter reaches
+  only 18/40 valid T1 outputs and 0/22 strict restraints on the new validation
+  split, so one future bounded run is justified but not executed.
 - Phase 5.2 freezes a 1,000-row deterministic family-split alignment dataset and
   a new 30-case post-training challenge, but ends `PARTIAL/BLOCKED` before adapter
   training because the official base checkpoint is absent and model download is
@@ -46,6 +51,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.3 parity, failure-taxonomy, contract-ablation, real-world corpus,
+  two-pass review, leakage, tokenization, F1 diagnostic, security, and future-run
+  decision evidence. PostgreSQL/Testcontainers fixtures remain explicit benchmark
+  labs and add no product runtime dependency.
 - An isolated, locked WSL2 PyTorch/Transformers/PEFT/bitsandbytes research
   environment; deterministic alignment data generator; locked-corpus leakage
   audit; offline preflight; F1/F2 configs; and fail-closed evaluation manifests.

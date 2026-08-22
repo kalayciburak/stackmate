@@ -45,8 +45,7 @@ class RealWorldPostgresRecipeLab {
 
     @ParameterizedTest(name = "{0} variant {1}")
     @MethodSource("developmentPostgresRecipes")
-    void reproducesDevelopmentPostgresSqlState(
-            RealWorldCorpusManifest.Family family, int variant) {
+    void reproducesDevelopmentPostgresSqlState(RealWorldCorpusManifest.Family family, int variant) {
         Throwable failure =
                 RealWorldPostgresFixtures.execute(
                         family.familyId(), variant, RealWorldPostgresRecipeLab::open);
@@ -64,19 +63,14 @@ class RealWorldPostgresRecipeLab {
     static Stream<Arguments> developmentPostgresRecipes() {
         return RealWorldCorpusManifest.load().developmentFamilies().stream()
                 .filter(item -> item.fixtureCode().equals("N-PG"))
-                .flatMap(
-                        item ->
-                                Stream.of(
-                                        Arguments.of(item, 0),
-                                        Arguments.of(item, 1)));
+                .flatMap(item -> Stream.of(Arguments.of(item, 0), Arguments.of(item, 1)));
     }
 
     private static Connection open(String catalog) throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[] {CONTAINER.getHost()});
         dataSource.setPortNumbers(new int[] {CONTAINER.getFirstMappedPort()});
-        dataSource.setDatabaseName(
-                catalog == null ? CONTAINER.getDatabaseName() : catalog);
+        dataSource.setDatabaseName(catalog == null ? CONTAINER.getDatabaseName() : catalog);
         dataSource.setUser(CONTAINER.getUsername());
         dataSource.setPassword(CONTAINER.getPassword());
         dataSource.setConnectTimeout(5);

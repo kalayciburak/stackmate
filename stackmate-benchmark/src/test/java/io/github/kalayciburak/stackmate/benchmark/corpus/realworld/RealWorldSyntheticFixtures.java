@@ -36,35 +36,36 @@ final class RealWorldSyntheticFixtures {
         }
         return switch (familyId) {
             case "G53-S-TOP-001",
-                            "G53-S-TOP-002",
-                            "G53-S-TOP-003",
-                            "G53-S-TOP-004",
-                            "G53-S-TOP-005",
-                            "G53-S-TOP-006",
-                            "G53-S-TOP-007",
-                            "G53-S-TOP-008",
-                            "G53-S-TOP-009",
-                            "G53-S-TOP-010",
-                            "G53-S-CON-001",
-                            "G53-S-CON-002",
-                            "G53-S-CON-003",
-                            "G53-S-CON-004",
-                            "G53-S-CON-005",
-                            "G53-S-CON-006",
-                            "G53-S-CON-007",
-                            "G53-S-CON-008",
-                            "G53-S-CON-009",
-                            "G53-S-CON-010",
-                            "G53-S-SEL-001",
-                            "G53-S-SEL-002",
-                            "G53-S-SEL-003",
-                            "G53-S-SEL-004",
-                            "G53-S-SEL-005",
-                            "G53-S-SEL-006",
-                            "G53-S-SEL-007",
-                            "G53-S-SEL-008",
-                            "G53-S-SEL-009",
-                            "G53-S-SEL-010" -> true;
+                    "G53-S-TOP-002",
+                    "G53-S-TOP-003",
+                    "G53-S-TOP-004",
+                    "G53-S-TOP-005",
+                    "G53-S-TOP-006",
+                    "G53-S-TOP-007",
+                    "G53-S-TOP-008",
+                    "G53-S-TOP-009",
+                    "G53-S-TOP-010",
+                    "G53-S-CON-001",
+                    "G53-S-CON-002",
+                    "G53-S-CON-003",
+                    "G53-S-CON-004",
+                    "G53-S-CON-005",
+                    "G53-S-CON-006",
+                    "G53-S-CON-007",
+                    "G53-S-CON-008",
+                    "G53-S-CON-009",
+                    "G53-S-CON-010",
+                    "G53-S-SEL-001",
+                    "G53-S-SEL-002",
+                    "G53-S-SEL-003",
+                    "G53-S-SEL-004",
+                    "G53-S-SEL-005",
+                    "G53-S-SEL-006",
+                    "G53-S-SEL-007",
+                    "G53-S-SEL-008",
+                    "G53-S-SEL-009",
+                    "G53-S-SEL-010" ->
+                    true;
             default -> false;
         };
     }
@@ -472,8 +473,7 @@ final class RealWorldSyntheticFixtures {
         List<InferenceCauseCandidate> candidates = new ArrayList<>(InferenceRequest.MAXIMUM_CAUSES);
         candidates.add(cause("cause.probe.primary", PRIMARY_FACT));
         for (int index = 1; index < InferenceRequest.MAXIMUM_CAUSES; index++) {
-            candidates.add(
-                    cause("cause.probe.cleanup-%02d".formatted(index), CLEANUP_FACT));
+            candidates.add(cause("cause.probe.cleanup-%02d".formatted(index), CLEANUP_FACT));
         }
         varyOrder(candidates, variant);
         return List.copyOf(candidates);
@@ -483,8 +483,7 @@ final class RealWorldSyntheticFixtures {
         List<InferenceCheckCandidate> candidates = new ArrayList<>(InferenceRequest.MAXIMUM_CHECKS);
         candidates.add(check("check.probe.primary", PRIMARY_FACT));
         for (int index = 1; index < InferenceRequest.MAXIMUM_CHECKS; index++) {
-            candidates.add(
-                    check("check.probe.cleanup-%02d".formatted(index), CLEANUP_FACT));
+            candidates.add(check("check.probe.cleanup-%02d".formatted(index), CLEANUP_FACT));
         }
         varyOrder(candidates, variant);
         return List.copyOf(candidates);
@@ -556,8 +555,7 @@ final class RealWorldSyntheticFixtures {
         return 1 + node.suppressed().stream().mapToInt(RealWorldSyntheticFixtures::countNode).sum();
     }
 
-    private static ThrowableNode sqlNode(
-            String text, String sqlState, int depth, int variant) {
+    private static ThrowableNode sqlNode(String text, String sqlState, int depth, int variant) {
         return node(
                 "java.sql.SQLException",
                 message(text, variant),
@@ -569,20 +567,12 @@ final class RealWorldSyntheticFixtures {
     }
 
     private static ThrowableNode node(
-            String type,
-            String text,
-            int depth,
-            boolean wrapper,
-            List<ThrowableNode> suppressed) {
+            String type, String text, int depth, boolean wrapper, List<ThrowableNode> suppressed) {
         return node(type, text, depth, wrapper, SqlExceptionDetails.none(), suppressed, true);
     }
 
     private static ThrowableNode nodeWithoutFrames(
-            String type,
-            String text,
-            int depth,
-            boolean wrapper,
-            List<ThrowableNode> suppressed) {
+            String type, String text, int depth, boolean wrapper, List<ThrowableNode> suppressed) {
         return node(type, text, depth, wrapper, SqlExceptionDetails.none(), suppressed, false);
     }
 

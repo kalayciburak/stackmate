@@ -16,7 +16,7 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 | Gate A: evaluation-path parity | PASS; discrepancy explained and bounded |
 | Gate B: failure taxonomy and contract diagnostics | PASS; T1 contract selected |
 | Gate C: real-world corpus and leakage audit | PASS; corpus frozen |
-| Gate D: future bounded-training recommendation | NOT_RUN |
+| Gate D: future bounded-training recommendation | PASS; one future run justified |
 
 ## Preserved starting point
 
@@ -68,3 +68,24 @@ variants per family and use ordinal selection-only contract T1. Two independent
 exports were byte-identical, all 120 families passed two ground-truth review passes,
 and the final offline leakage audit reported zero prohibited findings. The 30 final
 families were not executed or rendered.
+
+## Gate D result
+
+The unchanged F1 adapter was run once on the 40-row real-world VALIDATION split
+under T1. It produced 18/40 valid structures, 11/40 joint-correct selections, 0/22
+strict restraints, and 3/20 order-invariant families. This confirms that the old
+adapter cannot be reused unchanged and does not evaluate training on the new data.
+
+One future rank-8 T1 QLoRA run is justified with a six-epoch maximum chosen to keep
+forward-token exposure close to F1. No run configuration or adapter was created in
+Phase 5.3; the 30 final families remain untouched.
+
+## Final verification
+
+- Windows Java 21 `clean verify`: PASS across 11 modules with 516 Surefire and 11
+  Failsafe tests; zero failures, errors, or skips.
+- Spotless checks: PASS; no auto-apply command was used.
+- Frozen Python lock/compilation/unit suite: PASS, 10/10.
+- Explicit real-world recipe suite: PASS, 184/184.
+- Docker was stopped before the normal build; no container or Docker process
+  remained, and the build required no WSL, CUDA, model, adapter, or cloud service.

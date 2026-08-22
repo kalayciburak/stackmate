@@ -68,35 +68,36 @@ final class RealWorldJavaSpringFixtures {
         }
         return switch (familyId) {
             case "G53-R-JV-001",
-                            "G53-R-JV-002",
-                            "G53-R-JV-003",
-                            "G53-R-JV-004",
-                            "G53-R-JV-005",
-                            "G53-R-JV-006",
-                            "G53-R-JV-007",
-                            "G53-R-JV-008",
-                            "G53-R-JV-009",
-                            "G53-R-JV-010",
-                            "G53-R-JV-011",
-                            "G53-R-JV-012",
-                            "G53-R-JV-013",
-                            "G53-R-JV-014",
-                            "G53-R-JV-015",
-                            "G53-R-JV-016",
-                            "G53-R-SP-001",
-                            "G53-R-SP-002",
-                            "G53-R-SP-003",
-                            "G53-R-SP-004",
-                            "G53-R-SP-005",
-                            "G53-R-SP-006",
-                            "G53-R-SP-007",
-                            "G53-R-SP-008",
-                            "G53-R-SP-009",
-                            "G53-R-SP-010",
-                            "G53-R-SP-011",
-                            "G53-R-SP-012",
-                            "G53-R-SP-013",
-                            "G53-R-SP-014" -> true;
+                    "G53-R-JV-002",
+                    "G53-R-JV-003",
+                    "G53-R-JV-004",
+                    "G53-R-JV-005",
+                    "G53-R-JV-006",
+                    "G53-R-JV-007",
+                    "G53-R-JV-008",
+                    "G53-R-JV-009",
+                    "G53-R-JV-010",
+                    "G53-R-JV-011",
+                    "G53-R-JV-012",
+                    "G53-R-JV-013",
+                    "G53-R-JV-014",
+                    "G53-R-JV-015",
+                    "G53-R-JV-016",
+                    "G53-R-SP-001",
+                    "G53-R-SP-002",
+                    "G53-R-SP-003",
+                    "G53-R-SP-004",
+                    "G53-R-SP-005",
+                    "G53-R-SP-006",
+                    "G53-R-SP-007",
+                    "G53-R-SP-008",
+                    "G53-R-SP-009",
+                    "G53-R-SP-010",
+                    "G53-R-SP-011",
+                    "G53-R-SP-012",
+                    "G53-R-SP-013",
+                    "G53-R-SP-014" ->
+                    true;
             default -> false;
         };
     }
@@ -151,8 +152,7 @@ final class RealWorldJavaSpringFixtures {
     }
 
     private static void immutableListMutation(int variant) {
-        List<String> values =
-                variant == 0 ? List.of("alpha", "beta") : List.of("gamma", "delta");
+        List<String> values = variant == 0 ? List.of("alpha", "beta") : List.of("gamma", "delta");
         values.add("controlled");
     }
 
@@ -200,8 +200,7 @@ final class RealWorldJavaSpringFixtures {
                 variant == 0
                         ? new byte[] {0x00, 0x01, 0x02, 0x03}
                         : new byte[] {0x10, 0x11, 0x12, 0x13};
-        try (ObjectInputStream ignored =
-                new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+        try (ObjectInputStream ignored = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
             // Construction validates the stream header.
         }
     }
@@ -379,9 +378,7 @@ final class RealWorldJavaSpringFixtures {
 
     private static void absentSpelProperty(int variant) {
         String property = variant == 0 ? "missingCode" : "missingStatus";
-        new SpelExpressionParser()
-                .parseExpression(property)
-                .getValue(new SpelSource("controlled"));
+        new SpelExpressionParser().parseExpression(property).getValue(new SpelSource("controlled"));
     }
 
     private static void absentSpringMessage(int variant) {
@@ -487,8 +484,7 @@ final class RealWorldJavaSpringFixtures {
         throw new IllegalStateException("controlled fixture completed without a failure");
     }
 
-    private static Throwable failureInThread(
-            String name, long stackSize, ThrowingAction action) {
+    private static Throwable failureInThread(String name, long stackSize, ThrowingAction action) {
         AtomicReference<Throwable> failure = new AtomicReference<>();
         Thread thread =
                 new Thread(

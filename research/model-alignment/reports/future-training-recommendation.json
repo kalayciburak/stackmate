@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1",
+  "status": "FUTURE_RUN_JUSTIFIED",
+  "trainingPerformedInPhase53": false,
+  "gates": {
+    "evaluationParity": "PASS",
+    "contractSelection": "PASS",
+    "realWorldCorpus": "PASS",
+    "futureTrainingRecommendation": "PASS"
+  },
+  "f1Diagnostic": {
+    "reportSha256": "cf3df13b51d90526479e8bb4c378fe65ed4cb6155bfb719db5e128432c2ac1c5",
+    "validStructured": {"matched": 18, "total": 40},
+    "jointAccuracy": {"matched": 11, "total": 40},
+    "strictRestraint": {"matched": 0, "total": 22},
+    "orderInvariance": {"matched": 3, "total": 20},
+    "unknownIndexes": 0,
+    "hiddenThinking": 0
+  },
+  "futureRun": {
+    "count": 1,
+    "baseRepository": "Qwen/Qwen3.5-2B",
+    "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "datasetManifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+    "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+    "contract": "T1_SELECTION_ONLY_ORDINAL",
+    "loraRank": 8,
+    "loraAlpha": 16,
+    "loraDropout": 0.05,
+    "learningRate": 0.0001,
+    "maximumEpochs": 6,
+    "quantization": "NF4_DOUBLE_QUANT",
+    "computeDtype": "BF16",
+    "batchSize": 1,
+    "gradientAccumulation": 16,
+    "gradientCheckpointing": true,
+    "maximumSequenceLength": 2048,
+    "seed": 520021,
+    "maximumOptimizerSteps": 54,
+    "lockedFinalExecutionsPermittedInPhase53": 0
+  },
+  "stopRules": [
+    "No second training configuration or hyperparameter sweep.",
+    "No locked-final access before validation-only checkpoint locking.",
+    "Any final-gate failure ends the experiment before merge or export.",
+    "No production integration is authorized."
+  ]
+}

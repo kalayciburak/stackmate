@@ -60,8 +60,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
  */
 class RealWorldCorpusExportLab {
 
-    static final String OUTPUT_DIRECTORY_PROPERTY =
-            "stackmate.real-world-corpus.output-directory";
+    static final String OUTPUT_DIRECTORY_PROPERTY = "stackmate.real-world-corpus.output-directory";
 
     private static final String TRAIN_FILE = "train.jsonl";
     private static final String VALIDATION_FILE = "validation.jsonl";
@@ -116,8 +115,7 @@ class RealWorldCorpusExportLab {
         RealWorldCorpusManifest sourceManifest = RealWorldCorpusManifest.load();
         List<RealWorldCorpusManifest.Family> developmentFamilies =
                 verifiedDevelopmentFamilies(sourceManifest);
-        byte[] sealedFinalBytes =
-                sealedFinalBytes(sourceManifest, sourceManifestSha256);
+        byte[] sealedFinalBytes = sealedFinalBytes(sourceManifest, sourceManifestSha256);
 
         List<ExportedRow> rows;
         try (PostgreSQLContainer postgres = developmentPostgres()) {
@@ -126,8 +124,7 @@ class RealWorldCorpusExportLab {
         }
 
         List<ExportedRow> trainRows = rowsFor(rows, RealWorldCorpusManifest.Split.TRAIN);
-        List<ExportedRow> validationRows =
-                rowsFor(rows, RealWorldCorpusManifest.Split.VALIDATION);
+        List<ExportedRow> validationRows = rowsFor(rows, RealWorldCorpusManifest.Split.VALIDATION);
         requireSize(trainRows, EXPECTED_TRAIN_ROWS, "train rows");
         requireSize(validationRows, EXPECTED_VALIDATION_ROWS, "validation rows");
 
@@ -166,7 +163,8 @@ class RealWorldCorpusExportLab {
         List<RealWorldCorpusManifest.Family> development = manifest.developmentFamilies();
         if (development.size() != 90
                 || development.stream()
-                        .anyMatch(item -> item.split() == RealWorldCorpusManifest.Split.LOCKED_FINAL)
+                        .anyMatch(
+                                item -> item.split() == RealWorldCorpusManifest.Split.LOCKED_FINAL)
                 || development.stream()
                                 .filter(item -> item.split() == RealWorldCorpusManifest.Split.TRAIN)
                                 .count()
@@ -232,7 +230,8 @@ class RealWorldCorpusExportLab {
                         InferenceRequest.MAXIMUM_OUTPUT_CHARACTERS);
         InferenceRequest selectedRequest =
                 fixture.requestOverride() == null ? productionRequest : fixture.requestOverride();
-        InferenceRequest orderedRequest = orderCandidates(selectedRequest, family.familyId(), variant);
+        InferenceRequest orderedRequest =
+                orderCandidates(selectedRequest, family.familyId(), variant);
         verifyGroundTruth(family, orderedRequest);
 
         List<Integer> expectedCauseIndexes =
@@ -346,8 +345,7 @@ class RealWorldCorpusExportLab {
 
     private void verifyExceptionChain(
             RealWorldCorpusManifest.Family family, ThrowableSnapshot throwable) {
-        List<String> observed =
-                throwable.causeChain().stream().map(ThrowableNode::type).toList();
+        List<String> observed = throwable.causeChain().stream().map(ThrowableNode::type).toList();
         List<String> expected = new ArrayList<>(family.wrapperTopology());
         expected.add(family.rootType());
         if (!observed.equals(expected)) {
@@ -389,14 +387,11 @@ class RealWorldCorpusExportLab {
         }
         if (family.selectionCardinality().causes() != family.expectedCauseIds().size()
                 || family.selectionCardinality().checks() != family.expectedCheckIds().size()) {
-            throw new IllegalStateException(
-                    "selection cardinality drift for " + family.familyId());
+            throw new IllegalStateException("selection cardinality drift for " + family.familyId());
         }
-        boolean restraint =
-                family.disposition() == RealWorldCorpusManifest.Disposition.RESTRAIN;
+        boolean restraint = family.disposition() == RealWorldCorpusManifest.Disposition.RESTRAIN;
         if (restraint
-                != (family.expectedCauseIds().isEmpty()
-                        && family.expectedCheckIds().isEmpty())) {
+                != (family.expectedCauseIds().isEmpty() && family.expectedCheckIds().isEmpty())) {
             throw new IllegalStateException("disposition drift for " + family.familyId());
         }
     }
@@ -488,11 +483,9 @@ class RealWorldCorpusExportLab {
         payload.set("incident", mapper.valueToTree(request.incident()));
         payload.set("facts", facts);
         payload.set(
-                "candidateCauses",
-                ordinalCandidates(request.candidateCauses(), evidenceIndexes));
+                "candidateCauses", ordinalCandidates(request.candidateCauses(), evidenceIndexes));
         payload.set(
-                "candidateChecks",
-                ordinalCandidates(request.candidateChecks(), evidenceIndexes));
+                "candidateChecks", ordinalCandidates(request.candidateChecks(), evidenceIndexes));
         payload.set("terminology", mapper.valueToTree(request.terminology()));
         return "<STACKMATE_UNTRUSTED_INCIDENT schemaVersion=\"2\" contract=\"T1\">\n"
                 + canonicalJson(payload)
@@ -582,17 +575,14 @@ class RealWorldCorpusExportLab {
         }
     }
 
-    private byte[] sealedFinalBytes(
-            RealWorldCorpusManifest manifest, String sourceManifestSha256) throws IOException {
+    private byte[] sealedFinalBytes(RealWorldCorpusManifest manifest, String sourceManifestSha256)
+            throws IOException {
         ObjectNode sealed = mapper.createObjectNode();
         sealed.put("sourceManifestSha256", sourceManifestSha256);
         ArrayNode families = sealed.putArray("families");
         List<RealWorldCorpusManifest.Family> finalFamilies =
                 manifest.families().stream()
-                        .filter(
-                                item ->
-                                        item.split()
-                                                == RealWorldCorpusManifest.Split.LOCKED_FINAL)
+                        .filter(item -> item.split() == RealWorldCorpusManifest.Split.LOCKED_FINAL)
                         .toList();
         if (finalFamilies.size() != 30) {
             throw new IllegalStateException("sealed final split must contain exactly 30 families");
@@ -622,8 +612,7 @@ class RealWorldCorpusExportLab {
         descriptor.put("structuredEvidenceKind", family.structuredEvidenceKind());
         descriptor.set("expectedCauseIds", mapper.valueToTree(family.expectedCauseIds()));
         descriptor.set("expectedCheckIds", mapper.valueToTree(family.expectedCheckIds()));
-        descriptor.set(
-                "selectionCardinality", mapper.valueToTree(family.selectionCardinality()));
+        descriptor.set("selectionCardinality", mapper.valueToTree(family.selectionCardinality()));
         descriptor.put("disposition", family.disposition().name());
         return descriptor;
     }
@@ -656,9 +645,7 @@ class RealWorldCorpusExportLab {
         files.set(
                 "validation",
                 fileDescription(VALIDATION_FILE, validationRows.size(), validationBytes));
-        files.set(
-                "sealedFinalFamilies",
-                fileDescription(SEALED_FINAL_FILE, 30, sealedFinalBytes));
+        files.set("sealedFinalFamilies", fileDescription(SEALED_FINAL_FILE, 30, sealedFinalBytes));
 
         ObjectNode distributions = manifest.putObject("distributions");
         distributions.set("train", distributions(trainRows));
@@ -681,12 +668,10 @@ class RealWorldCorpusExportLab {
                 mapper.valueToTree(
                         distribution(rows, row -> row.family().classification().name())));
         result.set(
-                "category",
-                mapper.valueToTree(distribution(rows, row -> row.family().category())));
+                "category", mapper.valueToTree(distribution(rows, row -> row.family().category())));
         result.set(
                 "disposition",
-                mapper.valueToTree(
-                        distribution(rows, row -> row.family().disposition().name())));
+                mapper.valueToTree(distribution(rows, row -> row.family().disposition().name())));
         result.set(
                 "candidateOrder",
                 mapper.valueToTree(
@@ -746,8 +731,7 @@ class RealWorldCorpusExportLab {
         return value.deepCopy();
     }
 
-    private List<ExportedRow> rowsFor(
-            List<ExportedRow> rows, RealWorldCorpusManifest.Split split) {
+    private List<ExportedRow> rowsFor(List<ExportedRow> rows, RealWorldCorpusManifest.Split split) {
         return rows.stream().filter(row -> row.family().split() == split).toList();
     }
 
@@ -762,8 +746,7 @@ class RealWorldCorpusExportLab {
 
     private Map<String, Path> outputTargets(Path outputDirectory) {
         Map<String, Path> result = new LinkedHashMap<>();
-        for (String name :
-                List.of(TRAIN_FILE, VALIDATION_FILE, MANIFEST_FILE, SEALED_FINAL_FILE)) {
+        for (String name : List.of(TRAIN_FILE, VALIDATION_FILE, MANIFEST_FILE, SEALED_FINAL_FILE)) {
             result.put(name, outputDirectory.resolve(name));
         }
         return Map.copyOf(result);
@@ -805,8 +788,7 @@ class RealWorldCorpusExportLab {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[] {postgres.getHost()});
         dataSource.setPortNumbers(new int[] {postgres.getFirstMappedPort()});
-        dataSource.setDatabaseName(
-                catalog == null ? postgres.getDatabaseName() : catalog);
+        dataSource.setDatabaseName(catalog == null ? postgres.getDatabaseName() : catalog);
         dataSource.setUser(postgres.getUsername());
         dataSource.setPassword(postgres.getPassword());
         dataSource.setConnectTimeout(5);
@@ -902,8 +884,7 @@ class RealWorldCorpusExportLab {
 
     private void requireUnique(List<String> ids, String familyId, String kind) {
         if (ids.stream().distinct().count() != ids.size()) {
-            throw new IllegalStateException(
-                    "duplicate " + kind + " candidate IDs for " + familyId);
+            throw new IllegalStateException("duplicate " + kind + " candidate IDs for " + familyId);
         }
     }
 

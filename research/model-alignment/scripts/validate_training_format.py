@@ -20,6 +20,8 @@ def percentile(values: list[int], fraction: float) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--environment", default="configs/environment-v1.json")
+    parser.add_argument("--train", default="datasets/train.jsonl")
+    parser.add_argument("--validation", default="datasets/validation.jsonl")
     parser.add_argument("--report", default="reports/training-format.json")
     arguments = parser.parse_args()
     environment = json.loads((ROOT / arguments.environment).read_text(encoding="utf-8"))
@@ -49,10 +51,16 @@ def main() -> None:
     masked_prompt_tokens = 0
     unmasked_target_tokens = 0
     boundary_verified = True
-    for filename in ("datasets/train.jsonl", "datasets/validation.jsonl"):
+    source_hashes: dict[str, str] = {}
+    for filename in (arguments.train, arguments.validation):
         split_stats = stats_by_split[Path(filename).stem]
-        for line in (ROOT / filename).read_text(encoding="utf-8").splitlines():
+        source_path = (ROOT / filename).resolve()
+        source_hashes[Path(filename).stem] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+        for line in source_path.read_text(encoding="utf-8").splitlines():
             example = json.loads(line)
+            example_id = example.get(
+                "exampleId", f"{example.get('familyId', 'unknown')}/v{example.get('variant', 'unknown')}"
+            )
             messages = example["messages"]
             prefix = tokenizer.apply_chat_template(
                 messages[:2],
@@ -69,10 +77,10 @@ def main() -> None:
                 return_dict=False,
             )
             if full[: len(prefix)] != prefix:
-                raise ValueError(f"assistant boundary mismatch: {example['exampleId']}")
+                raise ValueError(f"assistant boundary mismatch: {example_id}")
             boundary_verified = boundary_verified and full[: len(prefix)] == prefix
             if bos_token_id is not None and full.count(bos_token_id) > 1:
-                raise ValueError(f"duplicated BOS: {example['exampleId']}")
+                raise ValueError(f"duplicated BOS: {example_id}")
             split_stats["total"].append(len(full))
             split_stats["input"].append(len(prefix))
             split_stats["output"].append(len(full) - len(prefix))
@@ -106,6 +114,7 @@ def main() -> None:
         "tokenizerClass": type(tokenizer).__name__,
         "tokenizerRevision": environment["baseModel"]["revision"],
         "chatTemplateSha256": hashlib.sha256(template.encode()).hexdigest(),
+        "sourceSha256": source_hashes,
         "maximumSequenceLength": environment["maximumSequenceLength"],
         "splits": {
             split: {

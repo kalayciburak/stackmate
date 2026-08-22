@@ -43,8 +43,7 @@ class ParityCorpusManifestTest {
     @Test
     void freezesFortyBalancedDevelopmentOnlyCases() throws Exception {
         assertThat(manifest.path("schemaVersion").asText()).isEqualTo("1");
-        assertThat(manifest.path("corpusId").asText())
-                .isEqualTo("stackmate-phase-5-3-parity-v1");
+        assertThat(manifest.path("corpusId").asText()).isEqualTo("stackmate-phase-5-3-parity-v1");
         assertThat(manifest.path("caseCount").asInt()).isEqualTo(40);
         assertThat(manifest.path("corpusSha256").asText())
                 .isEqualTo(sha256(root.resolve("corpus.json")));
@@ -52,7 +51,9 @@ class ParityCorpusManifestTest {
         assertThat(manifest.path("restraintCases").asInt()).isEqualTo(8);
         assertThat(manifest.path("unsupportedClaimTrapCases").asInt()).isEqualTo(9);
         assertThat(manifest.path("domainCounts").size()).isEqualTo(8);
-        manifest.path("domainCounts").elements().forEachRemaining(value -> assertThat(value.asInt()).isGreaterThanOrEqualTo(3));
+        manifest.path("domainCounts")
+                .elements()
+                .forEachRemaining(value -> assertThat(value.asInt()).isGreaterThanOrEqualTo(3));
 
         List<String> ids = strings(manifest.path("caseIds"), null);
         assertThat(ids).hasSize(40).doesNotHaveDuplicates();
@@ -112,12 +113,18 @@ class ParityCorpusManifestTest {
         assertThat(corpus.path("prompts").path("P0").path("semanticSha256").asText())
                 .isEqualTo(
                         sha256(
-                                corpus.path("prompts").path("P0").path("system").asText()
+                                corpus.path("prompts")
+                                        .path("P0")
+                                        .path("system")
+                                        .asText()
                                         .getBytes(StandardCharsets.UTF_8)));
         assertThat(corpus.path("prompts").path("P3").path("semanticSha256").asText())
                 .isEqualTo(
                         sha256(
-                                corpus.path("prompts").path("P3").path("system").asText()
+                                corpus.path("prompts")
+                                        .path("P3")
+                                        .path("system")
+                                        .asText()
                                         .getBytes(StandardCharsets.UTF_8)));
         assertThat(PRIVATE_DATA.matcher(Files.readString(root.resolve("corpus.json"))).find())
                 .isFalse();
@@ -145,8 +152,7 @@ class ParityCorpusManifestTest {
     }
 
     private static String sha256(byte[] bytes) throws Exception {
-        return HexFormat.of()
-                .formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
+        return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
     }
 
     private static Path findParityRoot() {

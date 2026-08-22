@@ -177,7 +177,11 @@ public final class RealWorldPostgresFixtures {
                 yield expectFailure(
                         familyId,
                         expectedState,
-                        () -> executePrepared(connection, "INSERT INTO " + records + " VALUES (?)", "alpha"));
+                        () ->
+                                executePrepared(
+                                        connection,
+                                        "INSERT INTO " + records + " VALUES (?)",
+                                        "alpha"));
             }
             case "G53-R-PG-003" ->
                     expectFailure(
@@ -193,7 +197,9 @@ public final class RealWorldPostgresFixtures {
                     expectFailure(
                             familyId,
                             expectedState,
-                            () -> executePrepared(connection, "SELECT CAST(? AS integer)", "sevenx"));
+                            () ->
+                                    executePrepared(
+                                            connection, "SELECT CAST(? AS integer)", "sevenx"));
             case "G53-R-PG-006" -> {
                 setup(familyId, connection, "SET DateStyle TO ISO");
                 yield expectFailure(
@@ -215,7 +221,9 @@ public final class RealWorldPostgresFixtures {
                 yield expectFailure(
                         familyId,
                         expectedState,
-                        () -> executeQuery(connection, "SELECT (SELECT marker FROM " + records + ")"));
+                        () ->
+                                executeQuery(
+                                        connection, "SELECT (SELECT marker FROM " + records + ")"));
             }
             case "G53-R-PG-009" -> {
                 String role = schema + "_role";
@@ -243,8 +251,7 @@ public final class RealWorldPostgresFixtures {
             case "G53-R-PG-010" -> {
                 String sql = "CREATE TABLE " + records + " (marker integer)";
                 setup(familyId, connection, sql);
-                yield expectFailure(
-                        familyId, expectedState, () -> executeUpdate(connection, sql));
+                yield expectFailure(familyId, expectedState, () -> executeUpdate(connection, sql));
             }
             case "G53-R-PG-011" -> {
                 setup(familyId, connection, "CREATE TABLE " + records + " (marker integer)");
@@ -275,7 +282,9 @@ public final class RealWorldPostgresFixtures {
                 yield expectFailure(
                         familyId,
                         expectedState,
-                        () -> executeUpdate(connection, "INSERT INTO " + records + " VALUES (TRUE)"));
+                        () ->
+                                executeUpdate(
+                                        connection, "INSERT INTO " + records + " VALUES (TRUE)"));
             }
             case "G53-R-PG-014" -> {
                 setup(
@@ -319,14 +328,9 @@ public final class RealWorldPostgresFixtures {
             }
             case "G53-R-PG-017" -> {
                 beginTransaction(familyId, connection);
-                expectFailure(
-                        familyId,
-                        "22012",
-                        () -> executeQuery(connection, "SELECT 8 / 0"));
+                expectFailure(familyId, "22012", () -> executeQuery(connection, "SELECT 8 / 0"));
                 yield expectFailure(
-                        familyId,
-                        expectedState,
-                        () -> executeQuery(connection, "SELECT 1"));
+                        familyId, expectedState, () -> executeQuery(connection, "SELECT 1"));
             }
             case "G53-R-PG-018" -> {
                 beginTransaction(familyId, connection);
@@ -377,16 +381,14 @@ public final class RealWorldPostgresFixtures {
                 String statementName = quoteIdentifier("reserved_statement");
                 String sql = "PREPARE " + statementName + " AS SELECT 1";
                 setup(familyId, connection, sql);
-                yield expectFailure(
-                        familyId, expectedState, () -> executeUpdate(connection, sql));
+                yield expectFailure(familyId, expectedState, () -> executeUpdate(connection, sql));
             }
             case "G53-R-PG-025" -> {
                 beginTransaction(familyId, connection);
                 String cursor = quoteIdentifier("reserved_cursor");
                 String sql = "DECLARE " + cursor + " CURSOR FOR SELECT 1";
                 setup(familyId, connection, sql);
-                yield expectFailure(
-                        familyId, expectedState, () -> executeUpdate(connection, sql));
+                yield expectFailure(familyId, expectedState, () -> executeUpdate(connection, sql));
             }
             case "G53-R-PG-026" -> {
                 beginTransaction(familyId, connection);
@@ -402,10 +404,7 @@ public final class RealWorldPostgresFixtures {
                     expectFailure(
                             familyId,
                             expectedState,
-                            () ->
-                                    executeUpdate(
-                                            connection,
-                                            "SET statement_timeout TO 'neverms'"));
+                            () -> executeUpdate(connection, "SET statement_timeout TO 'neverms'"));
             case "G53-R-PG-028" ->
                     expectFailure(
                             familyId,
@@ -436,14 +435,9 @@ public final class RealWorldPostgresFixtures {
                 setup(
                         familyId,
                         connection,
-                        "CREATE SEQUENCE "
-                                + sequence
-                                + " START WITH 1 MAXVALUE 1 NO CYCLE");
+                        "CREATE SEQUENCE " + sequence + " START WITH 1 MAXVALUE 1 NO CYCLE");
                 executePreparedSetup(
-                        familyId,
-                        connection,
-                        "SELECT nextval(CAST(? AS regclass))",
-                        sequence);
+                        familyId, connection, "SELECT nextval(CAST(? AS regclass))", sequence);
                 yield expectFailure(
                         familyId,
                         expectedState,
@@ -482,9 +476,7 @@ public final class RealWorldPostgresFixtures {
                 beginTransaction(familyId, locker);
                 beginTransaction(familyId, contender);
                 executeQuerySetup(
-                        familyId,
-                        locker,
-                        "SELECT id FROM " + records + " WHERE id = 1 FOR UPDATE");
+                        familyId, locker, "SELECT id FROM " + records + " WHERE id = 1 FOR UPDATE");
                 result =
                         expectFailure(
                                 familyId,
@@ -500,8 +492,7 @@ public final class RealWorldPostgresFixtures {
                 primaryFailure = failure;
                 throw failure;
             } finally {
-                rollbackTransactions(
-                        familyId, result, primaryFailure, contender, locker);
+                rollbackTransactions(familyId, result, primaryFailure, contender, locker);
             }
         } catch (SQLException failure) {
             throw harnessFailure(familyId, "coordinating the two lock connections", failure);
@@ -554,7 +545,8 @@ public final class RealWorldPostgresFixtures {
         try (Connection connection =
                 requireConnection(connectionFactory.open(DEFAULT_CATALOG), familyId)) {
             configureTimeouts(connection);
-            executeUpdate(connection, "DROP SCHEMA IF EXISTS " + quoteIdentifier(schema) + " CASCADE");
+            executeUpdate(
+                    connection, "DROP SCHEMA IF EXISTS " + quoteIdentifier(schema) + " CASCADE");
             executeUpdate(connection, "CREATE SCHEMA " + quoteIdentifier(schema));
         } catch (SQLException failure) {
             throw harnessFailure(familyId, "preparing schema " + schema, failure);
@@ -566,7 +558,8 @@ public final class RealWorldPostgresFixtures {
         try (Connection connection =
                 requireConnection(connectionFactory.open(DEFAULT_CATALOG), familyId)) {
             configureTimeouts(connection);
-            executeUpdate(connection, "DROP SCHEMA IF EXISTS " + quoteIdentifier(schema) + " CASCADE");
+            executeUpdate(
+                    connection, "DROP SCHEMA IF EXISTS " + quoteIdentifier(schema) + " CASCADE");
         } catch (SQLException failure) {
             throw harnessFailure(familyId, "cleaning schema " + schema, failure);
         }
@@ -576,8 +569,7 @@ public final class RealWorldPostgresFixtures {
         try {
             configureTimeouts(connection);
             executeUpdate(
-                    connection,
-                    "SET search_path TO " + quoteIdentifier(schema) + ", pg_catalog");
+                    connection, "SET search_path TO " + quoteIdentifier(schema) + ", pg_catalog");
         } catch (SQLException failure) {
             throw harnessFailure(familyId, "configuring the PostgreSQL session", failure);
         }
@@ -650,8 +642,7 @@ public final class RealWorldPostgresFixtures {
         }
     }
 
-    private static void executeQuerySetup(
-            String familyId, Connection connection, String sql) {
+    private static void executeQuerySetup(String familyId, Connection connection, String sql) {
         try {
             executeQuery(connection, sql);
         } catch (SQLException failure) {
@@ -735,7 +726,8 @@ public final class RealWorldPostgresFixtures {
             statement.setQueryTimeout(JDBC_QUERY_TIMEOUT_SECONDS);
             try (ResultSet resultSet = statement.executeQuery(sql)) {
                 while (resultSet.next()) {
-                    // Consume the result so lock acquisition and server-side execution are complete.
+                    // Consume the result so lock acquisition and server-side execution are
+                    // complete.
                 }
             }
         }
@@ -762,12 +754,19 @@ public final class RealWorldPostgresFixtures {
     private static HarnessException harnessFailure(
             String familyId, String operation, SQLException failure) {
         return new HarnessException(
-                familyId + " harness failure while " + operation + "; SQLSTATEs=" + observedStates(failure),
+                familyId
+                        + " harness failure while "
+                        + operation
+                        + "; SQLSTATEs="
+                        + observedStates(failure),
                 failure);
     }
 
     private static String schemaName(String familyId, int variant) {
-        return "stackmate_" + familyId.toLowerCase(java.util.Locale.ROOT).replace('-', '_') + "_v" + variant;
+        return "stackmate_"
+                + familyId.toLowerCase(java.util.Locale.ROOT).replace('-', '_')
+                + "_v"
+                + variant;
     }
 
     private static String qualified(String schema, String object) {

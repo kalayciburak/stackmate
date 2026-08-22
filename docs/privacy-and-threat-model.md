@@ -200,3 +200,25 @@ selected A1 condition. It nevertheless failed accuracy/structure gates, so no
 production model path was activated. This continuation does not change the
 existing rule that the normal Java product has no model downloader, telemetry,
 cloud inference, or Python/ML runtime dependency.
+
+## Phase 5.3 evaluation and corpus boundary
+
+Phase 5.3 adds controlled local test fixtures and committed synthetic/runtime
+research rows, not production telemetry. Ninety families are generated from local
+Java, Spring, PostgreSQL, loopback-network, filesystem, concurrency, and security
+fixtures; thirty synthetic families cover bounded topology and selection cases.
+Every family declares `privateData=false`, and the decoded-JSON scanner plus the
+offline leakage audit found zero private path or secret findings.
+
+| Boundary | Control | Residual risk |
+|---|---|---|
+| Docker/Testcontainers lab | Explicit `Lab` execution only; ephemeral local PostgreSQL; no final-family execution; no normal-build dependency | Docker daemon and image are privileged third-party local inputs |
+| Generated development data | `CREATE_NEW`, fixed family split, two variants maximum, full SHA-256 manifest, two byte-identical exports | Controlled lab traces can encode harness-specific artifacts |
+| Sealed final metadata | IDs and semantic descriptor hashes only; no request, stack trace, target, or output rendered | Future execution must preserve the seal and one-run rule |
+| Offline leakage audit | Prior train/validation, holdout, blind, challenge, parity, and sealed-final comparisons; no network | Similarity thresholds cannot prove absence of every conceptual relation |
+| F1 diagnostic | Exact base/adapter/data hashes, NF4/BF16 local load, socket/DNS guard, no repair, T1-only scoring | Native CUDA and bitsandbytes execute with WSL-user permissions |
+
+Invalid F1 outputs never entered a product response. The future plan permits one
+separately authorized bounded run only after rechecking hashes; it does not permit
+cloud training, data upload, prompt tuning against final, model merge, GGUF export,
+worker integration, or provisioning.

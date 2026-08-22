@@ -137,6 +137,19 @@ no model, adapter, merged model, or fine-tuned GGUF was distributed, committed,
 or published. The original third-party GGUF remained unchanged and was not used
 for training.
 
+Phase 5.3 adds the following benchmark test-scope dependencies only:
+
+| Test dependency | Version | License / use |
+|---|---:|---|
+| PostgreSQL JDBC driver | 42.7.11 | BSD-2-Clause; ephemeral local fixture connections |
+| Testcontainers PostgreSQL module | 2.0.5 | MIT; explicit Docker-backed PostgreSQL lab |
+| Spring Security Core | 7.1.0 | Apache-2.0; controlled authentication exception fixtures |
+
+The explicit lab also uses the local `postgres:17-alpine` container image. StackMate
+does not redistribute that image; its PostgreSQL and Alpine component notices
+remain governed by their upstream terms. None of these dependencies is added to a
+published runtime module.
+
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the
 deterministic starter. Their exact resolved versions and licenses are reviewable through the Maven dependency
 tree and generated build reports.

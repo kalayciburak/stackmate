@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "tokenizerClass": "Qwen2Tokenizer",
+  "tokenizerRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "sourceSha256": {
+    "train": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validation": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789"
+  },
+  "maximumSequenceLength": 2048,
+  "splits": {
+    "train": {
+      "inputTokens": {
+        "examples": 140,
+        "average": 801.7714285714286,
+        "p95": 978,
+        "maximum": 1019
+      },
+      "outputTokens": {
+        "examples": 140,
+        "average": 20.942857142857143,
+        "p95": 23,
+        "maximum": 24
+      },
+      "totalTokens": {
+        "examples": 140,
+        "average": 822.7142857142857,
+        "p95": 1001,
+        "maximum": 1039
+      }
+    },
+    "validation": {
+      "inputTokens": {
+        "examples": 40,
+        "average": 815.05,
+        "p95": 993,
+        "maximum": 1015
+      },
+      "outputTokens": {
+        "examples": 40,
+        "average": 21.65,
+        "p95": 23,
+        "maximum": 23
+      },
+      "totalTokens": {
+        "examples": 40,
+        "average": 836.7,
+        "p95": 1016,
+        "maximum": 1035
+      }
+    }
+  },
+  "truncationCount": 0,
+  "unknownTokenBehavior": {
+    "unknownTokenId": null,
+    "unknownTokenCount": 0,
+    "examplesWithUnknownToken": 0
+  },
+  "bosEosBehavior": {
+    "bosTokenId": null,
+    "eosTokenId": 248046,
+    "maximumBosPerExample": 0,
+    "totalEosTokens": 540,
+    "examplesEndingWithEos": 0,
+    "exampleCount": 180
+  },
+  "padding": {
+    "paddingSide": "right",
+    "truncationSide": "right",
+    "padTokenId": 248044,
+    "padToken": "<|endoftext|>"
+  },
+  "assistantOnlyLabels": {
+    "enabled": true,
+    "promptTokensMasked": 144850,
+    "targetTokensUnmasked": 3798,
+    "boundaryVerified": true
+  },
+  "duplicatedBosEos": false
+}

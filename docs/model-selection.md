@@ -309,3 +309,22 @@ both cause and check, blind was 15/20 for both, and challenge was 18/30 cause an
 unrounded accuracy and structured-output gates failed. The adapter is therefore
 `EXPERIMENTAL`; no full confirmation, merge, GGUF, persistent worker, or production
 integration was authorized.
+
+## Phase 5.3 evaluation parity and future boundary
+
+Phase 5.3 did not select or train another model. It kept the exact official
+Qwen3.5-2B revision and the historical F1 adapter, then separated runtime grammar,
+NF4 degradation, conversion/quantization, output extraction, prompt contract, and
+dataset distribution effects.
+
+The selected development-only T1 contract emits request-local cause/check indexes
+and no prose. Official BF16 base reached 40/40 valid T1 outputs and 38/40 original-
+order cause/check selections on the 40-case parity corpus; F1 reached 30/40 valid
+and failed all eight restraint cases. On the new real-world validation split, the
+unchanged F1 adapter reached 18/40 valid T1 outputs, 11/40 joint accuracy, 0/22
+strict restraint, and 3/20 family order invariance.
+
+The 120-family real-world corpus passed two reviews, reproducibility, tokenization,
+and leakage gates. This justifies one future bounded T1 QLoRA run, not a model
+readiness claim. Qwen3.5-2B and F1 remain `EXPERIMENTAL`; no merge, GGUF, worker,
+provisioning, or production adapter exists.

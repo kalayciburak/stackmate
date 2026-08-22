@@ -51,3 +51,11 @@ Adopt `stackmate-real-world-v1` under ADR 0032 after two independent ground-trut
 passes, two byte-identical exports, and a zero-finding offline leakage audit. Keep
 its 30 final families sealed and unexecuted in Phase 5.3. This establishes data
 feasibility only; Gate D still owns any future one-shot training recommendation.
+
+## D8: Recommend one future T1 QLoRA run
+
+The historical F1 adapter fails the frozen real-world validation/T1 diagnostic,
+but Gates A-C remove the prior evaluation, contract, and data blockers. Recommend
+one future rank-8 run with a six-epoch maximum and validation-only checkpoint lock.
+Do not create the run in Phase 5.3, do not add a second configuration, and do not
+open the 30 final families before the future adapter is locked.

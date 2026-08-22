@@ -98,11 +98,7 @@ class RealWorldDevelopmentRecipeTest {
                                         != RealWorldCorpusManifest.Classification
                                                 .CONTROLLED_SYNTHETIC)
                 .filter(item -> !item.fixtureCode().equals("N-PG"))
-                .flatMap(
-                        item ->
-                                Stream.of(
-                                        Arguments.of(item, 0),
-                                        Arguments.of(item, 1)));
+                .flatMap(item -> Stream.of(Arguments.of(item, 0), Arguments.of(item, 1)));
     }
 
     static Stream<Arguments> developmentSyntheticRecipes() {
@@ -112,11 +108,7 @@ class RealWorldDevelopmentRecipeTest {
                                 item.classification()
                                         == RealWorldCorpusManifest.Classification
                                                 .CONTROLLED_SYNTHETIC)
-                .flatMap(
-                        item ->
-                                Stream.of(
-                                        Arguments.of(item, 0),
-                                        Arguments.of(item, 1)));
+                .flatMap(item -> Stream.of(Arguments.of(item, 0), Arguments.of(item, 1)));
     }
 
     private boolean supported(RealWorldCorpusManifest.Family family) {

@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.sun.net.httpserver.HttpServer;
-import jakarta.servlet.AsyncEvent;
-import jakarta.servlet.AsyncListener;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -70,15 +68,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
-import org.springframework.mock.web.MockAsyncContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -144,48 +141,81 @@ final class RealWorldMvcInfrastructureFixtures {
             throw new IllegalArgumentException("variant must be 0 or 1: " + variant);
         }
         if (!supports(familyId)) {
-            throw new IllegalArgumentException("Unsupported real-world fixture family: " + familyId);
+            throw new IllegalArgumentException(
+                    "Unsupported real-world fixture family: " + familyId);
         }
 
         try {
-            Throwable failure = switch (familyId) {
-                case "G53-R-MV-001" -> missingResource(variant);
-                case "G53-R-MV-002" -> unacceptableResponse(variant);
-                case "G53-R-MV-003" -> unreadableBody(variant, temporalMapper(), "{\"date\":\"2025-02-30\"}", TemporalBody.class);
-                case "G53-R-MV-004" -> unreadableBody(variant, strictMapper(), "{\"name\":\"fixture\",\"unknown\":1}", NamedBody.class);
-                case "G53-R-MV-005" -> unreadableBody(variant, defaultMapper(), "{\"kind\":\"missing-subtype\",\"value\":1}", PolymorphicBody.class);
-                case "G53-R-MV-006" -> unreadableBody(variant, defaultMapper(), "{\"number\":2147483648}", IntegerBody.class);
-                case "G53-R-MV-007" -> unreadableBody(variant, depthMapper(), "{\"value\":{\"value\":{\"value\":1}}}", NestedBody.class);
-                case "G53-R-MV-008" -> unreadableBody(variant, duplicateMapper(), "{\"name\":\"first\",\"name\":\"second\"}", NamedBody.class);
-                case "G53-R-MV-009" -> creatorFailure(variant);
-                case "G53-R-MV-010" -> restClientNotFound(variant);
-                case "G53-R-MV-011" -> restClientUnknownContentType(variant);
-                case "G53-R-MV-012" -> responseStatusConflict(variant);
-                case "G53-R-MV-013" -> asyncTimeout(variant);
-                case "G53-R-MV-014" -> asyncWriteAfterCompletion(variant);
-                case "G53-R-MV-015" -> missingRequestAttribute(variant);
-                case "G53-R-MV-016" -> requiredSessionAttribute(variant);
-                case "G53-R-IN-001" -> httpRequestTimeout(variant);
-                case "G53-R-IN-002" -> socketWriteAfterClose(variant);
-                case "G53-R-IN-003" -> tlsHostnameMismatch(variant);
-                case "G53-R-IN-004" -> tlsProtocolMismatch(variant);
-                case "G53-R-IN-005" -> truncatedHttpBody(variant);
-                case "G53-R-IN-006" -> createExistingFile(variant);
-                case "G53-R-IN-007" -> deleteNonemptyDirectory(variant);
-                case "G53-R-IN-008" -> readClosedFileChannel(variant);
-                case "G53-R-IN-009" -> overlappingFileLock(variant);
-                case "G53-R-IN-010" -> brokenBarrier(variant);
-                case "G53-R-IN-011" -> nonOwnerUnlock(variant);
-                case "G53-R-IN-012" -> daoAccountFailure(variant, true);
-                case "G53-R-IN-013" -> daoAccountFailure(variant, false);
-                case "G53-R-IN-014" -> invalidGcmTag(variant);
-                default -> throw new AssertionError("exhaustive family switch");
-            };
+            Throwable failure =
+                    switch (familyId) {
+                        case "G53-R-MV-001" -> missingResource(variant);
+                        case "G53-R-MV-002" -> unacceptableResponse(variant);
+                        case "G53-R-MV-003" ->
+                                unreadableBody(
+                                        variant,
+                                        temporalMapper(),
+                                        "{\"date\":\"2025-02-30\"}",
+                                        TemporalBody.class);
+                        case "G53-R-MV-004" ->
+                                unreadableBody(
+                                        variant,
+                                        strictMapper(),
+                                        "{\"name\":\"fixture\",\"unknown\":1}",
+                                        NamedBody.class);
+                        case "G53-R-MV-005" ->
+                                unreadableBody(
+                                        variant,
+                                        defaultMapper(),
+                                        "{\"kind\":\"missing-subtype\",\"value\":1}",
+                                        PolymorphicBody.class);
+                        case "G53-R-MV-006" ->
+                                unreadableBody(
+                                        variant,
+                                        defaultMapper(),
+                                        "{\"number\":2147483648}",
+                                        IntegerBody.class);
+                        case "G53-R-MV-007" ->
+                                unreadableBody(
+                                        variant,
+                                        depthMapper(),
+                                        "{\"value\":{\"value\":{\"value\":1}}}",
+                                        NestedBody.class);
+                        case "G53-R-MV-008" ->
+                                unreadableBody(
+                                        variant,
+                                        duplicateMapper(),
+                                        "{\"name\":\"first\",\"name\":\"second\"}",
+                                        NamedBody.class);
+                        case "G53-R-MV-009" -> creatorFailure(variant);
+                        case "G53-R-MV-010" -> restClientNotFound(variant);
+                        case "G53-R-MV-011" -> restClientUnknownContentType(variant);
+                        case "G53-R-MV-012" -> responseStatusConflict(variant);
+                        case "G53-R-MV-013" -> asyncTimeout(variant);
+                        case "G53-R-MV-014" -> asyncWriteAfterCompletion(variant);
+                        case "G53-R-MV-015" -> missingRequestAttribute(variant);
+                        case "G53-R-MV-016" -> requiredSessionAttribute(variant);
+                        case "G53-R-IN-001" -> httpRequestTimeout(variant);
+                        case "G53-R-IN-002" -> socketWriteAfterClose(variant);
+                        case "G53-R-IN-003" -> tlsHostnameMismatch(variant);
+                        case "G53-R-IN-004" -> tlsProtocolMismatch(variant);
+                        case "G53-R-IN-005" -> truncatedHttpBody(variant);
+                        case "G53-R-IN-006" -> createExistingFile(variant);
+                        case "G53-R-IN-007" -> deleteNonemptyDirectory(variant);
+                        case "G53-R-IN-008" -> readClosedFileChannel(variant);
+                        case "G53-R-IN-009" -> overlappingFileLock(variant);
+                        case "G53-R-IN-010" -> brokenBarrier(variant);
+                        case "G53-R-IN-011" -> nonOwnerUnlock(variant);
+                        case "G53-R-IN-012" -> daoAccountFailure(variant, true);
+                        case "G53-R-IN-013" -> daoAccountFailure(variant, false);
+                        case "G53-R-IN-014" -> invalidGcmTag(variant);
+                        default -> throw new AssertionError("exhaustive family switch");
+                    };
             return verifyManifestTopology(familyId, failure);
         } catch (FixtureUnavailableException unavailable) {
             throw unavailable;
         } catch (Throwable setupFailure) {
-            throw new IllegalStateException("Fixture " + familyId + " could not be executed", setupFailure);
+            throw new IllegalStateException(
+                    "Fixture " + familyId + " could not be executed", setupFailure);
         }
     }
 
@@ -196,8 +226,11 @@ final class RealWorldMvcInfrastructureFixtures {
             resources.setLocations(
                     List.of(new FileSystemResource(directory + java.io.File.separator)));
             resources.afterPropertiesSet();
-            MockMvc mvc = MockMvcBuilders.standaloneSetup(new ResourceController(resources)).build();
-            return resolved(mvc.perform(get("/fixture/resource/missing-" + value(variant))).andReturn(), "missing resource");
+            MockMvc mvc =
+                    MockMvcBuilders.standaloneSetup(new ResourceController(resources)).build();
+            return resolved(
+                    mvc.perform(get("/fixture/resource/missing-" + value(variant))).andReturn(),
+                    "missing resource");
         } finally {
             Files.deleteIfExists(directory);
         }
@@ -209,13 +242,16 @@ final class RealWorldMvcInfrastructureFixtures {
                         .setMessageConverters(jsonConverter(defaultMapper()))
                         .build();
         MvcResult result =
-                mvc.perform(get("/fixture/json").param("variant", value(variant)).accept(MediaType.APPLICATION_XML))
+                mvc.perform(
+                                get("/fixture/json")
+                                        .param("variant", value(variant))
+                                        .accept(MediaType.APPLICATION_XML))
                         .andReturn();
         return resolved(result, "unacceptable response media type");
     }
 
-    private static Throwable unreadableBody(int variant, JsonMapper mapper, String json, Class<?> bodyType)
-            throws Exception {
+    private static Throwable unreadableBody(
+            int variant, JsonMapper mapper, String json, Class<?> bodyType) throws Exception {
         MockMvc mvc =
                 MockMvcBuilders.standaloneSetup(new BodyController())
                         .setMessageConverters(jsonConverter(mapper))
@@ -232,9 +268,11 @@ final class RealWorldMvcInfrastructureFixtures {
 
     private static Throwable creatorFailure(int variant) throws Exception {
         Class<? extends Throwable> domainType = DomainExceptionLoader.load();
-        CreatorBody.setFailure(domainType.getConstructor(String.class).newInstance("reserved-" + value(variant)));
+        CreatorBody.setFailure(
+                domainType.getConstructor(String.class).newInstance("reserved-" + value(variant)));
         try {
-            return unreadableBody(variant, defaultMapper(), "{\"value\":\"reserved\"}", CreatorBody.class);
+            return unreadableBody(
+                    variant, defaultMapper(), "{\"value\":\"reserved\"}", CreatorBody.class);
         } finally {
             CreatorBody.clearFailure();
         }
@@ -251,23 +289,32 @@ final class RealWorldMvcInfrastructureFixtures {
     }
 
     private static Throwable restClientUnknownContentType(int variant) throws Exception {
-        byte[] body = ("fixture-" + value(variant)).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] body =
+                ("fixture-" + value(variant)).getBytes(java.nio.charset.StandardCharsets.UTF_8);
         return withHttpServer(
                 variant,
                 exchange -> {
-                    exchange.getResponseHeaders().set("Content-Type", "application/x-stackmate-fixture");
+                    exchange.getResponseHeaders()
+                            .set("Content-Type", "application/x-stackmate-fixture");
                     exchange.sendResponseHeaders(200, body.length);
                     try (OutputStream output = exchange.getResponseBody()) {
                         output.write(body);
                     }
                 },
-                uri -> capture(() -> RestClient.create(uri).get().retrieve().body(UnknownBody.class)));
+                uri ->
+                        capture(
+                                () ->
+                                        RestClient.create(uri)
+                                                .get()
+                                                .retrieve()
+                                                .body(UnknownBody.class)));
     }
 
     private static Throwable responseStatusConflict(int variant) throws Exception {
         MockMvc mvc = MockMvcBuilders.standaloneSetup(new MvcController()).build();
         return resolved(
-                mvc.perform(get("/fixture/conflict").queryParam("variant", value(variant))).andReturn(),
+                mvc.perform(get("/fixture/conflict").queryParam("variant", value(variant)))
+                        .andReturn(),
                 "response status conflict");
     }
 
@@ -288,10 +335,12 @@ final class RealWorldMvcInfrastructureFixtures {
     }
 
     private static Throwable asyncWriteAfterCompletion(int variant) throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/fixture/async-write-" + value(variant));
+        MockHttpServletRequest request =
+                new MockHttpServletRequest("GET", "/fixture/async-write-" + value(variant));
         request.setAsyncSupported(true);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        StandardServletAsyncWebRequest asyncRequest = new StandardServletAsyncWebRequest(request, response);
+        StandardServletAsyncWebRequest asyncRequest =
+                new StandardServletAsyncWebRequest(request, response);
         asyncRequest.startAsync();
         HttpServletResponse lifecycleResponse = asyncRequest.getResponse();
         Objects.requireNonNull(lifecycleResponse, "async lifecycle response").getOutputStream();
@@ -302,16 +351,15 @@ final class RealWorldMvcInfrastructureFixtures {
     private static Throwable missingRequestAttribute(int variant) throws Exception {
         MockMvc mvc = MockMvcBuilders.standaloneSetup(new MvcController()).build();
         return resolved(
-                mvc.perform(get("/fixture/request-attribute").queryParam("variant", value(variant))).andReturn(),
+                mvc.perform(get("/fixture/request-attribute").queryParam("variant", value(variant)))
+                        .andReturn(),
                 "missing request attribute");
     }
 
     private static Throwable requiredSessionAttribute(int variant) throws Exception {
         MockMvc mvc = MockMvcBuilders.standaloneSetup(new MvcController()).build();
         return resolved(
-                mvc.perform(
-                                get("/fixture/path-variable")
-                                        .queryParam("variant", value(variant)))
+                mvc.perform(get("/fixture/path-variable").queryParam("variant", value(variant)))
                         .andReturn(),
                 "missing path variable");
     }
@@ -341,7 +389,8 @@ final class RealWorldMvcInfrastructureFixtures {
                                                                     .timeout(Duration.ofMillis(75))
                                                                     .GET()
                                                                     .build(),
-                                                            HttpResponse.BodyHandlers.discarding())));
+                                                            HttpResponse.BodyHandlers
+                                                                    .discarding())));
         } finally {
             release.countDown();
         }
@@ -353,7 +402,8 @@ final class RealWorldMvcInfrastructureFixtures {
             var accepted = executor.submit(server::accept);
             try (Socket client = new Socket()) {
                 client.connect(server.getLocalSocketAddress(), (int) COORDINATION_TIMEOUT_MILLIS);
-                try (Socket peer = accepted.get(COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                try (Socket peer =
+                        accepted.get(COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
                     OutputStream output = client.getOutputStream();
                     client.close();
                     return capture(() -> output.write(variant & 0xff));
@@ -368,7 +418,12 @@ final class RealWorldMvcInfrastructureFixtures {
             server.setSoTimeout((int) COORDINATION_TIMEOUT_MILLIS);
             try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
                 var serverTask = executor.submit(() -> acceptTls(server));
-                URI uri = URI.create("https://localhost:" + server.getLocalPort() + "/fixture/" + value(variant));
+                URI uri =
+                        URI.create(
+                                "https://localhost:"
+                                        + server.getLocalPort()
+                                        + "/fixture/"
+                                        + value(variant));
                 Throwable failure =
                         capture(
                                 () ->
@@ -399,7 +454,9 @@ final class RealWorldMvcInfrastructureFixtures {
                         (SSLSocket)
                                 material.trustingContext()
                                         .getSocketFactory()
-                                        .createSocket(InetAddress.getLoopbackAddress(), server.getLocalPort())) {
+                                        .createSocket(
+                                                InetAddress.getLoopbackAddress(),
+                                                server.getLocalPort())) {
                     client.setSoTimeout((int) COORDINATION_TIMEOUT_MILLIS);
                     client.setEnabledProtocols(new String[] {"TLSv1.3"});
                     Throwable failure = capture(client::startHandshake);
@@ -419,19 +476,30 @@ final class RealWorldMvcInfrastructureFixtures {
                                 try (Socket socket = server.accept()) {
                                     socket.setSoTimeout((int) COORDINATION_TIMEOUT_MILLIS);
                                     readRequestHeaders(socket);
-                                    byte[] partial = ("part-" + value(variant)).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+                                    byte[] partial =
+                                            ("part-" + value(variant))
+                                                    .getBytes(
+                                                            java.nio.charset.StandardCharsets
+                                                                    .US_ASCII);
                                     OutputStream output = socket.getOutputStream();
                                     output.write(
                                             ("HTTP/1.1 200 OK\r\nContent-Length: "
                                                             + (partial.length + 20)
                                                             + "\r\nConnection: close\r\n\r\n")
-                                                    .getBytes(java.nio.charset.StandardCharsets.US_ASCII));
+                                                    .getBytes(
+                                                            java.nio.charset.StandardCharsets
+                                                                    .US_ASCII));
                                     output.write(partial);
                                     output.flush();
                                 }
                                 return null;
                             });
-            URI uri = URI.create("http://localhost:" + server.getLocalPort() + "/fixture/" + value(variant));
+            URI uri =
+                    URI.create(
+                            "http://localhost:"
+                                    + server.getLocalPort()
+                                    + "/fixture/"
+                                    + value(variant));
             Throwable failure =
                     capture(
                             () ->
@@ -439,7 +507,10 @@ final class RealWorldMvcInfrastructureFixtures {
                                             .connectTimeout(CLIENT_TIMEOUT)
                                             .build()
                                             .send(
-                                                    HttpRequest.newBuilder(uri).timeout(CLIENT_TIMEOUT).GET().build(),
+                                                    HttpRequest.newBuilder(uri)
+                                                            .timeout(CLIENT_TIMEOUT)
+                                                            .GET()
+                                                            .build(),
                                                     HttpResponse.BodyHandlers.ofByteArray()));
             serverTask.get(COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             return failure;
@@ -451,7 +522,8 @@ final class RealWorldMvcInfrastructureFixtures {
         Path file = directory.resolve("fixture-" + value(variant));
         try {
             Files.createFile(file);
-            return capture(() -> Files.newOutputStream(file, StandardOpenOption.CREATE_NEW).close());
+            return capture(
+                    () -> Files.newOutputStream(file, StandardOpenOption.CREATE_NEW).close());
         } finally {
             Files.deleteIfExists(file);
             Files.deleteIfExists(directory);
@@ -483,8 +555,10 @@ final class RealWorldMvcInfrastructureFixtures {
 
     private static Throwable overlappingFileLock(int variant) throws Exception {
         Path file = Files.createTempFile("stackmate-lock-" + value(variant), ".bin");
-        try (FileChannel first = FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
-                FileChannel second = FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
+        try (FileChannel first =
+                        FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
+                FileChannel second =
+                        FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
                 FileLock ignored = first.lock(0, 1, false)) {
             return capture(() -> second.lock(0, 1, false));
         } finally {
@@ -495,7 +569,12 @@ final class RealWorldMvcInfrastructureFixtures {
     private static Throwable brokenBarrier(int variant) throws Exception {
         CyclicBarrier barrier = new CyclicBarrier(2);
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
-            var first = executor.submit(() -> barrier.await(25 + Math.floorMod(variant, 10), TimeUnit.MILLISECONDS));
+            var first =
+                    executor.submit(
+                            () ->
+                                    barrier.await(
+                                            25 + Math.floorMod(variant, 10),
+                                            TimeUnit.MILLISECONDS));
             capture(() -> first.get(COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS));
             return capture(barrier::await);
         }
@@ -512,7 +591,10 @@ final class RealWorldMvcInfrastructureFixtures {
                                 lock.lock();
                                 try {
                                     locked.countDown();
-                                    release.await(COORDINATION_TIMEOUT_MILLIS + Math.floorMod(variant, 10), TimeUnit.MILLISECONDS);
+                                    release.await(
+                                            COORDINATION_TIMEOUT_MILLIS
+                                                    + Math.floorMod(variant, 10),
+                                            TimeUnit.MILLISECONDS);
                                 } finally {
                                     lock.unlock();
                                 }
@@ -533,35 +615,84 @@ final class RealWorldMvcInfrastructureFixtures {
     private static Throwable daoAccountFailure(int variant, boolean locked) throws Exception {
         try {
             ClassLoader loader = RealWorldMvcInfrastructureFixtures.class.getClassLoader();
-            Class<?> userClass = Class.forName("org.springframework.security.core.userdetails.User", true, loader);
-            Class<?> userDetailsClass = Class.forName("org.springframework.security.core.userdetails.UserDetails", true, loader);
-            Class<?> userDetailsServiceClass = Class.forName("org.springframework.security.core.userdetails.UserDetailsService", true, loader);
-            Class<?> managerClass = Class.forName("org.springframework.security.provisioning.InMemoryUserDetailsManager", true, loader);
-            Class<?> providerClass = Class.forName("org.springframework.security.authentication.dao.DaoAuthenticationProvider", true, loader);
-            Class<?> encoderClass = Class.forName("org.springframework.security.crypto.password.NoOpPasswordEncoder", true, loader);
-            Class<?> tokenClass = Class.forName("org.springframework.security.authentication.UsernamePasswordAuthenticationToken", true, loader);
+            Class<?> userClass =
+                    Class.forName(
+                            "org.springframework.security.core.userdetails.User", true, loader);
+            Class<?> userDetailsClass =
+                    Class.forName(
+                            "org.springframework.security.core.userdetails.UserDetails",
+                            true,
+                            loader);
+            Class<?> userDetailsServiceClass =
+                    Class.forName(
+                            "org.springframework.security.core.userdetails.UserDetailsService",
+                            true,
+                            loader);
+            Class<?> managerClass =
+                    Class.forName(
+                            "org.springframework.security.provisioning.InMemoryUserDetailsManager",
+                            true,
+                            loader);
+            Class<?> providerClass =
+                    Class.forName(
+                            "org.springframework.security.authentication.dao.DaoAuthenticationProvider",
+                            true,
+                            loader);
+            Class<?> encoderClass =
+                    Class.forName(
+                            "org.springframework.security.crypto.password.NoOpPasswordEncoder",
+                            true,
+                            loader);
+            Class<?> tokenClass =
+                    Class.forName(
+                            "org.springframework.security.authentication.UsernamePasswordAuthenticationToken",
+                            true,
+                            loader);
 
             String username = (locked ? "locked-" : "disabled-") + value(variant);
-            Object builder = userClass.getMethod("withUsername", String.class).invoke(null, username);
-            builder = builder.getClass().getMethod("password", String.class).invoke(builder, "controlled-password");
-            builder = builder.getClass().getMethod("roles", String[].class).invoke(builder, (Object) new String[] {"USER"});
+            Object builder =
+                    userClass.getMethod("withUsername", String.class).invoke(null, username);
+            builder =
+                    builder.getClass()
+                            .getMethod("password", String.class)
+                            .invoke(builder, "controlled-password");
+            builder =
+                    builder.getClass()
+                            .getMethod("roles", String[].class)
+                            .invoke(builder, (Object) new String[] {"USER"});
             String accountMethod = locked ? "accountLocked" : "disabled";
-            builder = builder.getClass().getMethod(accountMethod, boolean.class).invoke(builder, true);
+            builder =
+                    builder.getClass()
+                            .getMethod(accountMethod, boolean.class)
+                            .invoke(builder, true);
             Object user = builder.getClass().getMethod("build").invoke(builder);
 
             Object users = Array.newInstance(userDetailsClass, 1);
             Array.set(users, 0, user);
             Object manager = managerClass.getConstructor(users.getClass()).newInstance(users);
-            Object provider = providerClass.getConstructor(userDetailsServiceClass).newInstance(manager);
+            Object provider =
+                    providerClass.getConstructor(userDetailsServiceClass).newInstance(manager);
             Object encoder = encoderClass.getMethod("getInstance").invoke(null);
-            Method setEncoder = Arrays.stream(providerClass.getMethods())
-                    .filter(method -> method.getName().equals("setPasswordEncoder"))
-                    .findFirst()
-                    .orElseThrow();
+            Method setEncoder =
+                    Arrays.stream(providerClass.getMethods())
+                            .filter(method -> method.getName().equals("setPasswordEncoder"))
+                            .findFirst()
+                            .orElseThrow();
             setEncoder.invoke(provider, encoder);
-            Object token = tokenClass.getMethod("unauthenticated", Object.class, Object.class)
-                    .invoke(null, username, "controlled-password");
-            return captureReflective(() -> providerClass.getMethod("authenticate", Class.forName("org.springframework.security.core.Authentication", true, loader)).invoke(provider, token));
+            Object token =
+                    tokenClass
+                            .getMethod("unauthenticated", Object.class, Object.class)
+                            .invoke(null, username, "controlled-password");
+            return captureReflective(
+                    () ->
+                            providerClass
+                                    .getMethod(
+                                            "authenticate",
+                                            Class.forName(
+                                                    "org.springframework.security.core.Authentication",
+                                                    true,
+                                                    loader))
+                                    .invoke(provider, token));
         } catch (ClassNotFoundException missingDependency) {
             throw new FixtureUnavailableException(
                     "G53-R-IN-012/013 require spring-security-core on the benchmark test classpath; the current dependencies do not provide it",
@@ -575,7 +706,8 @@ final class RealWorldMvcInfrastructureFixtures {
         SecretKey key = generator.generateKey();
         byte[] nonce = new byte[12];
         seededRandom(variant ^ 0x53_14).nextBytes(nonce);
-        byte[] plain = ("controlled-" + value(variant)).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] plain =
+                ("controlled-" + value(variant)).getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
         Cipher encrypt = Cipher.getInstance("AES/GCM/NoPadding");
         encrypt.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(128, nonce));
@@ -596,19 +728,23 @@ final class RealWorldMvcInfrastructureFixtures {
     }
 
     private static JsonMapper strictMapper() {
-        return JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build();
+        return JsonMapper.builder()
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
     }
 
     private static JsonMapper depthMapper() {
         JsonFactory factory =
                 JsonFactory.builder()
-                        .streamReadConstraints(StreamReadConstraints.builder().maxNestingDepth(2).build())
+                        .streamReadConstraints(
+                                StreamReadConstraints.builder().maxNestingDepth(2).build())
                         .build();
         return JsonMapper.builder(factory).build();
     }
 
     private static JsonMapper duplicateMapper() {
-        JsonFactory factory = JsonFactory.builder().enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build();
+        JsonFactory factory =
+                JsonFactory.builder().enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build();
         return JsonMapper.builder(factory).build();
     }
 
@@ -649,66 +785,97 @@ final class RealWorldMvcInfrastructureFixtures {
     private static Throwable verifyManifestTopology(String familyId, Throwable failure) {
         List<String> expected =
                 switch (familyId) {
-                    case "G53-R-MV-001" -> List.of("org.springframework.web.servlet.resource.NoResourceFoundException");
-                    case "G53-R-MV-002" -> List.of("org.springframework.web.HttpMediaTypeNotAcceptableException");
-                    case "G53-R-MV-003" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.databind.exc.InvalidFormatException",
-                            "java.time.format.DateTimeParseException",
-                            "java.time.DateTimeException");
-                    case "G53-R-MV-004" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.databind.exc.UnrecognizedPropertyException");
-                    case "G53-R-MV-005" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.databind.exc.InvalidTypeIdException");
-                    case "G53-R-MV-006" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.core.exc.InputCoercionException");
-                    case "G53-R-MV-007" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.core.exc.StreamConstraintsException");
-                    case "G53-R-MV-008" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.core.exc.StreamReadException");
-                    case "G53-R-MV-009" -> List.of(
-                            "org.springframework.http.converter.HttpMessageNotReadableException",
-                            "tools.jackson.databind.exc.ValueInstantiationException",
-                            "com.example.gatec.DomainInputException");
-                    case "G53-R-MV-010" -> List.of("org.springframework.web.client.HttpClientErrorException$NotFound");
-                    case "G53-R-MV-011" -> List.of("org.springframework.web.client.UnknownContentTypeException");
-                    case "G53-R-MV-012" -> List.of("org.springframework.web.server.ResponseStatusException");
-                    case "G53-R-MV-013" -> List.of(
-                            "jakarta.servlet.ServletException", "java.lang.InterruptedException");
-                    case "G53-R-MV-014" -> List.of("org.springframework.web.context.request.async.AsyncRequestNotUsableException");
-                    case "G53-R-MV-015" -> List.of("org.springframework.web.bind.MissingRequestAttributeException");
+                    case "G53-R-MV-001" ->
+                            List.of(
+                                    "org.springframework.web.servlet.resource.NoResourceFoundException");
+                    case "G53-R-MV-002" ->
+                            List.of("org.springframework.web.HttpMediaTypeNotAcceptableException");
+                    case "G53-R-MV-003" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.databind.exc.InvalidFormatException",
+                                    "java.time.format.DateTimeParseException",
+                                    "java.time.DateTimeException");
+                    case "G53-R-MV-004" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.databind.exc.UnrecognizedPropertyException");
+                    case "G53-R-MV-005" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.databind.exc.InvalidTypeIdException");
+                    case "G53-R-MV-006" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.core.exc.InputCoercionException");
+                    case "G53-R-MV-007" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.core.exc.StreamConstraintsException");
+                    case "G53-R-MV-008" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.core.exc.StreamReadException");
+                    case "G53-R-MV-009" ->
+                            List.of(
+                                    "org.springframework.http.converter.HttpMessageNotReadableException",
+                                    "tools.jackson.databind.exc.ValueInstantiationException",
+                                    "com.example.gatec.DomainInputException");
+                    case "G53-R-MV-010" ->
+                            List.of(
+                                    "org.springframework.web.client.HttpClientErrorException$NotFound");
+                    case "G53-R-MV-011" ->
+                            List.of("org.springframework.web.client.UnknownContentTypeException");
+                    case "G53-R-MV-012" ->
+                            List.of("org.springframework.web.server.ResponseStatusException");
+                    case "G53-R-MV-013" ->
+                            List.of(
+                                    "jakarta.servlet.ServletException",
+                                    "java.lang.InterruptedException");
+                    case "G53-R-MV-014" ->
+                            List.of(
+                                    "org.springframework.web.context.request.async.AsyncRequestNotUsableException");
+                    case "G53-R-MV-015" ->
+                            List.of(
+                                    "org.springframework.web.bind.MissingRequestAttributeException");
                     case "G53-R-IN-001" -> List.of("java.net.http.HttpTimeoutException");
                     case "G53-R-IN-002" -> List.of("java.net.SocketException");
-                    case "G53-R-IN-003" -> List.of(
-                            "javax.net.ssl.SSLHandshakeException",
-                            "javax.net.ssl.SSLHandshakeException",
-                            "java.security.cert.CertificateException");
+                    case "G53-R-IN-003" ->
+                            List.of(
+                                    "javax.net.ssl.SSLHandshakeException",
+                                    "javax.net.ssl.SSLHandshakeException",
+                                    "java.security.cert.CertificateException");
                     case "G53-R-IN-004" -> List.of("javax.net.ssl.SSLHandshakeException");
-                    case "G53-R-IN-005" -> List.of(
-                            "java.io.IOException", "java.io.IOException", "java.io.EOFException");
+                    case "G53-R-IN-005" ->
+                            List.of(
+                                    "java.io.IOException",
+                                    "java.io.IOException",
+                                    "java.io.EOFException");
                     case "G53-R-IN-006" -> List.of("java.nio.file.FileAlreadyExistsException");
                     case "G53-R-IN-007" -> List.of("java.nio.file.DirectoryNotEmptyException");
                     case "G53-R-IN-008" -> List.of("java.nio.channels.ClosedChannelException");
-                    case "G53-R-IN-009" -> List.of("java.nio.channels.OverlappingFileLockException");
+                    case "G53-R-IN-009" ->
+                            List.of("java.nio.channels.OverlappingFileLockException");
                     case "G53-R-IN-010" -> List.of("java.util.concurrent.BrokenBarrierException");
                     case "G53-R-IN-011" -> List.of("java.lang.IllegalMonitorStateException");
-                    case "G53-R-IN-012" -> List.of("org.springframework.security.authentication.LockedException");
-                    case "G53-R-IN-013" -> List.of("org.springframework.security.authentication.DisabledException");
+                    case "G53-R-IN-012" ->
+                            List.of("org.springframework.security.authentication.LockedException");
+                    case "G53-R-IN-013" ->
+                            List.of(
+                                    "org.springframework.security.authentication.DisabledException");
                     case "G53-R-IN-014" -> List.of("javax.crypto.AEADBadTagException");
-                    case "G53-R-MV-016" -> List.of(
-                            "org.springframework.web.bind.MissingPathVariableException");
-                    default -> throw new AssertionError("validated family was not mapped: " + familyId);
+                    case "G53-R-MV-016" ->
+                            List.of("org.springframework.web.bind.MissingPathVariableException");
+                    default ->
+                            throw new AssertionError(
+                                    "validated family was not mapped: " + familyId);
                 };
 
         Throwable current = failure;
         for (String expectedType : expected) {
             if (current == null || !current.getClass().getName().equals(expectedType)) {
-                String actualType = current == null ? "<missing cause>" : current.getClass().getName();
+                String actualType =
+                        current == null ? "<missing cause>" : current.getClass().getName();
                 throw new FixtureUnavailableException(
                         familyId
                                 + " produced "
@@ -733,19 +900,27 @@ final class RealWorldMvcInfrastructureFixtures {
 
     private static Throwable captureReflective(ThrowingAction action) throws Exception {
         Throwable failure = capture(action);
-        return failure instanceof InvocationTargetException invocation && invocation.getCause() != null
+        return failure instanceof InvocationTargetException invocation
+                        && invocation.getCause() != null
                 ? invocation.getCause()
                 : failure;
     }
 
     private static Throwable withHttpServer(
             int variant, HttpHandlerAction handler, UriFailureAction operation) throws Exception {
-        HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
+        HttpServer server =
+                HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             server.setExecutor(executor);
-            server.createContext("/fixture/" + value(variant), exchange -> handler.handle(exchange));
+            server.createContext(
+                    "/fixture/" + value(variant), exchange -> handler.handle(exchange));
             server.start();
-            URI uri = URI.create("http://localhost:" + server.getAddress().getPort() + "/fixture/" + value(variant));
+            URI uri =
+                    URI.create(
+                            "http://localhost:"
+                                    + server.getAddress().getPort()
+                                    + "/fixture/"
+                                    + value(variant));
             return operation.run(uri);
         } finally {
             server.stop(0);
@@ -981,17 +1156,29 @@ final class RealWorldMvcInfrastructureFixtures {
                         source,
                         "package com.example.gatec; public final class DomainInputException extends RuntimeException {"
                                 + " public DomainInputException(String message) { super(message); } }");
-                try (StandardJavaFileManager files = compiler.getStandardFileManager(null, null, null)) {
+                try (StandardJavaFileManager files =
+                        compiler.getStandardFileManager(null, null, null)) {
                     var units = files.getJavaFileObjects(source.toFile());
-                    Boolean success = compiler.getTask(null, files, null, List.of("-d", directory.toString()), null, units).call();
+                    Boolean success =
+                            compiler.getTask(
+                                            null,
+                                            files,
+                                            null,
+                                            List.of("-d", directory.toString()),
+                                            null,
+                                            units)
+                                    .call();
                     if (!Boolean.TRUE.equals(success)) {
                         throw new FixtureUnavailableException(
                                 "G53-R-MV-009 could not compile its controlled manifest domain exception",
                                 new IllegalStateException("JDK compiler returned false"));
                     }
                 }
-                byte[] bytecode = Files.readAllBytes(packageDirectory.resolve("DomainInputException.class"));
-                Class<?> type = new ByteArrayClassLoader().define("com.example.gatec.DomainInputException", bytecode);
+                byte[] bytecode =
+                        Files.readAllBytes(packageDirectory.resolve("DomainInputException.class"));
+                Class<?> type =
+                        new ByteArrayClassLoader()
+                                .define("com.example.gatec.DomainInputException", bytecode);
                 return (Class<? extends Throwable>) type.asSubclass(Throwable.class);
             } finally {
                 deleteTree(directory);
@@ -1009,7 +1196,11 @@ final class RealWorldMvcInfrastructureFixtures {
         }
     }
 
-    private record TlsMaterial(KeyPair keyPair, X509Certificate certificate, SSLContext serverContext, SSLContext trustContext) {
+    private record TlsMaterial(
+            KeyPair keyPair,
+            X509Certificate certificate,
+            SSLContext serverContext,
+            SSLContext trustContext) {
         private static TlsMaterial create(int variant) throws Exception {
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
             generator.initialize(2048, seededRandom(variant ^ 0x53_03));
@@ -1019,21 +1210,29 @@ final class RealWorldMvcInfrastructureFixtures {
             char[] password = ("fixture-" + value(variant)).toCharArray();
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(null, password);
-            keyStore.setKeyEntry("fixture", keyPair.getPrivate(), password, new java.security.cert.Certificate[] {certificate});
-            KeyManagerFactory keyManagers = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyStore.setKeyEntry(
+                    "fixture",
+                    keyPair.getPrivate(),
+                    password,
+                    new java.security.cert.Certificate[] {certificate});
+            KeyManagerFactory keyManagers =
+                    KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagers.init(keyStore, password);
             SSLContext serverContext = SSLContext.getInstance("TLS");
             serverContext.init(keyManagers.getKeyManagers(), null, seededRandom(variant ^ 0x53_04));
 
             X509TrustManager trustFixture = new FixtureTrustManager(certificate);
             SSLContext trustContext = SSLContext.getInstance("TLS");
-            trustContext.init(null, new TrustManager[] {trustFixture}, seededRandom(variant ^ 0x53_05));
+            trustContext.init(
+                    null, new TrustManager[] {trustFixture}, seededRandom(variant ^ 0x53_05));
             return new TlsMaterial(keyPair, certificate, serverContext, trustContext);
         }
 
         private SSLServerSocket serverSocket() throws IOException {
             return (SSLServerSocket)
-                    serverContext.getServerSocketFactory().createServerSocket(0, 1, InetAddress.getLoopbackAddress());
+                    serverContext
+                            .getServerSocketFactory()
+                            .createServerSocket(0, 1, InetAddress.getLoopbackAddress());
         }
 
         private SSLContext trustingContext() {
@@ -1049,18 +1248,21 @@ final class RealWorldMvcInfrastructureFixtures {
         }
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+        public void checkClientTrusted(X509Certificate[] chain, String authType)
+                throws java.security.cert.CertificateException {
             check(chain);
         }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+        public void checkServerTrusted(X509Certificate[] chain, String authType)
+                throws java.security.cert.CertificateException {
             check(chain);
         }
 
         private void check(X509Certificate[] chain) throws java.security.cert.CertificateException {
             if (chain == null || chain.length != 1 || !certificate.equals(chain[0])) {
-                throw new java.security.cert.CertificateException("untrusted controlled fixture certificate");
+                throw new java.security.cert.CertificateException(
+                        "untrusted controlled fixture certificate");
             }
         }
 
@@ -1075,11 +1277,27 @@ final class RealWorldMvcInfrastructureFixtures {
         private SelfSignedCertificate() {}
 
         private static X509Certificate create(KeyPair pair, int variant) throws Exception {
-            byte[] signatureAlgorithm = sequence(oid("1.2.840.113549.1.1.11"), der(0x05, new byte[0]));
-            byte[] commonName = sequence(set(sequence(oid("2.5.4.3"), der(0x0c, "fixture.invalid".getBytes(java.nio.charset.StandardCharsets.UTF_8)))));
-            byte[] validity = sequence(der(0x18, ascii("20200101000000Z")), der(0x18, ascii("20400101000000Z")));
+            byte[] signatureAlgorithm =
+                    sequence(oid("1.2.840.113549.1.1.11"), der(0x05, new byte[0]));
+            byte[] commonName =
+                    sequence(
+                            set(
+                                    sequence(
+                                            oid("2.5.4.3"),
+                                            der(
+                                                    0x0c,
+                                                    "fixture.invalid"
+                                                            .getBytes(
+                                                                    java.nio.charset
+                                                                            .StandardCharsets
+                                                                            .UTF_8)))));
+            byte[] validity =
+                    sequence(
+                            der(0x18, ascii("20200101000000Z")),
+                            der(0x18, ascii("20400101000000Z")));
             byte[] sanValue = sequence(der(0x82, ascii("fixture.invalid")));
-            byte[] extensions = der(0xa3, sequence(sequence(oid("2.5.29.17"), der(0x04, sanValue))));
+            byte[] extensions =
+                    der(0xa3, sequence(sequence(oid("2.5.29.17"), der(0x04, sanValue))));
             byte[] tbs =
                     sequence(
                             der(0xa0, integer(2)),
@@ -1095,7 +1313,8 @@ final class RealWorldMvcInfrastructureFixtures {
             signer.update(tbs);
             byte[] encoded = sequence(tbs, signatureAlgorithm, bitString(signer.sign()));
             return (X509Certificate)
-                    CertificateFactory.getInstance("X.509").generateCertificate(new ByteArrayInputStream(encoded));
+                    CertificateFactory.getInstance("X.509")
+                            .generateCertificate(new ByteArrayInputStream(encoded));
         }
 
         private static byte[] sequence(byte[]... values) {
@@ -1109,7 +1328,9 @@ final class RealWorldMvcInfrastructureFixtures {
         private static byte[] integer(int value) {
             byte[] bytes = ByteBuffer.allocate(4).putInt(value).array();
             int first = 0;
-            while (first < bytes.length - 1 && bytes[first] == 0 && (bytes[first + 1] & 0x80) == 0) {
+            while (first < bytes.length - 1
+                    && bytes[first] == 0
+                    && (bytes[first + 1] & 0x80) == 0) {
                 first++;
             }
             return der(0x02, Arrays.copyOfRange(bytes, first, bytes.length));

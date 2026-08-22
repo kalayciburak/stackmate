@@ -54,12 +54,12 @@ ignored local `<WSL_CACHE>/training/phase-5-3/` area, not Git.
 - Auditor SHA-256:
   `46f32fecec42d0e914e017b4d1260e357356b9fae174eacac1b49860e2ed9e50`
 - Final report SHA-256:
-  `8dc99f2b3094a01c59eafe495086c90b31c4b6691af3db2cd753c9825152a4cf`
+  `63ab07efbd7b2018fab4c98f17dd4aa81654921462803540eb2ffa72fce8a5b4`
 - Corpus manifest SHA-256:
   `42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee`
 - TRAIN SHA-256:
-  `3cfcb527e5319763b44bf1354b6244f400a854a5ad356deabd80e2a28c271ba0`
+  `ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93`
 - VALIDATION SHA-256:
-  `b71a298bfcb25dccb7a09a01041655d2ac3a9b158741903015fbcc0668abe548`
+  `bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789`
 
 The audit performed no network request and wrote only its exclusive local report.
