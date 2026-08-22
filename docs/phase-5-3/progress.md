@@ -13,8 +13,8 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 
 | Gate | State |
 |---|---|
-| Gate A: evaluation-path parity | IN_PROGRESS |
-| Gate B: failure taxonomy and contract diagnostics | NOT_RUN |
+| Gate A: evaluation-path parity | PASS; discrepancy explained and bounded |
+| Gate B: failure taxonomy and contract diagnostics | IN_PROGRESS |
 | Gate C: real-world corpus and leakage audit | NOT_RUN |
 | Gate D: future bounded-training recommendation | NOT_RUN |
 
@@ -47,3 +47,15 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 - Do not change locked expected answers or weaken the semantic validator.
 - Do not recommend future training unless evaluation parity and the new corpus are
   both evidence-backed.
+
+## Gate A result
+
+The baseline discrepancy is explained by four controlled effects: request-scoped
+llama.cpp grammar versus unconstrained generation, severe NF4 base degradation,
+development-versus-locked distribution differences, and measurable
+third-party-versus-official conversion behavior. Exact chat-template text matched;
+one prompt-file newline token was corrected but did not explain aggregate scores.
+
+Official BF16, NF4, F1, third-party Q4_K_M, official-converted BF16, and
+official-converted Q4_K_M paths were all measured on the same 40 development cases.
+The full matrix is in `evaluation-parity.md`.

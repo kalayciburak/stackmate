@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1",
+  "status": "LOCAL_PARITY_ARTIFACTS_CREATED",
+  "purpose": "Phase 5.3 evaluation-path parity only",
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "baseManifestSha256": "1dc49db3fd0a49ee7bf33190b04c1bac5d1ed489e87855a81c64ac7344571981",
+  "converter": {
+    "repository": "ggml-org/llama.cpp",
+    "commit": "11924d4c17abc27383376a1ac6a24fa3e36c1c0c",
+    "script": "convert_hf_to_gguf.py",
+    "scriptSha256": "8f1bed9466221e57e434caa7ee720abe1569deb6bc2fe5a65da950ea66c8e737",
+    "sourceTreeClean": true,
+    "remoteConversion": false,
+    "trustRemoteCode": false
+  },
+  "quantizer": {
+    "release": "b10223",
+    "commit": "11924d4c17abc27383376a1ac6a24fa3e36c1c0c",
+    "artifact": "llama-quantize.exe",
+    "bytes": 9216,
+    "sha256": "b8e7a39d4abafdd594c2895434a48621c779e566e608936319936745252ca3c5",
+    "threads": 16
+  },
+  "outputs": {
+    "bf16": {
+      "path": "<WSL_CACHE>/gguf/phase-5-3/qwen3.5-2b-official-15852e8-bf16.gguf",
+      "bytes": 3897387456,
+      "sha256": "577da3084b5b231ce973299394676ebc30104d3743200c13d5ccdb8f8bbed3c6",
+      "tensorCount": 335,
+      "tracked": false,
+      "published": false
+    },
+    "q4KM": {
+      "path": "<WSL_CACHE>/gguf/phase-5-3/qwen3.5-2b-official-15852e8-q4_k_m.gguf",
+      "bytes": 1312164288,
+      "sha256": "935bdb7b044e16348543d587dcc741b3bf3a0b33ab1d392502d4865a32d751b7",
+      "quantization": "Q4_K_M",
+      "tracked": false,
+      "published": false
+    }
+  },
+  "network": {
+    "officialSourceFetchOnly": true,
+    "modelUpload": false,
+    "datasetUpload": false,
+    "remoteInference": false,
+    "telemetry": false
+  }
+}
