@@ -93,7 +93,10 @@ def main() -> None:
         failures.append("BASE_MODEL_PATH_NOT_SET")
     else:
         model_path = Path(model_value).expanduser().resolve()
-        base["path"] = str(model_path)
+        base["path"] = (
+            "<WSL_HF_CACHE>/models--Qwen--Qwen3.5-2B/snapshots/"
+            + config["baseModel"]["revision"]
+        )
         missing = [name for name in config["baseModel"]["requiredFiles"] if not (model_path / name).is_file()]
         repository_segment = "models--" + config["baseModel"]["repository"].replace("/", "--")
         snapshot_revision_verified = (

@@ -110,12 +110,11 @@ class ResearchControlsTest(unittest.TestCase):
                 required_keys=required,
             )
 
-    def test_blocked_preflight_did_not_attempt_network_or_create_adapter_lock(self) -> None:
+    def test_historical_blocked_preflight_record_is_preserved(self) -> None:
         preflight = self._read(ROOT / "reports/environment-preflight.json")
         self.assertEqual("BLOCKED", preflight["status"])
         self.assertEqual(["BASE_MODEL_PATH_NOT_SET"], preflight["failures"])
         self.assertFalse(preflight["networkAccessAttempted"])
-        self.assertFalse((ROOT / "reports/selected-adapter.json").exists())
 
     @staticmethod
     def _read(path: Path) -> dict:
