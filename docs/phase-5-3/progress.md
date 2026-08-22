@@ -14,7 +14,7 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 | Gate | State |
 |---|---|
 | Gate A: evaluation-path parity | PASS; discrepancy explained and bounded |
-| Gate B: failure taxonomy and contract diagnostics | IN_PROGRESS |
+| Gate B: failure taxonomy and contract diagnostics | PASS; T1 contract selected |
 | Gate C: real-world corpus and leakage audit | NOT_RUN |
 | Gate D: future bounded-training recommendation | NOT_RUN |
 

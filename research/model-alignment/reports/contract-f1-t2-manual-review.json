@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1",
+  "status": "TWO_PASS_MANUAL_REVIEW_COMPLETE",
+  "scope": "F1 T2 prose-only on 40 frozen development parity cases",
+  "reviewerCount": 1,
+  "reviewMethod": "Two complete passes in different deterministic case orders",
+  "pass1": {
+    "order": "frozen corpus order",
+    "useful": 34,
+    "addsClarityBeyondDeterministicCandidateText": 0,
+    "confusion": 6,
+    "repetition": 0,
+    "confusionCaseIds": [
+      "DB-H2-UNIQUE-001",
+      "DB-H2-FK-003",
+      "DB-H2-TABLE-004",
+      "NET-UNKNOWN-ADDRESS-005",
+      "SPRING-PROPERTY-007",
+      "MVC-VALIDATION-007"
+    ]
+  },
+  "pass2": {
+    "order": "SHA-256(pass2-53102|caseId)",
+    "useful": 33,
+    "addsClarityBeyondDeterministicCandidateText": 0,
+    "confusion": 7,
+    "repetition": 0,
+    "confusionCaseIds": [
+      "DB-H2-UNIQUE-001",
+      "DB-H2-FK-003",
+      "DB-H2-TABLE-004",
+      "NET-UNKNOWN-ADDRESS-005",
+      "SPRING-PROPERTY-007",
+      "MVC-VALIDATION-007",
+      "CONC-TIMEOUT-003"
+    ]
+  },
+  "disagreements": {
+    "pass2OnlyConfusion": ["CONC-TIMEOUT-003"],
+    "resolution": "Conservative union retained"
+  },
+  "conservativeResult": {
+    "cases": 40,
+    "useful": 33,
+    "usefulRate": 0.825,
+    "addsClarity": 0,
+    "addsClarityRate": 0.0,
+    "confusion": 7,
+    "repetition": 0,
+    "unsupportedTechnicalClaims": 4,
+    "unsupportedClaimCaseIds": [
+      "DB-H2-TABLE-004",
+      "NET-UNKNOWN-ADDRESS-005",
+      "SPRING-PROPERTY-007",
+      "MVC-VALIDATION-007"
+    ]
+  },
+  "decision": "MODEL_PROSE_ONLY_REJECTED",
+  "reason": "The model often emitted meta-commentary instead of explanation and introduced four unsupported technical details. Deterministic candidate/check rendering is clearer and safer."
+}

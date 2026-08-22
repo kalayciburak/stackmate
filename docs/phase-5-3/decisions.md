@@ -37,3 +37,10 @@ F1 remains the only selected adapter. Phase 5.3 creates no F3 configuration and
 runs no LoRA or QLoRA training. A future one-shot recommendation is permitted only
 if evaluation parity is explained or bounded and a 120-family real-world corpus
 passes family separation, ground-truth review, and leakage controls.
+
+## D6: Separate model selection from prose
+
+Development ablations select `SEPARATE_SELECTION_AND_PROSE`: a future model emits
+only request-local ordinal cause/check selections and a limitation; Java validates,
+maps, and renders trusted deterministic text. This is a future research contract,
+not a Phase 5.3 production-schema change. ADR 0031 records the evidence.
