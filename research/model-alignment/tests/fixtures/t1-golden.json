@@ -1,0 +1,602 @@
+{
+  "schemaVersion": "1",
+  "fixtures": [
+    {
+      "id": "valid-single-00",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-01",
+      "raw": "{\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-02",
+      "raw": "{\"selectedCauseIndexes\":[2],\"selectedCheckIndexes\":[2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-03",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-04",
+      "raw": "{\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-05",
+      "raw": "{\"selectedCauseIndexes\":[2],\"selectedCheckIndexes\":[2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-06",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-07",
+      "raw": "{\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-08",
+      "raw": "{\"selectedCauseIndexes\":[2],\"selectedCheckIndexes\":[2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-09",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-10",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-11",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-12",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-13",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-14",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-15",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-16",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-17",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-18",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-19",
+      "raw": "{\"selectedCauseIndexes\":[0,1],\"selectedCheckIndexes\":[1,2],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-20",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-21",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-22",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-23",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-24",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "duplicate-cause",
+      "raw": "{\"selectedCauseIndexes\":[0,0],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-check",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[1,1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "negative-cause",
+      "raw": "{\"selectedCauseIndexes\":[-1],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "out-of-bounds-check",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[3],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "missing-check",
+      "raw": "{\"selectedCauseIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "extra-field",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null,\"extra\":true}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "EXTRA_FIELDS"
+        ]
+      }
+    },
+    {
+      "id": "invalid-limitation",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":\"NOT_ALLOWED\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      }
+    },
+    {
+      "id": "pair-mismatch",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_CHECK_PAIR_MISMATCH"
+        ]
+      }
+    },
+    {
+      "id": "cause-not-array",
+      "raw": "{\"selectedCauseIndexes\":\"0\",\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "cause-bool",
+      "raw": "{\"selectedCauseIndexes\":[true],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "root-array",
+      "raw": "[]",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      }
+    },
+    {
+      "id": "invalid-json",
+      "raw": "{",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      }
+    },
+    {
+      "id": "trailing-prose",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":null} trailing",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      }
+    },
+    {
+      "id": "empty-diagnose-null",
+      "raw": "{\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "selected-insufficient",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":\"EVIDENCE_INSUFFICIENT\"}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "negative-check",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[-1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-both",
+      "raw": "{\"selectedCauseIndexes\":[0,0],\"selectedCheckIndexes\":[1,1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE",
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "check-not-array",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":\"0\",\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "limitation-number",
+      "raw": "{\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0],\"limitation\":0}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      }
+    },
+    {
+      "id": "empty-object",
+      "raw": "{}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "valid-whitespace",
+      "raw": "  {\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[2],\"limitation\":null}  ",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-unicode-irrelevant",
+      "raw": "{\"selectedCauseIndexes\":[2],\"selectedCheckIndexes\":[1],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "out-of-bounds-both",
+      "raw": "{\"selectedCauseIndexes\":[3],\"selectedCheckIndexes\":[3],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS",
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "mixed-index-types",
+      "raw": "{\"selectedCauseIndexes\":[0,\"1\"],\"selectedCheckIndexes\":[0],\"limitation\":null}",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "null-root",
+      "raw": "null",
+      "causeCount": 3,
+      "checkCount": 3,
+      "expected": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS_PRESERVED",
+  "startingHead": "8d12ca3ee740a87bf438b5ba3b6726040bbbfc73",
+  "startingTag": "phase-5-4-1-complete",
+  "archivePath": "<WSL_CACHE>/phase-5-4-2/forensic/original",
+  "artifacts": {
+    "lockedInputs": {"sha256": "e7323f558fbe968711daa1075ed106a64f9e8d66e12d2292153bb6410d792777", "sizeBytes": 302526},
+    "rawReport": {"sha256": "6a222a12dfea9d612510ded7861893f7f3f8dc1b12af47cef927da14033a1b60", "sizeBytes": 404244},
+    "authoritativeReport": {"sha256": "83c9218f7733f91d4911254aa872217fbccc24ec7b029c74337594b56e782ea3", "sizeBytes": 322739},
+    "accessReceipt": {"sha256": "502bfbfcae48474c752b3ac8b142ecd19d76f4d67cc9944f4d52952dc6e6f81f", "sizeBytes": 903},
+    "baseManifest": "1dc49db3fd0a49ee7bf33190b04c1bac5d1ed489e87855a81c64ac7344571981",
+    "selectedAdapterReport": "410a53337658b715e0446548bfb7b23102d58469d74df16d445dba8637b10284",
+    "selectedAdapterValidation": "d71d979d0e5964786e90d128a4351289fa2d4db447ad396a293157b824bb6153",
+    "trainingReport": "fb2177281247c1d356c62eea898a03aa6b6da3b55ee9855e19bfdfd6b3566ea3",
+    "memoryAttribution": "7979f032e8e417d3a81858b04375f6dcfb239d87718aacf52de888ff1995a863",
+    "tokenizationAudit": "986da692bfc4b3bd00422fb98a33321a68f027986a8277bb580a09e661c64ee1"
+  },
+  "mutationCheck": "Original artifact hashes matched before and after forensic classification.",
+  "weightsInRepository": false,
+  "credentialsInInventory": false
+}

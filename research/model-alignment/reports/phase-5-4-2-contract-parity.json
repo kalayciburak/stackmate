@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS_MISMATCH_IDENTIFIED",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "paths": {
+    "T1_VALIDATION": {
+      "promptContract": "T1_SELECTION_ONLY_ORDINAL",
+      "systemPromptSha256": "9daee6dc707ff1c347346f5f0c667cba2b03035ab3966ddaf362744e0c528897",
+      "outputKeys": ["selectedCauseIndexes", "selectedCheckIndexes", "limitation"],
+      "parser": "scripts/t1_contract.py / evaluate_real_world_f1.py",
+      "validator": "scripts/t1_contract.py / evaluate_real_world_f1.score",
+      "maxNewTokens": 128,
+      "candidateRepresentation": "local ordinal indexes plus candidateOrder causeIds/checkIds"
+    },
+    "L0_B0": {
+      "promptId": "P0",
+      "promptSha256": "3362afedc99b7c930a8423a33d011bb8b8a026d7072befef6041f6629b36fa03",
+      "outputSchema": "schema-v2 IDs and prose",
+      "parser": "scripts/run_locked_evaluation.py",
+      "validator": "scripts/ScoreLockedEvaluation.java / DefaultInferenceOutputValidator",
+      "maxNewTokens": 192,
+      "candidateRepresentation": "persistent cause/check/evidence IDs"
+    },
+    "L1_B1": {
+      "promptId": "P3",
+      "promptSha256": "d5117da41bd8af64982035fb75dbac91968249ea48fd02f120c532755074bf7f",
+      "outputSchema": "schema-v2 IDs and prose",
+      "parser": "scripts/run_locked_evaluation.py",
+      "validator": "scripts/ScoreLockedEvaluation.java / DefaultInferenceOutputValidator",
+      "maxNewTokens": 192,
+      "candidateRepresentation": "persistent cause/check/evidence IDs"
+    },
+    "L2_A1": {
+      "promptId": "P3",
+      "promptSha256": "d5117da41bd8af64982035fb75dbac91968249ea48fd02f120c532755074bf7f",
+      "outputSchema": "schema-v2 IDs and prose",
+      "parser": "scripts/run_locked_evaluation.py",
+      "validator": "scripts/ScoreLockedEvaluation.java / DefaultInferenceOutputValidator",
+      "maxNewTokens": 192,
+      "candidateRepresentation": "persistent cause/check/evidence IDs"
+    },
+    "L3_A2": {
+      "promptId": "P2",
+      "promptSha256": "9f40df4491fcb5a009b05d94c505bb4f1105e34f0fd48c7231bbae78fdd7e213",
+      "outputSchema": "schema-v2 IDs and prose",
+      "parser": "scripts/run_locked_evaluation.py",
+      "validator": "scripts/ScoreLockedEvaluation.java / DefaultInferenceOutputValidator",
+      "maxNewTokens": 192,
+      "candidateRepresentation": "persistent cause/check/evidence IDs"
+    }
+  },
+  "mismatchBoundary": "A1/A2 condition mapping injects P3/P2 schema-v2 prompts; no T1 prompt or ordinal parser is used in the locked path.",
+  "t1SchemaExampleSha256": "c04d55dc313934f78b78900cf3ebd3413ae9a523d17195a1f014a1f7a40ccd67",
+  "schemaV2ExampleSha256": "ab54222f92f83b44ebb3c8ad8d321c874cce597149c8e7ab7cb7f476cdc2e844"
+}

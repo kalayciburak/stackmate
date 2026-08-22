@@ -145,3 +145,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Phase 3 Qwen3.5-2B and Qwen3.5-4B Q4_K_M configurations are also `NOT_VIABLE`. The 2B model failed Turkish
   selection/usefulness; the 4B model failed the mandatory 85% cause/check selection gate. Gates B and C were not
   run, so there is no production llama.cpp adapter or automatic provisioning.
+## Unreleased
+
+- Added Phase 5.4.2 T1/schema-v2 contract recovery evidence and an authoritative
+  cross-language ordinal T1 scorer.
+- Preserved and forensically classified the Phase 5.4.1 locked outputs without
+  regeneration; fresh-final qualification remains blocked pending an independent
+  corpus.

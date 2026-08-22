@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1",
+  "status": "FRESH_FINAL_NOT_AVAILABLE",
+  "requiredFamilies": 30,
+  "requiredRealFamilies": 24,
+  "requiredSyntheticAdversarialFamilies": 6,
+  "availableIndependentFreshFamilies": 0,
+  "existingCatalog": {
+    "manifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee",
+    "familyCount": 120,
+    "trainFamilies": 70,
+    "validationFamilies": 20,
+    "historicalLockedFinalFamilies": 30,
+    "realFamilies": 90,
+    "syntheticFamilies": 30
+  },
+  "prohibitedPriorManifests": {
+    "corpusV2": "292b395f6024837a52878b38a6c0170a62cb29fdfcc89df68b845ced7732f294",
+    "corpusV3": "eeab25e72c2a63785d45381681bdfb9f850c2e17e721c79750b4d576e6aba52a",
+    "corpusV4": "9b5477bf2e1ea1593b3559a2696a0f5e9043f8d34577fbc86be85663d3d6f5e1"
+  },
+  "decision": "Do not fabricate new real recipes or relabel prior families; stop before Gate E.",
+  "modelExecution": false,
+  "push": false
+}

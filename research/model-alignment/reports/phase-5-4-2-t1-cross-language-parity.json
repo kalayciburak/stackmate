@@ -1,0 +1,804 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "fixtures": 50,
+  "passed": 50,
+  "failed": 0,
+  "fixtureSha256": "cb084e5eb12d544aea425b75bb34962c358d5e0da309982e551fea6aa8fe32b5",
+  "cases": [
+    {
+      "id": "valid-single-00",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-01",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-02",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-03",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-04",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-05",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-06",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-07",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-08",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-single-09",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-10",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-11",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-12",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-13",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-14",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-15",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-16",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-17",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-18",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-multi-19",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-20",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-21",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-22",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-23",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-restraint-24",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "duplicate-cause",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-check",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "negative-cause",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "out-of-bounds-check",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "missing-check",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "extra-field",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "EXTRA_FIELDS"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "EXTRA_FIELDS"
+        ]
+      }
+    },
+    {
+      "id": "invalid-limitation",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      }
+    },
+    {
+      "id": "pair-mismatch",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_CHECK_PAIR_MISMATCH"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_CHECK_PAIR_MISMATCH"
+        ]
+      }
+    },
+    {
+      "id": "cause-not-array",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "cause-bool",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "root-array",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      }
+    },
+    {
+      "id": "invalid-json",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      }
+    },
+    {
+      "id": "trailing-prose",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_JSON"
+        ]
+      }
+    },
+    {
+      "id": "empty-diagnose-null",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "selected-insufficient",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "negative-check",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-both",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE",
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_DUPLICATE",
+          "SELECTEDCHECKINDEXES_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "id": "check-not-array",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "limitation-number",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "INVALID_LIMITATION"
+        ]
+      }
+    },
+    {
+      "id": "empty-object",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "MISSING_FIELDS",
+          "SELECTEDCAUSEINDEXES_NOT_ARRAY",
+          "SELECTEDCHECKINDEXES_NOT_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "valid-whitespace",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "valid-unicode-irrelevant",
+      "equal": true,
+      "python": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      },
+      "java": {
+        "exactT1": true,
+        "boundsValid": true,
+        "failureCodes": []
+      }
+    },
+    {
+      "id": "out-of-bounds-both",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS",
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "CAUSE_INDEX_OUT_OF_BOUNDS",
+          "CHECK_INDEX_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "id": "mixed-index-types",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "SELECTEDCAUSEINDEXES_NOT_INTEGER_ARRAY"
+        ]
+      }
+    },
+    {
+      "id": "null-root",
+      "equal": true,
+      "python": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      },
+      "java": {
+        "exactT1": false,
+        "boundsValid": false,
+        "failureCodes": [
+          "ROOT_NOT_OBJECT"
+        ]
+      }
+    }
+  ]
+}
