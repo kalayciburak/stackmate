@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1",
+  "status": "SELECTED_VALIDATION_ONLY",
+  "adapterId": "P5.4.1-T1-checkpoint-18",
+  "baseModelRepository": "Qwen/Qwen3.5-2B",
+  "baseModelRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "adapterPath": "<WSL_CACHE>/adapters/phase-5-4-1/selected-P5.4-T1-real-world-r8",
+  "adapterSha256": "7848c9a140d2616e009b5179aa4a02867590f95dd261154c0b983ee45c187b49",
+  "adapterSizeBytes": 53704036,
+  "sourceCheckpoint": "checkpoint-18",
+  "sourceCheckpointDirectorySha256": "fd136663aed59a4d9487fc276e85e1d3a24ddc13dfa5e037ecfe59868f733bb9",
+  "trainingReportSha256": "fb2177281247c1d356c62eea898a03aa6b6da3b55ee9855e19bfdfd6b3566ea3",
+  "configurationSha256": "5e2c6b1657c9f026af44993e84504952ceb0bf8d046883814546c78901bb83b6",
+  "memoryAttributionSha256": "7979f032e8e417d3a81858b04375f6dcfb239d87718aacf52de888ff1995a863",
+  "dataset": {
+    "manifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+    "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+    "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee"
+  },
+  "sealedFinalDescriptorSha256": "53f3ae08ff53bf192da6cd54f3a05de62cc9c3d0ec7fbadedf3b1c2c6caed61e",
+  "selectionMetrics": {
+    "rows": 40,
+    "validJson": {"matched": 40, "total": 40},
+    "validStructured": {"matched": 40, "total": 40},
+    "causeAccuracy": {"matched": 39, "total": 40},
+    "checkAccuracy": {"matched": 40, "total": 40},
+    "jointAccuracy": {"matched": 39, "total": 40},
+    "diagnoseJointAccuracy": {"matched": 17, "total": 18},
+    "strictRestraint": {"matched": 22, "total": 22},
+    "unknownIndexes": 0,
+    "contractFieldMismatch": 0,
+    "genericFallbackMisuse": 0,
+    "hiddenThinking": 0,
+    "orderInvariance": {"matched": 19, "total": 20}
+  },
+  "rejectedCheckpoints": [
+    {"checkpoint": "9", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "8872adbc240a2f6ca1161442b0df2f029c88030559d0333cfdd7e2295c39eada"},
+    {"checkpoint": "27", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "e59deaa20b999ad6dab43c36b83296aa33fc6c40123b968fc66f453be4c4cafc"},
+    {"checkpoint": "36", "cause": 37, "check": 36, "joint": 36, "order": 18, "adapterSha256": "3e8305622d4bf144da67b8a22580e5dfcac7f18b7e309542b4fa7336541c3472"},
+    {"checkpoint": "45", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "2f1b77a5d2dbf1c48e8e9f9ab3c8518a0c662f51163e7a98d35ee014fa1bce1a"},
+    {"checkpoint": "54", "cause": 38, "check": 37, "joint": 37, "order": 18, "adapterSha256": "28e1f70881d2519136e16bd701e3af05946bc2a58c79e86d40c58315831b3d49"}
+  ],
+  "selectionCommit": "TO_BE_RECORDED_BY_SELECTION_COMMIT",
+  "lockedFinalOpened": false,
+  "selectionUsesLockedData": false
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1",
+  "status": "FROZEN_BEFORE_REAL_TRAINING",
+  "runId": "P5.4-T1-real-world-r8",
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "precision": "BF16_LORA",
+  "allocator": "expandable_segments:True",
+  "rank": 8,
+  "alpha": 16,
+  "dropout": 0.05,
+  "learningRate": 0.0001,
+  "epochs": 6,
+  "perDeviceTrainBatchSize": 1,
+  "gradientAccumulationSteps": 16,
+  "gradientCheckpointing": true,
+  "gradientCheckpointingUseReentrant": false,
+  "maximumSequenceLength": 2048,
+  "seed": 520021,
+  "targetModules": [
+    "down_proj", "gate_proj", "in_proj_a", "in_proj_b", "in_proj_qkv", "in_proj_z",
+    "k_proj", "o_proj", "out_proj", "q_proj", "up_proj", "v_proj"
+  ],
+  "dataset": {
+    "trainRows": 140,
+    "validationRows": 40,
+    "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+    "manifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+    "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee"
+  },
+  "inputArtifacts": {
+    "configurationSha256": "5e2c6b1657c9f026af44993e84504952ceb0bf8d046883814546c78901bb83b6",
+    "environmentSha256": "b81c1ca678e7a8c30ad8b2906bd571416baf5a5b47af31ab7a61c1c01025d91a",
+    "architectureSha256": "bbc77177898f6de14dd26f96f7e6315c52b7c9fc16ee0b0ab13510f20909810f",
+    "tokenizationAuditSha256": "986da692bfc4b3bd00422fb98a33321a68f027986a8277bb580a09e661c64ee1",
+    "memoryAttributionSha256": "7979f032e8e417d3a81858b04375f6dcfb239d87718aacf52de888ff1995a863"
+  },
+  "executionRules": {
+    "resumeFromCheckpoint": false,
+    "lockedFinalLoadedDuringTraining": false,
+    "selectionUsesValidationOnly": true,
+    "maximumRealTrainingRuns": 1,
+    "additionalHyperparameterRuns": 0,
+    "mergeOrExportBeforeLockedPass": false
+  }
+}

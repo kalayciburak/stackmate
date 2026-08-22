@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "runId": "P5.4-T1-real-world-r8",
+  "smoke": false,
+  "precision": "BF16_LORA",
+  "trainingPerformed": true,
+  "lockedFinalLoaded": false,
+  "cudaAllocatorConfig": "expandable_segments:True",
+  "resumeFromCheckpoint": false,
+  "startTimeUtc": "2026-08-22T21:05:16+00:00",
+  "finishTimeUtc": "2026-08-22T22:14:32+00:00",
+  "durationSeconds": 4156.033,
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "configurationSha256": "5e2c6b1657c9f026af44993e84504952ceb0bf8d046883814546c78901bb83b6",
+  "environmentSha256": "b81c1ca678e7a8c30ad8b2906bd571416baf5a5b47af31ab7a61c1c01025d91a",
+  "architectureSha256": "bbc77177898f6de14dd26f96f7e6315c52b7c9fc16ee0b0ab13510f20909810f",
+  "datasetManifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+  "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+  "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+  "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee",
+  "seed": 520021,
+  "targetModules": [
+    "down_proj",
+    "gate_proj",
+    "in_proj_a",
+    "in_proj_b",
+    "in_proj_qkv",
+    "in_proj_z",
+    "k_proj",
+    "o_proj",
+    "out_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "trainableParameters": 8409600,
+  "totalParameters": 2221651264,
+  "trainablePercentage": 0.37996754429434054,
+  "trainExamples": 140,
+  "validationExamples": 40,
+  "trainTokensPerEpoch": 115180,
+  "validationTokens": 33468,
+  "trainingSteps": 54,
+  "epochs": 6.0,
+  "trainingMetrics": {
+    "train_runtime": 4104.5515,
+    "train_samples_per_second": 0.205,
+    "train_steps_per_second": 0.013,
+    "total_flos": 7093518544419840.0,
+    "train_loss": 0.04694274630121611,
+    "init_mem_cpu_alloc_delta": 32768,
+    "init_mem_gpu_alloc_delta": 0,
+    "init_mem_cpu_peaked_delta": 0,
+    "init_mem_gpu_peaked_delta": 0,
+    "train_mem_cpu_alloc_delta": 983678976,
+    "train_mem_gpu_alloc_delta": 34324992,
+    "train_mem_cpu_peaked_delta": 0,
+    "train_mem_gpu_peaked_delta": 3240994304,
+    "before_init_mem_cpu": 1143328768,
+    "before_init_mem_gpu": 4460145152,
+    "epoch": 6.0
+  },
+  "validationMetrics": {
+    "eval_loss": 0.01081980299204588,
+    "eval_runtime": 46.8818,
+    "eval_samples_per_second": 0.853,
+    "eval_steps_per_second": 0.853,
+    "epoch": 6.0,
+    "eval_mem_cpu_alloc_delta": -36917248,
+    "eval_mem_gpu_alloc_delta": 0,
+    "eval_mem_cpu_peaked_delta": 36917248,
+    "eval_mem_gpu_peaked_delta": 2623693824
+  },
+  "lossHistory": [
+    {
+      "loss": 0.9036904573440552,
+      "grad_norm": 7.222731590270996,
+      "learning_rate": 0.0001,
+      "epoch": 0.11428571428571428,
+      "step": 1
+    },
+    {
+      "eval_loss": 0.017660019919276237,
+      "eval_runtime": 47.3965,
+      "eval_samples_per_second": 0.844,
+      "eval_steps_per_second": 0.844,
+      "epoch": 1.0,
+      "step": 9
+    },
+    {
+      "loss": 0.13943013879987928,
+      "grad_norm": 1.0094449520111084,
+      "learning_rate": 8.333333333333334e-05,
+      "epoch": 1.1142857142857143,
+      "step": 10
+    },
+    {
+      "eval_loss": 0.009568465873599052,
+      "eval_runtime": 47.8171,
+      "eval_samples_per_second": 0.837,
+      "eval_steps_per_second": 0.837,
+      "epoch": 2.0,
+      "step": 18
+    },
+    {
+      "loss": 0.021765148639678954,
+      "grad_norm": 0.181446835398674,
+      "learning_rate": 6.481481481481482e-05,
+      "epoch": 2.2285714285714286,
+      "step": 20
+    },
+    {
+      "eval_loss": 0.009226104244589806,
+      "eval_runtime": 46.5476,
+      "eval_samples_per_second": 0.859,
+      "eval_steps_per_second": 0.859,
+      "epoch": 3.0,
+      "step": 27
+    },
+    {
+      "loss": 0.010592638701200485,
+      "grad_norm": 0.28528931736946106,
+      "learning_rate": 4.62962962962963e-05,
+      "epoch": 3.342857142857143,
+      "step": 30
+    },
+    {
+      "eval_loss": 0.01224576961249113,
+      "eval_runtime": 47.5107,
+      "eval_samples_per_second": 0.842,
+      "eval_steps_per_second": 0.842,
+      "epoch": 4.0,
+      "step": 36
+    },
+    {
+      "loss": 0.0032253507524728775,
+      "grad_norm": 0.14282584190368652,
+      "learning_rate": 2.777777777777778e-05,
+      "epoch": 4.457142857142857,
+      "step": 40
+    },
+    {
+      "eval_loss": 0.013220081105828285,
+      "eval_runtime": 46.6917,
+      "eval_samples_per_second": 0.857,
+      "eval_steps_per_second": 0.857,
+      "epoch": 5.0,
+      "step": 45
+    },
+    {
+      "loss": 0.0017014754936099052,
+      "grad_norm": 0.04044191166758537,
+      "learning_rate": 9.259259259259259e-06,
+      "epoch": 5.571428571428571,
+      "step": 50
+    },
+    {
+      "eval_loss": 0.01081980299204588,
+      "eval_runtime": 46.9283,
+      "eval_samples_per_second": 0.852,
+      "eval_steps_per_second": 0.852,
+      "epoch": 6.0,
+      "step": 54
+    },
+    {
+      "eval_loss": 0.01081980299204588,
+      "eval_runtime": 46.8818,
+      "eval_samples_per_second": 0.853,
+      "eval_steps_per_second": 0.853,
+      "epoch": 6.0,
+      "step": 54
+    }
+  ],
+  "gradientNormHistory": [
+    7.222731590270996,
+    1.0094449520111084,
+    0.181446835398674,
+    0.28528931736946106,
+    0.14282584190368652,
+    0.04044191166758537
+  ],
+  "peakGpuVramBytes": 7118163968,
+  "peakGpuVramReservedBytes": 7667187712,
+  "systemMemory": {
+    "totalBytes": 33201799168,
+    "availableBytesAtFinish": 30271086592
+  },
+  "checkpointSizes": {
+    "checkpoint-18": {
+      "sizeBytes": 71249325,
+      "sha256": "fd136663aed59a4d9487fc276e85e1d3a24ddc13dfa5e037ecfe59868f733bb9"
+    },
+    "checkpoint-27": {
+      "sizeBytes": 71249710,
+      "sha256": "e59deaa20b999ad6dab43c36b83296aa33fc6c40123b968fc66f453be4c4cafc"
+    },
+    "checkpoint-36": {
+      "sizeBytes": 71250094,
+      "sha256": "3e8305622d4bf144da67b8a22580e5dfcac7f18b7e309542b4fa7336541c3472"
+    },
+    "checkpoint-45": {
+      "sizeBytes": 71250481,
+      "sha256": "2f1b77a5d2dbf1c48e8e8f9ab3c8518a0c662f51163e7a98d35ee014fa1bce1a"
+    },
+    "checkpoint-54": {
+      "sizeBytes": 71250866,
+      "sha256": "28e1f70881d2519136e16bd701e3af05946bc2a58c79e86d40c58315831b3d49"
+    },
+    "checkpoint-9": {
+      "sizeBytes": 71248939,
+      "sha256": "8872adbc240a2f6ca1161442b0df2f029c88030559d0333cfdd7e2295c39eada"
+    }
+  },
+  "adapterPath": "<WSL_CACHE>/adapters/phase-5-4/P5.4-T1-real-world-r8",
+  "adapterSizeBytes": 53704036,
+  "adapterSha256": "d3e5fc5eb19da6b45632ab17ccfaeb8bfede386da843b254106a7f559cf78879",
+  "networkAccessDuringTraining": false,
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "python": "3.10.12",
+  "packages": {
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.50.0",
+    "peft": "0.20.0",
+    "torch": "2.13.0",
+    "transformers": "5.14.1"
+  }
+}

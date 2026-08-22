@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS_STAGE_SCOPED_BF16",
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "deviceTotalBytes": 17170956288,
+  "deviceTotalMiB": 16376,
+  "headroomRequirementBytes": 1073741824,
+  "datasetManifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+  "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+  "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+  "targetModules": [
+    "down_proj", "gate_proj", "in_proj_a", "in_proj_b", "in_proj_qkv", "in_proj_z",
+    "k_proj", "o_proj", "out_proj", "q_proj", "up_proj", "v_proj"
+  ],
+  "baseline": {
+    "allocator": "default",
+    "M0": {"peakAllocatedBytes": 4427087872, "peakReservedBytes": 4431282176, "minimumNvidiaFreeMiB": 10432, "deviceFreeBytes": 11350835200, "allocationRetries": 0, "oomCount": 0, "reportSha256": "80bc3d89932660f472404109d9834da00297251603b013d7a481364a685a904c", "traceSha256": "bea5efb898cdd240af9d8c51a56acf5d11266e34a4663de3e408c343dcb0d035"},
+    "M1": {"peakAllocatedBytes": 4460210688, "peakReservedBytes": 4466933760, "minimumNvidiaFreeMiB": 10449, "deviceFreeBytes": 11315183616, "allocationRetries": 0, "oomCount": 0, "reportSha256": "a2a270ddb2388bb933ec2ff3bc0668a3e1ddd7a6883ded4f3219de588a695934", "traceSha256": "f2fd7e69fd5e4210d60a59f81918ebca49c0a6ee8a2e487fc5acdb8a7bf34c60"},
+    "M2": {"peakAllocatedBytes": 7736681472, "peakReservedBytes": 17402167296, "minimumNvidiaFreeMiB": 87, "deviceFreeBytes": 0, "allocationRetries": 0, "oomCount": 0, "reportSha256": "a3ff51c59ec2067136d31eaa66939ad7304edbe8ee5805b440151b0c9b7162ed", "traceSha256": "64654d36f11b2716da8b9c3f3b1d1f47d84cb94103561896ee0e92f1dd0d9651"},
+    "M3": {"peakAllocatedBytes": 4589963776, "peakReservedBytes": 4645191680, "minimumNvidiaFreeMiB": 9943, "deviceFreeBytes": 11118051328, "allocationRetries": 0, "oomCount": 0, "reportSha256": "f7a062c84a6b9400aa6549d03ebfb4ec4ef0cee6764c8d7ea4c201b562016d8b", "traceSha256": "715f9a5366ae11042cfaabe6db50c7a37fccecd9134148fd63b0d0d6c7a19d08"},
+    "M4": {"peakAllocatedBytes": 4611882496, "peakReservedBytes": 4703911936, "minimumNvidiaFreeMiB": 10166, "deviceFreeBytes": 11059331072, "allocationRetries": 0, "oomCount": 0, "reportSha256": "f77185f144efd5c53a8bbadcb7b71296d51c5aa317b306dabe08b73f713ae627", "traceSha256": "49b78e426013e23691767dc0fc5812958f07cab99643bc714dcf207eca61c94b"}
+  },
+  "expandableSegments": {
+    "allocator": "expandable_segments:True",
+    "M0": {"peakAllocatedBytes": 4426507264, "peakReservedBytes": 4450156544, "minimumNvidiaFreeMiB": 10650, "deviceFreeBytes": 11331960832, "allocationRetries": 0, "oomCount": 0, "reportSha256": "c87926ad5c2f251306270927d6916eedc8f2b4ea6daaedeec8f654388152f9b6", "traceSha256": "b17e0ebb62db19efd4ed6141c386e0461ba70f71653e3ed3be63c1ee86d86880"},
+    "M1": {"peakAllocatedBytes": 4460210688, "peakReservedBytes": 4485808128, "minimumNvidiaFreeMiB": 10691, "deviceFreeBytes": 11296309248, "allocationRetries": 0, "oomCount": 0, "reportSha256": "c934fd8f71888bd4bb2bce7726582c0698eaa06b959dd57d2ea28dded1f52783", "traceSha256": "1fbc936958de3180682793352da8032c074476e73306e0e985bf390a33c4deba"},
+    "M2": {"peakAllocatedBytes": 7735497728, "peakReservedBytes": 8833204224, "minimumNvidiaFreeMiB": 6234, "deviceFreeBytes": 6921650176, "allocationRetries": 0, "oomCount": 0, "reportSha256": "bd33f7922433cbd8773ca75a4bf90e9ffea1f39b8eafc5892c9bd1c57f9a6974", "traceSha256": "ef8d969cb410f889763666bff8a9c69deb3b7f44153e0f9c0f1d1cc6358fbd15"},
+    "M3": {"peakAllocatedBytes": 4586905088, "peakReservedBytes": 4609540096, "minimumNvidiaFreeMiB": 10509, "deviceFreeBytes": 11153702912, "allocationRetries": 0, "oomCount": 0, "reportSha256": "3912aeea7acc0e4d0d986bf45f09c5adfa44eef738d9cebd4df686edc46b33f7", "traceSha256": "baa67c68134d2972fc611ffd6c09307c2001247513a5c5fd39d33cc4e002e152"},
+    "M4": {"peakAllocatedBytes": 4609946112, "peakReservedBytes": 4659871744, "minimumNvidiaFreeMiB": 10461, "deviceFreeBytes": 11103371264, "allocationRetries": 0, "oomCount": 0, "reportSha256": "d41fd3fe8921566bd5bc3c802347a40d5d7e77e7ac10845068c079aa4e8d0c83", "traceSha256": "732855ed3e458ffc3b0f189f4f7705525559130eb230891ed44b3bc7ce2f5dd7"
+    }
+  },
+  "smokeAdapterSha256": "7e2a53f78781438d97c4f92dd747f467a382f9a9964d94ee8c3daf9f504d1e2f",
+  "smokeAdapterSizeBytes": 53703972,
+  "sealedFinalLoaded": false,
+  "networkAccess": false
+}

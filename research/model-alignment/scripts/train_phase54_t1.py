@@ -384,6 +384,8 @@ def main() -> None:
     report: dict[str, Any] = {
         "schemaVersion": "1", "status": "PASS", "runId": RUN_ID, "smoke": args.smoke,
         "precision": precision, "trainingPerformed": True, "lockedFinalLoaded": False,
+        "cudaAllocatorConfig": os.environ.get("PYTORCH_CUDA_ALLOC_CONF", "default"),
+        "resumeFromCheckpoint": False,
         "startTimeUtc": started.isoformat(), "finishTimeUtc": finished.isoformat(),
         "durationSeconds": round(time.perf_counter() - wall_started, 3),
         "baseRepository": environment["baseModel"]["repository"], "baseRevision": REVISION,

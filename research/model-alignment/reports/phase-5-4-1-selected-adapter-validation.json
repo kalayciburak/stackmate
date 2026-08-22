@@ -1,0 +1,1631 @@
+{
+  "schemaVersion": "1",
+  "status": "COMPLETE",
+  "mode": "adapter",
+  "precision": "BF16",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "adapterSha256": "7848c9a140d2616e009b5179aa4a02867590f95dd261154c0b983ee45c187b49",
+  "datasetManifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+  "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+  "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee",
+  "rows": 40,
+  "families": 20,
+  "lockedFinalLoaded": false,
+  "trainingPerformed": false,
+  "generation": {
+    "maxNewTokens": 128,
+    "doSample": false,
+    "numBeams": 1,
+    "enableThinking": false,
+    "localFilesOnly": true,
+    "trustRemoteCode": false
+  },
+  "startedUtc": "2026-08-22T22:23:31+00:00",
+  "finishedUtc": "2026-08-22T22:24:13+00:00",
+  "durationSeconds": 42.038,
+  "metrics": {
+    "validJson": {
+      "matched": 40,
+      "total": 40
+    },
+    "validStructured": {
+      "matched": 40,
+      "total": 40
+    },
+    "causeAccuracy": {
+      "matched": 39,
+      "total": 40
+    },
+    "checkAccuracy": {
+      "matched": 40,
+      "total": 40
+    },
+    "jointAccuracy": {
+      "matched": 39,
+      "total": 40
+    },
+    "diagnoseJointAccuracy": {
+      "matched": 17,
+      "total": 18
+    },
+    "strictRestraint": {
+      "matched": 22,
+      "total": 22
+    },
+    "unknownIndexes": 0,
+    "contractFieldMismatch": 0,
+    "genericFallbackMisuse": 0,
+    "hiddenThinking": 0,
+    "orderInvariance": {
+      "matched": 19,
+      "total": 20,
+      "families": [
+        {
+          "familyId": "G53-R-IN-010",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-IN-011",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-JV-011",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-JV-012",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-JV-013",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-MV-011",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-MV-012",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-MV-013",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-PG-019",
+          "invariant": false
+        },
+        {
+          "familyId": "G53-R-PG-020",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-PG-021",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-PG-022",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-PG-023",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-SP-009",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-R-SP-010",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-S-CON-006",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-S-CON-007",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-S-SEL-006",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-S-TOP-006",
+          "invariant": true
+        },
+        {
+          "familyId": "G53-S-TOP-007",
+          "invariant": true
+        }
+      ]
+    }
+  },
+  "performance": {
+    "meanLatencySeconds": 1.047923,
+    "peakGpuVramBytes": 4609937408,
+    "peakGpuVramReservedBytes": 4659871744,
+    "maximumInputTokens": 1015,
+    "maximumOutputTokens": 22
+  },
+  "network": {
+    "access": false,
+    "uploads": false,
+    "telemetry": false
+  },
+  "packages": {
+    "torch": "2.13.0",
+    "transformers": "5.14.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "bitsandbytes": "0.50.0"
+  },
+  "results": [
+    {
+      "familyId": "G53-R-JV-011",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 933,
+      "outputTokens": 22,
+      "latencySeconds": 2.235033,
+      "peakGpuVramBytes": 4601503744,
+      "peakGpuVramReservedBytes": 4634705920,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-JV-011",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 933,
+      "outputTokens": 22,
+      "latencySeconds": 1.085746,
+      "peakGpuVramBytes": 4601503744,
+      "peakGpuVramReservedBytes": 4634705920,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-JV-012",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 908,
+      "outputTokens": 22,
+      "latencySeconds": 1.073203,
+      "peakGpuVramBytes": 4600210944,
+      "peakGpuVramReservedBytes": 4638900224,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-JV-012",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 908,
+      "outputTokens": 22,
+      "latencySeconds": 1.079192,
+      "peakGpuVramBytes": 4600210944,
+      "peakGpuVramReservedBytes": 4638900224,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-JV-013",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 905,
+      "outputTokens": 22,
+      "latencySeconds": 1.06886,
+      "peakGpuVramBytes": 4600057344,
+      "peakGpuVramReservedBytes": 4638900224,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-JV-013",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 905,
+      "outputTokens": 22,
+      "latencySeconds": 1.078389,
+      "peakGpuVramBytes": 4600057344,
+      "peakGpuVramReservedBytes": 4638900224,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-SP-009",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 988,
+      "outputTokens": 22,
+      "latencySeconds": 1.08584,
+      "peakGpuVramBytes": 4608542208,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-SP-009",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 988,
+      "outputTokens": 22,
+      "latencySeconds": 1.107383,
+      "peakGpuVramBytes": 4608542208,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-SP-010",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 942,
+      "outputTokens": 22,
+      "latencySeconds": 1.083301,
+      "peakGpuVramBytes": 4601967104,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-SP-010",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 942,
+      "outputTokens": 22,
+      "latencySeconds": 1.074596,
+      "peakGpuVramBytes": 4601967104,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-011",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 993,
+      "outputTokens": 22,
+      "latencySeconds": 1.129988,
+      "peakGpuVramBytes": 4608802816,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-011",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 993,
+      "outputTokens": 22,
+      "latencySeconds": 1.240023,
+      "peakGpuVramBytes": 4608802816,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-012",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 892,
+      "outputTokens": 22,
+      "latencySeconds": 1.052179,
+      "peakGpuVramBytes": 4595184640,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-012",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 892,
+      "outputTokens": 22,
+      "latencySeconds": 1.029629,
+      "peakGpuVramBytes": 4595184640,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-013",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 975,
+      "outputTokens": 22,
+      "latencySeconds": 1.153822,
+      "peakGpuVramBytes": 4607870464,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-MV-013",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 975,
+      "outputTokens": 22,
+      "latencySeconds": 1.063118,
+      "peakGpuVramBytes": 4607870464,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-PG-019",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 1015,
+      "outputTokens": 19,
+      "latencySeconds": 0.954489,
+      "peakGpuVramBytes": 4609937408,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.lock-not-available"
+      ],
+      "predictedCheckIds": [
+        "check.database.lock-not-available"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-019",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          2
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": false,
+      "checkCorrect": true,
+      "jointCorrect": false,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[2],\"selectedCheckIndexes\":[2]}",
+      "rawOutputSha256": "1d053c0e87bde254f483acf28e3432fa869516d04d1b57f2a85b65fac48f42a3",
+      "inputTokens": 1015,
+      "outputTokens": 19,
+      "latencySeconds": 0.927004,
+      "peakGpuVramBytes": 4609937408,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.lock-unavailable-message"
+      ],
+      "predictedCheckIds": [
+        "check.database.lock-not-available"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-020",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 913,
+      "outputTokens": 19,
+      "latencySeconds": 0.913203,
+      "peakGpuVramBytes": 4600471552,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.query-canceled"
+      ],
+      "predictedCheckIds": [
+        "check.database.query-canceled"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-020",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 913,
+      "outputTokens": 19,
+      "latencySeconds": 0.916846,
+      "peakGpuVramBytes": 4600471552,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.query-canceled"
+      ],
+      "predictedCheckIds": [
+        "check.database.query-canceled"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-021",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 936,
+      "outputTokens": 19,
+      "latencySeconds": 0.935213,
+      "peakGpuVramBytes": 4601657344,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-021",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 936,
+      "outputTokens": 19,
+      "latencySeconds": 0.934096,
+      "peakGpuVramBytes": 4601657344,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-022",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 911,
+      "outputTokens": 19,
+      "latencySeconds": 0.936749,
+      "peakGpuVramBytes": 4600365568,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-022",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 911,
+      "outputTokens": 19,
+      "latencySeconds": 0.969953,
+      "peakGpuVramBytes": 4600365568,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-023",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 914,
+      "outputTokens": 19,
+      "latencySeconds": 0.987211,
+      "peakGpuVramBytes": 4600522752,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-PG-023",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 914,
+      "outputTokens": 19,
+      "latencySeconds": 0.95064,
+      "peakGpuVramBytes": 4600522752,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.database.sql-state"
+      ],
+      "predictedCheckIds": [
+        "check.database.sql-state"
+      ]
+    },
+    {
+      "familyId": "G53-R-IN-010",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 853,
+      "outputTokens": 22,
+      "latencySeconds": 1.09814,
+      "peakGpuVramBytes": 4593171968,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-IN-010",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 853,
+      "outputTokens": 22,
+      "latencySeconds": 1.076967,
+      "peakGpuVramBytes": 4593171968,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-IN-011",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 853,
+      "outputTokens": 22,
+      "latencySeconds": 1.086184,
+      "peakGpuVramBytes": 4593171968,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-R-IN-011",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 853,
+      "outputTokens": 22,
+      "latencySeconds": 1.087862,
+      "peakGpuVramBytes": 4593171968,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-S-TOP-006",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 468,
+      "outputTokens": 19,
+      "latencySeconds": 0.912772,
+      "peakGpuVramBytes": 4548086784,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.unsupported-operation"
+      ],
+      "predictedCheckIds": [
+        "check.java.unsupported-operation"
+      ]
+    },
+    {
+      "familyId": "G53-S-TOP-006",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 468,
+      "outputTokens": 19,
+      "latencySeconds": 0.931111,
+      "peakGpuVramBytes": 4548086784,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.unsupported-operation"
+      ],
+      "predictedCheckIds": [
+        "check.java.unsupported-operation"
+      ]
+    },
+    {
+      "familyId": "G53-S-TOP-007",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 449,
+      "outputTokens": 19,
+      "latencySeconds": 0.930912,
+      "peakGpuVramBytes": 4547106816,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.concurrent-modification"
+      ],
+      "predictedCheckIds": [
+        "check.java.collection-mutation"
+      ]
+    },
+    {
+      "familyId": "G53-S-TOP-007",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 449,
+      "outputTokens": 19,
+      "latencySeconds": 0.923295,
+      "peakGpuVramBytes": 4547106816,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.concurrent-modification"
+      ],
+      "predictedCheckIds": [
+        "check.java.collection-mutation"
+      ]
+    },
+    {
+      "familyId": "G53-S-CON-006",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 552,
+      "outputTokens": 22,
+      "latencySeconds": 1.076718,
+      "peakGpuVramBytes": 4556624896,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-S-CON-006",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [],
+        "selectedCheckIndexes": [],
+        "limitation": "EVIDENCE_INSUFFICIENT"
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": true,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":\"EVIDENCE_INSUFFICIENT\",\"selectedCauseIndexes\":[],\"selectedCheckIndexes\":[]}",
+      "rawOutputSha256": "3878c48f77cb9a16bc85b882d0be0508553e1b7a0ad9bdfb09e61a2def0b1291",
+      "inputTokens": 552,
+      "outputTokens": 22,
+      "latencySeconds": 1.074535,
+      "peakGpuVramBytes": 4556624896,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [],
+      "predictedCheckIds": []
+    },
+    {
+      "familyId": "G53-S-CON-007",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 448,
+      "outputTokens": 19,
+      "latencySeconds": 0.925387,
+      "peakGpuVramBytes": 4542852608,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.unsupported-operation"
+      ],
+      "predictedCheckIds": [
+        "check.java.unsupported-operation"
+      ]
+    },
+    {
+      "familyId": "G53-S-CON-007",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 448,
+      "outputTokens": 19,
+      "latencySeconds": 0.90514,
+      "peakGpuVramBytes": 4542852608,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.java.unsupported-operation"
+      ],
+      "predictedCheckIds": [
+        "check.java.unsupported-operation"
+      ]
+    },
+    {
+      "familyId": "G53-S-SEL-006",
+      "variant": 0,
+      "candidateOrder": "ORIGINAL",
+      "expected": {
+        "selectedCauseIndexes": [
+          0
+        ],
+        "selectedCheckIndexes": [
+          0
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[0],\"selectedCheckIndexes\":[0]}",
+      "rawOutputSha256": "450e809c4dd5b124e840bb3fc41a3668519c477c7bbe19c9d5d55eda66b3ba87",
+      "inputTokens": 453,
+      "outputTokens": 19,
+      "latencySeconds": 0.922321,
+      "peakGpuVramBytes": 4547312640,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.probe.primary"
+      ],
+      "predictedCheckIds": [
+        "check.probe.primary"
+      ]
+    },
+    {
+      "familyId": "G53-S-SEL-006",
+      "variant": 1,
+      "candidateOrder": "DETERMINISTIC_PERMUTATION",
+      "expected": {
+        "selectedCauseIndexes": [
+          1
+        ],
+        "selectedCheckIndexes": [
+          1
+        ],
+        "limitation": null
+      },
+      "validJson": true,
+      "validStructured": true,
+      "causeCorrect": true,
+      "checkCorrect": true,
+      "jointCorrect": true,
+      "strictRestraint": false,
+      "overAbstention": false,
+      "unknownIndex": false,
+      "contractFieldMismatch": false,
+      "missingFields": [],
+      "extraFields": [],
+      "proseFields": false,
+      "genericFallbackMisuse": false,
+      "hiddenThinking": false,
+      "rawOutput": "{\"limitation\":null,\"selectedCauseIndexes\":[1],\"selectedCheckIndexes\":[1]}",
+      "rawOutputSha256": "3ab58ec12b07746296427c1b7a4d1c110aaca0638528114a79515b20c362d843",
+      "inputTokens": 453,
+      "outputTokens": 19,
+      "latencySeconds": 0.899881,
+      "peakGpuVramBytes": 4547312640,
+      "peakGpuVramReservedBytes": 4659871744,
+      "predictedCauseIds": [
+        "cause.probe.primary"
+      ],
+      "predictedCheckIds": [
+        "check.probe.primary"
+      ]
+    }
+  ]
+}
