@@ -44,3 +44,10 @@ Development ablations select `SEPARATE_SELECTION_AND_PROSE`: a future model emit
 only request-local ordinal cause/check selections and a limitation; Java validates,
 maps, and renders trusted deterministic text. This is a future research contract,
 not a Phase 5.3 production-schema change. ADR 0031 records the evidence.
+
+## D7: Freeze the family-separated real-world corpus
+
+Adopt `stackmate-real-world-v1` under ADR 0032 after two independent ground-truth
+passes, two byte-identical exports, and a zero-finding offline leakage audit. Keep
+its 30 final families sealed and unexecuted in Phase 5.3. This establishes data
+feasibility only; Gate D still owns any future one-shot training recommendation.

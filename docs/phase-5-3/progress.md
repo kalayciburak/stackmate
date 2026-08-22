@@ -15,7 +15,7 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 |---|---|
 | Gate A: evaluation-path parity | PASS; discrepancy explained and bounded |
 | Gate B: failure taxonomy and contract diagnostics | PASS; T1 contract selected |
-| Gate C: real-world corpus and leakage audit | NOT_RUN |
+| Gate C: real-world corpus and leakage audit | PASS; corpus frozen |
 | Gate D: future bounded-training recommendation | NOT_RUN |
 
 ## Preserved starting point
@@ -59,3 +59,12 @@ one prompt-file newline token was corrected but did not explain aggregate scores
 Official BF16, NF4, F1, third-party Q4_K_M, official-converted BF16, and
 official-converted Q4_K_M paths were all measured on the same 40 development cases.
 The full matrix is in `evaluation-parity.md`.
+
+## Gate C result
+
+The new corpus freezes 120 families: 90 controlled real runtime/integration and 30
+controlled synthetic, split 70/20/30 by family. TRAIN and VALIDATION contain two
+variants per family and use ordinal selection-only contract T1. Two independent
+exports were byte-identical, all 120 families passed two ground-truth review passes,
+and the final offline leakage audit reported zero prohibited findings. The 30 final
+families were not executed or rendered.

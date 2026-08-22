@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "1",
+  "status": "COMPLETE",
+  "offline": true,
+  "sources": {
+    "oldTrain": {
+      "path": "research/model-alignment/datasets/train.jsonl",
+      "sha256": "4c3d7675666212406400884a415a2920be6da36a80c617b55e31896f820cf070"
+    },
+    "oldValidation": {
+      "path": "research/model-alignment/datasets/validation.jsonl",
+      "sha256": "4b3d9bb0cd4dcbc79c1764ae2a511e1f2eb007f375cf72b8d5cb193eecef507b"
+    },
+    "newTrain": {
+      "path": "research/model-alignment/datasets/real-world-v1/train.jsonl",
+      "sha256": "3cfcb527e5319763b44bf1354b6244f400a854a5ad356deabd80e2a28c271ba0"
+    },
+    "newValidation": {
+      "path": "research/model-alignment/datasets/real-world-v1/validation.jsonl",
+      "sha256": "b71a298bfcb25dccb7a09a01041655d2ac3a9b158741903015fbcc0668abe548"
+    },
+    "newManifest": {
+      "path": "research/model-alignment/datasets/real-world-v1/manifest.json",
+      "sha256": "973f71a655608abd6049db123556aea6e72c1765187fba5fd5398965362fb4f4"
+    }
+  },
+  "oldSynthetic": {
+    "train": {
+      "rows": 800,
+      "families": 32,
+      "variantsPerFamily": {
+        "minimum": 10,
+        "maximum": 30,
+        "mean": 25,
+        "distribution": {
+          "10": 4,
+          "25": 16,
+          "30": 12
+        }
+      },
+      "restraintRows": 200,
+      "provenanceRows": {
+        "DETERMINISTIC_SYNTHETIC": 800
+      },
+      "candidateOrderRows": {
+        "OPAQUE_ID_ORDER": 800
+      },
+      "expectedCauseIndexCounts": {
+        "0": 325,
+        "1": 275
+      },
+      "expectedCheckIndexCounts": {
+        "0": 325,
+        "1": 275
+      },
+      "userPromptCharacters": {
+        "mean": 637.119,
+        "p95": 719,
+        "maximum": 721
+      },
+      "uniqueUserPrompts": 800,
+      "exactDuplicateUserPromptRows": 0,
+      "uniqueNormalizedUserPrompts": 800,
+      "normalizedDuplicateUserPromptRows": 0,
+      "uniqueExceptionChainSignatures": 0
+    },
+    "validation": {
+      "rows": 200,
+      "families": 8,
+      "variantsPerFamily": {
+        "minimum": 10,
+        "maximum": 30,
+        "mean": 25,
+        "distribution": {
+          "10": 1,
+          "25": 4,
+          "30": 3
+        }
+      },
+      "restraintRows": 50,
+      "provenanceRows": {
+        "DETERMINISTIC_SYNTHETIC": 200
+      },
+      "candidateOrderRows": {
+        "OPAQUE_ID_ORDER": 200
+      },
+      "expectedCauseIndexCounts": {
+        "0": 71,
+        "1": 79
+      },
+      "expectedCheckIndexCounts": {
+        "0": 78,
+        "1": 72
+      },
+      "userPromptCharacters": {
+        "mean": 643.025,
+        "p95": 724,
+        "maximum": 758
+      },
+      "uniqueUserPrompts": 200,
+      "exactDuplicateUserPromptRows": 0,
+      "uniqueNormalizedUserPrompts": 200,
+      "normalizedDuplicateUserPromptRows": 0,
+      "uniqueExceptionChainSignatures": 0
+    }
+  },
+  "phase53RealWorld": {
+    "train": {
+      "rows": 140,
+      "families": 70,
+      "variantsPerFamily": {
+        "minimum": 2,
+        "maximum": 2,
+        "mean": 2,
+        "distribution": {
+          "2": 70
+        }
+      },
+      "restraintRows": 40,
+      "provenanceRows": {
+        "CONTROLLED_REAL_INTEGRATION": 80,
+        "CONTROLLED_REAL_RUNTIME": 30,
+        "CONTROLLED_SYNTHETIC": 30
+      },
+      "candidateOrderRows": {
+        "DETERMINISTIC_PERMUTATION": 70,
+        "ORIGINAL": 70
+      },
+      "expectedCauseIndexCounts": {
+        "0": 71,
+        "1": 26,
+        "2": 5
+      },
+      "expectedCheckIndexCounts": {
+        "0": 70,
+        "1": 29,
+        "2": 3
+      },
+      "userPromptCharacters": {
+        "mean": 2092.157,
+        "p95": 2773,
+        "maximum": 2917
+      },
+      "uniqueUserPrompts": 107,
+      "exactDuplicateUserPromptRows": 33,
+      "uniqueNormalizedUserPrompts": 97,
+      "normalizedDuplicateUserPromptRows": 43,
+      "uniqueExceptionChainSignatures": 46
+    },
+    "validation": {
+      "rows": 40,
+      "families": 20,
+      "variantsPerFamily": {
+        "minimum": 2,
+        "maximum": 2,
+        "mean": 2,
+        "distribution": {
+          "2": 20
+        }
+      },
+      "restraintRows": 22,
+      "provenanceRows": {
+        "CONTROLLED_REAL_INTEGRATION": 20,
+        "CONTROLLED_REAL_RUNTIME": 10,
+        "CONTROLLED_SYNTHETIC": 10
+      },
+      "candidateOrderRows": {
+        "DETERMINISTIC_PERMUTATION": 20,
+        "ORIGINAL": 20
+      },
+      "expectedCauseIndexCounts": {
+        "0": 12,
+        "1": 6
+      },
+      "expectedCheckIndexCounts": {
+        "0": 11,
+        "1": 6,
+        "2": 1
+      },
+      "userPromptCharacters": {
+        "mean": 2147.65,
+        "p95": 2904,
+        "maximum": 2970
+      },
+      "uniqueUserPrompts": 31,
+      "exactDuplicateUserPromptRows": 9,
+      "uniqueNormalizedUserPrompts": 27,
+      "normalizedDuplicateUserPromptRows": 13,
+      "uniqueExceptionChainSignatures": 16
+    }
+  },
+  "interpretation": [
+    "The Phase 5.2 split repeats each family many times and is entirely deterministic synthetic data.",
+    "The Phase 5.3 development split uses exactly two variants per family, includes controlled runtime and integration failures, and permutes candidate order once per family.",
+    "These structural measurements do not by themselves prove downstream model generalization."
+  ]
+}

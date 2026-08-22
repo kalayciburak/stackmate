@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "corpusId": "stackmate-real-world-v1",
+  "sourceManifestSha256": "42d2bab37173a9b8a7579203e270a02fbe9ab795b12b9a731f39fa035a8244ee",
+  "familiesReviewed": 120,
+  "anomaliesRemaining": 0,
+  "finalFixturesExecuted": 0,
+  "passes": [
+    {
+      "pass": 1,
+      "owner": "phase-5-3-experiment-owner",
+      "order": "familyId lexical ascending",
+      "orderSha256": "56ae1b42159360456af4a444da630d09094949f6d60e6b57e8824136b8f262c9",
+      "familiesReviewed": 120,
+      "developmentEvidence": "Two reproducible executions for every TRAIN and VALIDATION family; exact wrapper/root topology, deterministic category, expected candidate presence, cardinality, disposition, private-data scan, and family separation were checked.",
+      "lockedFinalEvidence": "Metadata, semantic ground truth, split assignment, reproducibility recipe, and helper mapping only; no final fixture was executed or rendered.",
+      "result": "PASS"
+    },
+    {
+      "pass": 2,
+      "owner": "independent-static-reviewer",
+      "order": "SHA-256(familyId) ascending",
+      "orderSha256": "d1bc05be8783226476a998b5827b91697f8c74d1995342c4abb66ccc82db1ea2",
+      "familiesReviewed": 120,
+      "developmentEvidence": "Static recipe, root/wrapper, selection, cardinality, split/classification, helper support, reproducibility, and private-data review; generated JSONL content was not used.",
+      "lockedFinalEvidence": "Metadata and helper mapping only; no final fixture was executed or rendered.",
+      "result": "PASS"
+    }
+  ],
+  "frozenComposition": {
+    "trainFamilies": 70,
+    "validationFamilies": 20,
+    "lockedFinalFamilies": 30,
+    "controlledRealFamilies": 90,
+    "controlledSyntheticFamilies": 30,
+    "diagnoseFamilies": 79,
+    "restrainFamilies": 41
+  },
+  "reproducibility": {
+    "independentExports": 2,
+    "byteIdentical": true,
+    "trainSha256": "3cfcb527e5319763b44bf1354b6244f400a854a5ad356deabd80e2a28c271ba0",
+    "validationSha256": "b71a298bfcb25dccb7a09a01041655d2ac3a9b158741903015fbcc0668abe548",
+    "datasetManifestSha256": "973f71a655608abd6049db123556aea6e72c1765187fba5fd5398965362fb4f4",
+    "sealedFinalFamiliesSha256": "53f3ae08ff53bf192da6cd54f3a05de62cc9c3d0ec7fbadedf3b1c2c6caed61e"
+  },
+  "reviewTopics": [
+    "ROOT_WRAPPER_SHAPE",
+    "EVIDENCE_SELECTION",
+    "LEGACY_FAMILY_SEPARATION",
+    "REPRODUCIBILITY",
+    "PRIVATE_DATA_ABSENCE"
+  ],
+  "preFreezeCorrections": [
+    "Corrected observed categories and restraint targets for unmapped Spring and synthetic topology cases.",
+    "Recorded the two-node PostgreSQL failed-transaction exception chain.",
+    "Removed one model-facing SocketException overlap and two cross-split synthetic semantic near-matches by balanced pre-freeze split swaps.",
+    "Removed asynchronous fixture interrupt-state leakage and StackOverflowError frame nondeterminism.",
+    "Changed private-material scanning to inspect decoded JSON strings instead of serialized escape sequences."
+  ]
+}
