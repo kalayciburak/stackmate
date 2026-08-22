@@ -12,10 +12,11 @@ Date: 2026-08-23
 | Frozen execution plan | PASS; plan SHA-256 `810180a2ac13197b2d6645ac143a8902563e0d2dc35a4ea7f4034887da66f7b0` |
 | Real training | PASS; 54 steps, 6 epochs |
 | Validation-only adapter selection | PASS; checkpoint 18 selected |
-| LOCKED_FINAL access | CLOSED |
-| Full confirmation | NOT RUN |
-| Merge/GGUF | NOT RUN |
+| LOCKED_FINAL access | PASS; opened exactly once |
+| Locked qualification | FAIL; production schema-v2 contract mismatch |
+| Full confirmation | NOT RUN; locked gates failed |
+| Merge/GGUF | NOT RUN; locked gates failed |
 
-No locked-final or production-quality claim is made yet. The selected adapter is
-ready for the single fail-closed locked-evaluation opening after the selection
-commit is recorded.
+The selected adapter is experimental only. It learned the ordinal T1 development
+contract but failed the production schema-v2 locked qualification. No merge,
+GGUF, or production integration is authorized.
