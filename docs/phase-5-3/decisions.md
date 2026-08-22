@@ -8,12 +8,14 @@ The completed continuation is tagged locally and is not rewritten. Existing lock
 outputs are exposed diagnostic evidence only; they cannot become a new untouched
 qualification gate.
 
-## D2: Use only the frozen 40-case prompt-development split for parity
+## D2: Freeze a coverage-balanced 40-case V2 development parity split
 
-The existing `promptDevelopment` split already provides representative Java,
-Spring, MVC, JDBC, restraint, hard-negative, and prompt-injection development
-cases. Reusing it avoids a new case-selection degree of freedom and excludes every
-locked or final case.
+Use only Benchmark V2 development cases. Include every development restraint and
+unsupported-claim trap, guarantee at least three cases from each of the eight V2
+domains, then fill to 40 by domain round-robin in source-manifest order. This fixed
+rule represents Java, Spring, MVC, database, security, network, concurrency, and
+adversarial behavior while excluding every holdout, blind, challenge, or other
+final case.
 
 ## D3: Treat runtime, weights, serialization, extraction, and validation separately
 

@@ -56,8 +56,11 @@ All four hashes were recalculated at Phase 5.3 start.
 | Output schema | version 2 |
 | Validator | repository `DefaultInferenceOutputValidator` at the baseline commit |
 
-The parity source is exactly the 40 IDs in `promptDevelopment`. Four require
-restraint. Holdout, blind, and post-training challenge cases are excluded.
+The parity source is selected only from the 60 V2 development cases. The frozen
+policy includes every development restraint and unsupported-claim trap, guarantees
+at least three cases from each V2 domain, then fills to 40 by domain round-robin in
+source-manifest order. Holdout, blind, and post-training challenge cases are
+excluded.
 
 ## Historical measurements to reproduce
 

@@ -35,9 +35,10 @@ justify one future bounded alignment run. Phase 5.3 performs no training.
 - Research lock, Python compilation, and research tests: PASS, 10/10.
 - Official checkpoint, official tokenizer, F1 adapter, prior GGUF, pinned
   `llama-completion`, P0, P3, and the current validator are present and identified.
-- The development-only parity source is the existing 40-case
-  `promptDevelopment` split; it contains no V2 holdout, Phase 5 blind, or
-  post-training challenge case.
+- The development-only parity source is a deterministic 40-case selection from
+  Benchmark V2 development: every development restraint and unsupported-claim
+  trap, at least three cases per domain, then domain round-robin selection to 40.
+  It contains no V2 holdout, Phase 5 blind, or post-training challenge case.
 
 ## Active stop rules
 
