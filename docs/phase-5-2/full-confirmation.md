@@ -2,6 +2,14 @@
 
 Date: 2026-08-02
 
+## Resumed continuation decision
+
+Full confirmation remained `NOT_RUN`. The selected F1 adapter failed the locked
+valid-structured and cause/check accuracy gates: A1 was 68/70 structured, 44/70
+cause, and 45/70 check. The protocol therefore stopped before the planned 100
+Phase 5 qualification cases plus 30 challenge cases. No locked result was used to
+select another adapter, prompt, or run.
+
 The full confirmation is `NOT_RUN`. It depends on a selected adapter passing the
 locked V2, blind, and challenge stages. No such adapter exists.
 

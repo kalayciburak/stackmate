@@ -36,7 +36,7 @@ will be made by this experiment.
 | PyTorch | 2.13.0+cu130 |
 | Transformers / PEFT / Accelerate | 5.14.1 / 0.20.0 / 1.14.0 |
 | bitsandbytes / gguf | 0.50.0 / 0.19.0 |
-| Official Qwen3.5-2B HF cache | absent |
+| Official Qwen3.5-2B HF cache | acquired and SHA-256 verified under WSL cache |
 
 WSL2 is the selected research environment. The training environment will be
 project-local and reproducibly locked; no dependency enters a Maven module.
@@ -60,7 +60,7 @@ The locked environment contains 62 resolved packages in an isolated
 artifact. CUDA tensor execution passed, Torch reported CUDA 13.0, BF16 support,
 compute capability 8.9, and 17,170,956,288 bytes of device memory.
 
-## Gate B blocker
+## Historical Gate B blocker
 
 The preflight passed package, CUDA, dataset-lock, and challenge-lock checks but
 stopped with `BASE_MODEL_PATH_NOT_SET`. The required official safetensors
@@ -76,4 +76,18 @@ quantization, not the official base checkpoint required by the experiment.
 Therefore the environment itself is CUDA-capable, but the controlled training
 input is unavailable. Four-bit load, target-module inspection, chat-template
 statistics, checkpoint save/reload, loss, and JSON-generation smoke tests were
-not run.
+not run in the historical report.
+
+## Resumed continuation
+
+The same Ubuntu 22.04.5 WSL2 distribution was reused. No Linux NVIDIA driver was
+installed; the Windows driver remained the WSL GPU provider. The only missing
+ordinary Ubuntu package was `python3-venv`, installed after a package-index refresh
+with `apt-get update` and `apt-get install -y python3-venv`. The frozen uv
+environment then synchronized successfully with `uv sync --frozen`.
+
+The official checkpoint was downloaded to the WSL Linux filesystem, never into the
+Git checkout. Local model/tokenizer loading passed with offline mode,
+`local_files_only=true`, and `trust_remote_code=false`. The existing CUDA/BF16
+environment was reused; no Windows driver, BIOS, system CUDA toolkit, or unrelated
+distribution was changed.

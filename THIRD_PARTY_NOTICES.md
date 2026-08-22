@@ -97,6 +97,23 @@ the executed `llama-completion.exe` SHA-256 is
 No native or model artifact entered a Maven module, starter JAR, normal CI, or Git.
 Gate A failed, so no persistent worker or production llama.cpp dependency was added.
 
+## Phase 5.2 continuation artifacts
+
+The continuation downloaded the official Apache-2.0 Qwen3.5-2B Transformers/
+SafeTensors checkpoint from `Qwen/Qwen3.5-2B` at immutable revision
+`15852e8c16360a2fea060d615a32b45270f8a8fc` for a local, non-published research
+run. It contained 4,571,198,095 bytes across 10 files; the complete file-level
+SHA-256 manifest is in `docs/phase-5-2/checkpoint-acquisition.md` and
+`research/model-alignment/reports/base-model-manifest.json`. `trust_remote_code`
+was false and no model, adapter, merged checkpoint, or fine-tuned GGUF was
+distributed or committed.
+
+The isolated research packages remain pinned outside Maven: PyTorch 2.13.0+cu130,
+Transformers 5.14.1, PEFT 0.20.0, Accelerate 1.14.0, bitsandbytes 0.50.0, gguf
+0.19.0, and uv 0.12.1. No telemetry, experiment tracker, remote inference, or
+upload service was used. Gate C failed after the locked comparison, so no merge or
+conversion tool was invoked.
+
 ## Development and test dependencies
 
 Phase 5.2 uses an isolated, non-product WSL research environment. Its direct
@@ -114,9 +131,11 @@ runtime, published, or distributed dependencies:
 | uv | 0.12.1 | environment tool installed for the WSL user, not distributed |
 
 The resolved PyTorch environment includes NVIDIA CUDA runtime libraries under
-their upstream package terms. StackMate distributes none of these files. No Qwen
-base checkpoint, adapter, merged model, or fine-tuned GGUF was downloaded,
-created, committed, or published in Phase 5.2.
+their upstream package terms. StackMate distributes none of these files. The
+official Qwen base checkpoint was acquired locally for the resumed experiment;
+no model, adapter, merged model, or fine-tuned GGUF was distributed, committed,
+or published. The original third-party GGUF remained unchanged and was not used
+for training.
 
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the
 deterministic starter. Their exact resolved versions and licenses are reviewable through the Maven dependency

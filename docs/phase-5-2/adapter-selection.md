@@ -30,6 +30,7 @@ and safety metrics tied, so the final criterion selected the smaller adapter:
 - Adapter SHA-256: `6642b7e3bad7eb64c6199d56db60935aabda54b5a2c26f33af4e79bc8d5ab6ca`
 - Training configuration SHA-256: `15cd5a948c78ef20e8799da57eea1ca63adef2f622b617d7e59ae02403d6a6e5`
 - Dataset manifest SHA-256: `b433fd0091594570aaf8a973b7bbc0b9eb77dca5682b01d010ff8071c73ea2f2`
+- Selection commit: `cc8af67` (local, not pushed)
 - Selection source commit: `0a6c1f27a086457079d5011e4451a8810fabb21a`
 
 The machine-readable lock is `research/model-alignment/reports/selected-adapter.json`.

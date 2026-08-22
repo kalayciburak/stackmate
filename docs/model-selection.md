@@ -295,3 +295,17 @@ fine-tuned GGUF exists. See [`docs/phase-5-2/training-runs.md`](phase-5-2/traini
 - llama.cpp: https://github.com/ggml-org/llama.cpp
 - llama.cpp advisories: https://github.com/ggml-org/llama.cpp/security/advisories
 - java-llama.cpp: https://github.com/kherud/java-llama.cpp
+# Phase 5.2 continuation qualification boundary
+
+The previously blocked Phase 5.2 experiment was resumed with the exact official
+Qwen3.5-2B Transformers checkpoint and only the preplanned F1/F2 QLoRA runs. F1
+(`r=8`, `alpha=16`) and F2 (`r=16`, `alpha=32`) tied on the frozen validation
+split; F1 was locked solely because its adapter was smaller.
+
+The locked A1 comparison (selected F1 + P3) achieved 44/70 cause and 45/70 check
+accuracy, with 68/70 valid structured outputs. Benchmark V2 holdout was 11/20 for
+both cause and check, blind was 15/20 for both, and challenge was 18/30 cause and
+19/30 check. Although the accepted safety counters were zero, the mandatory
+unrounded accuracy and structured-output gates failed. The adapter is therefore
+`EXPERIMENTAL`; no full confirmation, merge, GGUF, persistent worker, or production
+integration was authorized.

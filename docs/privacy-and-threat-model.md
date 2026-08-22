@@ -157,9 +157,10 @@ MHRS data, credential, PII, private path, or model-generated target. A separate
 fail-closed audit found zero prohibited overlap with V2 holdout, blind, Phase 5.1
 locked-final, and the new 30-case challenge. Training libraries live outside the
 Maven graph and model network fallback is disabled. CUDA native-code risk exists
-only in the manually invoked WSL research environment. Training stopped before
-loading weights because the official base was absent; no adapter, merged model,
-new GGUF, locked output, or publication surface exists.
+only in the manually invoked WSL research environment. The historical
+pre-acquisition report stopped before loading weights; the resumed run later
+created local, unpublished F1/F2 adapters and locked outputs, but failed before
+merge/export and did not activate a production surface.
 
 ## Remaining high-priority mitigations
 
@@ -179,3 +180,23 @@ new GGUF, locked output, or publication surface exists.
 
 The repository-grounded boundary, attacker, abuse-path, and risk-priority review is maintained separately in
 `docs/reviews/stackmate-threat-model.md`.
+
+## Phase 5.2 checkpoint-acquisition continuation
+
+The resumed experiment adds a research-only local supply-chain boundary:
+
+| Boundary | Control | Residual risk |
+|---|---|---|
+| Official checkpoint acquisition | Official `Qwen/Qwen3.5-2B` repository only; immutable revision; bounded `snapshot_download`; file-size and SHA-256 manifest | Upstream bytes and library parsers remain external inputs; no OS sandbox |
+| Hugging Face cache | WSL Linux filesystem outside Git; no cache cleanup of unrelated models; offline loading after acquisition | Local users/processes with filesystem access can replace files; permissions remain host-controlled |
+| SafeTensors/model load | Local-only load, `trust_remote_code=false`, expected config/tokenizer, no GGUF training fallback | Native CUDA/PyTorch/bitsandbytes code runs with WSL-user permissions |
+| Training scripts | Repository scripts are pinned to the lock/config; no telemetry, tracker, upload, or remote inference | Research scripts remain executable code and require review before reuse |
+| Adapter serialization | F1/F2 adapters and optimizer state remain outside Git; SHA-256 recorded; one adapter locked before evaluation | Adapter files are not independently signed or published |
+| Merge/GGUF | Not reached because locked gates failed; no merged weights or fine-tuned GGUF exist | Future export needs a fresh provenance and conversion review |
+
+The locked run observed zero accepted unsupported claims, fabricated references,
+unknown IDs, secret leakage, prompt-injection success, or hidden thinking for the
+selected A1 condition. It nevertheless failed accuracy/structure gates, so no
+production model path was activated. This continuation does not change the
+existing rule that the normal Java product has no model downloader, telemetry,
+cloud inference, or Python/ML runtime dependency.

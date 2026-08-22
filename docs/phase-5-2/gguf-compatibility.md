@@ -2,11 +2,12 @@
 
 Date: 2026-08-02
 
-Gate D is `NOT_RUN` because Gate C did not run.
+Gate D is `NOT_RUN` because Gate C failed. No merge, export, quantization, or
+GGUF compatibility subset was attempted after the locked result.
 
 | Artifact/result | Value |
 |---|---|
-| Selected adapter | NOT_AVAILABLE |
+| Selected adapter | F1 locked locally; export not authorized by failed Gate C |
 | Merged model checksum | NOT_AVAILABLE |
 | Fine-tuned GGUF checksum | NOT_AVAILABLE |
 | Quantization | Q4_K_M planned, not executed |
