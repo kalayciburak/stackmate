@@ -17,7 +17,7 @@ Windows-only executable, CIM and hidden-window assumptions.
 
 ## Hosted platform matrix
 
-The rc2 workflow implements the following scope. Two hosted attempts are
+The rc2 workflow implements the following scope. Three hosted attempts are
 preserved below, but no final rc2 commit has passed the complete matrix yet.
 
 | Hosted platform | Full clean verify | Public install | Consumer | API/bundle/evidence | Extra gates | Result |
@@ -71,3 +71,15 @@ The focused Windows suite passed 12/12 with no skips; hosted rerun is pending.
 The second fix set passed the affected 77-test benchmark subset and the full
 Windows reactor. No hosted success is claimed until the exact pushed commit
 passes.
+
+## Third hosted failure disposition
+
+Run [33924591960](https://github.com/kalayciburak/stackmate/actions/runs/33924591960)
+proved the complete Linux and Windows jobs. Linux passed in 4m53s, including
+OSV, performance smoke and evidence upload. Windows passed in 8m40s, including
+clean file-repository consumption and evidence upload. macOS reached
+`FileSystemIncidentExporterTest`; four normal exports were rejected because
+JUnit exposed the real temporary directory through the leading `/var` system
+alias. The existing test class now canonicalizes only its injected temp root
+before each case. Its deliberate user-created symlink rejection remains active,
+and the focused class passed 6/6 locally.

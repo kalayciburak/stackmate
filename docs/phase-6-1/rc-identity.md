@@ -27,7 +27,7 @@ cannot be attached to rc1 without falsifying its immutable identity.
 
 The local bundle is not yet a qualified remote identity because the final
 commit and hosted run set do not exist. Its hash may change when evidence-only
-documents are finalized after the first hosted run.
+documents are finalized after the successful exact-commit hosted run.
 
 The frozen public API contains 73 types with signature SHA-256
 `41f718f0479f10daf502012a54b20e7569699d1318efe4fe0b91b95b9878bea7`.

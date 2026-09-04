@@ -1,6 +1,6 @@
 # Phase 6.1 remote-run ledger
 
-Two hosted run sets failed and are preserved below. The required final-commit
+Three hosted run sets failed and are preserved below. The required final-commit
 run IDs, artifact identities and qualification conclusions remain `PENDING` /
 `UNVERIFIED` until the focused fixes are pushed and rerun.
 
@@ -37,6 +37,23 @@ It also stores the already-frozen parity corpus bytes without Git line-ending
 conversion; the staged blob remains
 `fc07d86362b705bee5a493515180ac4daf687b3e820095142dd82bec09540bd8`.
 No case, expected answer, ID or model-evaluation result changed.
+
+## Preserved third run set
+
+The third run set used commit
+`610600eb2fa4746e7027f9f920ac307cfe930d1f`.
+
+| Workflow | Run | Conclusion | Classification and evidence |
+|---|---|---|---|
+| CI | [33924591960](https://github.com/kalayciburak/stackmate/actions/runs/33924591960) | `FAIL` | Linux passed the full job in 4m53s, including OSV/performance and evidence upload. Windows passed the full job in 8m40s, including file-repository consume and evidence upload. macOS stopped in four export tests because JUnit supplied its ordinary temporary directory through `/var`, a system symlink alias. Ubuntu reproducibility was skipped by the failed matrix dependency. |
+| CodeQL | [33924592005](https://github.com/kalayciburak/stackmate/actions/runs/33924592005) | `FAIL` | Full tested construction passed and CodeQL scanned 261/270 Java files and exported SARIF. Post-analysis workflow-run metadata lookup lacked read-only `actions: read`, so the action ended as a configuration error before artifact upload. No CodeQL query failure was reported. |
+| Dependency review | [33924591939](https://github.com/kalayciburak/stackmate/actions/runs/33924591939) | `PASS` | Public dependency graph, base/head declaration review, runtime denylist and seven-day evidence upload all passed in 1m15s. |
+
+The next repair canonicalizes only the JUnit temporary directory before the
+existing export tests; the explicit symlink-rejection scenario and production
+export policy remain unchanged. CodeQL receives read-only `actions: read` and
+moves from the deprecated v3 line to immutable official v4.37.9 commit
+`cdf488f595d80d6e07e03d4674febd5ab45fa938`.
 
 ## Required runs
 

@@ -63,12 +63,12 @@ gap between analyzed construction and the tested application build.
 
 ## D8 - Pin official actions to commit objects
 
-Status: implemented locally for rc2; actionlint passed, remote behavior unverified.
+Status: updated after hosted CodeQL run `33924592005`; final behavior unverified.
 
-Official actions remain commit-pinned. The existing checkout, setup-java and
-dependency-review pins map to official releases. The CodeQL release pin must use
-target commit `6f5948dfacef28e207b48d0905cf90c03365536d`, not the annotated-tag object
-SHA.
+Official actions remain commit-pinned. Checkout and setup-java map to official
+releases. CodeQL initially moved from an annotated v3 tag object to its target
+commit; the hosted deprecation warning then justified moving to official
+v4.37.9 target commit `cdf488f595d80d6e07e03d4674febd5ab45fa938`.
 
 ## D9 - Supply attachments for every public non-POM JAR
 
@@ -129,3 +129,22 @@ Git had normalized the repository blob to LF (`543da525...`), so fresh Linux
 checkouts could never match the manifest. A path-specific `.gitattributes`
 rule now stores the existing frozen bytes verbatim; semantic content and
 historical checksum references are not rewritten.
+
+## D15 - Canonicalize the test fixture, not export policy
+
+Status: accepted after macOS job `101190218603` in run `33924591960`.
+
+macOS JUnit temp paths use the `/var` system alias, while the exporter
+deliberately rejects configured paths containing symlink components. The
+existing export test class canonicalizes its injected temp directory before
+normal scenarios. Production path policy and the explicit user-created symlink
+rejection case remain unchanged.
+
+## D16 - Grant CodeQL read-only workflow metadata access
+
+Status: accepted after CodeQL run `33924592005`.
+
+CodeQL completed queries and SARIF export but failed its workflow-run metadata
+lookup. Add only `actions: read`; retain `contents: read`, no
+`security-events: write`, `upload=false`, disabled database upload and bounded
+SARIF artifact retention.

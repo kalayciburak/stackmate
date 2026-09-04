@@ -2,7 +2,7 @@
 
 Audit date: 2026-09-05
 
-Status: local rc2 qualification is complete. Two failed hosted run sets are
+Status: local rc2 qualification is complete. Three failed hosted run sets are
 preserved; final-commit remote gates remain `PENDING` / `UNVERIFIED`.
 
 ## Release-candidate boundary
@@ -67,6 +67,18 @@ result. CodeQL's tested build then exposed Linux TLS exception-chain variation
 and a parity corpus byte-serialization defect. The narrow fixes preserve all
 frozen cases and expected answers. Focused tests passed 77/77 and the full
 reactor passed 543 Surefire + 5 Failsafe locally with zero skips.
+
+## Third hosted run
+
+Commit `610600eb2fa4746e7027f9f920ac307cfe930d1f` produced CI run
+`33924591960`, CodeQL run `33924592005` and dependency-review run
+`33924591939`. Linux and Windows completed every configured job step; macOS
+found that its normal JUnit temp directory traverses the `/var` system alias.
+CodeQL passed the full tested build and produced SARIF after scanning 261/270
+Java files, but lacked `actions: read` for post-analysis workflow metadata.
+Dependency review passed again. The macOS fixture canonicalization passed 6/6
+locally; CodeQL is updated to immutable official v4.37.9 with read-only
+workflow metadata access. Final hosted rerun remains pending.
 
 ## Publication boundary
 

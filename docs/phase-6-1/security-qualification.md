@@ -4,8 +4,8 @@
 
 | Control | Local configuration/evidence | Remote result |
 |---|---|---|
-| Immutable official-action pins | Checkout `3d3c42e5aac5ba805825da76410c181273ba90b1` (official v7.0.1); setup-java `dd06d9cba3e5552c54d9f8ea23572deb30010f7c` (official v6.0.0); CodeQL commit `6f5948dfacef28e207b48d0905cf90c03365536d`; upload-artifact `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (official v7.0.1) | `UNVERIFIED` |
-| Correct CodeQL object | Corrected from the annotated tag object to commit `6f5948dfacef28e207b48d0905cf90c03365536d`, behind the current official v3 tag | `UNVERIFIED` |
+| Immutable official-action pins | Checkout `3d3c42e5aac5ba805825da76410c181273ba90b1` (official v7.0.1); setup-java `dd06d9cba3e5552c54d9f8ea23572deb30010f7c` (official v6.0.0); CodeQL `cdf488f595d80d6e07e03d4674febd5ab45fa938` (official v4.37.9); upload-artifact `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (official v7.0.1) | `UNVERIFIED` |
+| Current CodeQL line | Migrated from the deprecated Node 20-based v3 line to immutable official v4.37.9 after the hosted warning | `UNVERIFIED` |
 | Tested CodeQL construction | Full clean verification is configured instead of a skipped-test build; SARIF upload to Code Scanning is disabled because private-repository GHAS is unavailable, and controlled SARIF is retained for seven days instead | `UNVERIFIED` |
 | Dependency review | Repository-local PR base/head declaration diff and public runtime denylist audit | Replacement run `33923226273` passed on intermediate commit `b6821d6`; final-commit rerun pending |
 | Public SBOM scan | Ubuntu uses official OSV Scanner `2.5.1` Linux asset with expected SHA-256 `f9f25499a2c8cc367b3af45df2ea7eeca7fbccceab9c35079968f4b3652194be` | `UNVERIFIED` |
@@ -67,3 +67,12 @@ The repaired CodeQL job uses the official action's documented `upload=false`
 and `output` inputs, disables database upload, removes `security-events: write`
 and stores SARIF as a bounded workflow artifact. This preserves analysis
 without changing repository security settings.
+
+The third CodeQL run
+[33924592005](https://github.com/kalayciburak/stackmate/actions/runs/33924592005)
+passed full tested construction, scanned 261 of 270 Java files and exported
+SARIF. It failed only when the action queried workflow-run metadata without
+`actions: read`; no query or build failure was reported and no SARIF artifact
+was uploaded. The next run adds only read-only workflow metadata permission and
+uses official v4.37.9 commit
+`cdf488f595d80d6e07e03d4674febd5ab45fa938`.

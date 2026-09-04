@@ -10,6 +10,7 @@ on:
     - cron: "19 4 * * 1"
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -29,7 +30,7 @@ jobs:
           cache-dependency-path: "**/pom.xml"
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@6f5948dfacef28e207b48d0905cf90c03365536d # v3
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
           languages: java-kotlin
 
@@ -40,7 +41,7 @@ jobs:
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Analyze
-        uses: github/codeql-action/analyze@6f5948dfacef28e207b48d0905cf90c03365536d # v3
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
           output: target/codeql-results
           upload: "false"

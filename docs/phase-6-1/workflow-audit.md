@@ -23,7 +23,7 @@ Java setup enables the Maven cache.
 | `actions/checkout` | Entry SHA mapped to official `v4.4.0` but emitted a hosted Node 20 deprecation warning | Updated to official v7.0.1 commit `3d3c42e5aac5ba805825da76410c181273ba90b1` |
 | `actions/setup-java` | Entry SHA mapped to official `v4.9.1` but emitted a hosted Node 20 deprecation warning | Updated to official v6.0.0 commit `dd06d9cba3e5552c54d9f8ea23572deb30010f7c` |
 | `actions/dependency-review-action` | Official v4.9.0 ran but the private repository lacks required GitHub capability | Replaced with a repository-local base/head declaration and public runtime policy audit |
-| `github/codeql-action` | Existing SHA is the release's annotated-tag object, not its commit | Pin init/analyze to target commit `6f5948dfacef28e207b48d0905cf90c03365536d` |
+| `github/codeql-action` | Existing SHA was an annotated v3 tag object; the subsequent v3 target emitted Node 20 and December 2026 deprecation warnings | Pin init/analyze to official v4.37.9 target commit `cdf488f595d80d6e07e03d4674febd5ab45fa938` |
 
 This pin mapping is audit input, not evidence that GitHub fetched or executed
 the actions during this documentation task.
@@ -36,6 +36,8 @@ the actions during this documentation task.
   consumer, frozen API and assembled/audited bundle.
 - Controlled summaries and bundles use seven-day artifact retention.
 - The CodeQL Maven build runs full tests.
+- CodeQL has read-only `actions: read` for workflow-run metadata; no write
+  permission is added.
 - CodeQL writes SARIF locally with `upload=false` and seven-day artifact
   retention because this private repository does not expose GHAS Code Scanning;
   no `security-events: write` permission remains.
@@ -73,6 +75,16 @@ failed on additional deterministic test-harness portability defects, while the
 replacement dependency review
 [33923226273](https://github.com/kalayciburak/stackmate/actions/runs/33923226273)
 passed. These intermediate results do not fill the final-commit placeholders.
+
+The third set is also intermediate. CI
+[33924591960](https://github.com/kalayciburak/stackmate/actions/runs/33924591960)
+proved complete Linux and Windows jobs but failed the macOS temp-path fixture;
+CodeQL
+[33924592005](https://github.com/kalayciburak/stackmate/actions/runs/33924592005)
+passed tested construction and SARIF generation but lacked `actions: read` for
+metadata; dependency review
+[33924591939](https://github.com/kalayciburak/stackmate/actions/runs/33924591939)
+passed.
 
 The first manual release-preflight dispatch returned HTTP 404 because GitHub
 only exposes new `workflow_dispatch` definitions after they exist on the

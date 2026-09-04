@@ -32,12 +32,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class FileSystemIncidentExporterTest {
 
     @TempDir Path temporaryDirectory;
+
+    @BeforeEach
+    void canonicalizeTemporaryDirectory() throws IOException {
+        temporaryDirectory = temporaryDirectory.toRealPath();
+    }
 
     @Test
     void publishesFourSanitizedFilesAtomically() throws IOException {

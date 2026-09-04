@@ -14,7 +14,7 @@ All notable public product changes are documented here. The format follows
 - Added full hosted Linux, Windows and macOS qualification, external-consumer checks, API/artifact evidence,
   seven-day artifact retention, Ubuntu OSV/performance smoke and same-OS reproducibility.
 - Made release preflight manual-only and kept publication/signing absent.
-- Corrected CodeQL to use the official v3 target commit rather than its annotated-tag object.
+- Migrated CodeQL to immutable official v4.37.9 with read-only workflow metadata access and local SARIF retention.
 - Made the packaged performance harness portable across Windows, Linux and macOS PowerShell.
 - Corrected historical inference tests for Unix separators, Windows cross-drive temp paths and macOS system path
   aliases without adding inference to the public release.
@@ -24,6 +24,7 @@ All notable public product changes are documented here. The format follows
   answers.
 - Preserved the frozen parity corpus's recorded byte identity across Git checkouts without changing its semantic
   content or checksum.
+- Canonicalized the macOS JUnit temporary-directory fixture without weakening production export symlink rejection.
 
 RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
 frozen local-only checkpoint and will not be moved or pushed.
