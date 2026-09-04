@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1",
+  "release": "0.1.0-rc.1",
+  "groupId": "io.github.kalayciburak",
+  "publicArtifacts": [
+    "stackmate-parent",
+    "stackmate-core",
+    "stackmate-spring-boot-autoconfigure",
+    "stackmate-spring-boot-starter"
+  ],
+  "modules": [
+    {
+      "artifactId": "stackmate-parent",
+      "classification": "PUBLIC_RELEASE",
+      "deploy": true,
+      "packaging": "pom"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "classification": "PUBLIC_RELEASE",
+      "deploy": true,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-inference-api",
+      "classification": "HISTORICAL_EXPERIMENT",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-inference-jvm",
+      "classification": "HISTORICAL_EXPERIMENT",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "classification": "PUBLIC_RELEASE",
+      "deploy": true,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure-local",
+      "classification": "HISTORICAL_EXPERIMENT",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-starter",
+      "classification": "PUBLIC_RELEASE",
+      "deploy": true,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-starter-local",
+      "classification": "HISTORICAL_EXPERIMENT",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-sample",
+      "classification": "SAMPLE",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-e2e",
+      "classification": "INTERNAL_TEST",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-startup-baseline",
+      "classification": "BENCHMARK",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "stackmate-benchmark",
+      "classification": "BENCHMARK",
+      "deploy": false,
+      "packaging": "jar"
+    },
+    {
+      "artifactId": "research/model-alignment",
+      "classification": "RESEARCH",
+      "deploy": false,
+      "packaging": "none"
+    }
+  ]
+}

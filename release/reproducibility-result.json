@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1",
+  "release": "0.1.0-rc.1",
+  "status": "PASS",
+  "cleanBuilds": 2,
+  "comparedPayloadFiles": 18,
+  "differences": 0,
+  "firstManifestSha256": "bb708acdd3bcd100f60695c6e1a7500e84094095c91550bd8bac39bfb352f256",
+  "secondManifestSha256": "bb708acdd3bcd100f60695c6e1a7500e84094095c91550bd8bac39bfb352f256",
+  "comparisonReportSha256": "15afd9d8b14ff1e94c9eb69a361f4f0206225a39c18835be0d649d2e104ec3c2",
+  "comparisonExclusions": [
+    "checksums/manifest.json",
+    "checksums/SHA256SUMS",
+    "reports/release-audit.json"
+  ],
+  "publicationPerformed": false,
+  "signingPerformed": false
+}

@@ -1,0 +1,447 @@
+{
+  "schemaVersion": "1",
+  "release": "0.1.0-rc.1",
+  "signatureFile": "release/public-api-baseline.txt",
+  "signatureSha256": "41f718f0479f10daf502012a54b20e7569699d1318efe4fe0b91b95b9878bea7",
+  "publicTypeCount": 73,
+  "classifications": [
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.AnalysisContribution",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.CauseCandidate",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.CheckCandidate",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DatabaseAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DeterministicResult",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DiagnosedCause",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.Diagnosis",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DiagnosticCategory",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.DiagnosticStrength",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.EvidenceStrengthCalculator",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.GeneralJavaAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.InfrastructureAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.SpringDependencyConfigurationAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.SpringSecurityAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.analysis.WebRequestAnalyzer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.deduplication.DeduplicationResult",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.deduplication.DeduplicationStore",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.evidence.EvidenceItem",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.evidence.EvidenceReliability",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.evidence.EvidenceType",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.export.IncidentExporter",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.export.IncidentExportResult",
+      "kind": "interface",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.export.IncidentExportResult$Exported",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.export.IncidentExportResult$Failed",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.export.IncidentExportResult$Rejected",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.fingerprint.FingerprintInput",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.IncidentSnapshot",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.JvmRuntimeContext",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.RequestContext",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.SpringRuntimeContext",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.incident.StackFrameSnapshot",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.privacy.DefaultSanitizer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.privacy.Sanitizer",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.privacy.SanitizerConfig",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.privacy.SanitizerPattern",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.ApplicationFrameSelector",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.ThrowableNode",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-core",
+      "type": "io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.autoconfigure.StackMateAutoConfiguration",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.capture.CapturedServletException",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.capture.StackMateExceptionCaptureFilter",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.CaptureProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.ConsoleProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style",
+      "kind": "enum",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.DeduplicationProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.ExportProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.PrivacyProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard$Decision",
+      "kind": "record",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.SafetyProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.configuration.StackMateProperties",
+      "kind": "class",
+      "classification": "CONFIGURATION_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.context.ServletContextExtractor",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.context.ServletIncidentContext",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.export.FileSystemIncidentExporter",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.output.ConsoleRenderer",
+      "kind": "interface",
+      "classification": "EXTENSION_SPI"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer",
+      "kind": "class",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.output.RenderOptions",
+      "kind": "record",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.output.RenderStyle",
+      "kind": "enum",
+      "classification": "STABLE_API"
+    },
+    {
+      "artifactId": "stackmate-spring-boot-autoconfigure",
+      "type": "io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler",
+      "kind": "class",
+      "classification": "STABLE_API"
+    }
+  ]
+}

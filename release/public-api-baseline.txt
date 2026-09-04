@@ -1,0 +1,1635 @@
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.AnalysisContribution
+public final class io.github.kalayciburak.stackmate.analysis.AnalysisContribution extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution(java.lang.String, java.util.List<io.github.kalayciburak.stackmate.evidence.EvidenceItem>, java.util.List<io.github.kalayciburak.stackmate.analysis.CauseCandidate>, java.util.List<io.github.kalayciburak.stackmate.analysis.CheckCandidate>);
+    descriptor: (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+
+  public static io.github.kalayciburak.stackmate.analysis.AnalysisContribution empty(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String analyzerId();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<io.github.kalayciburak.stackmate.evidence.EvidenceItem> evidence();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<io.github.kalayciburak.stackmate.analysis.CauseCandidate> causes();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<io.github.kalayciburak.stackmate.analysis.CheckCandidate> checks();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.CauseCandidate
+public final class io.github.kalayciburak.stackmate.analysis.CauseCandidate extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.CauseCandidate(java.lang.String, io.github.kalayciburak.stackmate.analysis.DiagnosticCategory, java.lang.String, java.lang.String, java.util.List<java.lang.String>);
+    descriptor: (Ljava/lang/String;Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.analysis.DiagnosticCategory category();
+    descriptor: ()Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+
+  public java.lang.String title();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String explanation();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<java.lang.String> evidenceIds();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.CheckCandidate
+public final class io.github.kalayciburak.stackmate.analysis.CheckCandidate extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.CheckCandidate(java.lang.String, java.lang.String, java.util.List<java.lang.String>);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String instruction();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<java.lang.String> evidenceIds();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DatabaseAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.DatabaseAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "database";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.DatabaseAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers
+public final class io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers {
+  public static java.util.List<io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer> create();
+    descriptor: ()Ljava/util/List;
+
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator aggregator();
+    descriptor: ()Lio/github/kalayciburak/stackmate/analysis/DiagnosisAggregator;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine
+public final class io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine {
+  public io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine(io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator, io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DiagnosisAggregator;Lio/github/kalayciburak/stackmate/fingerprint/IncidentFingerprinter;)V
+
+  public io.github.kalayciburak.stackmate.analysis.DeterministicResult analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DeterministicResult
+public final class io.github.kalayciburak.stackmate.analysis.DeterministicResult extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.DeterministicResult(io.github.kalayciburak.stackmate.incident.IncidentSnapshot, io.github.kalayciburak.stackmate.analysis.Diagnosis, io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;Lio/github/kalayciburak/stackmate/analysis/Diagnosis;Lio/github/kalayciburak/stackmate/fingerprint/ExceptionFingerprint;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public io.github.kalayciburak.stackmate.incident.IncidentSnapshot incident();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;
+
+  public io.github.kalayciburak.stackmate.analysis.Diagnosis diagnosis();
+    descriptor: ()Lio/github/kalayciburak/stackmate/analysis/Diagnosis;
+
+  public io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint fingerprint();
+    descriptor: ()Lio/github/kalayciburak/stackmate/fingerprint/ExceptionFingerprint;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DiagnosedCause
+public final class io.github.kalayciburak.stackmate.analysis.DiagnosedCause extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.DiagnosedCause(java.lang.String, io.github.kalayciburak.stackmate.analysis.DiagnosticCategory, java.lang.String, java.lang.String, io.github.kalayciburak.stackmate.analysis.DiagnosticStrength, java.util.List<java.lang.String>);
+    descriptor: (Ljava/lang/String;Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;Ljava/lang/String;Ljava/lang/String;Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;Ljava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.analysis.DiagnosticCategory category();
+    descriptor: ()Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+
+  public java.lang.String title();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String explanation();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.analysis.DiagnosticStrength strength();
+    descriptor: ()Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+
+  public java.util.List<java.lang.String> evidenceIds();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.Diagnosis
+public final class io.github.kalayciburak.stackmate.analysis.Diagnosis extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.analysis.Diagnosis(java.util.List<io.github.kalayciburak.stackmate.evidence.EvidenceItem>, java.util.List<io.github.kalayciburak.stackmate.analysis.DiagnosedCause>, java.util.List<io.github.kalayciburak.stackmate.analysis.CheckCandidate>, java.util.List<java.lang.String>, boolean);
+    descriptor: (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Z)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.util.List<io.github.kalayciburak.stackmate.evidence.EvidenceItem> evidence();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<io.github.kalayciburak.stackmate.analysis.DiagnosedCause> causes();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<io.github.kalayciburak.stackmate.analysis.CheckCandidate> checks();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<java.lang.String> analyzerTokens();
+    descriptor: ()Ljava/util/List;
+
+  public boolean fallback();
+    descriptor: ()Z
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator
+public final class io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator {
+  public io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator(java.util.Collection<? extends io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer>);
+    descriptor: (Ljava/util/Collection;)V
+
+  public io.github.kalayciburak.stackmate.analysis.Diagnosis diagnose(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/Diagnosis;
+
+  public java.util.List<io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer> analyzers();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer
+public interface io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public abstract java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public default java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract int order();
+    descriptor: ()I
+
+  public abstract io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DiagnosticCategory
+public final class io.github.kalayciburak.stackmate.analysis.DiagnosticCategory extends java.lang.Enum<io.github.kalayciburak.stackmate.analysis.DiagnosticCategory> {
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory GENERAL_JAVA;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory CONCURRENCY;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory RESOURCE_EXHAUSTION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory SPRING_DEPENDENCY_INJECTION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory SPRING_CONFIGURATION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory WEB_REQUEST;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory VALIDATION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory SERIALIZATION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE_CONSTRAINT;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE_SCHEMA;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE_CONNECTION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE_TRANSACTION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DATABASE_LOCKING;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory PERSISTENCE_STATE;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory AUTHENTICATION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory AUTHORIZATION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory DNS;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory TLS;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory NETWORK_CONNECTION;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory TIMEOUT;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticCategory UNKNOWN;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosticCategory[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosticCategory valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/analysis/DiagnosticCategory;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.DiagnosticStrength
+public final class io.github.kalayciburak.stackmate.analysis.DiagnosticStrength extends java.lang.Enum<io.github.kalayciburak.stackmate.analysis.DiagnosticStrength> {
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticStrength UNKNOWN;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticStrength LOW;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticStrength MEDIUM;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+  public static final io.github.kalayciburak.stackmate.analysis.DiagnosticStrength HIGH;
+    descriptor: Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosticStrength[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosticStrength valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.EvidenceStrengthCalculator
+public final class io.github.kalayciburak.stackmate.analysis.EvidenceStrengthCalculator {
+  public static io.github.kalayciburak.stackmate.analysis.DiagnosticStrength calculate(java.util.Collection<io.github.kalayciburak.stackmate.evidence.EvidenceItem>);
+    descriptor: (Ljava/util/Collection;)Lio/github/kalayciburak/stackmate/analysis/DiagnosticStrength;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.GeneralJavaAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.GeneralJavaAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "general-java";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.GeneralJavaAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.InfrastructureAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.InfrastructureAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "infrastructure";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.InfrastructureAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.SpringDependencyConfigurationAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.SpringDependencyConfigurationAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "spring-di-config";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.SpringDependencyConfigurationAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.SpringSecurityAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.SpringSecurityAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "spring-security";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.SpringSecurityAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.analysis.WebRequestAnalyzer
+public final class io.github.kalayciburak.stackmate.analysis.WebRequestAnalyzer implements io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer {
+  public static final java.lang.String ID = "web-request";
+    descriptor: Ljava/lang/String;
+  public io.github.kalayciburak.stackmate.analysis.WebRequestAnalyzer();
+    descriptor: ()V
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String version();
+    descriptor: ()Ljava/lang/String;
+
+  public int order();
+    descriptor: ()I
+
+  public io.github.kalayciburak.stackmate.analysis.AnalysisContribution analyze(io.github.kalayciburak.stackmate.incident.IncidentSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;)Lio/github/kalayciburak/stackmate/analysis/AnalysisContribution;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore
+public final class io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore implements io.github.kalayciburak.stackmate.deduplication.DeduplicationStore {
+  public io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore(int, java.time.Duration);
+    descriptor: (ILjava/time/Duration;)V
+
+  public io.github.kalayciburak.stackmate.deduplication.BoundedInMemoryDeduplicationStore(int, java.time.Duration, java.time.Clock);
+    descriptor: (ILjava/time/Duration;Ljava/time/Clock;)V
+
+  public synchronized io.github.kalayciburak.stackmate.deduplication.DeduplicationResult record(java.lang.String, boolean);
+    descriptor: (Ljava/lang/String;Z)Lio/github/kalayciburak/stackmate/deduplication/DeduplicationResult;
+
+  public synchronized boolean releaseInferenceReservation(java.lang.String);
+    descriptor: (Ljava/lang/String;)Z
+
+  public synchronized int size();
+    descriptor: ()I
+
+  public synchronized void clear();
+    descriptor: ()V
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.deduplication.DeduplicationResult
+public final class io.github.kalayciburak.stackmate.deduplication.DeduplicationResult extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.deduplication.DeduplicationResult(long, boolean, boolean, java.time.Instant, java.time.Instant);
+    descriptor: (JZZLjava/time/Instant;Ljava/time/Instant;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public long occurrenceCount();
+    descriptor: ()J
+
+  public boolean duplicate();
+    descriptor: ()Z
+
+  public boolean inferenceReserved();
+    descriptor: ()Z
+
+  public java.time.Instant firstSeen();
+    descriptor: ()Ljava/time/Instant;
+
+  public java.time.Instant lastSeen();
+    descriptor: ()Ljava/time/Instant;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.deduplication.DeduplicationStore
+public interface io.github.kalayciburak.stackmate.deduplication.DeduplicationStore {
+  public abstract io.github.kalayciburak.stackmate.deduplication.DeduplicationResult record(java.lang.String, boolean);
+    descriptor: (Ljava/lang/String;Z)Lio/github/kalayciburak/stackmate/deduplication/DeduplicationResult;
+
+  public default io.github.kalayciburak.stackmate.deduplication.DeduplicationResult record(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/deduplication/DeduplicationResult;
+
+  public abstract boolean releaseInferenceReservation(java.lang.String);
+    descriptor: (Ljava/lang/String;)Z
+
+  public abstract int size();
+    descriptor: ()I
+
+  public abstract void clear();
+    descriptor: ()V
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.evidence.EvidenceItem
+public final class io.github.kalayciburak.stackmate.evidence.EvidenceItem extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.evidence.EvidenceItem(java.lang.String, io.github.kalayciburak.stackmate.evidence.EvidenceType, java.lang.String, java.lang.String, io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity, io.github.kalayciburak.stackmate.evidence.EvidenceReliability);
+    descriptor: (Ljava/lang/String;Lio/github/kalayciburak/stackmate/evidence/EvidenceType;Ljava/lang/String;Ljava/lang/String;Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String id();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.evidence.EvidenceType type();
+    descriptor: ()Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+
+  public java.lang.String source();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String value();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity sensitivity();
+    descriptor: ()Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+
+  public io.github.kalayciburak.stackmate.evidence.EvidenceReliability reliability();
+    descriptor: ()Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.evidence.EvidenceReliability
+public final class io.github.kalayciburak.stackmate.evidence.EvidenceReliability extends java.lang.Enum<io.github.kalayciburak.stackmate.evidence.EvidenceReliability> {
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceReliability LOW;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceReliability MEDIUM;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceReliability HIGH;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceReliability[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceReliability valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/evidence/EvidenceReliability;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity
+public final class io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity extends java.lang.Enum<io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity> {
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity PUBLIC;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity POTENTIALLY_SENSITIVE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity SENSITIVE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceSensitivity valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/evidence/EvidenceSensitivity;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.evidence.EvidenceType
+public final class io.github.kalayciburak.stackmate.evidence.EvidenceType extends java.lang.Enum<io.github.kalayciburak.stackmate.evidence.EvidenceType> {
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType EXCEPTION_CLASS;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType MESSAGE_PATTERN;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType SQL_STATE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType DATABASE_VENDOR_CODE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType DATABASE_CONSTRAINT;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType DATABASE_TABLE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType DATABASE_COLUMN;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType PROPERTY_NAME;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType EXPECTED_TYPE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType RECEIVED_VALUE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType HANDLER_METHOD;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType REQUEST_PATH;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType WRAPPER_CLASS;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType SANITIZED_MESSAGE;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType APPLICATION_FRAME;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType CAUSE_RELATIONSHIP;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static final io.github.kalayciburak.stackmate.evidence.EvidenceType ANALYZER_RESULT;
+    descriptor: Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceType[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+
+  public static io.github.kalayciburak.stackmate.evidence.EvidenceType valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/evidence/EvidenceType;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.export.IncidentExporter
+public interface io.github.kalayciburak.stackmate.export.IncidentExporter {
+  public abstract io.github.kalayciburak.stackmate.export.IncidentExportResult export(io.github.kalayciburak.stackmate.analysis.DeterministicResult);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;)Lio/github/kalayciburak/stackmate/export/IncidentExportResult;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.export.IncidentExportResult
+public interface io.github.kalayciburak.stackmate.export.IncidentExportResult {
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.export.IncidentExportResult$Exported
+public final class io.github.kalayciburak.stackmate.export.IncidentExportResult$Exported extends java.lang.Record implements io.github.kalayciburak.stackmate.export.IncidentExportResult {
+  public io.github.kalayciburak.stackmate.export.IncidentExportResult$Exported(java.nio.file.Path);
+    descriptor: (Ljava/nio/file/Path;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.nio.file.Path directory();
+    descriptor: ()Ljava/nio/file/Path;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.export.IncidentExportResult$Failed
+public final class io.github.kalayciburak.stackmate.export.IncidentExportResult$Failed extends java.lang.Record implements io.github.kalayciburak.stackmate.export.IncidentExportResult {
+  public io.github.kalayciburak.stackmate.export.IncidentExportResult$Failed(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String reason();
+    descriptor: ()Ljava/lang/String;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.export.IncidentExportResult$Rejected
+public final class io.github.kalayciburak.stackmate.export.IncidentExportResult$Rejected extends java.lang.Record implements io.github.kalayciburak.stackmate.export.IncidentExportResult {
+  public io.github.kalayciburak.stackmate.export.IncidentExportResult$Rejected(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String reason();
+    descriptor: ()Ljava/lang/String;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint
+public final class io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String value();
+    descriptor: ()Ljava/lang/String;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.fingerprint.FingerprintInput
+public final class io.github.kalayciburak.stackmate.fingerprint.FingerprintInput extends java.lang.Record {
+  public static final int MAX_APPLICATION_FRAMES = 16;
+    descriptor: I
+  public static final int MAX_STABLE_FACT_TYPES = 32;
+    descriptor: I
+  public io.github.kalayciburak.stackmate.fingerprint.FingerprintInput(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List<java.lang.String>, java.util.List<java.lang.String>);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String analyzerVersion();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String rootType();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String category();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String rootMessage();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<java.lang.String> topApplicationFrames();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<java.lang.String> stableFactTypes();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter
+public final class io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter {
+  public io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter();
+    descriptor: ()V
+
+  public io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint fingerprint(io.github.kalayciburak.stackmate.fingerprint.FingerprintInput);
+    descriptor: (Lio/github/kalayciburak/stackmate/fingerprint/FingerprintInput;)Lio/github/kalayciburak/stackmate/fingerprint/ExceptionFingerprint;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.IncidentSnapshot
+public final class io.github.kalayciburak.stackmate.incident.IncidentSnapshot extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.incident.IncidentSnapshot(java.lang.String, java.time.Instant, io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot, java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot>, io.github.kalayciburak.stackmate.incident.RequestContext, io.github.kalayciburak.stackmate.incident.SpringRuntimeContext, io.github.kalayciburak.stackmate.incident.JvmRuntimeContext);
+    descriptor: (Ljava/lang/String;Ljava/time/Instant;Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshot;Ljava/util/List;Lio/github/kalayciburak/stackmate/incident/RequestContext;Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext;Lio/github/kalayciburak/stackmate/incident/JvmRuntimeContext;)V
+
+  public static io.github.kalayciburak.stackmate.incident.IncidentSnapshot of(java.lang.String, java.time.Instant, io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot, java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot>);
+    descriptor: (Ljava/lang/String;Ljava/time/Instant;Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshot;Ljava/util/List;)Lio/github/kalayciburak/stackmate/incident/IncidentSnapshot;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String incidentId();
+    descriptor: ()Ljava/lang/String;
+
+  public java.time.Instant timestamp();
+    descriptor: ()Ljava/time/Instant;
+
+  public io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot throwable();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshot;
+
+  public java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot> applicationFrames();
+    descriptor: ()Ljava/util/List;
+
+  public io.github.kalayciburak.stackmate.incident.RequestContext requestContext();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/RequestContext;
+
+  public io.github.kalayciburak.stackmate.incident.SpringRuntimeContext springRuntimeContext();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext;
+
+  public io.github.kalayciburak.stackmate.incident.JvmRuntimeContext jvmRuntimeContext();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/JvmRuntimeContext;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.JvmRuntimeContext
+public final class io.github.kalayciburak.stackmate.incident.JvmRuntimeContext extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.incident.JvmRuntimeContext(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+
+  public static io.github.kalayciburak.stackmate.incident.JvmRuntimeContext current();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/JvmRuntimeContext;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String javaVersion();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String vmName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String vmVendor();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String osName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String osArch();
+    descriptor: ()Ljava/lang/String;
+
+  public int availableProcessors();
+    descriptor: ()I
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.RequestContext
+public final class io.github.kalayciburak.stackmate.incident.RequestContext extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.incident.RequestContext(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, java.util.Map<java.lang.String, java.lang.String>);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/util/Map;)V
+
+  public static io.github.kalayciburak.stackmate.incident.RequestContext none();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/RequestContext;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String method();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String path();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String handlerClass();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String handlerMethod();
+    descriptor: ()Ljava/lang/String;
+
+  public int responseStatus();
+    descriptor: ()I
+
+  public java.util.Map<java.lang.String, java.lang.String> selectedCorrelationIds();
+    descriptor: ()Ljava/util/Map;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.SpringRuntimeContext
+public final class io.github.kalayciburak.stackmate.incident.SpringRuntimeContext extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.incident.SpringRuntimeContext(java.lang.String, java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState);
+    descriptor: (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;)V
+
+  public static io.github.kalayciburak.stackmate.incident.SpringRuntimeContext unknown();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String applicationName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<java.lang.String> activeProfiles();
+    descriptor: ()Ljava/util/List;
+
+  public java.lang.String applicationPackage();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String bootVersion();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String frameworkVersion();
+    descriptor: ()Ljava/lang/String;
+
+  public io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState transactionState();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState
+public final class io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState extends java.lang.Enum<io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState> {
+  public static final io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState ACTIVE;
+    descriptor: Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+  public static final io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState INACTIVE;
+    descriptor: Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+  public static final io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState UNKNOWN;
+    descriptor: Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+  public static io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+
+  public static io.github.kalayciburak.stackmate.incident.SpringRuntimeContext$TransactionState valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext$TransactionState;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.incident.StackFrameSnapshot
+public final class io.github.kalayciburak.stackmate.incident.StackFrameSnapshot extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.incident.StackFrameSnapshot(java.lang.String, java.lang.String, java.lang.String, int, boolean, java.lang.String, java.lang.String, java.lang.String, int);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+
+  public static io.github.kalayciburak.stackmate.incident.StackFrameSnapshot from(java.lang.StackTraceElement, int);
+    descriptor: (Ljava/lang/StackTraceElement;I)Lio/github/kalayciburak/stackmate/incident/StackFrameSnapshot;
+
+  public io.github.kalayciburak.stackmate.incident.StackFrameSnapshot withCausalDepth(int);
+    descriptor: (I)Lio/github/kalayciburak/stackmate/incident/StackFrameSnapshot;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String className();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String methodName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String fileName();
+    descriptor: ()Ljava/lang/String;
+
+  public int lineNumber();
+    descriptor: ()I
+
+  public boolean nativeMethod();
+    descriptor: ()Z
+
+  public java.lang.String moduleName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String moduleVersion();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String classLoaderName();
+    descriptor: ()Ljava/lang/String;
+
+  public int causalDepth();
+    descriptor: ()I
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.privacy.DefaultSanitizer
+public final class io.github.kalayciburak.stackmate.privacy.DefaultSanitizer implements io.github.kalayciburak.stackmate.privacy.Sanitizer {
+  public io.github.kalayciburak.stackmate.privacy.DefaultSanitizer(io.github.kalayciburak.stackmate.privacy.SanitizerConfig);
+    descriptor: (Lio/github/kalayciburak/stackmate/privacy/SanitizerConfig;)V
+
+  public static io.github.kalayciburak.stackmate.privacy.DefaultSanitizer defaults();
+    descriptor: ()Lio/github/kalayciburak/stackmate/privacy/DefaultSanitizer;
+
+  public java.lang.String sanitize(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+
+  public java.lang.String sanitize(java.lang.String, java.lang.String);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.privacy.Sanitizer
+public interface io.github.kalayciburak.stackmate.privacy.Sanitizer {
+  public abstract java.lang.String sanitize(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+
+  public abstract java.lang.String sanitize(java.lang.String, java.lang.String);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+  public default java.util.Map<java.lang.String, java.lang.String> sanitize(java.util.Map<java.lang.String, java.lang.String>);
+    descriptor: (Ljava/util/Map;)Ljava/util/Map;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.privacy.SanitizerConfig
+public final class io.github.kalayciburak.stackmate.privacy.SanitizerConfig extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.privacy.SanitizerConfig(int, java.lang.String, boolean, boolean, boolean, java.util.Set<java.lang.String>, java.util.List<io.github.kalayciburak.stackmate.privacy.SanitizerPattern>);
+    descriptor: (ILjava/lang/String;ZZZLjava/util/Set;Ljava/util/List;)V
+
+  public static io.github.kalayciburak.stackmate.privacy.SanitizerConfig defaults();
+    descriptor: ()Lio/github/kalayciburak/stackmate/privacy/SanitizerConfig;
+
+  public io.github.kalayciburak.stackmate.privacy.SanitizerConfig withPiiRedaction(boolean, boolean, boolean);
+    descriptor: (ZZZ)Lio/github/kalayciburak/stackmate/privacy/SanitizerConfig;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public int maxLength();
+    descriptor: ()I
+
+  public java.lang.String replacement();
+    descriptor: ()Ljava/lang/String;
+
+  public boolean redactEmail();
+    descriptor: ()Z
+
+  public boolean redactTurkishIdentityNumber();
+    descriptor: ()Z
+
+  public boolean redactPaymentCard();
+    descriptor: ()Z
+
+  public java.util.Set<java.lang.String> sensitiveFieldNames();
+    descriptor: ()Ljava/util/Set;
+
+  public java.util.List<io.github.kalayciburak.stackmate.privacy.SanitizerPattern> customPatterns();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.privacy.SanitizerPattern
+public final class io.github.kalayciburak.stackmate.privacy.SanitizerPattern extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.privacy.SanitizerPattern(java.util.regex.Pattern, java.lang.String);
+    descriptor: (Ljava/util/regex/Pattern;Ljava/lang/String;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.util.regex.Pattern pattern();
+    descriptor: ()Ljava/util/regex/Pattern;
+
+  public java.lang.String replacement();
+    descriptor: ()Ljava/lang/String;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.ApplicationFrameSelector
+public final class io.github.kalayciburak.stackmate.throwable.ApplicationFrameSelector {
+  public io.github.kalayciburak.stackmate.throwable.ApplicationFrameSelector(java.util.List<java.lang.String>, int);
+    descriptor: (Ljava/util/List;I)V
+
+  public java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot> select(io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot);
+    descriptor: (Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshot;)Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails
+public final class io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails(java.lang.String, int);
+    descriptor: (Ljava/lang/String;I)V
+
+  public static io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails none();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/SqlExceptionDetails;
+
+  public boolean present();
+    descriptor: ()Z
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String sqlState();
+    descriptor: ()Ljava/lang/String;
+
+  public int vendorCode();
+    descriptor: ()I
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.ThrowableNode
+public final class io.github.kalayciburak.stackmate.throwable.ThrowableNode extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.throwable.ThrowableNode(java.lang.String, java.lang.String, java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot>, java.util.List<io.github.kalayciburak.stackmate.throwable.ThrowableNode>, io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails, int, boolean, boolean, boolean, boolean, boolean, java.util.List<java.lang.String>);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lio/github/kalayciburak/stackmate/throwable/SqlExceptionDetails;IZZZZZLjava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.String type();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String message();
+    descriptor: ()Ljava/lang/String;
+
+  public java.util.List<io.github.kalayciburak.stackmate.incident.StackFrameSnapshot> frames();
+    descriptor: ()Ljava/util/List;
+
+  public java.util.List<io.github.kalayciburak.stackmate.throwable.ThrowableNode> suppressed();
+    descriptor: ()Ljava/util/List;
+
+  public io.github.kalayciburak.stackmate.throwable.SqlExceptionDetails sql();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/SqlExceptionDetails;
+
+  public int depth();
+    descriptor: ()I
+
+  public boolean wrapper();
+    descriptor: ()Z
+
+  public boolean cycleDetected();
+    descriptor: ()Z
+
+  public boolean depthTruncated();
+    descriptor: ()Z
+
+  public boolean framesTruncated();
+    descriptor: ()Z
+
+  public boolean suppressedTruncated();
+    descriptor: ()Z
+
+  public java.util.List<java.lang.String> captureFailures();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot
+public final class io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot(java.util.List<io.github.kalayciburak.stackmate.throwable.ThrowableNode>, int, boolean);
+    descriptor: (Ljava/util/List;IZ)V
+
+  public io.github.kalayciburak.stackmate.throwable.ThrowableNode outer();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/ThrowableNode;
+
+  public io.github.kalayciburak.stackmate.throwable.ThrowableNode root();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/ThrowableNode;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.util.List<io.github.kalayciburak.stackmate.throwable.ThrowableNode> causeChain();
+    descriptor: ()Ljava/util/List;
+
+  public int nodeCount();
+    descriptor: ()I
+
+  public boolean truncated();
+    descriptor: ()Z
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits
+public final class io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits(int, int, int, int, int, int);
+    descriptor: (IIIIII)V
+
+  public static io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits defaults();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshotLimits;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public int maxCauseDepth();
+    descriptor: ()I
+
+  public int maxFramesPerThrowable();
+    descriptor: ()I
+
+  public int maxSuppressedPerThrowable();
+    descriptor: ()I
+
+  public int maxTotalNodes();
+    descriptor: ()I
+
+  public int maxMessageLength();
+    descriptor: ()I
+
+  public int maxCaptureFailures();
+    descriptor: ()I
+}
+
+## stackmate-core/io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter
+public final class io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter {
+  public io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter(io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits, io.github.kalayciburak.stackmate.privacy.Sanitizer);
+    descriptor: (Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshotLimits;Lio/github/kalayciburak/stackmate/privacy/Sanitizer;)V
+
+  public static io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter defaults();
+    descriptor: ()Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshotter;
+
+  public io.github.kalayciburak.stackmate.throwable.ThrowableSnapshot capture(java.lang.Throwable);
+    descriptor: (Ljava/lang/Throwable;)Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshot;
+
+  public static boolean isSevereJvmFailure(java.lang.Throwable);
+    descriptor: (Ljava/lang/Throwable;)Z
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.autoconfigure.StackMateAutoConfiguration
+public class io.github.kalayciburak.stackmate.autoconfigure.StackMateAutoConfiguration {
+  public io.github.kalayciburak.stackmate.autoconfigure.StackMateAutoConfiguration();
+    descriptor: ()V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.capture.CapturedServletException
+public final class io.github.kalayciburak.stackmate.capture.CapturedServletException extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.capture.CapturedServletException(java.lang.Throwable, io.github.kalayciburak.stackmate.context.ServletIncidentContext);
+    descriptor: (Ljava/lang/Throwable;Lio/github/kalayciburak/stackmate/context/ServletIncidentContext;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public java.lang.Throwable exception();
+    descriptor: ()Ljava/lang/Throwable;
+
+  public io.github.kalayciburak.stackmate.context.ServletIncidentContext context();
+    descriptor: ()Lio/github/kalayciburak/stackmate/context/ServletIncidentContext;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler
+public interface io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler {
+  public abstract void capture(io.github.kalayciburak.stackmate.capture.CapturedServletException);
+    descriptor: (Lio/github/kalayciburak/stackmate/capture/CapturedServletException;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.capture.StackMateExceptionCaptureFilter
+public final class io.github.kalayciburak.stackmate.capture.StackMateExceptionCaptureFilter extends org.springframework.web.filter.OncePerRequestFilter {
+  public io.github.kalayciburak.stackmate.capture.StackMateExceptionCaptureFilter(io.github.kalayciburak.stackmate.context.ServletContextExtractor, io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler);
+    descriptor: (Lio/github/kalayciburak/stackmate/context/ServletContextExtractor;Lio/github/kalayciburak/stackmate/capture/ServletExceptionCaptureHandler;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.CaptureProperties
+public class io.github.kalayciburak.stackmate.configuration.CaptureProperties {
+  public io.github.kalayciburak.stackmate.configuration.CaptureProperties();
+    descriptor: ()V
+
+  public boolean isMvcUnhandled();
+    descriptor: ()Z
+
+  public void setMvcUnhandled(boolean);
+    descriptor: (Z)V
+
+  public java.util.List<java.lang.String> getSelectedMdcKeys();
+    descriptor: ()Ljava/util/List;
+
+  public void setSelectedMdcKeys(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.ConsoleProperties
+public class io.github.kalayciburak.stackmate.configuration.ConsoleProperties {
+  public io.github.kalayciburak.stackmate.configuration.ConsoleProperties();
+    descriptor: ()V
+
+  public boolean isEnabled();
+    descriptor: ()Z
+
+  public void setEnabled(boolean);
+    descriptor: (Z)V
+
+  public io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style getStyle();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;
+
+  public void setStyle(io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;)V
+
+  public int getMaximumWidth();
+    descriptor: ()I
+
+  public void setMaximumWidth(int);
+    descriptor: (I)V
+
+  public boolean isShowApplicationTrace();
+    descriptor: ()Z
+
+  public void setShowApplicationTrace(boolean);
+    descriptor: (Z)V
+
+  public boolean isShowTechnicalDetails();
+    descriptor: ()Z
+
+  public void setShowTechnicalDetails(boolean);
+    descriptor: (Z)V
+
+  public boolean isShowCauseChain();
+    descriptor: ()Z
+
+  public void setShowCauseChain(boolean);
+    descriptor: (Z)V
+
+  public boolean isDebugLogging();
+    descriptor: ()Z
+
+  public void setDebugLogging(boolean);
+    descriptor: (Z)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style
+public final class io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style extends java.lang.Enum<io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style> {
+  public static final io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style BOX;
+    descriptor: Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;
+  public static final io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style COMPACT;
+    descriptor: Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;
+  public static io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;
+
+  public static io.github.kalayciburak.stackmate.configuration.ConsoleProperties$Style valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties$Style;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.DeduplicationProperties
+public class io.github.kalayciburak.stackmate.configuration.DeduplicationProperties {
+  public io.github.kalayciburak.stackmate.configuration.DeduplicationProperties();
+    descriptor: ()V
+
+  public boolean isEnabled();
+    descriptor: ()Z
+
+  public void setEnabled(boolean);
+    descriptor: (Z)V
+
+  public java.time.Duration getTtl();
+    descriptor: ()Ljava/time/Duration;
+
+  public void setTtl(java.time.Duration);
+    descriptor: (Ljava/time/Duration;)V
+
+  public int getMaximumEntries();
+    descriptor: ()I
+
+  public void setMaximumEntries(int);
+    descriptor: (I)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties
+public class io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties {
+  public io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties();
+    descriptor: ()V
+
+  public int getMaximumCauseDepth();
+    descriptor: ()I
+
+  public void setMaximumCauseDepth(int);
+    descriptor: (I)V
+
+  public int getMaximumSuppressedExceptions();
+    descriptor: ()I
+
+  public void setMaximumSuppressedExceptions(int);
+    descriptor: (I)V
+
+  public int getMaximumStackFrames();
+    descriptor: ()I
+
+  public void setMaximumStackFrames(int);
+    descriptor: (I)V
+
+  public int getMaximumApplicationFrames();
+    descriptor: ()I
+
+  public void setMaximumApplicationFrames(int);
+    descriptor: (I)V
+
+  public int getMaximumMessageLength();
+    descriptor: ()I
+
+  public void setMaximumMessageLength(int);
+    descriptor: (I)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.ExportProperties
+public class io.github.kalayciburak.stackmate.configuration.ExportProperties {
+  public io.github.kalayciburak.stackmate.configuration.ExportProperties();
+    descriptor: ()V
+
+  public boolean isEnabled();
+    descriptor: ()Z
+
+  public void setEnabled(boolean);
+    descriptor: (Z)V
+
+  public java.nio.file.Path getDirectory();
+    descriptor: ()Ljava/nio/file/Path;
+
+  public void setDirectory(java.nio.file.Path);
+    descriptor: (Ljava/nio/file/Path;)V
+
+  public int getMaximumIncidents();
+    descriptor: ()I
+
+  public void setMaximumIncidents(int);
+    descriptor: (I)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.PrivacyProperties
+public class io.github.kalayciburak.stackmate.configuration.PrivacyProperties {
+  public io.github.kalayciburak.stackmate.configuration.PrivacyProperties();
+    descriptor: ()V
+
+  public java.util.List<java.lang.String> getRedactValues();
+    descriptor: ()Ljava/util/List;
+
+  public void setRedactValues(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard
+public final class io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard {
+  public io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard(org.springframework.core.env.Environment, io.github.kalayciburak.stackmate.configuration.StackMateProperties);
+    descriptor: (Lorg/springframework/core/env/Environment;Lio/github/kalayciburak/stackmate/configuration/StackMateProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard$Decision decision();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/ProductionProfileGuard$Decision;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard$Decision
+public final class io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard$Decision extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard$Decision(boolean, boolean, java.util.List<java.lang.String>);
+    descriptor: (ZZLjava/util/List;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public boolean analysisAllowed();
+    descriptor: ()Z
+
+  public boolean warningRequired();
+    descriptor: ()Z
+
+  public java.util.List<java.lang.String> matchedProductionProfiles();
+    descriptor: ()Ljava/util/List;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.SafetyProperties
+public class io.github.kalayciburak.stackmate.configuration.SafetyProperties {
+  public io.github.kalayciburak.stackmate.configuration.SafetyProperties();
+    descriptor: ()V
+
+  public boolean isAllowInProduction();
+    descriptor: ()Z
+
+  public void setAllowInProduction(boolean);
+    descriptor: (Z)V
+
+  public java.util.List<java.lang.String> getProductionProfiles();
+    descriptor: ()Ljava/util/List;
+
+  public void setProductionProfiles(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.configuration.StackMateProperties
+public class io.github.kalayciburak.stackmate.configuration.StackMateProperties {
+  public io.github.kalayciburak.stackmate.configuration.StackMateProperties();
+    descriptor: ()V
+
+  public boolean isEnabled();
+    descriptor: ()Z
+
+  public void setEnabled(boolean);
+    descriptor: (Z)V
+
+  public java.util.List<java.lang.String> getApplicationPackages();
+    descriptor: ()Ljava/util/List;
+
+  public void setApplicationPackages(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)V
+
+  public io.github.kalayciburak.stackmate.configuration.CaptureProperties getCapture();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/CaptureProperties;
+
+  public void setCapture(io.github.kalayciburak.stackmate.configuration.CaptureProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/CaptureProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties getDiagnostics();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/DiagnosticsProperties;
+
+  public void setDiagnostics(io.github.kalayciburak.stackmate.configuration.DiagnosticsProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/DiagnosticsProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.PrivacyProperties getPrivacy();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/PrivacyProperties;
+
+  public void setPrivacy(io.github.kalayciburak.stackmate.configuration.PrivacyProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/PrivacyProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.DeduplicationProperties getDeduplication();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/DeduplicationProperties;
+
+  public void setDeduplication(io.github.kalayciburak.stackmate.configuration.DeduplicationProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/DeduplicationProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.ConsoleProperties getConsole();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties;
+
+  public void setConsole(io.github.kalayciburak.stackmate.configuration.ConsoleProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/ConsoleProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.ExportProperties getExport();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/ExportProperties;
+
+  public void setExport(io.github.kalayciburak.stackmate.configuration.ExportProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/ExportProperties;)V
+
+  public io.github.kalayciburak.stackmate.configuration.SafetyProperties getSafety();
+    descriptor: ()Lio/github/kalayciburak/stackmate/configuration/SafetyProperties;
+
+  public void setSafety(io.github.kalayciburak.stackmate.configuration.SafetyProperties);
+    descriptor: (Lio/github/kalayciburak/stackmate/configuration/SafetyProperties;)V
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.context.ServletContextExtractor
+public final class io.github.kalayciburak.stackmate.context.ServletContextExtractor {
+  public io.github.kalayciburak.stackmate.context.ServletContextExtractor(org.springframework.core.env.Environment, org.springframework.beans.factory.BeanFactory, io.github.kalayciburak.stackmate.configuration.StackMateProperties, io.github.kalayciburak.stackmate.privacy.Sanitizer);
+    descriptor: (Lorg/springframework/core/env/Environment;Lorg/springframework/beans/factory/BeanFactory;Lio/github/kalayciburak/stackmate/configuration/StackMateProperties;Lio/github/kalayciburak/stackmate/privacy/Sanitizer;)V
+
+  public io.github.kalayciburak.stackmate.context.ServletIncidentContext extract(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse);
+    descriptor: (Ljakarta/servlet/http/HttpServletRequest;Ljakarta/servlet/http/HttpServletResponse;)Lio/github/kalayciburak/stackmate/context/ServletIncidentContext;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.context.ServletIncidentContext
+public final class io.github.kalayciburak.stackmate.context.ServletIncidentContext extends java.lang.Record {
+  public io.github.kalayciburak.stackmate.context.ServletIncidentContext(io.github.kalayciburak.stackmate.incident.RequestContext, io.github.kalayciburak.stackmate.incident.SpringRuntimeContext);
+    descriptor: (Lio/github/kalayciburak/stackmate/incident/RequestContext;Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext;)V
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public io.github.kalayciburak.stackmate.incident.RequestContext request();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/RequestContext;
+
+  public io.github.kalayciburak.stackmate.incident.SpringRuntimeContext springRuntime();
+    descriptor: ()Lio/github/kalayciburak/stackmate/incident/SpringRuntimeContext;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.export.FileSystemIncidentExporter
+public final class io.github.kalayciburak.stackmate.export.FileSystemIncidentExporter implements io.github.kalayciburak.stackmate.export.IncidentExporter {
+  public io.github.kalayciburak.stackmate.export.FileSystemIncidentExporter(java.nio.file.Path, int, io.github.kalayciburak.stackmate.privacy.Sanitizer);
+    descriptor: (Ljava/nio/file/Path;ILio/github/kalayciburak/stackmate/privacy/Sanitizer;)V
+
+  public io.github.kalayciburak.stackmate.export.IncidentExportResult export(io.github.kalayciburak.stackmate.analysis.DeterministicResult);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;)Lio/github/kalayciburak/stackmate/export/IncidentExportResult;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.output.ConsoleRenderer
+public interface io.github.kalayciburak.stackmate.output.ConsoleRenderer {
+  public abstract java.lang.String render(io.github.kalayciburak.stackmate.analysis.DeterministicResult, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+
+  public abstract java.lang.String renderDuplicate(io.github.kalayciburak.stackmate.analysis.DeterministicResult, io.github.kalayciburak.stackmate.deduplication.DeduplicationResult, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;Lio/github/kalayciburak/stackmate/deduplication/DeduplicationResult;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+
+  public abstract java.lang.String renderSevereJvmFailure(io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint, java.lang.String, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/fingerprint/ExceptionFingerprint;Ljava/lang/String;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer
+public final class io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer implements io.github.kalayciburak.stackmate.output.ConsoleRenderer {
+  public io.github.kalayciburak.stackmate.output.DefaultConsoleRenderer(io.github.kalayciburak.stackmate.privacy.Sanitizer);
+    descriptor: (Lio/github/kalayciburak/stackmate/privacy/Sanitizer;)V
+
+  public java.lang.String render(io.github.kalayciburak.stackmate.analysis.DeterministicResult, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+
+  public java.lang.String renderDuplicate(io.github.kalayciburak.stackmate.analysis.DeterministicResult, io.github.kalayciburak.stackmate.deduplication.DeduplicationResult, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/analysis/DeterministicResult;Lio/github/kalayciburak/stackmate/deduplication/DeduplicationResult;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+
+  public java.lang.String renderSevereJvmFailure(io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint, java.lang.String, io.github.kalayciburak.stackmate.output.RenderOptions);
+    descriptor: (Lio/github/kalayciburak/stackmate/fingerprint/ExceptionFingerprint;Ljava/lang/String;Lio/github/kalayciburak/stackmate/output/RenderOptions;)Ljava/lang/String;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.output.RenderOptions
+public final class io.github.kalayciburak.stackmate.output.RenderOptions extends java.lang.Record {
+  public static final int MIN_WIDTH = 60;
+    descriptor: I
+  public static final int MAX_WIDTH = 200;
+    descriptor: I
+  public io.github.kalayciburak.stackmate.output.RenderOptions(io.github.kalayciburak.stackmate.output.RenderStyle, int, boolean, boolean, boolean);
+    descriptor: (Lio/github/kalayciburak/stackmate/output/RenderStyle;IZZZ)V
+
+  public static io.github.kalayciburak.stackmate.output.RenderOptions defaults();
+    descriptor: ()Lio/github/kalayciburak/stackmate/output/RenderOptions;
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public final int hashCode();
+    descriptor: ()I
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public io.github.kalayciburak.stackmate.output.RenderStyle style();
+    descriptor: ()Lio/github/kalayciburak/stackmate/output/RenderStyle;
+
+  public int maxWidth();
+    descriptor: ()I
+
+  public boolean showApplicationTrace();
+    descriptor: ()Z
+
+  public boolean showDetails();
+    descriptor: ()Z
+
+  public boolean showCauseChain();
+    descriptor: ()Z
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.output.RenderStyle
+public final class io.github.kalayciburak.stackmate.output.RenderStyle extends java.lang.Enum<io.github.kalayciburak.stackmate.output.RenderStyle> {
+  public static final io.github.kalayciburak.stackmate.output.RenderStyle BOX;
+    descriptor: Lio/github/kalayciburak/stackmate/output/RenderStyle;
+  public static final io.github.kalayciburak.stackmate.output.RenderStyle COMPACT;
+    descriptor: Lio/github/kalayciburak/stackmate/output/RenderStyle;
+  public static io.github.kalayciburak.stackmate.output.RenderStyle[] values();
+    descriptor: ()[Lio/github/kalayciburak/stackmate/output/RenderStyle;
+
+  public static io.github.kalayciburak.stackmate.output.RenderStyle valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lio/github/kalayciburak/stackmate/output/RenderStyle;
+}
+
+## stackmate-spring-boot-autoconfigure/io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler
+public final class io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler implements io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler {
+  public io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler(io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter, io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine, io.github.kalayciburak.stackmate.deduplication.DeduplicationStore, io.github.kalayciburak.stackmate.output.ConsoleRenderer, io.github.kalayciburak.stackmate.configuration.StackMateProperties, io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard);
+    descriptor: (Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshotter;Lio/github/kalayciburak/stackmate/analysis/DeterministicDiagnosticEngine;Lio/github/kalayciburak/stackmate/deduplication/DeduplicationStore;Lio/github/kalayciburak/stackmate/output/ConsoleRenderer;Lio/github/kalayciburak/stackmate/configuration/StackMateProperties;Lio/github/kalayciburak/stackmate/configuration/ProductionProfileGuard;)V
+
+  public io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler(io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter, io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine, io.github.kalayciburak.stackmate.deduplication.DeduplicationStore, io.github.kalayciburak.stackmate.output.ConsoleRenderer, io.github.kalayciburak.stackmate.configuration.StackMateProperties, io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard, io.github.kalayciburak.stackmate.export.IncidentExporter);
+    descriptor: (Lio/github/kalayciburak/stackmate/throwable/ThrowableSnapshotter;Lio/github/kalayciburak/stackmate/analysis/DeterministicDiagnosticEngine;Lio/github/kalayciburak/stackmate/deduplication/DeduplicationStore;Lio/github/kalayciburak/stackmate/output/ConsoleRenderer;Lio/github/kalayciburak/stackmate/configuration/StackMateProperties;Lio/github/kalayciburak/stackmate/configuration/ProductionProfileGuard;Lio/github/kalayciburak/stackmate/export/IncidentExporter;)V
+
+  public void capture(io.github.kalayciburak.stackmate.capture.CapturedServletException);
+    descriptor: (Lio/github/kalayciburak/stackmate/capture/CapturedServletException;)V
+}
