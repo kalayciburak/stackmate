@@ -2,7 +2,10 @@
   "schemaVersion": "1",
   "status": "PASS",
   "inventorySha256": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
-  "descriptorSha256": "6d5ca00867954028561e8777acc2d592f4d0373dc764f44654f96f51e278e228",
+  "descriptorSha256": "abedc872456538290144aadc8b416f80dc431bc70cd473646431687106cf311a",
+  "reproductionSha256": "02a57674877f28617a16ae87aaa3097993d02dfec980766f441b4cd2ddb92435",
+  "resolvedDescriptorSha256": "d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c",
+  "scoringLabelsSha256": "c44e481fe9ea1a019e1bfdc7bd1360428580b98808ccc605e5c82dc224e10fd3",
   "familyCount": 30,
   "realFamilies": 24,
   "syntheticFamilies": 6,
@@ -45,77 +48,161 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "63e29d989596fb22b7749e111eea043210ea091c8d496cf88efe118a57e9fc91",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.188119,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-013",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.170496,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.158324,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-002",
-      "recipeId": "jdk.watch-service.take-after-close",
+      "recipeId": "jdk.concurrent-hash-map.recursive-same-key-compute",
       "classification": "CONTROLLED_REAL_RUNTIME",
       "declaredClosestExistingFamilies": [
-        "G53-R-IN-008",
-        "G53-R-JV-010"
+        "G53-R-JV-004",
+        "JAVA-STATE-003"
       ],
-      "noveltyRationale": "A closed filesystem event service blocks/takes through a different lifecycle contract than a file channel or ZipFS path.",
+      "noveltyRationale": "ConcurrentHashMap reservation-node reentrancy for the same key is distinct from iterator mutation and a generic invalid-state snapshot.",
       "nearestAutomatedMatches": [
         {
-          "familyId": "G53-R-JV-010",
+          "familyId": "G53-R-JV-004",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.159751,
+          "characterFiveGramJaccard": 0.121429,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-IN-008",
+          "familyId": "G53-R-SP-008",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.128,
+          "characterFiveGramJaccard": 0.116393,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-IN-006",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.127745,
+          "familyId": "CONC-COMPLETION-001",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.114192,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "437bfc2adf67e68e7fb063767c64cfc225a3dca695220483ae9ef076f45adb4c",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-004",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.174074,
+          "tokenThreeGramJaccard": 0.017544,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-STATE-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.169471,
+          "tokenThreeGramJaccard": 0.015267,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.161212,
+          "tokenThreeGramJaccard": 0.008696,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-003",
-      "recipeId": "jdk.selector.select-after-close",
+      "recipeId": "jdk.method-handle.incompatible-primitive-adaptation",
       "classification": "CONTROLLED_REAL_RUNTIME",
       "declaredClosestExistingFamilies": [
-        "G53-R-IN-008",
-        "G53-R-IN-009"
+        "JAVA-CAST-006",
+        "G53-R-JV-015"
       ],
-      "noveltyRationale": "Selector event-multiplexing lifecycle differs from closed file I/O and overlapping file locks.",
+      "noveltyRationale": "Method-handle call-site adaptation validates a dynamic JVM signature and primitive conversion contract, not an ordinary object cast or formatter conversion.",
       "nearestAutomatedMatches": [
         {
-          "familyId": "G53-R-IN-008",
+          "familyId": "G53-R-JV-015",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.156733,
+          "characterFiveGramJaccard": 0.116522,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-IN-009",
+          "familyId": "G53-R-JV-001",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.138593,
+          "characterFiveGramJaccard": 0.105983,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-JV-010",
+          "familyId": "G53-R-JV-002",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.130719,
+          "characterFiveGramJaccard": 0.10084,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "ee012158b6e2e41e5c508fd9496afec03ab01f96ce6b55ccd679441c16a9d7a9",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.162471,
+          "tokenThreeGramJaccard": 0.015873,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-STATE-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.158427,
+          "tokenThreeGramJaccard": 0.013986,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-ARG-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.155481,
+          "tokenThreeGramJaccard": 0.013986,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-004",
@@ -149,7 +236,35 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "49cf3d0abaa3af3cdcddda34c69104febe4f9b6ab79a80551a4287129f007376",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.162286,
+          "tokenThreeGramJaccard": 0.016529,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.150794,
+          "tokenThreeGramJaccard": 0.016529,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.149714,
+          "tokenThreeGramJaccard": 0.016529,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-005",
@@ -163,27 +278,55 @@
         {
           "familyId": "G53-R-JV-009",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.19375,
+          "characterFiveGramJaccard": 0.192946,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-JV-013",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.128,
+          "characterFiveGramJaccard": 0.12749,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-JV-012",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.125506,
+          "characterFiveGramJaccard": 0.125,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "8d409c14696b0ebae05b058b4466332896bdbb3950b70a86d2adc931bb40b854",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.177956,
+          "tokenThreeGramJaccard": 0.01626,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.153244,
+          "tokenThreeGramJaccard": 0.01626,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.152318,
+          "tokenThreeGramJaccard": 0.01626,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-006",
@@ -218,7 +361,35 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "3fd8fc1bae442090bec9812a1224d3d77f03ab6ff001a6e3853e8918331cc28b",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.158439,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.156069,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.155172,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-007",
@@ -252,7 +423,35 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "755d09428c78c1d8d3658960940323be1eaaebcd428b92f0406507cf8b7e5e38",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.180751,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.153318,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.150922,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JV-008",
@@ -287,7 +486,35 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "f90b682b796e59b7ddaee6c0d9700937f7513ba92db2033b9dbae85933cb878d",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "JAVA-STATE-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.188424,
+          "tokenThreeGramJaccard": 0.023622,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.17284,
+          "tokenThreeGramJaccard": 0.018018,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-ARG-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.172121,
+          "tokenThreeGramJaccard": 0.015625,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-SP-001",
@@ -301,27 +528,55 @@
         {
           "familyId": "G53-R-SP-009",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.214141,
+          "characterFiveGramJaccard": 0.21328,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-SP-007",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.155914,
+          "characterFiveGramJaccard": 0.155357,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-SP-014",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.147601,
+          "characterFiveGramJaccard": 0.147059,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "b4c695496073fc20497cc8634b3dcfb8fc07edc17b601b02a3877d7cdaa82b59",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-SP-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.17124,
+          "tokenThreeGramJaccard": 0.007634,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-SP-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.157447,
+          "tokenThreeGramJaccard": 0.007634,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-SP-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.154886,
+          "tokenThreeGramJaccard": 0.007576,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-SP-002",
@@ -336,62 +591,118 @@
         {
           "familyId": "SPRING-PROPERTY-007",
           "catalog": "benchmark-v2",
-          "characterFiveGramJaccard": 0.199637,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-R-SP-001",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.151042,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.214286,
+          "tokenThreeGramJaccard": 0.012821,
           "normalizedTextEqual": false
         },
         {
           "familyId": "SPRING-CREATION-003",
           "catalog": "benchmark-v2",
-          "characterFiveGramJaccard": 0.15,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.163478,
+          "tokenThreeGramJaccard": 0.012821,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "SPRING-BIND-010",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.163194,
+          "tokenThreeGramJaccard": 0.012821,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "c1bdbde5985c778e0daa9d2c81133a239dce41a4e89130d3fb7b56ef2f76ba2f",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "SPRING-PROPERTY-007",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.242466,
+          "tokenThreeGramJaccard": 0.026087,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "SPRING-BIND-010",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.210596,
+          "tokenThreeGramJaccard": 0.026087,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "SPRING-PLACEHOLDER-005",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.199478,
+          "tokenThreeGramJaccard": 0.026087,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-SP-003",
-      "recipeId": "spring.path-pattern.capture-rest-not-terminal",
+      "recipeId": "spring.path-pattern.unclosed-capture-rest",
       "classification": "CONTROLLED_REAL_RUNTIME",
       "declaredClosestExistingFamilies": [
         "G53-R-MV-016",
         "MVC-METHOD-006"
       ],
-      "noveltyRationale": "Route grammar compilation rejects a non-terminal capture-rest token before request dispatch.",
+      "noveltyRationale": "Route grammar compilation rejects an unterminated capture-rest token before request dispatch.",
       "nearestAutomatedMatches": [
         {
-          "familyId": "G53-R-MV-011",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.128107,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "CH-MVC-MISSING-CURSOR",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.137097,
+          "tokenThreeGramJaccard": 0.016949,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-MV-014",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.127778,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "CH-MVC-VALIDATION-LINE",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.130612,
+          "tokenThreeGramJaccard": 0.016949,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-MV-015",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.127341,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "MVC-MEDIA-005",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.130841,
+          "tokenThreeGramJaccard": 0.015385,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "a36d0c0d29c08f083195addc4d95e58cd87b8ed9e54b6e00c03068b5e5842544",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.146394,
+          "tokenThreeGramJaccard": 0.015504,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "SPRING-CIRCULAR-004",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.146613,
+          "tokenThreeGramJaccard": 0.013514,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "SPRING-NONUNIQUE-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.144153,
+          "tokenThreeGramJaccard": 0.013514,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-MV-001",
@@ -403,29 +714,57 @@
       "noveltyRationale": "Header argument resolution and transport metadata differ from query-parameter resolution.",
       "nearestAutomatedMatches": [
         {
+          "familyId": "CH-MVC-MISSING-CURSOR",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.186613,
+          "tokenThreeGramJaccard": 0.016393,
+          "normalizedTextEqual": false
+        },
+        {
           "familyId": "G53-R-MV-015",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.192913,
+          "characterFiveGramJaccard": 0.192157,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-MV-016",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.192308,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-S-CON-006",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.170874,
+          "characterFiveGramJaccard": 0.191571,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "8cc37a2c41a870492daab7f1cce9bd95f56826fca9f4e2f31b4ea38e7297a315",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "MVC-MISSING-PARAM-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.203262,
+          "tokenThreeGramJaccard": 0.015385,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.207161,
+          "tokenThreeGramJaccard": 0.008929,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.204663,
+          "tokenThreeGramJaccard": 0.008929,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-MV-002",
@@ -437,29 +776,57 @@
       "noveltyRationale": "Cookie resolver/client-state semantics differ from query and header inputs.",
       "nearestAutomatedMatches": [
         {
+          "familyId": "CH-MVC-MISSING-CURSOR",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.172065,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false
+        },
+        {
           "familyId": "G53-R-MV-015",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.178782,
+          "characterFiveGramJaccard": 0.178082,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-MV-016",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.178503,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-S-CON-006",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.166016,
+          "characterFiveGramJaccard": 0.17782,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "274fac482b28fc77de5f7db4830d735dd5f43ff2290a2f8e24639fef4ba6eb11",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-MV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.208333,
+          "tokenThreeGramJaccard": 0.017699,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.21216,
+          "tokenThreeGramJaccard": 0.008929,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.209699,
+          "tokenThreeGramJaccard": 0.008929,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-MV-003",
@@ -474,27 +841,55 @@
         {
           "familyId": "CH-MVC-MISSING-CURSOR",
           "catalog": "post-training-challenge",
-          "characterFiveGramJaccard": 0.168224,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-R-MV-001",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.155752,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.183019,
+          "tokenThreeGramJaccard": 0.013699,
           "normalizedTextEqual": false
         },
         {
           "familyId": "MVC-MISSING-PARAM-002",
           "catalog": "benchmark-v2",
-          "characterFiveGramJaccard": 0.153322,
+          "characterFiveGramJaccard": 0.166667,
+          "tokenThreeGramJaccard": 0.012658,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.155203,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "79d5e06a0c5a44209f392f5b7f164a1424a0ebb88252eab2554c8eefd715c81c",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "MVC-MISSING-PARAM-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.201958,
+          "tokenThreeGramJaccard": 0.015873,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.1975,
+          "tokenThreeGramJaccard": 0.018349,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "CH-MVC-MISSING-CURSOR",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.196911,
+          "tokenThreeGramJaccard": 0.016667,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JS-001",
@@ -509,27 +904,55 @@
         {
           "familyId": "MVC-SERIALIZE-011",
           "catalog": "benchmark-v2",
-          "characterFiveGramJaccard": 0.151203,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.170732,
+          "tokenThreeGramJaccard": 0.028169,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-MV-009",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.144377,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "CH-MVC-MALFORMED-LIST",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.141805,
+          "tokenThreeGramJaccard": 0.030769,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-MV-005",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.139423,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "DB-LAZY-019",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.123457,
+          "tokenThreeGramJaccard": 0.029851,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "b779b7b2b7d6707dee82df338988ffd3d28abaf55363ec673647f16b3a766505",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "MVC-SERIALIZE-011",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.155702,
+          "tokenThreeGramJaccard": 0.021898,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-NPE-001",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.149944,
+          "tokenThreeGramJaccard": 0.021898,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "SPRING-MISSING-BEAN-001",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.145766,
+          "tokenThreeGramJaccard": 0.021898,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-JS-002",
@@ -544,27 +967,55 @@
         {
           "familyId": "MVC-SERIALIZE-011",
           "catalog": "benchmark-v2",
-          "characterFiveGramJaccard": 0.150685,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.170139,
+          "tokenThreeGramJaccard": 0.026316,
           "normalizedTextEqual": false
         },
         {
           "familyId": "CH-MVC-MALFORMED-LIST",
           "catalog": "post-training-challenge",
-          "characterFiveGramJaccard": 0.123188,
-          "tokenThreeGramJaccard": 0.0,
+          "characterFiveGramJaccard": 0.143382,
+          "tokenThreeGramJaccard": 0.028571,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-MV-009",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.121842,
-          "tokenThreeGramJaccard": 0.0,
+          "familyId": "CH-SPRING-MISSING-CLOCK",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.117958,
+          "tokenThreeGramJaccard": 0.028571,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "2776479dcdce9f5a6b340002029c50e288bbe8fd35e8914644fa6524e2474639",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "MVC-SERIALIZE-011",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.167824,
+          "tokenThreeGramJaccard": 0.023622,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-NPE-001",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.159334,
+          "tokenThreeGramJaccard": 0.023622,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "JAVA-STATE-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.153025,
+          "tokenThreeGramJaccard": 0.023622,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-NET-001",
@@ -599,7 +1050,35 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "041ce7684af432285d6bbe06e965b84d89763178e4394f41bfaac22f45918ac6",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.185841,
+          "tokenThreeGramJaccard": 0.018018,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "B5-CONNECTION-LOOPBACK-REFUSED",
+          "catalog": "phase5-blind",
+          "characterFiveGramJaccard": 0.179004,
+          "tokenThreeGramJaccard": 0.017857,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "supported.endpoint-refusal",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.159763,
+          "tokenThreeGramJaccard": 0.007299,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-NET-002",
@@ -614,27 +1093,55 @@
         {
           "familyId": "G53-R-IN-005",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.141414,
+          "characterFiveGramJaccard": 0.126233,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-IN-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.112811,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-JV-015",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.111984,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-R-MV-011",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.109434,
+          "characterFiveGramJaccard": 0.11068,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "7521a8324ceb8238f6731d977194a7cb94823ce5b4917922d5d3c66580dbdd75",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.156926,
+          "tokenThreeGramJaccard": 0.014925,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-IN-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.145281,
+          "tokenThreeGramJaccard": 0.007407,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.135362,
+          "tokenThreeGramJaccard": 0.015152,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-001",
@@ -649,27 +1156,55 @@
         {
           "familyId": "G53-R-PG-001",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.165103,
+          "characterFiveGramJaccard": 0.164486,
           "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "DB-PG-UNIQUE-011",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.130282,
+          "tokenThreeGramJaccard": 0.012658,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-019",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.141577,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-R-PG-003",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.139963,
+          "characterFiveGramJaccard": 0.141071,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "a7ac898e0a4ebe4ded2aeb6d1121c3ecd697b5ac2b3a7cd4b287e3c8032f94cc",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.246011,
+          "tokenThreeGramJaccard": 0.016393,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.211765,
+          "tokenThreeGramJaccard": 0.00813,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-021",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.209845,
+          "tokenThreeGramJaccard": 0.00813,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-002",
@@ -684,62 +1219,118 @@
         {
           "familyId": "G53-R-PG-009",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.149206,
+          "characterFiveGramJaccard": 0.148734,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-029",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.13522,
+          "characterFiveGramJaccard": 0.134796,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-011",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.134069,
+          "characterFiveGramJaccard": 0.133648,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "99b51e1229ab40c442af7ccdb1ef8533b1d55fb10b1faf0842b48ccbe6d962e6",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.191275,
+          "tokenThreeGramJaccard": 0.014286,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.191226,
+          "tokenThreeGramJaccard": 0.014286,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-024",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.190583,
+          "tokenThreeGramJaccard": 0.014286,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-003",
-      "recipeId": "postgres.statement-undefined-bind-parameter",
+      "recipeId": "postgres.statement-bind-count-protocol-violation",
       "classification": "CONTROLLED_REAL_INTEGRATION",
       "declaredClosestExistingFamilies": [
         "G53-R-PG-012",
         "G53-R-PG-024"
       ],
-      "noveltyRationale": "An unbound protocol placeholder differs from function resolution and duplicate prepared-statement identity.",
+      "noveltyRationale": "A simple statement containing a positional placeholder reaches the bind protocol with zero supplied values; this differs from function resolution and duplicate prepared-statement identity.",
       "nearestAutomatedMatches": [
         {
           "familyId": "G53-R-PG-024",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.167254,
+          "characterFiveGramJaccard": 0.139319,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-PG-012",
+          "familyId": "G53-R-PG-001",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.161739,
+          "characterFiveGramJaccard": 0.130503,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-R-PG-010",
+          "familyId": "G53-R-PG-022",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.151832,
+          "characterFiveGramJaccard": 0.129134,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "b2e729a73dd9d11bf3ec444a7fff4c055ff260dc0ea33a7bb84717260eef7307",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-024",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.184123,
+          "tokenThreeGramJaccard": 0.007246,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-022",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.181411,
+          "tokenThreeGramJaccard": 0.007246,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.181006,
+          "tokenThreeGramJaccard": 0.007246,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-004",
@@ -754,27 +1345,55 @@
         {
           "familyId": "G53-R-PG-021",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.189922,
+          "characterFiveGramJaccard": 0.189189,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-010",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.188324,
+          "characterFiveGramJaccard": 0.187617,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-011",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.185741,
+          "characterFiveGramJaccard": 0.185047,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "2c27ac9bdd366422ed2254111f95af02fec96c9c6a6ea1de9aedaee2e71d0780",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.237548,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.235669,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.234177,
+          "tokenThreeGramJaccard": 0.016129,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-005",
@@ -788,27 +1407,55 @@
         {
           "familyId": "G53-R-PG-012",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.168784,
+          "characterFiveGramJaccard": 0.168174,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-015",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.149201,
+          "characterFiveGramJaccard": 0.148673,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-010",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.141831,
+          "characterFiveGramJaccard": 0.141324,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "66983b6a6a71d270f529e71b1ef523811187f851ab44ae1429fd5bea6e6c776b",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.236573,
+          "tokenThreeGramJaccard": 0.016667,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.236271,
+          "tokenThreeGramJaccard": 0.016667,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.235741,
+          "tokenThreeGramJaccard": 0.016667,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-R-PG-006",
@@ -823,27 +1470,55 @@
         {
           "familyId": "G53-R-PG-018",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.137056,
+          "characterFiveGramJaccard": 0.136594,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-016",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.136752,
+          "characterFiveGramJaccard": 0.136286,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-R-PG-006",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.130208,
+          "characterFiveGramJaccard": 0.129758,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "4b18b3985a39152aed3e1fa4cea96fde720b4d716df2f7dc7db875f32f87df8c",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.231593,
+          "tokenThreeGramJaccard": 0.008403,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-017",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.227865,
+          "tokenThreeGramJaccard": 0.008333,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-018",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.222955,
+          "tokenThreeGramJaccard": 0.008403,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-S-001",
@@ -879,77 +1554,161 @@
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "9ddd45777a4b7485c3738d1c5fbd74b8aa66c9986af3320824a3aab2d5e7da7f",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.215407,
+          "tokenThreeGramJaccard": 0.010753,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-CON-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.214485,
+          "tokenThreeGramJaccard": 0.010753,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-TOP-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.200814,
+          "tokenThreeGramJaccard": 0.010638,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-S-002",
-      "recipeId": "synthetic.secret-bait-candidate",
+      "recipeId": "synthetic.secret-marker-false-classification",
       "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
       "declaredClosestExistingFamilies": [
         "ADV-SECRET-001",
         "B5-SECRET-FABRICATED-SOURCE-TRAP"
       ],
-      "noveltyRationale": "A bounded non-credential bait marker appears only in an unsupported candidate; T1 cannot echo prose or select it.",
+      "noveltyRationale": "A controlled bait value is present as untrusted evidence, while a separate policy fact says it carries no diagnostic meaning; the T1 task is to reject secret-classification candidates rather than reproduce prose.",
       "nearestAutomatedMatches": [
         {
           "familyId": "G53-S-SEL-008",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.177239,
+          "characterFiveGramJaccard": 0.166163,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-S-SEL-006",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.170863,
+          "characterFiveGramJaccard": 0.162996,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "G53-S-SEL-005",
+          "familyId": "G53-S-SEL-004",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.167273,
+          "characterFiveGramJaccard": 0.157819,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "a8266eadc3f75af5450303753363bdfcef03fb97eaf3f1cb14f6bbba5dec8bdb",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.205438,
+          "tokenThreeGramJaccard": 0.011905,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.195906,
+          "tokenThreeGramJaccard": 0.011765,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-004",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.191702,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-S-003",
-      "recipeId": "synthetic.structured-state-unsupported-alternative",
+      "recipeId": "synthetic.module-opens-unsupported-alternative",
       "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
       "declaredClosestExistingFamilies": [
-        "G53-S-CON-001",
-        "G53-S-CON-010"
+        "G53-R-JV-002",
+        "SECURITY-GENERIC-002"
       ],
-      "noveltyRationale": "Structured SQLState support conflicts with an alternative candidate linked only to generic location evidence, not message wording.",
+      "noveltyRationale": "Successful class and member lookup rule out missing-symbol alternatives while an explicit JPMS opens boundary supports deep-reflection denial; this differs from absent classes and a generic security exception.",
       "nearestAutomatedMatches": [
         {
-          "familyId": "G53-S-CON-001",
+          "familyId": "G53-S-TOP-010",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.184919,
+          "characterFiveGramJaccard": 0.129261,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "supported.unique-key",
-          "catalog": "phase52-synthetic-sft",
-          "characterFiveGramJaccard": 0.156704,
-          "tokenThreeGramJaccard": 0.011111,
+          "familyId": "G53-S-TOP-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.128655,
+          "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
-          "familyId": "CH-HARD-POOL-DRIVER",
-          "catalog": "post-training-challenge",
-          "characterFiveGramJaccard": 0.166667,
+          "familyId": "G53-S-CON-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.11782,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "e5f07dd2801924a0940da92ba2702b812e647e5cc3c769c1a66f7c283ca5e2b2",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-TOP-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.190798,
+          "tokenThreeGramJaccard": 0.009524,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-TOP-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.186981,
+          "tokenThreeGramJaccard": 0.009524,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "supported.state-transition",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.171875,
+          "tokenThreeGramJaccard": 0.022556,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-S-004",
@@ -958,102 +1717,186 @@
       "declaredClosestExistingFamilies": [
         "G53-S-SEL-007"
       ],
-      "noveltyRationale": "Candidate prose repeatedly names slot one while the trusted T1 position is zero, testing semantic labels against zero-based local order.",
+      "noveltyRationale": "Order-independent branch identity supports one semantic candidate while distractor prose claims that one-based slot wording determines the zero-based T1 answer.",
       "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.148773,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
         {
           "familyId": "G53-S-SEL-002",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.162162,
+          "characterFiveGramJaccard": 0.147287,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-S-SEL-001",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.161889,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-S-SEL-009",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.159734,
+          "characterFiveGramJaccard": 0.147059,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "615f8693950e0fabb5102ca836be465de39f9c1169407ae0e9d6da9bd66ff2bc",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.225197,
+          "tokenThreeGramJaccard": 0.011905,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.222395,
+          "tokenThreeGramJaccard": 0.011765,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.222395,
+          "tokenThreeGramJaccard": 0.011765,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     },
     {
       "familyId": "F543-S-005",
-      "recipeId": "synthetic.ambiguous-evidence-restraint",
+      "recipeId": "synthetic.duration-threshold-missing-units",
       "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
       "declaredClosestExistingFamilies": [
-        "G53-S-CON-006",
-        "B5-AMBIGUOUS-ASYNC-WRAPPER"
+        "G53-S-CON-002",
+        "CONC-TIMEOUT-003"
       ],
-      "noveltyRationale": "Two candidates share only generic evidence with no discriminating fact, requiring restraint rather than choosing either plausible option.",
+      "noveltyRationale": "Two numeric timing facts lack unit provenance, so their ordering cannot be established; this is quantitative dimensional ambiguity rather than conflicting throwable prose or generic equal candidates.",
       "nearestAutomatedMatches": [
         {
-          "familyId": "G53-S-SEL-008",
+          "familyId": "G53-S-TOP-003",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.148148,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-S-SEL-006",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.143101,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        },
-        {
-          "familyId": "G53-S-SEL-005",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.139415,
-          "tokenThreeGramJaccard": 0.0,
-          "normalizedTextEqual": false
-        }
-      ],
-      "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
-    },
-    {
-      "familyId": "F543-S-006",
-      "recipeId": "synthetic.maximum-candidates-no-support",
-      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
-      "declaredClosestExistingFamilies": [
-        "G53-S-SEL-009",
-        "G53-S-SEL-010"
-      ],
-      "noveltyRationale": "Both cause and check arrays reach the 32-item boundary simultaneously while none has specific supporting evidence.",
-      "nearestAutomatedMatches": [
-        {
-          "familyId": "G53-S-SEL-008",
-          "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.167549,
+          "characterFiveGramJaccard": 0.104698,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-S-SEL-009",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.167539,
+          "characterFiveGramJaccard": 0.101389,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         },
         {
           "familyId": "G53-S-SEL-010",
           "catalog": "real-world-v1",
-          "characterFiveGramJaccard": 0.165505,
+          "characterFiveGramJaccard": 0.101389,
           "tokenThreeGramJaccard": 0.0,
           "normalizedTextEqual": false
         }
       ],
       "automatedThresholdPass": true,
-      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+      "taskSemanticSignature": "140f2dab2a5afc57a7be9f80e8eee6efb7b715f66fe862fab4d5ac179d87b5f7",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-TOP-003",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.187692,
+          "tokenThreeGramJaccard": 0.013699,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "supported.read-budget",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.173981,
+          "tokenThreeGramJaccard": 0.020833,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-TOP-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.16879,
+          "tokenThreeGramJaccard": 0.014085,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
+    },
+    {
+      "familyId": "F543-S-006",
+      "recipeId": "synthetic.negative-evidence-exhausts-candidate-set",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "abstain.no-evidence-link",
+        "G53-S-CON-008"
+      ],
+      "noveltyRationale": "Trusted negative observations explicitly rule out every offered network candidate while the true mechanism is absent; this tests closed-set elimination rather than empty links, a generic fallback, or candidate-count flooding.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.114362,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.114286,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "abstain.no-evidence-link",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.11186,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "taskSemanticSignature": "6e7a32eccb06b11da9593c9f1487a44a48e0aabf012ca03993a9d9cc56c00236",
+      "taskNearestAutomatedMatches": [
+        {
+          "familyId": "abstain.unrelated-options",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.173077,
+          "tokenThreeGramJaccard": 0.017094,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.169168,
+          "tokenThreeGramJaccard": 0.010101,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        },
+        {
+          "familyId": "hard.refusal-versus-credentials",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.170861,
+          "tokenThreeGramJaccard": 0.008065,
+          "normalizedTextEqual": false,
+          "semanticSignatureEqual": false
+        }
+      ],
+      "taskAutomatedThresholdPass": true,
+      "manualSemanticReview": "RECORDED_SEPARATELY"
     }
   ]
 }

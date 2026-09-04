@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "sources": {
+    "generationInputs": {
+      "file": "generation-inputs.jsonl",
+      "sha256": "8d1020d58bb31303bc6649a6a7088084091d80d5ae3287eb289220e20b02ffe8"
+    },
+    "scoringLabels": {
+      "file": "scoring-labels.jsonl",
+      "sha256": "c44e481fe9ea1a019e1bfdc7bd1360428580b98808ccc605e5c82dc224e10fd3"
+    },
+    "descriptors": {
+      "file": "descriptors.json",
+      "sha256": "d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c"
+    },
+    "reproduction": {
+      "file": "reproduction.json",
+      "sha256": "02a57674877f28617a16ae87aaa3097993d02dfec980766f441b4cd2ddb92435"
+    }
+  },
+  "baseModel": {
+    "directoryName": "15852e8c16360a2fea060d615a32b45270f8a8fc"
+  },
+  "counts": {
+    "generationRows": 30,
+    "labelRows": 30,
+    "descriptorFamilies": 30,
+    "reproductionFamilies": 24
+  },
+  "distributions": {
+    "classification": {
+      "real": 24,
+      "synthetic": 6
+    },
+    "disposition": {
+      "DIAGNOSE": 19,
+      "RESTRAINT": 11
+    }
+  },
+  "tokenization": {
+    "baseModel": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "localFilesOnly": true,
+    "trustRemoteCode": false,
+    "enableThinking": false,
+    "addGenerationPrompt": true,
+    "truncation": false,
+    "maximumInputTokens": 2048,
+    "truncationCount": 0,
+    "unknownTokenCount": 0,
+    "prompts": {
+      "count": 60,
+      "mean": 766.6,
+      "p95": 898,
+      "min": 484,
+      "max": 899
+    },
+    "expectedT1Targets": {
+      "count": 60,
+      "mean": 19.1,
+      "p95": 21,
+      "min": 18,
+      "max": 21
+    },
+    "fullSequences": {
+      "count": 60,
+      "mean": 785.7,
+      "p95": 916,
+      "min": 502,
+      "max": 920
+    },
+    "promptPlusGenerationBudget": {
+      "count": 60,
+      "mean": 894.6,
+      "p95": 1026,
+      "min": 612,
+      "max": 1027
+    },
+    "tokenizerClass": "Qwen2Tokenizer",
+    "paddingSide": "right",
+    "padTokenId": 248044,
+    "eosTokenId": 248046,
+    "bosTokenId": null,
+    "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+  },
+  "validated": {
+    "generation": {
+      "families": 30,
+      "classification": {
+        "real": 24,
+        "synthetic": 6
+      }
+    },
+    "labels": {
+      "families": 30,
+      "disposition": {
+        "DIAGNOSE": 19,
+        "RESTRAINT": 11
+      },
+      "originalCausePositions": {
+        "0": 6,
+        "1": 6,
+        "2": 7
+      },
+      "originalCheckPositions": {
+        "0": 7,
+        "1": 6,
+        "2": 6
+      }
+    },
+    "descriptors": {
+      "families": 30
+    },
+    "reproduction": {
+      "families": 24,
+      "variants": 48,
+      "runs": 96,
+      "unresolved": 0
+    }
+  },
+  "checks": [
+    {
+      "name": "read-and-hash-generationInputs",
+      "status": "PASS"
+    },
+    {
+      "name": "read-and-hash-scoringLabels",
+      "status": "PASS"
+    },
+    {
+      "name": "read-and-hash-descriptors",
+      "status": "PASS"
+    },
+    {
+      "name": "read-and-hash-reproduction",
+      "status": "PASS"
+    },
+    {
+      "name": "parse-generation-inputs",
+      "status": "PASS"
+    },
+    {
+      "name": "parse-scoring-labels",
+      "status": "PASS"
+    },
+    {
+      "name": "parse-descriptors",
+      "status": "PASS"
+    },
+    {
+      "name": "parse-reproduction",
+      "status": "PASS"
+    },
+    {
+      "name": "generation-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "index-generation-families",
+      "status": "PASS"
+    },
+    {
+      "name": "label-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "index-label-families",
+      "status": "PASS"
+    },
+    {
+      "name": "descriptor-id-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "reproduction-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "offline-tokenization",
+      "status": "PASS"
+    }
+  ]
+}
