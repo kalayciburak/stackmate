@@ -16,6 +16,10 @@ All notable public product changes are documented here. The format follows
 - Made release preflight manual-only and kept publication/signing absent.
 - Corrected CodeQL to use the official v3 target commit rather than its annotated-tag object.
 - Made the packaged performance harness portable across Windows, Linux and macOS PowerShell.
+- Corrected historical inference tests for Unix separators, Windows cross-drive temp paths and macOS system path
+  aliases without adding inference to the public release.
+- Replaced unavailable private-repository dependency-review integration with a PR base/head declaration diff and
+  fail-closed public runtime dependency audit.
 
 RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
 frozen local-only checkpoint and will not be moved or pushed.

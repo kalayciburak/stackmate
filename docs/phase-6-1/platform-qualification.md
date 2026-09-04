@@ -38,3 +38,18 @@ manifest SHA-256, evidence artifact name/checksum/expiry and final conclusion.
 Linux must additionally record OSV and performance-smoke conclusions.
 
 This qualification does not publish, sign, tag, merge or release artifacts.
+
+## First hosted failure disposition
+
+- Linux: one separator-dependent command assertion and one missing intermediate
+  fixture directory.
+- Windows: the hosted workspace and temporary directory were on different
+  drives, making `Path.relativize` invalid.
+- macOS: the two issues above plus `/var` being a system symlink caused a false
+  rejection of every otherwise valid temporary model directory.
+
+The repair checks the selected executable file name, creates the intended
+normalization parent, constructs the relative-path fixture beneath module
+`target`, and rejects the configured model directory itself plus required model
+files when they are symlinks. Canonical root/file containment remains enforced.
+The focused Windows suite passed 12/12 with no skips; hosted rerun is pending.

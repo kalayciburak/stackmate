@@ -1,7 +1,7 @@
 # Phase 6.1 workflow audit
 
-This is a static audit of the workflows at local tag `v0.1.0-rc.1`. No remote
-workflow was run or observed.
+This audit starts from the workflows at local tag `v0.1.0-rc.1` and records the
+first hosted failure set plus the focused rc2 corrections.
 
 ## Current workflow inventory
 
@@ -20,9 +20,9 @@ Java setup enables the Maven cache.
 
 | Action | Current pin assessment | rc2 action |
 |---|---|---|
-| `actions/checkout` | Existing SHA maps to official `v4.4.0` | Keep or replace only with a verified official commit pin |
-| `actions/setup-java` | Existing SHA maps to official `v4.9.1` | Keep or replace only with a verified official commit pin |
-| `actions/dependency-review-action` | Existing SHA maps to official `v4.9.0` | Keep or replace only with a verified official commit pin |
+| `actions/checkout` | Entry SHA mapped to official `v4.4.0` but emitted a hosted Node 20 deprecation warning | Updated to official v7.0.1 commit `3d3c42e5aac5ba805825da76410c181273ba90b1` |
+| `actions/setup-java` | Entry SHA mapped to official `v4.9.1` but emitted a hosted Node 20 deprecation warning | Updated to official v6.0.0 commit `dd06d9cba3e5552c54d9f8ea23572deb30010f7c` |
+| `actions/dependency-review-action` | Official v4.9.0 ran but the private repository lacks required GitHub capability | Replaced with a repository-local base/head declaration and public runtime policy audit |
 | `github/codeql-action` | Existing SHA is the release's annotated-tag object, not its commit | Pin init/analyze to target commit `6f5948dfacef28e207b48d0905cf90c03365536d` |
 
 This pin mapping is audit input, not evidence that GitHub fetched or executed
@@ -36,6 +36,9 @@ the actions during this documentation task.
   consumer, frozen API and assembled/audited bundle.
 - Controlled summaries and bundles use seven-day artifact retention.
 - The CodeQL Maven build runs full tests.
+- CodeQL writes SARIF locally with `upload=false` and seven-day artifact
+  retention because this private repository does not expose GHAS Code Scanning;
+  no `security-events: write` permission remains.
 - Official actions use verified commit objects; CodeQL uses the release target
   commit and upload-artifact uses official v7.0.1 commit
   `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`.
@@ -61,3 +64,9 @@ After the first authorized remote runs, the main Phase 6.1 document must record:
 | Uploaded artifacts | `UNVERIFIED` | Record names, checksums, retention days and expiry |
 
 No row may be changed to `PASS` from configuration inspection alone.
+
+The first manual release-preflight dispatch returned HTTP 404 because GitHub
+only exposes new `workflow_dispatch` definitions after they exist on the
+default branch. The phase will not merge or push directly to that branch to
+bypass this rule. Equivalent Windows checks are included in PR qualification;
+manual preflight remains post-merge preparation only.

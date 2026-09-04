@@ -88,3 +88,22 @@ not repository publication, artifact publication, signing or branch merge.
 Remote writes require separate authorization. After authorized runs, the main
 Phase 6.1 status/progress document must be updated with immutable run links,
 exact commits, artifact checksums and retention information.
+
+## D11 - Replace unavailable GitHub dependency review without changing settings
+
+Status: accepted after failed run `33922327570`.
+
+The private repository does not provide the Dependency Graph/GitHub Advanced
+Security capability required by the official action. Repository settings remain
+unchanged. The PR instead records base/head POM declaration differences and
+fails closed on forbidden public runtime dependencies, with a seven-day report.
+
+## D12 - Accept system-level path aliases outside the model boundary
+
+Status: accepted after Linux, Windows and macOS failures in run `33922327479`.
+
+Historical model validation rejects a symlink at the configured model directory
+and every required model file, then canonicalizes the root and enforces file
+containment. It no longer rejects an operating-system ancestor such as macOS
+`/var -> /private/var`, which is outside the configured model directory and
+caused false rejection of all temporary paths.

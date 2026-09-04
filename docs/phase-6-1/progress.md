@@ -47,6 +47,16 @@ Configuration inspection is not a remote result. All workflow run IDs, URLs,
 commit conclusions, uploaded artifact identities and security conclusions are
 still `PENDING` / `UNVERIFIED`.
 
+## First hosted run
+
+Draft PR [#1](https://github.com/kalayciburak/stackmate/pull/1) triggered the
+first run set on commit `9a8f67357a60124fe7ef5e80c0f55a8d049ca7d7`.
+CI run `33922327479`, CodeQL run `33922327492` and dependency-review run
+`33922327570` failed for preserved, diagnosed reasons. No product-release
+artifact failed: all failures occurred before artifact qualification, in
+historical test portability or unavailable repository capability. Focused
+repairs are locally verified and the final hosted rerun is pending.
+
 ## Publication boundary
 
 No signing, Central credential use, Central deployment, GitHub Release, PR,

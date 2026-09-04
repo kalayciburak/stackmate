@@ -1,7 +1,24 @@
 # Phase 6.1 remote-run ledger
 
-No remote run has been executed or observed for the rc2 working tree. Every ID,
-URL and result in this ledger is intentionally `PENDING` / `UNVERIFIED`.
+The first hosted run set failed and is preserved below. The required final-commit
+run IDs, artifact identities and qualification conclusions remain `PENDING` /
+`UNVERIFIED` until the focused fixes are pushed and rerun.
+
+## Preserved first failed run set
+
+The draft PR is [#1](https://github.com/kalayciburak/stackmate/pull/1). Its first
+run set used commit `9a8f67357a60124fe7ef5e80c0f55a8d049ca7d7`.
+
+| Workflow | Run | Conclusion | Classification and evidence |
+|---|---|---|---|
+| CI | [33922327479](https://github.com/kalayciburak/stackmate/actions/runs/33922327479) | `FAIL` | `TEST_PORTABILITY_DEFECT`: Linux and macOS exposed Windows path assumptions and macOS system-symlink false positives in historical inference tests; Windows exposed cross-drive relativization in the same test module. Ubuntu reproducibility was skipped because the matrix dependency failed. |
+| CodeQL | [33922327492](https://github.com/kalayciburak/stackmate/actions/runs/33922327492) | `FAIL` | Build extraction reached the same Linux inference tests and stopped before analysis; no CodeQL finding was produced. |
+| Dependency review | [33922327570](https://github.com/kalayciburak/stackmate/actions/runs/33922327570) | `FAIL` | `WORKFLOW_DEFECT / REPOSITORY_CAPABILITY`: the official action reported that dependency review is unavailable without Dependency Graph and GitHub Advanced Security on this private repository. Repository settings were not changed. |
+| Release preflight | no run | `NOT_RUN` | Dispatch returned HTTP 404 because a new `workflow_dispatch` file is not invokable until it exists on the default branch. Merge/default-branch push remain forbidden. Equivalent Windows evidence is moved into the PR qualification path; the manual workflow remains prepared for post-merge use. |
+
+The focused repair keeps all mandatory tests enabled. It does not use retries,
+timeout inflation, platform skips, `continue-on-error` or repository-setting
+changes.
 
 ## Required runs
 
