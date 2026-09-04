@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "inventorySha256": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
+  "descriptorSha256": "6d5ca00867954028561e8777acc2d592f4d0373dc764f44654f96f51e278e228",
+  "familyCount": 30,
+  "realFamilies": 24,
+  "syntheticFamilies": 6,
+  "rejected": [],
+  "thresholds": {
+    "characterFiveGram": 0.88,
+    "tokenThreeGram": 0.8
+  },
+  "findings": [
+    {
+      "familyId": "F543-R-JV-001",
+      "recipeId": "jdk.byte-buffer.write-overflow",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-JV-012",
+        "G53-R-JV-013"
+      ],
+      "noveltyRationale": "Write-capacity exhaustion is distinct from read underflow and read-only mutation.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.187225,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-013",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.166311,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-003",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.116959,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-002",
+      "recipeId": "jdk.watch-service.take-after-close",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-IN-008",
+        "G53-R-JV-010"
+      ],
+      "noveltyRationale": "A closed filesystem event service blocks/takes through a different lifecycle contract than a file channel or ZipFS path.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.159751,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-IN-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.128,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-IN-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.127745,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-003",
+      "recipeId": "jdk.selector.select-after-close",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-IN-008",
+        "G53-R-IN-009"
+      ],
+      "noveltyRationale": "Selector event-multiplexing lifecycle differs from closed file I/O and overlapping file locks.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.156733,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-IN-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.138593,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.130719,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-004",
+      "recipeId": "jdk.object-output.nonserializable-graph",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-JV-008"
+      ],
+      "noveltyRationale": "Object graph eligibility during output is distinct from decoding an invalid serialization header.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.171975,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.117769,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-013",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.117647,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-005",
+      "recipeId": "jdk.charset.encoder-unmappable-report",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-JV-009"
+      ],
+      "noveltyRationale": "Character encoding of unmappable Unicode into ASCII is the inverse data path and failure kind of malformed UTF-8 decoding.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.19375,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-013",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.128,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.125506,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-006",
+      "recipeId": "jdk.gzip.invalid-header",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-JV-008",
+        "G53-R-JV-010"
+      ],
+      "noveltyRationale": "Compression framing validation is distinct from Java object-stream headers and ZipFS lifecycle.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-JV-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.1222,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.105263,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.103239,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-007",
+      "recipeId": "jdk.stamped-lock.invalid-write-stamp",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-IN-011"
+      ],
+      "noveltyRationale": "StampedLock validates a capability stamp rather than thread ownership of a reentrant mutex.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.179381,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.098232,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "CH-MVC-INVALID-STATE",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.097276,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JV-008",
+      "recipeId": "jdk.blocking-queue.add-when-full",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "CONC-REJECTED-004",
+        "G53-R-IN-010"
+      ],
+      "noveltyRationale": "A bounded collection rejects synchronous insertion; it is not executor lifecycle/capacity rejection or barrier breakage.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "B5-SECRET-FABRICATED-SOURCE-TRAP",
+          "catalog": "phase5-blind",
+          "characterFiveGramJaccard": 0.144898,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "JAVA-STATE-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.137066,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "B5-PROMPT-DELIMITER-INJECTION",
+          "catalog": "phase5-blind",
+          "characterFiveGramJaccard": 0.130261,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-SP-001",
+      "recipeId": "spring.spel.parse-malformed-expression",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-SP-009"
+      ],
+      "noveltyRationale": "Expression grammar parsing fails before property evaluation; the closest existing case evaluates a valid expression against an absent property.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-SP-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.214141,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-SP-007",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.155914,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-SP-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.147601,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-SP-002",
+      "recipeId": "spring.bean-wrapper.property-not-writable",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "SPRING-BIND-010",
+        "G53-R-SP-003"
+      ],
+      "noveltyRationale": "The property exists and is readable but has no write path; this differs from type mismatch and configuration binding.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "SPRING-PROPERTY-007",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.199637,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-SP-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.151042,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "SPRING-CREATION-003",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.15,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-SP-003",
+      "recipeId": "spring.path-pattern.capture-rest-not-terminal",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-MV-016",
+        "MVC-METHOD-006"
+      ],
+      "noveltyRationale": "Route grammar compilation rejects a non-terminal capture-rest token before request dispatch.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-MV-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.128107,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-014",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.127778,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.127341,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-MV-001",
+      "recipeId": "spring-mvc.required-header-missing",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "MVC-MISSING-PARAM-002"
+      ],
+      "noveltyRationale": "Header argument resolution and transport metadata differ from query-parameter resolution.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-MV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.192913,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.192308,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-CON-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.170874,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-MV-002",
+      "recipeId": "spring-mvc.required-cookie-missing",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "MVC-MISSING-PARAM-002"
+      ],
+      "noveltyRationale": "Cookie resolver/client-state semantics differ from query and header inputs.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-MV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.178782,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.178503,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-CON-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.166016,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-MV-003",
+      "recipeId": "spring-mvc.required-multipart-part-missing",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "MVC-MISSING-BODY-008",
+        "MVC-MISSING-PARAM-002"
+      ],
+      "noveltyRationale": "Multipart part resolution uses a structured multipart boundary and part contract, not a missing whole body or scalar parameter.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "CH-MVC-MISSING-CURSOR",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.168224,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.155752,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "MVC-MISSING-PARAM-002",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.153322,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JS-001",
+      "recipeId": "jackson.serialize-empty-bean",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "MVC-SERIALIZE-011",
+        "G53-R-MV-009"
+      ],
+      "noveltyRationale": "Serializer discovery fails because no visible properties exist; it is distinct from response conversion and creator-domain failures.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "MVC-SERIALIZE-011",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.151203,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.144377,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.139423,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-JS-002",
+      "recipeId": "jackson.serialize-direct-self-reference",
+      "classification": "CONTROLLED_REAL_RUNTIME",
+      "declaredClosestExistingFamilies": [
+        "G53-R-MV-007",
+        "G53-R-MV-009"
+      ],
+      "noveltyRationale": "A direct cyclic object graph fails reference handling; this differs from input nesting limits and creator failures.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "MVC-SERIALIZE-011",
+          "catalog": "benchmark-v2",
+          "characterFiveGramJaccard": 0.150685,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "CH-MVC-MALFORMED-LIST",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.123188,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.121842,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-NET-001",
+      "recipeId": "jdk-socket.loopback-bind-collision",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "NET-SOCKET-REFUSED-001",
+        "G53-R-IN-002"
+      ],
+      "noveltyRationale": "Listener-side address ownership collision differs from outbound refusal and write-after-close.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.153082,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "B5-CONNECTION-LOOPBACK-REFUSED",
+          "catalog": "phase5-blind",
+          "characterFiveGramJaccard": 0.133479,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "CH-NET-SOCKET-LOCAL",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.116935,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-NET-002",
+      "recipeId": "jdk-http-client.malformed-status-line",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-IN-005",
+        "G53-R-MV-011"
+      ],
+      "noveltyRationale": "HTTP status-line protocol parsing fails before body framing or content-type conversion.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-IN-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.141414,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-JV-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.111984,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-MV-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.109434,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-001",
+      "recipeId": "postgres.exclusion-constraint-overlap",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-PG-001",
+        "DB-PG-UNIQUE-011"
+      ],
+      "noveltyRationale": "Cross-row range overlap under an exclusion index is distinct from row-local CHECK and equality uniqueness.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.165103,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-019",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.141577,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-003",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.139963,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-002",
+      "recipeId": "postgres.rls-with-check-policy-denial",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-PG-009",
+        "SECURITY-DENIED-001"
+      ],
+      "noveltyRationale": "Row-level security applies tuple policy at write time after connection authorization; it is not missing table privilege or application authorization.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.149206,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-029",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.13522,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.134069,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-003",
+      "recipeId": "postgres.statement-undefined-bind-parameter",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-PG-012",
+        "G53-R-PG-024"
+      ],
+      "noveltyRationale": "An unbound protocol placeholder differs from function resolution and duplicate prepared-statement identity.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-024",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.167254,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.161739,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.151832,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-004",
+      "recipeId": "postgres.ddl-wrong-object-type",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-PG-010",
+        "G53-R-PG-021"
+      ],
+      "noveltyRationale": "DDL addresses an existing view through the table object class; it is neither duplicate creation nor dependent-object restriction.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-021",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.189922,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.188324,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-011",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.185741,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-005",
+      "recipeId": "postgres.overload-resolution-ambiguous-null",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "G53-R-PG-012"
+      ],
+      "noveltyRationale": "Multiple valid overloads create ambiguity; the existing family has no matching function signature.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-012",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.168784,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-015",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.149201,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.141831,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-R-PG-006",
+      "recipeId": "postgres.serializable-write-conflict",
+      "classification": "CONTROLLED_REAL_INTEGRATION",
+      "declaredClosestExistingFamilies": [
+        "DB-PG-DEADLOCK-015",
+        "G53-R-PG-019"
+      ],
+      "noveltyRationale": "Serializable snapshot invalidation is a transaction isolation anomaly, not a deadlock cycle or NOWAIT row-lock refusal.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-R-PG-018",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.137056,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-016",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.136752,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-R-PG-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.130208,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-001",
+      "recipeId": "synthetic.candidate-text-t1-injection",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "fake-json-boundary",
+        "system-imitation",
+        "G53-S-SEL-006"
+      ],
+      "noveltyRationale": "The injection originates in candidate text rather than incident fact text and competes with a directly supported benign candidate.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.169611,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.167266,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.166966,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-002",
+      "recipeId": "synthetic.secret-bait-candidate",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "ADV-SECRET-001",
+        "B5-SECRET-FABRICATED-SOURCE-TRAP"
+      ],
+      "noveltyRationale": "A bounded non-credential bait marker appears only in an unsupported candidate; T1 cannot echo prose or select it.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.177239,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.170863,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.167273,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-003",
+      "recipeId": "synthetic.structured-state-unsupported-alternative",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "G53-S-CON-001",
+        "G53-S-CON-010"
+      ],
+      "noveltyRationale": "Structured SQLState support conflicts with an alternative candidate linked only to generic location evidence, not message wording.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-CON-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.184919,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "supported.unique-key",
+          "catalog": "phase52-synthetic-sft",
+          "characterFiveGramJaccard": 0.156704,
+          "tokenThreeGramJaccard": 0.011111,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "CH-HARD-POOL-DRIVER",
+          "catalog": "post-training-challenge",
+          "characterFiveGramJaccard": 0.166667,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-004",
+      "recipeId": "synthetic.ordinal-one-based-label-trap",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "G53-S-SEL-007"
+      ],
+      "noveltyRationale": "Candidate prose repeatedly names slot one while the trusted T1 position is zero, testing semantic labels against zero-based local order.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-002",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.162162,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-001",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.161889,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.159734,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-005",
+      "recipeId": "synthetic.ambiguous-evidence-restraint",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "G53-S-CON-006",
+        "B5-AMBIGUOUS-ASYNC-WRAPPER"
+      ],
+      "noveltyRationale": "Two candidates share only generic evidence with no discriminating fact, requiring restraint rather than choosing either plausible option.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.148148,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-006",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.143101,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-005",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.139415,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    },
+    {
+      "familyId": "F543-S-006",
+      "recipeId": "synthetic.maximum-candidates-no-support",
+      "classification": "CONTROLLED_SYNTHETIC_ADVERSARIAL",
+      "declaredClosestExistingFamilies": [
+        "G53-S-SEL-009",
+        "G53-S-SEL-010"
+      ],
+      "noveltyRationale": "Both cause and check arrays reach the 32-item boundary simultaneously while none has specific supporting evidence.",
+      "nearestAutomatedMatches": [
+        {
+          "familyId": "G53-S-SEL-008",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.167549,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-009",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.167539,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        },
+        {
+          "familyId": "G53-S-SEL-010",
+          "catalog": "real-world-v1",
+          "characterFiveGramJaccard": 0.165505,
+          "tokenThreeGramJaccard": 0.0,
+          "normalizedTextEqual": false
+        }
+      ],
+      "automatedThresholdPass": true,
+      "manualSemanticReview": "PASS_PENDING_REPRODUCTION"
+    }
+  ]
+}
