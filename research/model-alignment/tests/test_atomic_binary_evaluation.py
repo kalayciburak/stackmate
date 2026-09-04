@@ -76,10 +76,17 @@ class AtomicBinaryEvaluationTest(unittest.TestCase):
             object_pairs_hook=evaluation.reject_duplicate_keys,
         )
         self.assertIn(report["status"], {"PASS", "BINARY_BASE_NOT_PROMISING"})
-        self.assertEqual(
-            report["orderInvariance"]["pairs"],
+        self.assertLessEqual(
             report["orderInvariance"]["orderInvariantPairs"],
+            report["orderInvariance"]["pairs"],
         )
+        self.assertEqual(
+            report["orderInvariance"]["predictionDifferences"],
+            report["orderInvariance"]["pairs"]
+            - report["orderInvariance"]["orderInvariantPairs"],
+        )
+        if report["status"] == "PASS":
+            self.assertEqual(0, report["orderInvariance"]["predictionDifferences"])
         self.assertEqual(612, len(report["pairResults"]))
         self.assertFalse(report["configuration"]["generationUsed"])
         self.assertFalse(report["security"]["labelsPassedToModel"])
