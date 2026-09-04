@@ -10,4 +10,3 @@ justify supervised learning.
 No prompt-token masking, target-position, finite-gradient, save/reload or
 trainable-parameter check was run. This preserves the Gate B instruction not to
 train a model to imitate executable Java-owned rules.
-

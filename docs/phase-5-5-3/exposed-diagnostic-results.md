@@ -11,4 +11,3 @@ Historical native D0 is retained only as non-comparable context: 15/30 cause,
 15/30 check, 15/30 joint, 11/11 strict restraint, 30/30 order invariance and
 zero prompt-injection success. It cannot be compared to the 612 atomic pairs
 without a frozen product-ID-to-atomic-semantic crosswalk.
-

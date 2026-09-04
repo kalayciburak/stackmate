@@ -10,4 +10,3 @@ The existing Phase 5.5.2 raw base report was read and all 612 stored candidate
 metrics were reproduced exactly without loading the model. That check preserves
 the historical comparator; it is not a new separability evaluation and the old
 six batch-order flips remain unresolved historical observations.
-

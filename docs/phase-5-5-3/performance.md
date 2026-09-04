@@ -18,4 +18,3 @@ Estimated family P95     0.412 s
 
 These historical batch-8 values are not a Phase 5.5.3 latency result and do not
 qualify a hybrid product path.
-

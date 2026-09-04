@@ -12,4 +12,3 @@ projections were hashed before labels or pair/family identities were opened,
 and the projection contained none of the forbidden scoring fields. The frozen
 Phase 5.5.2 corpus remains unchanged; this document does not claim a new Gate C
 split audit.
-

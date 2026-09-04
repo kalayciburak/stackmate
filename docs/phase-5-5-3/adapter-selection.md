@@ -8,4 +8,3 @@ selection-metric record.
 
 Selection was inapplicable after `LLM_TASK_DETERMINISTIC`; no adapter weights or
 metadata were placed in Git or uploaded.
-

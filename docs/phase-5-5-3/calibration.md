@@ -9,4 +9,3 @@ computed.
 
 Calibration stopped upstream at Gate B; no exposed diagnostic result influenced
 a threshold.
-

@@ -9,4 +9,3 @@ VRAM measurement or adapter size for this phase.
 The stop reason is `LLM_TASK_DETERMINISTIC`, reached before model loading. No
 GPU, network, upload, telemetry, package installation or model artifact was
 used or created.
-

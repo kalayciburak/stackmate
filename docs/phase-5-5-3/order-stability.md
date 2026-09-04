@@ -11,4 +11,3 @@ were invariant, six batch-order flips occurred, and the maximum logit
 difference was 0.25. Those six cases were not rerun or reclassified in Phase
 5.5.3. No authoritative single-pair tolerance, margin policy or batching path
 was established.
-

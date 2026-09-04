@@ -10,4 +10,3 @@ applicable rather than failed.
 The split was stopped before any model evaluation because Gate B returned
 `LLM_TASK_DETERMINISTIC`. No exposed diagnostic family was moved into
 development data.
-

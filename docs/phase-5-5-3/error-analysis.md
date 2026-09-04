@@ -15,4 +15,3 @@ were not reviewed because Gates D-G were not run.
 
 The zero-error result is construction-bound. It does not establish that the
 product engine solves all real-world incidents.
-

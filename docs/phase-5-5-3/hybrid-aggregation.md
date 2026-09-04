@@ -9,4 +9,3 @@ therefore not implemented or evaluated.
 
 D1 and D2 remain research audit baselines, not a claim that the current product
 engine resolves every incident and not a new production integration.
-
