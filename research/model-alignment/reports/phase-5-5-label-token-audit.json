@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "tokenizerClass": "Qwen2Tokenizer",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "promptFile": "pairwise-entailment-v1.txt",
+  "promptSha256": "93515b517ff08c5bcf92764936e62a4c8709652fe0ff14152fbe0f6fc3a96517",
+  "labelMapping": {
+    "0": {
+      "semantic": "CONTRADICTED",
+      "tokenId": 15
+    },
+    "1": {
+      "semantic": "SUPPORTED",
+      "tokenId": 16
+    },
+    "2": {
+      "semantic": "UNKNOWN",
+      "tokenId": 17
+    }
+  },
+  "labelMappingSha256": "98b223427fc6be46cedbe74fd3e10c9696900fba59f032387d63288925e2de76",
+  "labels": {
+    "0": {
+      "semantic": "CONTRADICTED",
+      "tokenId": 15,
+      "plainTokenCount": 1,
+      "leadingSpaceIds": [
+        220,
+        15
+      ],
+      "leadingNewlineIds": [
+        198,
+        15
+      ]
+    },
+    "1": {
+      "semantic": "SUPPORTED",
+      "tokenId": 16,
+      "plainTokenCount": 1,
+      "leadingSpaceIds": [
+        220,
+        16
+      ],
+      "leadingNewlineIds": [
+        198,
+        16
+      ]
+    },
+    "2": {
+      "semantic": "UNKNOWN",
+      "tokenId": 17,
+      "plainTokenCount": 1,
+      "leadingSpaceIds": [
+        220,
+        17
+      ],
+      "leadingNewlineIds": [
+        198,
+        17
+      ]
+    }
+  },
+  "contexts": [
+    {
+      "context": 0,
+      "promptTokens": 224,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ],
+        "2": [
+          17,
+          248046,
+          198
+        ]
+      }
+    },
+    {
+      "context": 1,
+      "promptTokens": 221,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ],
+        "2": [
+          17,
+          248046,
+          198
+        ]
+      }
+    },
+    {
+      "context": 2,
+      "promptTokens": 228,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ],
+        "2": [
+          17,
+          248046,
+          198
+        ]
+      }
+    }
+  ],
+  "assistantTargetPolicy": "append exactly one frozen label token; mask every prompt token",
+  "localFilesOnly": true,
+  "trustRemoteCode": false,
+  "networkAccess": false
+}
