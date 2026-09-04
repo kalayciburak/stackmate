@@ -7,7 +7,7 @@ Starting branch       phase-5-5-pairwise-evidence-entailment
 Starting HEAD         5585a59c36d68fab45887688453d6b19b9ec7a8f
 Completion tag        phase-5-5-complete
 New branch            phase-5-5-1-binary-evidence-support
-Obsolete branch found no
+Obsolete branch/report detected  no
 Working tree          clean
 Remote                origin configured; no push
 ```

@@ -9,6 +9,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.5.1 freezes an offline two-label, one-token-output
+  `SUPPORTED`/`NOT_SUPPORTED` classification contract, then stops at dataset
+  validity. A conservative audit
+  removes compound checks, probe placeholders, hedged causes and unselected
+  causes carrying direct positive evidence; only 12 defensible `SUPPORTED`
+  validation pairs remain, below the required 15. Base inference, training,
+  calibration and exposed diagnostics are therefore unrun.
 - Phase 5.5 freezes a one-token pairwise entailment contract and audits the
   Phase 5.3 real-world source without changing frozen data. TRAIN yields
   102 `SUPPORTED`, 0 `CONTRADICTED`, and 104 `UNKNOWN` native pairs;
@@ -67,6 +74,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.5.1 binary prompt/token audit, family-level candidate audit,
+  ambiguity/security coverage evidence and explicit blocked-gate reports. No
+  binary dataset rows, model output, adapter or product dependency were added.
 - Phase 5.5 pairwise label-token audit, contract prompt, conservative source
   auditor, leakage evidence, regression tests, and explicit blocked-gate reports.
   No pairwise dataset rows, adapter, model output, or product dependency were added.

@@ -287,3 +287,31 @@ created. PyTorch/Transformers execution remained unopened for Phase 5.5. A
 mistaken Windows-side frozen `uv` environment download left a local user-cache
 copy of research packages after cleanup was safety-policy rejected; it contains
 no model or StackMate dataset copy and is outside Git.
+
+## Phase 5.5.1 binary annotation boundary
+
+Phase 5.5.1 narrows the research output to one `SUPPORTED` or `NOT_SUPPORTED`
+token. Invalid, additional or unknown tokens fail safe to `NOT_SUPPORTED` and
+remain invalid in metrics. Candidate/evidence text remains untrusted, sibling
+candidates and persistent identifiers are excluded, and remote code, telemetry,
+upload and network inference remain disabled.
+
+The dominant threat is still annotation laundering. A listwise ground truth that
+chooses the most specific cause does not prove that every omitted broad candidate
+lacks direct support. Training that conversion would encode hidden sibling
+ranking while claiming pair independence. Compound checks and ID-dependent probe
+text add partial-label and shortcut-learning risks. A conservative family audit
+therefore rejects these units and stops when validation support falls below the
+predeclared class minimum.
+
+The retained proposal also has a complete candidate-text shortcut: none of its
+29 unique candidate texts appears with both labels. A model could score perfectly
+on repeated templates while ignoring evidence, so family separation alone would
+not establish evidence-conditioned behavior. The experiment treats that as
+leakage and does not train on it.
+
+No binary dataset, model output, adapter, threshold, runtime worker, endpoint,
+merge or GGUF was created. The tokenizer-only audit used the exact existing local
+checkpoint with `local_files_only=true` and `trust_remote_code=false`; model
+weights were not loaded. The normal product data flow and dependency graph remain
+unchanged.

@@ -173,3 +173,13 @@ One accidental Windows-side `uv run --frozen` invocation downloaded the existing
 lock's research packages into the user's local cache. Those files are not part of
 StackMate, are not committed or redistributed, and add no product/runtime license
 obligation beyond the already documented Phase 5.2 research environment.
+
+## Phase 5.5.1 binary feasibility
+
+Phase 5.5.1 adds no third-party dependency and distributes no third-party
+artifact. Its tokenizer-only audit reused the local official Apache-2.0
+`Qwen/Qwen3.5-2B` checkpoint at immutable revision
+`15852e8c16360a2fea060d615a32b45270f8a8fc`, with remote code and network access
+disabled. Dataset validity failed before model loading, inference or training.
+No model, adapter, merged checkpoint, GGUF, native runtime or Maven dependency was
+added, committed, published or uploaded.

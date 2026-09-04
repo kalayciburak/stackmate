@@ -22,3 +22,7 @@ No Phase 5.5.1 model execution, training, adapter creation, calibration,
 exposed-diagnostic access, or remote push occurred.
 
 Phase outcome: `BLOCKED` / `BINARY_DATASET_BLOCKED`.
+
+Final verification: 36/36 Python tests passed. The normal product build passed
+517 Surefire and 11 Failsafe tests with zero failures, errors or skips; Spotless,
+coverage and Maven Enforcer gates also passed.

@@ -371,3 +371,26 @@ calibration, exposed diagnostics, merge, and GGUF conversion were not run. The
 pairwise role is `NOT_EVALUATED`, not `NOT_VIABLE`; the historical listwise role
 remains rejected and deterministic diagnostics remain ready. No product model
 selection changes.
+
+## Phase 5.5.1 binary evidence-support feasibility
+
+Phase 5.5.1 replaced the unavailable contradiction distinction with the product
+decision `SUPPORTED` versus `NOT_SUPPORTED`. The official tokenizer verified
+plain digit tokens 1 and 0 respectively, and the fail-safe single-token contract
+passed offline without loading model weights.
+
+The existing listwise annotations still do not provide enough candidate-level
+binary truth. They select the most specific directly supported candidate, so an
+unselected broad candidate may carry direct positive evidence. The corpus also
+contains compound checks and ID-dependent probe placeholders. After the minimum
+conservative exclusions, VALIDATION retains 12 `SUPPORTED` and 22
+`NOT_SUPPORTED` pairs; the gate requires at least 15 of each. Required natural
+candidate-level security attacks are also absent. Worse, the 136 retained
+proposals contain 29 unique candidate texts and no text appears under both
+labels, so candidate text alone perfectly predicts the target without evidence.
+
+Gate B is `BINARY_VALIDATION_CLASS_INSUFFICIENT`. The binary role remains
+`NOT_EVALUATED`; base feasibility, LoRA training, checkpoint selection,
+calibration and exposed diagnostics were not run. Deterministic diagnostics and
+the prior listwise rejection remain unchanged, and no product model selection
+changes.
