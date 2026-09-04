@@ -19,3 +19,9 @@
 - Keep aggregation in research scope and deterministic Java logic; the model may
   neither select by list position nor generate prose.
 - Create local commits at phase boundaries and perform no remote push.
+- Close Gate B as `BINARY_VALIDATION_CLASS_INSUFFICIENT`; do not rescue the
+  dataset with copied rows, fabricated counterfactuals, cross-family negatives
+  or newly invented security labels.
+- Treat candidate-text-perfect label separation as shortcut leakage, not model
+  learnability evidence. Leave Gates C-F unopened and classify the binary role
+  as `NOT_EVALUATED`.

@@ -1,0 +1,1734 @@
+{
+  "schemaVersion": "1",
+  "auditId": "stackmate-binary-source-audit-v1",
+  "status": "BINARY_VALIDATION_CLASS_INSUFFICIENT",
+  "gateBlockers": [
+    "BINARY_VALIDATION_CLASS_INSUFFICIENT",
+    "CANDIDATE_TEXT_SHORTCUT_LEAKAGE"
+  ],
+  "methodology": {
+    "canonicalVariant": 0,
+    "rawProposal": {
+      "expectedSelected": "SUPPORTED",
+      "unselected": "NOT_SUPPORTED"
+    },
+    "proposalAcceptedWithoutReview": false,
+    "excludedPairsReceiveNoLabel": true,
+    "ambiguousLabelsForced": false,
+    "readOnly": true,
+    "datasetWritten": false
+  },
+  "sources": {
+    "train": {
+      "file": "train.jsonl",
+      "sha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93"
+    },
+    "validation": {
+      "file": "validation.jsonl",
+      "sha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789"
+    },
+    "datasetManifest": {
+      "file": "manifest.json",
+      "sha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2"
+    },
+    "triClassAudit": {
+      "file": "phase-5-5-pairwise-source-audit.json",
+      "sha256": "cb9f4d734542c361ff76c7eaa90b261d308fe8aff093f0a9150cc7bb1fda413c"
+    },
+    "validationHelper": {
+      "file": "audit_pairwise_source.py",
+      "sha256": "92aa2803aec8dd7b20fb492bf6c31c65195a743175b7d6268985ffa4f6305a57"
+    }
+  },
+  "splits": {
+    "TRAIN": {
+      "raw": {
+        "families": 70,
+        "pairs": 206,
+        "proposedLabelCounts": {
+          "SUPPORTED": 102,
+          "NOT_SUPPORTED": 104
+        },
+        "categoryCounts": {
+          "AUTHENTICATION": {
+            "families": 2,
+            "pairs": 4
+          },
+          "CONCURRENCY": {
+            "families": 1,
+            "pairs": 2
+          },
+          "DATABASE": {
+            "families": 12,
+            "pairs": 49
+          },
+          "DATABASE_CONSTRAINT": {
+            "families": 1,
+            "pairs": 4
+          },
+          "DATABASE_SCHEMA": {
+            "families": 7,
+            "pairs": 28
+          },
+          "GENERAL_JAVA": {
+            "families": 9,
+            "pairs": 18
+          },
+          "RESOURCE_EXHAUSTION": {
+            "families": 2,
+            "pairs": 4
+          },
+          "SERIALIZATION": {
+            "families": 7,
+            "pairs": 32
+          },
+          "SPRING_CONFIGURATION": {
+            "families": 4,
+            "pairs": 9
+          },
+          "TIMEOUT": {
+            "families": 3,
+            "pairs": 12
+          },
+          "TLS": {
+            "families": 2,
+            "pairs": 4
+          },
+          "UNKNOWN": {
+            "families": 19,
+            "pairs": 38
+          },
+          "WEB_REQUEST": {
+            "families": 1,
+            "pairs": 2
+          }
+        },
+        "lengthDistributions": {
+          "candidateCharacters": {
+            "count": 206,
+            "minimum": 25,
+            "median": 94.0,
+            "p90": 129,
+            "maximum": 178,
+            "mean": 93.107
+          },
+          "candidateWords": {
+            "count": 206,
+            "minimum": 2,
+            "median": 13.0,
+            "p90": 19,
+            "maximum": 24,
+            "mean": 13.529
+          },
+          "evidenceItemsPerPair": {
+            "count": 206,
+            "minimum": 1,
+            "median": 1.0,
+            "p90": 4,
+            "maximum": 6,
+            "mean": 2.015
+          },
+          "evidenceCharactersPerPair": {
+            "count": 206,
+            "minimum": 14,
+            "median": 62.0,
+            "p90": 297,
+            "maximum": 508,
+            "mean": 104.549
+          }
+        }
+      },
+      "exclusions": {
+        "reasonCounts": {
+          "MULTI_TARGET_CHECK": 58,
+          "PROBE_PLACEHOLDER": 12,
+          "POSITIVE_EVIDENCE_UNSELECTED": 25,
+          "HEDGED_CAUSE": 7,
+          "CONFLICTING_MODEL_INPUT_LABEL": 2
+        },
+        "reasonCombinationCounts": {
+          "CONFLICTING_MODEL_INPUT_LABEL": 2,
+          "HEDGED_CAUSE": 7,
+          "MULTI_TARGET_CHECK": 58,
+          "POSITIVE_EVIDENCE_UNSELECTED": 25,
+          "PROBE_PLACEHOLDER": 12
+        },
+        "pairsWithMultipleReasons": 0,
+        "overlapAware": true,
+        "excludedPairs": 104,
+        "excludedPairsAssignedLabels": 0
+      },
+      "preConflict": {
+        "representedFamilies": 65,
+        "pairs": 104,
+        "labelCounts": {
+          "SUPPORTED": 58,
+          "NOT_SUPPORTED": 46
+        },
+        "conflictingModelInputSignatures": 1
+      },
+      "retained": {
+        "representedFamilies": 64,
+        "pairs": 102,
+        "labelCounts": {
+          "SUPPORTED": 57,
+          "NOT_SUPPORTED": 45
+        },
+        "labelRatiosPercent": {
+          "SUPPORTED": 55.882,
+          "NOT_SUPPORTED": 44.118
+        },
+        "kindCounts": {
+          "cause": 65,
+          "check": 37
+        },
+        "categoryCounts": {
+          "AUTHENTICATION": {
+            "families": 2,
+            "pairs": 2
+          },
+          "CONCURRENCY": {
+            "families": 1,
+            "pairs": 2
+          },
+          "DATABASE": {
+            "families": 11,
+            "pairs": 15
+          },
+          "DATABASE_CONSTRAINT": {
+            "families": 1,
+            "pairs": 2
+          },
+          "DATABASE_SCHEMA": {
+            "families": 7,
+            "pairs": 7
+          },
+          "GENERAL_JAVA": {
+            "families": 5,
+            "pairs": 5
+          },
+          "RESOURCE_EXHAUSTION": {
+            "families": 2,
+            "pairs": 2
+          },
+          "SERIALIZATION": {
+            "families": 7,
+            "pairs": 15
+          },
+          "SPRING_CONFIGURATION": {
+            "families": 3,
+            "pairs": 6
+          },
+          "TIMEOUT": {
+            "families": 3,
+            "pairs": 5
+          },
+          "TLS": {
+            "families": 2,
+            "pairs": 2
+          },
+          "UNKNOWN": {
+            "families": 19,
+            "pairs": 38
+          },
+          "WEB_REQUEST": {
+            "families": 1,
+            "pairs": 1
+          }
+        },
+        "lengthDistributions": {
+          "candidateCharacters": {
+            "count": 102,
+            "minimum": 53,
+            "median": 94.0,
+            "p90": 178,
+            "maximum": 178,
+            "mean": 103.48
+          },
+          "candidateWords": {
+            "count": 102,
+            "minimum": 7,
+            "median": 14.0,
+            "p90": 24,
+            "maximum": 24,
+            "mean": 14.657
+          },
+          "evidenceItemsPerPair": {
+            "count": 102,
+            "minimum": 1,
+            "median": 1.0,
+            "p90": 4,
+            "maximum": 6,
+            "mean": 2.284
+          },
+          "evidenceCharactersPerPair": {
+            "count": 102,
+            "minimum": 14,
+            "median": 77.0,
+            "p90": 358,
+            "maximum": 508,
+            "mean": 151.814
+          }
+        }
+      }
+    },
+    "VALIDATION": {
+      "raw": {
+        "families": 20,
+        "pairs": 54,
+        "proposedLabelCounts": {
+          "SUPPORTED": 18,
+          "NOT_SUPPORTED": 36
+        },
+        "categoryCounts": {
+          "CONCURRENCY": {
+            "families": 1,
+            "pairs": 2
+          },
+          "DATABASE": {
+            "families": 3,
+            "pairs": 12
+          },
+          "DATABASE_LOCKING": {
+            "families": 1,
+            "pairs": 6
+          },
+          "GENERAL_JAVA": {
+            "families": 2,
+            "pairs": 4
+          },
+          "TIMEOUT": {
+            "families": 1,
+            "pairs": 4
+          },
+          "UNKNOWN": {
+            "families": 12,
+            "pairs": 26
+          }
+        },
+        "lengthDistributions": {
+          "candidateCharacters": {
+            "count": 54,
+            "minimum": 35,
+            "median": 96.5,
+            "p90": 178,
+            "maximum": 178,
+            "mean": 101.13
+          },
+          "candidateWords": {
+            "count": 54,
+            "minimum": 5,
+            "median": 13.0,
+            "p90": 24,
+            "maximum": 24,
+            "mean": 14.407
+          },
+          "evidenceItemsPerPair": {
+            "count": 54,
+            "minimum": 1,
+            "median": 2.0,
+            "p90": 4,
+            "maximum": 5,
+            "mean": 2.481
+          },
+          "evidenceCharactersPerPair": {
+            "count": 54,
+            "minimum": 14,
+            "median": 62.0,
+            "p90": 392,
+            "maximum": 559,
+            "mean": 161.815
+          }
+        }
+      },
+      "exclusions": {
+        "reasonCounts": {
+          "MULTI_TARGET_CHECK": 10,
+          "PROBE_PLACEHOLDER": 4,
+          "POSITIVE_EVIDENCE_UNSELECTED": 5,
+          "HEDGED_CAUSE": 1,
+          "CONFLICTING_MODEL_INPUT_LABEL": 0
+        },
+        "reasonCombinationCounts": {
+          "HEDGED_CAUSE": 1,
+          "MULTI_TARGET_CHECK": 10,
+          "POSITIVE_EVIDENCE_UNSELECTED": 5,
+          "PROBE_PLACEHOLDER": 4
+        },
+        "pairsWithMultipleReasons": 0,
+        "overlapAware": true,
+        "excludedPairs": 20,
+        "excludedPairsAssignedLabels": 0
+      },
+      "preConflict": {
+        "representedFamilies": 19,
+        "pairs": 34,
+        "labelCounts": {
+          "SUPPORTED": 12,
+          "NOT_SUPPORTED": 22
+        },
+        "conflictingModelInputSignatures": 0
+      },
+      "retained": {
+        "representedFamilies": 19,
+        "pairs": 34,
+        "labelCounts": {
+          "SUPPORTED": 12,
+          "NOT_SUPPORTED": 22
+        },
+        "labelRatiosPercent": {
+          "SUPPORTED": 35.294,
+          "NOT_SUPPORTED": 64.706
+        },
+        "kindCounts": {
+          "cause": 19,
+          "check": 15
+        },
+        "categoryCounts": {
+          "CONCURRENCY": {
+            "families": 1,
+            "pairs": 2
+          },
+          "DATABASE": {
+            "families": 3,
+            "pairs": 6
+          },
+          "DATABASE_LOCKING": {
+            "families": 1,
+            "pairs": 1
+          },
+          "GENERAL_JAVA": {
+            "families": 2,
+            "pairs": 2
+          },
+          "TIMEOUT": {
+            "families": 1,
+            "pairs": 1
+          },
+          "UNKNOWN": {
+            "families": 11,
+            "pairs": 22
+          }
+        },
+        "lengthDistributions": {
+          "candidateCharacters": {
+            "count": 34,
+            "minimum": 62,
+            "median": 95.0,
+            "p90": 178,
+            "maximum": 178,
+            "mean": 109.5
+          },
+          "candidateWords": {
+            "count": 34,
+            "minimum": 8,
+            "median": 13.0,
+            "p90": 24,
+            "maximum": 24,
+            "mean": 15.059
+          },
+          "evidenceItemsPerPair": {
+            "count": 34,
+            "minimum": 1,
+            "median": 3.0,
+            "p90": 4,
+            "maximum": 5,
+            "mean": 2.853
+          },
+          "evidenceCharactersPerPair": {
+            "count": 34,
+            "minimum": 14,
+            "median": 242.0,
+            "p90": 485,
+            "maximum": 559,
+            "mean": 224.088
+          }
+        }
+      }
+    }
+  },
+  "crossSplit": {
+    "familyOverlapCount": 0,
+    "rawSignatureOverlaps": {
+      "rawPairSignature": {
+        "trainUnique": 174,
+        "validationUnique": 54,
+        "overlap": 2
+      },
+      "normalizedPairSignature": {
+        "trainUnique": 146,
+        "validationUnique": 52,
+        "overlap": 8
+      },
+      "semanticPairSignature": {
+        "trainUnique": 146,
+        "validationUnique": 52,
+        "overlap": 8
+      },
+      "modelInputSignature": {
+        "trainUnique": 166,
+        "validationUnique": 52,
+        "overlap": 6
+      },
+      "candidateSignature": {
+        "trainUnique": 59,
+        "validationUnique": 17,
+        "overlap": 14
+      },
+      "evidenceSignature": {
+        "trainUnique": 68,
+        "validationUnique": 26,
+        "overlap": 6
+      },
+      "throwableTopologySignature": {
+        "trainUnique": 46,
+        "validationUnique": 16,
+        "overlap": 4
+      }
+    },
+    "retainedSignatureOverlaps": {
+      "rawPairSignature": {
+        "trainUnique": 87,
+        "validationUnique": 34,
+        "overlap": 1
+      },
+      "normalizedPairSignature": {
+        "trainUnique": 79,
+        "validationUnique": 33,
+        "overlap": 4
+      },
+      "semanticPairSignature": {
+        "trainUnique": 79,
+        "validationUnique": 33,
+        "overlap": 4
+      },
+      "modelInputSignature": {
+        "trainUnique": 84,
+        "validationUnique": 33,
+        "overlap": 4
+      },
+      "candidateSignature": {
+        "trainUnique": 29,
+        "validationUnique": 9,
+        "overlap": 9
+      },
+      "evidenceSignature": {
+        "trainUnique": 47,
+        "validationUnique": 18,
+        "overlap": 3
+      },
+      "throwableTopologySignature": {
+        "trainUnique": 44,
+        "validationUnique": 15,
+        "overlap": 3
+      }
+    },
+    "retainedLeakageOverlaps": {
+      "candidateText": 9,
+      "exactModelInputPair": 4,
+      "evidence": 3,
+      "throwableTopology": 3,
+      "category": 5,
+      "exactPairLabelConflicts": 0
+    },
+    "conflictingLabelSignatureChecks": {
+      "raw": {
+        "rawPairSignature": {
+          "conflictingSignatures": 4,
+          "pass": false
+        },
+        "normalizedPairSignature": {
+          "conflictingSignatures": 6,
+          "pass": false
+        },
+        "semanticPairSignature": {
+          "conflictingSignatures": 6,
+          "pass": false
+        },
+        "modelInputSignature": {
+          "conflictingSignatures": 6,
+          "pass": false
+        }
+      },
+      "retained": {
+        "rawPairSignature": {
+          "conflictingSignatures": 0,
+          "pass": true
+        },
+        "normalizedPairSignature": {
+          "conflictingSignatures": 0,
+          "pass": true
+        },
+        "semanticPairSignature": {
+          "conflictingSignatures": 0,
+          "pass": true
+        },
+        "modelInputSignature": {
+          "conflictingSignatures": 0,
+          "pass": true
+        }
+      }
+    }
+  },
+  "classRangeChecks": [
+    {
+      "check": "TRAIN_SUPPORTED_PRESENT",
+      "minimum": 1,
+      "actual": 57,
+      "pass": true
+    },
+    {
+      "check": "TRAIN_NOT_SUPPORTED_PRESENT",
+      "minimum": 1,
+      "actual": 45,
+      "pass": true
+    },
+    {
+      "check": "VALIDATION_SUPPORTED_MINIMUM",
+      "minimum": 15,
+      "actual": 12,
+      "pass": false
+    },
+    {
+      "check": "VALIDATION_NOT_SUPPORTED_MINIMUM",
+      "minimum": 15,
+      "actual": 22,
+      "pass": true
+    },
+    {
+      "check": "TRAIN_SUPPORTED_RATIO",
+      "minimumPercent": 30.0,
+      "maximumPercent": 60.0,
+      "actualPercent": 55.882,
+      "pass": true
+    },
+    {
+      "check": "TRAIN_NOT_SUPPORTED_RATIO",
+      "minimumPercent": 40.0,
+      "maximumPercent": 70.0,
+      "actualPercent": 44.118,
+      "pass": true
+    },
+    {
+      "check": "VALIDATION_SUPPORTED_RATIO",
+      "minimumPercent": 30.0,
+      "maximumPercent": 60.0,
+      "actualPercent": 35.294,
+      "pass": true
+    },
+    {
+      "check": "VALIDATION_NOT_SUPPORTED_RATIO",
+      "minimumPercent": 40.0,
+      "maximumPercent": 70.0,
+      "actualPercent": 64.706,
+      "pass": true
+    }
+  ],
+  "allClassRangeChecksPass": false,
+  "shortcutLeakage": {
+    "retainedPairs": 136,
+    "uniqueCandidateTexts": 29,
+    "textsWithBothLabels": 0,
+    "candidateTextPerfectlyDeterminesLabel": true,
+    "notSupportedTextCount": 3,
+    "notSupportedPairs": 67,
+    "notSupportedConcentration": [
+      {
+        "textRole": "UNKNOWN_CAUSE_TEXT",
+        "pairs": 30
+      },
+      {
+        "textRole": "INSPECT_ROOT_CAUSE_CHECK_TEXT",
+        "pairs": 30
+      },
+      {
+        "textRole": "JSON_PARSE_CHECK_TEXT",
+        "pairs": 7
+      }
+    ],
+    "candidateIdsIncluded": false,
+    "finding": "CANDIDATE_TEXT_SHORTCUT_LEAKAGE",
+    "compatibleWithLearningEvidenceDependence": false
+  },
+  "familyAggregateReviews": [
+    {
+      "split": "TRAIN",
+      "familySignature": "b81918b0d80c4456517a858978012d2dd52f8d0883985fe9c420525e466da976",
+      "category": "TIMEOUT",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "7d4570ff73a377421c813634a7463ffe80b2be3f17bec1feca1f928054f99dff",
+      "category": "TLS",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "b67fe21c1177b56c245a38b5fa94f6e7147447ca36fd54489059513d33a0af96",
+      "category": "TLS",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "d86f3aa836416cda92fdcbb84facea05d9efd0d703e7cddb34c9e850e74bcf82",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "36fc34ef9fdf06e2bdd36d80b349b752a76c113ddd07e0986944ec4d7aba35c4",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "55e93255b052d9f01fca3857dbeb8bf9aa9002d8a3c167db1bba93dc281e0791",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "ad5ecfa62afde0c74c5d895b421f36ab6724f843f64edfe68864b25d9fb5150e",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "124a5638da4f009900425404e111d3f8023480019747abc91acf4888b36069cb",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "f341c70e60786aef6b7a5f51bf83ce50be9ae5d75deb99e162f14f7cbb42dd9b",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "0166dd1a75aaa554ee3738e3ba43d1968ac943823bb8af8d7e20239e2f59c066",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "7d3bc6232dc222ef2ac8bd0eefc14e351b6a2838ec0d74b05344a222b7e9484d",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "f101af54407400bed6b68a14a044ed8f221e698dc0bc794ce091f9cd685ef438",
+      "category": "RESOURCE_EXHAUSTION",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "ebe9b861e72be0c30016ad21df5a34d47824be336fc3794fef871049e2a4f182",
+      "category": "CONCURRENCY",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "ffe0f16b320d8ceae0b8f260773c25bc16cec6a09e47ce8cad28bd0169d126da",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "c2bc589840bfb49ecc301bf0900060a2f1a3f3c098940ad78355dc120104c866",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "b6f513221c5794034b360798cd023143dda7f428de4bbaea087974aabbe54037",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "887d64b283cd5a52fb8be25361ff2d16eb760dedb2a5b8eb3c7efac8794f51ca",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "1ebfdf923c1f9d3e20ae2c103d03ce679622fd4b4695992173a0cd6342117ead",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "bc8860dcebda69868c25d73762dfd3d5b166335f43415a471bff792aa77ec88d",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "91f4e5fe54318de1c481bac82190ffdc473ee7c91a9a9c59d3f4cf415b8a125a",
+      "category": "WEB_REQUEST",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "4a3e2db140567a408931667dc3083198174f0e72be5d3f6c6cb916f9025ef87d",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "dedde43d966f45e6259155ef4d41d1e34537cb941d29acc74f859457a022a07f",
+      "category": "SERIALIZATION",
+      "rawPairs": 6,
+      "retainedPairs": 3,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "5042a8044649ca65cb76f0373999152bde81bdb115d2bdfb5896f4840faf0025",
+      "category": "SERIALIZATION",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "823e785416cca8a9b79c95b304401752ecc3bc4fafb030d543bf7dbed9a18ea7",
+      "category": "SERIALIZATION",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "a8a35ecd4b43a2564629400dfc3e7e33f4e4c51756de5bab21d28ea4abdf7d7b",
+      "category": "SERIALIZATION",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "12f49e172884aee3947c97dbb80e309c4f80bf8451229810d2ae3cb5cd8518ae",
+      "category": "SERIALIZATION",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "0be6836095a1179d762948822740609d29d488236899a5b5fbea66a0f945e097",
+      "category": "SERIALIZATION",
+      "rawPairs": 6,
+      "retainedPairs": 2,
+      "excludedPairs": 4,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "1a537c543b8b1d765d2179b79d2ed825d10fa329e6059cf8268901cb7711b9a0",
+      "category": "SERIALIZATION",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "8c93485aba0e3e36a60f0939694d0dfbc02a8ea442fd9fcf1a084548a2b2cf8e",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "711450874bf2a51dc4b19f5849f932f0dd206f66181eca65bb0ceaa95328efd0",
+      "category": "DATABASE_CONSTRAINT",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "7b7978e3c051ce0d28d6ec7dbc7fb9c75de1bd265928e9a9b56ecac10c41bd96",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "c2a121456102356a627f6a7c31b3ca07f341ad58dd7518b03a543ffc9025cde2",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "9f7407aa87d22d1f7805d471515c412991a0817373c9a3c454f4a460ac6c83a4",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "3f343d728e6647878fb88bea5c58e153e8c4cfd3864eea17d523bda412800f99",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "6906eb4de6f62de83910fa3a132e8836505e57d2616b9f6ba3be23ce60802506",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "020e8339499fe0be8664cc7a380486ba302b95cb63ed554dc64ab58f9c17feec",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "081389f31b98e0f01b46e0e847cfb9d152d997f5ff4c521cca294ce10e9d0a8e",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "2dca40b3b8c4fc7d2efa45ee2ffc1ad1660fb26bea295351c92f7d25bd26bbef",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "10cf6ff758515cc49eac3dd9c794331cdcfb02e0d139230d88b0aa50e4e12f30",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "64733c89538e506177d991508db73e2164caa89dd8b8a3635a8490b56cf51ff9",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "03ff77a811d2d6cdabfe82b67161ddfca5fefeb3d6ccf8c091d51d48a0ac86b2",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "23e807411465b595f7da56f7be9fd5fa71595acbca090ac6ad8190b0b552ddc9",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "6fadbc6ebd62a54270053b40e93878074ade2e0e482d8e3fa94c2c0d05ee697d",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "ba6feeee729f597791f23879463b33ae2e055215d062e8cf04e1fa3c141f3f0d",
+      "category": "DATABASE_SCHEMA",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "11d46414fb816d2fa880d970f31795c5c544344eb8ca855cd65378d50f10152b",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "eb52dd952db2c1951de02d4f94709486151ec6283e20694ab10305c6d21deeeb",
+      "category": "DATABASE",
+      "rawPairs": 6,
+      "retainedPairs": 2,
+      "excludedPairs": 4,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 2
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "9b33075c2cd622a07ecb943a322d979d8c50814d26d90d86168c1c4f99a3e5dd",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "3d948e31272974aefa3f26fb74853982f990be37e68b071376b379544797bf76",
+      "category": "SPRING_CONFIGURATION",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "2d4d89debb4570811f91ed161cb4cbb8a8fa81f9a8d1c70d05e803d333fc4403",
+      "category": "SPRING_CONFIGURATION",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "b9ec49cab3fc4a26b69bf375073082d24c39693ed8adc9a1fd0399e236712fa1",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "cd22f4b8af028808b5bbf3f34ac5fe0264126c9e280c87a003b150a73f8a37a4",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "394958f0d5ff6520979935333744d14068efaceb0f71e49ea1bf89f1df13e098",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 0,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "POSITIVE_EVIDENCE_UNSELECTED": 1,
+        "CONFLICTING_MODEL_INPUT_LABEL": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "55b1047c503d13873feb80069191b53c2621a3b3242bd3ffea657517a33fa3ca",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "d77171c5dc77930c15486360e5e06c64908b333440faba8a131b60841ad08fa0",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "81a9a6016f52df0b2c199874c1b16a8ff16d1f56e1f9aa5ffe715649b65a6f1a",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "CONFLICTING_MODEL_INPUT_LABEL": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "67aa6484f739d8ce23d2d168305ae420911b3c50566ba33bc96fcae9e6929a83",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "2c6921c778b95b673f01fbe13ba4bc318ea83d875003a5d5b349b374547076af",
+      "category": "AUTHENTICATION",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "f6188b1dd695838f5efcde9232c9569432da575455b1a20549169e69c01a4b47",
+      "category": "SPRING_CONFIGURATION",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "3982b8b307fd33950d80889ce65eb66e5c9e6ca0195ebf0c66100dd240592c1c",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 0,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 2
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "fdc597c8a1d225b7dbf0b688a84fc29376f87e7c8dd0764f2df4d348d568517f",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 0,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 2
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "d7d98ac72c252b2552c3061b77ccb102ce22ba8af8b001d1eb8e4099ebe0c1e5",
+      "category": "DATABASE",
+      "rawPairs": 3,
+      "retainedPairs": 0,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 3
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "84e2d7a45f6477c32e26a1e6b410322ce3a432686f3e89cf8a8afe3c3ab77b1e",
+      "category": "SPRING_CONFIGURATION",
+      "rawPairs": 3,
+      "retainedPairs": 0,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 3
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "22c5c2f6735c3ad91b48a39c53e498f3d08a00ade4f85d3c016d9ea82eebcece",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 0,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 2
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "e98d14c559e70dfc5efb1219d3c13f3795728a3f0f575a7ad4537878aa6be072",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "8280670ef85d87a0237b5489d4c11b373af3b8bab424156c93542f0398f430c8",
+      "category": "TIMEOUT",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "bf2f45aceb98a471e38cda19b230a0f4322752b28d41054ba9ac3222b69b338d",
+      "category": "TIMEOUT",
+      "rawPairs": 6,
+      "retainedPairs": 2,
+      "excludedPairs": 4,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 3,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "040141649c69483edabc555527e5d30d2b15044148b1c6d31ca3194ae26ba1a6",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "7a97dd0e9658db831bbebf77d00dd27bac73f6ad15da41e039e03b8f9ddaded3",
+      "category": "RESOURCE_EXHAUSTION",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "5c0459d3756fddeb17887b0f7ccacfcbfac84a044284a01b5dd63c344d9b4396",
+      "category": "AUTHENTICATION",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "TRAIN",
+      "familySignature": "4208bfc738a7a1ac85923699a6ec179cacc86c8f0582ab42ed7b2b232bf6f348",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "45b7e621d0038e7eb86afd7872c80b0bac72c04b8ec978c3ffef4dcd602fe862",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "4ec3cda0cbcf8787b1f60101126b4602ceba7c5d1c67332d0b48fa9313cba1c3",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "f1adf81744f4c88680386f37acdfd13804ad6ba33043edc679b97fab895fb29b",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "54549ef3d9820622a175653ee66ae242b23dd25f8d0a6135bbc8c2b7a47e6a7c",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "97c8042993622f76bdaea4776e5c9f86001e13f1c777bebba9c93e7a94227631",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "f5c579cf90f5f74bff9d8319c893b2335bfab4d2930d32d528499b31f30602fa",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "fbb881c213fcf08f09ee7fc3e1d3b4bd7b2d011c03dd88346432c00f47da0e03",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "8b4dfd14de136afa68c210661378ebfa5cd8bc52f307a5ba6a0edac4207f4c7b",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "e1bbbbb08181de5fa553b7473441b931434bb8665f58fdeac854d686338aae2e",
+      "category": "DATABASE_LOCKING",
+      "rawPairs": 6,
+      "retainedPairs": 1,
+      "excludedPairs": 5,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 3,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1,
+        "HEDGED_CAUSE": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "63cded8e37f849989d76f6b614aecde43934ec36a73848c0af6341d9312f9dc0",
+      "category": "TIMEOUT",
+      "rawPairs": 4,
+      "retainedPairs": 1,
+      "excludedPairs": 3,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 2,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "887a6657abf9601a0dbc5f120a4bb34c0fe9bcc5cd3fe982b22903de76a2f9b7",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "da74bd6202ede54eb3da5c9a8683289a041a34911b3f2083e1befa4d47094020",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "dd3ee990156d12e6a8e3277f116127f1b40a163b5dc45a981cad6e92d3b08cff",
+      "category": "DATABASE",
+      "rawPairs": 4,
+      "retainedPairs": 2,
+      "excludedPairs": 2,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1,
+        "POSITIVE_EVIDENCE_UNSELECTED": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "d00ae798ff086ce68104e1332c586488164ddf450a70226564770b528cd42f60",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "c47cf3e7f1218e27c566b5a402b874aa1ed42d41a69afadb03bfb403dbcc773e",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "fdc09712a94513111c498898341a8664b6bdae828405320f12c09e86ae4a6442",
+      "category": "UNKNOWN",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "747e6ae1eda112510b9dd668b4ef740812013bd63efeaf4c1f0f737e0853ffd0",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "23e61d81d4c6cfe13ceb8bcd69bfe7a3e6e5e1b83b09fda6bc4011ef2fea3606",
+      "category": "UNKNOWN",
+      "rawPairs": 4,
+      "retainedPairs": 0,
+      "excludedPairs": 4,
+      "exclusionReasonCounts": {
+        "PROBE_PLACEHOLDER": 4
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "3fb420d1d947e9f02765004be84594b591c8be67b99612a0a02859e635083c44",
+      "category": "GENERAL_JAVA",
+      "rawPairs": 2,
+      "retainedPairs": 1,
+      "excludedPairs": 1,
+      "exclusionReasonCounts": {
+        "MULTI_TARGET_CHECK": 1
+      },
+      "individualLabelsIncluded": false
+    },
+    {
+      "split": "VALIDATION",
+      "familySignature": "e6c7a674a007bf4a722c8a02b2c8cbece516666202ad276fa1b588e4e45a4a7a",
+      "category": "CONCURRENCY",
+      "rawPairs": 2,
+      "retainedPairs": 2,
+      "excludedPairs": 0,
+      "exclusionReasonCounts": {},
+      "individualLabelsIncluded": false
+    }
+  ],
+  "familyAggregateReviewCount": 90,
+  "securityCoverage": {
+    "scope": "natural canonical candidate text and candidate-linked evidence only",
+    "requiredAttackCategoryPairCounts": {
+      "RETURN_LABEL": 0,
+      "SYSTEM_IMITATION": 0,
+      "HIDDEN_REASONING": 0,
+      "LABEL_BAIT": 0,
+      "BOTH_LABEL_DIGITS": 0,
+      "JSON_MARKDOWN_DELIMITER": 0,
+      "FAKE_CLOSING_TAG": 0,
+      "EXPECTED_ANSWER": 0,
+      "ONE_BASED": 0,
+      "SECRET_MARKER": 0,
+      "PLAUSIBLE_UNSUPPORTED_FRAMEWORK_CAUSE": 0,
+      "UNICODE_HOMOGLYPH": 0,
+      "ZERO_WIDTH_OR_BIDI": 0
+    },
+    "candidateLocalNegativeFieldPairCounts": {
+      "negativeEvidenceIds": 0,
+      "contradictedEvidenceIds": 0,
+      "negativeOrContradictedPolarity": 0
+    },
+    "allRequiredCountsZero": true,
+    "dynamicCoverageAvailable": false
+  },
+  "privacy": {
+    "timestampsIncluded": false,
+    "absolutePathsIncluded": false,
+    "candidateIdsIncluded": false,
+    "familyIdsIncluded": false,
+    "individualLabelsIncluded": false,
+    "exposedDiagnosticLabelsAccessed": false
+  }
+}
