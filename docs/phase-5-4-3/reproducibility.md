@@ -38,3 +38,17 @@ Exactly-once generation must use the committed and annotated freeze tag. The
 runner order is D0, B0, A1. No score may be opened until all three receipts are
 complete. Scoring may be repeated against immutable predictions without loading
 the model again.
+
+Exactly-once prediction hashes:
+
+```text
+D0 8b242f05890d9fad9d2e1b2317dff17e162a81baaecbe6f965d7228c24460b3f
+B0 8dc4647ad61bf314d9ed0ba0005a1556d1ca6003fa1b5df0fb8fb84988ca682d
+A1 52580204f5c18d2f5926ffa453948f6c2c21af6efe353ec20f3288182e4c9123
+```
+
+The frozen scorer's first attempt exposed a nullable-invalid-output aggregation
+bug and wrote no report. The documented scorer-only wrapper verified the frozen
+scorer SHA, mapped only nullable accuracy values to `false`, and scored the same
+immutable predictions. No generation or label was repeated or changed. See
+`phase-5-4-3-scoring-rerun.json`.

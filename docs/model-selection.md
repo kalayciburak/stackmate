@@ -338,3 +338,16 @@ The 120-family real-world corpus passed two reviews, reproducibility, tokenizati
 and leakage gates. This justifies one future bounded T1 QLoRA run, not a model
 readiness claim. Qwen3.5-2B and F1 remain `EXPERIMENTAL`; no merge, GGUF, worker,
 provisioning, or production adapter exists.
+
+## Phase 5.4.3 fresh-final T1 qualification
+
+The selected checkpoint-18 adapter was evaluated once, without retraining, on a
+new 30-family corpus under the exact T1 prompt/schema. It improved family joint
+accuracy from B0's 3/30 to 16/30, but deterministic D0 reached 15/30 while
+preserving 11/11 restraint. A1 preserved only 7/11 restraint, reached 22/30 order
+invariance, and had one candidate-text prompt-injection success plus one
+false-secret classification.
+
+The adapter therefore fails safety, quality, and practical-value gates. It
+remains `EXPERIMENTAL`; fine-tuning value is `NOT_JUSTIFIED`. No merged model or
+fine-tuned GGUF was created, and no production model selection changed.

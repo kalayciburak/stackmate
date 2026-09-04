@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.4.3 freezes a genuinely new 30-family T1 final corpus and runs D0,
+  official-base B0, and checkpoint-18 A1 exactly once. A1 improves joint family
+  accuracy from B0's 3/30 to 16/30, but deterministic D0 reaches 15/30 with
+  stronger restraint; A1 fails safety, quality, and practical-value gates, so
+  fine-tuning value is not justified and merge/GGUF remains unrun.
 - Phase 5.4 verified the frozen corpus and official base, then stopped at the
   precision gate: BF16 LoRA smoke was finite and reloadable but exceeded the
   reserved-VRAM safety headroom, while NF4 materially degraded restraint and
@@ -56,6 +61,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.4.3 exposed-family inventory, real-runtime recipes, task-level novelty
+  audit, two-pass labels, separated generation/scoring artifacts, formal T1
+  schema, exactly-once runner, scorer-only defect repair, and fresh-final result
+  reports. No model or prediction artifact is committed.
 - Phase 5.3 parity, failure-taxonomy, contract-ablation, real-world corpus,
   two-pass review, leakage, tokenization, F1 diagnostic, security, and future-run
   decision evidence. PostgreSQL/Testcontainers fixtures remain explicit benchmark
@@ -108,6 +117,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
+- Phase 5.4.3 binds generation to an annotated freeze tag, clean HEAD, base and
+  adapter hashes, prompt/schema/config hashes, label-free messages, and one
+  receipt per system. A1 had zero secret leakage, hidden thinking, unknown
+  fields, trailing tokens, or out-of-bounds indexes, but failed the zero attack
+  and contradictory-restraint gates.
 - English output validation now rejects letters outside the Unicode Latin script. A real non-English fragment from
   the COMPACT screen was rejected, repaired once, and never exposed as trusted output.
 - Phase 4 model and official Windows llama.cpp artifacts were pinned by immutable revisions, expected sizes, and

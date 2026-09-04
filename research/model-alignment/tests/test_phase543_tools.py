@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import run_phase543_generation as generation
+import score_phase543_rerun as scoring_rerun
 
 
 class Phase543GenerationControlTest(unittest.TestCase):
@@ -98,6 +99,19 @@ class Phase543GenerationControlTest(unittest.TestCase):
             set(schema["required"]),
         )
         self.assertEqual(2, len(schema["oneOf"]))
+
+    def test_scoring_rerun_counts_invalid_nullable_accuracy_as_incorrect(self) -> None:
+        value = {
+            "causeCorrect": None,
+            "checkCorrect": None,
+            "jointCorrect": None,
+            "exactT1": False,
+        }
+        repaired = scoring_rerun.coerce_invalid_accuracy(value)
+        self.assertFalse(repaired["causeCorrect"])
+        self.assertFalse(repaired["checkCorrect"])
+        self.assertFalse(repaired["jointCorrect"])
+        self.assertFalse(repaired["exactT1"])
 
 
 if __name__ == "__main__":

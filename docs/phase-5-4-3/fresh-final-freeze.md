@@ -32,3 +32,8 @@ The freeze commit is identified by the annotated local tag
 `phase-5-4-3-fresh-final-frozen`; the generator requires HEAD to equal that tag
 and verifies the manifest blob directly from the tagged commit. No model output
 existed when the manifest was created.
+
+```text
+Freeze commit a0693e0a3fe1bd359ce7997f4f8128951eb8f42c
+Freeze tag    phase-5-4-3-fresh-final-frozen
+```

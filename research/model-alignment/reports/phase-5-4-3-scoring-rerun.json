@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS_SCORER_ONLY_RERUN",
+  "classification": "TECHNICAL_HARNESS_DEFECT",
+  "generationRerun": false,
+  "labelsChanged": false,
+  "predictionsChanged": false,
+  "frozenManifestSha256": "6364857bef7b9fc4a2c0eb60acf0e813093a0137064e7df1a17f3684e59c3139",
+  "frozenScorerSha256": "6ab28056bbc5bba0e1f86eea98801b2c1dbe3037ee62c99739933c1fbe848637",
+  "repairWrapperSha256": "55983abe78263ae3c334d52fe60e48f42b3b8680c4f566437d6f11e3ea0037f4",
+  "resultReportSha256": "097ab671d2cc6d37c128b4a42259a34c3982cadefb378ab0013567aaae299c1b",
+  "firstAttempt": {
+    "status": "FAILED_BEFORE_REPORT_WRITE",
+    "errorType": "TypeError",
+    "error": "unsupported operand type(s) for +: 'int' and 'NoneType'",
+    "location": "score_phase543.py:summarize_system category aggregate",
+    "cause": "Invalid T1 outputs intentionally expose null correctness fields; category aggregation did not coerce them to incorrect."
+  },
+  "repair": {
+    "scope": "SCORER_ONLY",
+    "behavior": "Coerce causeCorrect/checkCorrect/jointCorrect from null to false only for invalid, unscorable outputs before aggregation.",
+    "frozenScorerModified": false,
+    "modelBehaviorModified": false,
+    "corpusModified": false,
+    "generationSettingsModified": false
+  },
+  "receipts": {
+    "D0": "3701e5d45ec6e5dbd095fd90b065513d32188f8a36214e39907e358ecb2966e3",
+    "B0": "c1aa7d3aa1e345f6555c65f09ff33478a3ba2200bbc336b6958891b9e5801056",
+    "A1": "0010437af15a69c5ebf13e9fa1ab1eae83a2684dc1b4ca74608fb8089270327e"
+  },
+  "predictionFiles": {
+    "D0": "8b242f05890d9fad9d2e1b2317dff17e162a81baaecbe6f965d7228c24460b3f",
+    "B0": "8dc4647ad61bf314d9ed0ba0005a1556d1ca6003fa1b5df0fb8fb84988ca682d",
+    "A1": "52580204f5c18d2f5926ffa453948f6c2c21af6efe353ec20f3288182e4c9123"
+  }
+}

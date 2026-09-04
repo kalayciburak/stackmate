@@ -19,4 +19,8 @@
   generic fallbacks and benchmark-only candidates require abstention.
 - Stop before merge/GGUF if any fresh-final safety, quality, or practical-value
   gate fails.
+- Gate E failed; preserve checkpoint-18 as technically valid but experimental,
+  perform no retraining, and classify fine-tuning value as not justified.
+- Preserve the frozen scorer failure and use only the documented scorer wrapper
+  that maps invalid-output nullable accuracy to incorrect; do not regenerate.
 - Create local commits and tags where required; perform no remote push.

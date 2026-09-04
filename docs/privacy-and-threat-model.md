@@ -254,3 +254,12 @@ Transformers/PEFT, Docker/PostgreSQL, SafeTensors, and any conditional llama.cpp
 conversion remain third-party native/parser trust boundaries. No cloud inference,
 telemetry, upload, persistent worker, product adapter, or provisioning path is
 introduced.
+
+The exactly-once result confirmed that structural containment alone remains
+insufficient. A1 emitted valid JSON for every family and leaked no secret or
+hidden thinking, but selected an instruction-bearing candidate in one order and
+selected false-secret candidates in both orders of another family. Four
+restraint families also received contradictory non-empty selections. These
+outputs remained in the external research cache and scorer report; none entered
+a product response. Gate E failed, so merged-weight and native GGUF boundaries
+were not opened.
