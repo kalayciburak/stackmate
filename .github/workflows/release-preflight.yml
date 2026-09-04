@@ -2,12 +2,12 @@ name: Release preflight
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
 
 permissions:
   contents: read
+
+env:
+  STACKMATE_VERSION: 0.1.0-rc.2
 
 jobs:
   local-artifact-verification:
@@ -15,14 +15,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out sources
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up Java 21
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
+          cache-dependency-path: "**/pom.xml"
 
       - name: Verify and install the local RC
         shell: pwsh
@@ -33,19 +34,47 @@ jobs:
         run: >-
           .\mvnw.cmd --batch-mode --no-transfer-progress
           -f release\consumer\pom.xml
-          "-Dstackmate.version=0.1.0-rc.1" verify
+          "-Dstackmate.version=$env:STACKMATE_VERSION" clean verify
 
       - name: Verify the frozen public API baseline
         shell: pwsh
         run: |
           .\release\generate-public-api.ps1 `
-            -Version 0.1.0-rc.1 `
-            -SignatureOutput target/release-api-current.txt `
-            -InventoryOutput target/release-api-current.json
+            -Version $env:STACKMATE_VERSION `
+            -SignatureOutput target/qualification/public-api.txt `
+            -InventoryOutput target/qualification/public-api.json
           $expected = (Get-Content release/public-api-inventory.json -Raw | ConvertFrom-Json).signatureSha256
-          $actual = (Get-FileHash target/release-api-current.txt -Algorithm SHA256).Hash.ToLowerInvariant()
+          $actual = (Get-FileHash target/qualification/public-api.txt -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($actual -ne $expected) { throw "Public API signature drift: $actual" }
 
       - name: Assemble and audit the local bundle
         shell: pwsh
-        run: .\release\assemble-local-rc.ps1 -Version 0.1.0-rc.1
+        run: >-
+          .\release\assemble-local-rc.ps1
+          -Version $env:STACKMATE_VERSION
+          -OutputRoot target/qualification-release
+
+      - name: Collect qualification evidence
+        shell: pwsh
+        run: >-
+          .\release\collect-qualification-evidence.ps1
+          -Platform Windows-release-preflight
+          -Version $env:STACKMATE_VERSION
+          -BundlePath "target/qualification-release/stackmate-$env:STACKMATE_VERSION"
+
+      - name: Verify local file-repository deployment
+        shell: pwsh
+        run: >-
+          .\release\verify-file-repository.ps1
+          -Version $env:STACKMATE_VERSION
+
+      - name: Upload bounded release-preflight evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-preflight-Windows-${{ github.sha }}
+          path: |
+            target/qualification/**
+            target/qualification-release/**
+            target/file-repository-verification/**/file-repository-report.json
+          if-no-files-found: error
+          retention-days: 7

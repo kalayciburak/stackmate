@@ -70,7 +70,11 @@ function Stop-ProcessTree([System.Diagnostics.Process]$Process) {
         $Process.Kill($true)
     }
     catch {
-        & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
+        if ($IsWindows) {
+            & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
+        } else {
+            $Process.Kill()
+        }
     }
     $Process.WaitForExit(5000) | Out-Null
 }
@@ -134,12 +138,17 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory, [string]$JavaExec
     $log = Join-Path $RunDirectory ("{0}.log" -f $Mode.Name)
     $errorLog = Join-Path $RunDirectory ("{0}.err.log" -f $Mode.Name)
     $arguments = @("-jar", ('"{0}"' -f $Mode.Jar), "--server.address=127.0.0.1", "--server.port=$port", "--spring.main.banner-mode=off", "--stackmate.deduplication.maximum-entries=$DeduplicationMaximumEntries") + $Mode.Arguments
-    $process = Start-Process -FilePath $JavaExecutable `
-        -ArgumentList $arguments `
-        -WindowStyle Hidden `
-        -RedirectStandardOutput $log `
-        -RedirectStandardError $errorLog `
-        -PassThru
+    $startOptions = @{
+        FilePath = $JavaExecutable
+        ArgumentList = $arguments
+        RedirectStandardOutput = $log
+        RedirectStandardError = $errorLog
+        PassThru = $true
+    }
+    if ($IsWindows) {
+        $startOptions.WindowStyle = "Hidden"
+    }
+    $process = Start-Process @startOptions
     $client = [System.Net.Http.HttpClient]::new()
     $client.Timeout = [TimeSpan]::FromSeconds($RequestTimeoutSeconds)
     $baseUri = "http://127.0.0.1:$port"
@@ -181,7 +190,8 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory, [string]$JavaExec
 
 $baseline = Resolve-RequiredFile $BaselineJar "BaselineJar"
 $deterministic = Resolve-RequiredFile $DeterministicJar "DeterministicJar"
-$java = Resolve-RequiredFile (Join-Path $env:JAVA_HOME "bin/java.exe") "JAVA_HOME java executable"
+$javaPath = Join-Path $env:JAVA_HOME $(if ($IsWindows) { "bin/java.exe" } else { "bin/java" })
+$java = Resolve-RequiredFile $javaPath "JAVA_HOME java executable"
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $OutputDirectory ([DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss-fff"))))
 [System.IO.Directory]::CreateDirectory($runDirectory) | Out-Null
 $modes = @(
@@ -209,7 +219,7 @@ $report = [ordered]@{
         note = "Entry count is configuration-bounded; retained bytes are intentionally not estimated"
     }
     java = (& $java -version 2>&1 | Out-String).Trim()
-    os = [System.Environment]::OSVersion.VersionString
+    os = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
     results = @($results)
 }
 $reportPath = Join-Path $runDirectory "http-report.json"

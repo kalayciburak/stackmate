@@ -17,7 +17,8 @@ function Get-Percentile([long[]]$Values, [double]$Rate) {
 }
 
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot "../.."))
-$java = [System.IO.Path]::GetFullPath((Join-Path $env:JAVA_HOME "bin/java.exe"))
+$javaPath = Join-Path $env:JAVA_HOME $(if ($IsWindows) { "bin/java.exe" } else { "bin/java" })
+$java = [System.IO.Path]::GetFullPath($javaPath)
 $benchmarkClasses = Join-Path $repositoryRoot "stackmate-benchmark/target/classes"
 $coreClasses = Join-Path $repositoryRoot "stackmate-core/target/classes"
 $probeClass = Join-Path $benchmarkClasses "io/github/kalayciburak/stackmate/benchmark/performance/DeduplicationRetainedMemoryProbe.class"

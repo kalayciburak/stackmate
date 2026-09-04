@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - phase-5-4-1-memory-attribution-and-resume
   pull_request:
 
 permissions:
@@ -12,54 +14,228 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  STACKMATE_VERSION: 0.1.0-rc.2
+
 jobs:
-  verify:
-    name: Verify (${{ matrix.os }})
+  qualify:
+    name: Full qualification (${{ matrix.platform }})
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: Linux
+          - os: windows-latest
+            platform: Windows
+          - os: macos-latest
+            platform: macOS
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out sources
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up Java 21
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
+          cache-dependency-path: "**/pom.xml"
 
-      - name: Make Maven Wrapper executable (Linux)
-        if: runner.os == 'Linux'
+      - name: Make Maven Wrapper executable
+        if: runner.os != 'Windows'
         run: chmod +x ./mvnw
 
-      - name: Clean verify (Linux)
-        if: runner.os == 'Linux'
+      - name: Full clean verify
+        if: runner.os != 'Windows'
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
-      - name: Clean verify (Windows)
+      - name: Full clean verify (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
 
-  macos-smoke:
-    name: macOS smoke
-    runs-on: macos-latest
+      - name: Prepare bounded performance fixtures
+        if: runner.os == 'Linux'
+        shell: pwsh
+        run: |
+          $fixtures = Join-Path $env:RUNNER_TEMP "stackmate-performance-fixtures"
+          New-Item -ItemType Directory -Path $fixtures -Force | Out-Null
+          Copy-Item `
+            stackmate-startup-baseline/target/stackmate-startup-baseline-$env:STACKMATE_VERSION.jar `
+            (Join-Path $fixtures "without-stackmate.jar")
+          ./mvnw --batch-mode --no-transfer-progress `
+            -pl stackmate-startup-baseline -am `
+            -Pwith-deterministic-stackmate clean package
+          Copy-Item `
+            stackmate-startup-baseline/target/stackmate-startup-baseline-$env:STACKMATE_VERSION.jar `
+            (Join-Path $fixtures "deterministic.jar")
+
+      - name: Install public release artifacts
+        if: runner.os != 'Windows'
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress
+          -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am install
+
+      - name: Install public release artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: >-
+          .\mvnw.cmd --batch-mode --no-transfer-progress
+          -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am install
+
+      - name: Verify external consumer
+        if: runner.os != 'Windows'
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress
+          -f release/consumer/pom.xml
+          "-Dstackmate.version=${STACKMATE_VERSION}"
+          clean verify
+
+      - name: Verify external consumer (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: >-
+          .\mvnw.cmd --batch-mode --no-transfer-progress
+          -f release\consumer\pom.xml
+          "-Dstackmate.version=$env:STACKMATE_VERSION"
+          clean verify
+
+      - name: Generate API baseline and local bundle
+        shell: pwsh
+        run: |
+          ./release/generate-public-api.ps1 `
+            -Version $env:STACKMATE_VERSION `
+            -SignatureOutput target/qualification/public-api.txt `
+            -InventoryOutput target/qualification/public-api.json
+          $expected = (Get-Content release/public-api-inventory.json -Raw | ConvertFrom-Json).signatureSha256
+          $actual = (Get-FileHash target/qualification/public-api.txt -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "Public API signature drift: $actual" }
+          ./release/assemble-local-rc.ps1 `
+            -Version $env:STACKMATE_VERSION `
+            -OutputRoot target/qualification-release
+
+      - name: Scan public SBOMs with OSV
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p target/qualification
+          curl --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/osv-scanner" \
+            https://github.com/google/osv-scanner/releases/download/v2.5.1/osv-scanner_linux_amd64
+          echo "f9f25499a2c8cc367b3af45df2ea7eeca7fbccceab9c35079968f4b3652194be  $RUNNER_TEMP/osv-scanner" \
+            | sha256sum --check --strict
+          chmod +x "$RUNNER_TEMP/osv-scanner"
+          "$RUNNER_TEMP/osv-scanner" scan source \
+            --format json \
+            --output-file target/qualification/osv-public-sbom.json \
+            --sbom stackmate-core/target/bom.json \
+            --sbom stackmate-spring-boot-autoconfigure/target/bom.json \
+            --sbom stackmate-spring-boot-starter/target/bom.json
+
+      - name: Run bounded performance smoke
+        if: runner.os == 'Linux'
+        shell: pwsh
+        run: |
+          $fixtures = Join-Path $env:RUNNER_TEMP "stackmate-performance-fixtures"
+          ./stackmate-benchmark/scripts/measure-http.ps1 `
+            -BaselineJar (Join-Path $fixtures "without-stackmate.jar") `
+            -DeterministicJar (Join-Path $fixtures "deterministic.jar") `
+            -WarmupIterations 5 `
+            -Iterations 50 `
+            -OutputDirectory target/qualification/performance-http | Out-Null
+          ./stackmate-benchmark/scripts/measure-startup.ps1 `
+            -BaselineJar (Join-Path $fixtures "without-stackmate.jar") `
+            -DeterministicJar (Join-Path $fixtures "deterministic.jar") `
+            -WarmupIterations 1 `
+            -Iterations 3 `
+            -OutputDirectory target/qualification/performance-startup | Out-Null
+
+      - name: Collect qualification evidence
+        shell: pwsh
+        run: >-
+          ./release/collect-qualification-evidence.ps1
+          -Platform "${{ matrix.platform }}"
+          -Version $env:STACKMATE_VERSION
+          -BundlePath "target/qualification-release/stackmate-$env:STACKMATE_VERSION"
+
+      - name: Upload bounded qualification evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: qualification-${{ matrix.platform }}-${{ github.sha }}
+          path: |
+            target/qualification/**
+            target/qualification-release/**
+          if-no-files-found: error
+          retention-days: 7
+
+  ubuntu-reproducibility:
+    name: Ubuntu reproducibility
+    needs: qualify
+    runs-on: ubuntu-latest
     steps:
       - name: Check out sources
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Set up Java 21
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
+          cache-dependency-path: "**/pom.xml"
 
       - name: Make Maven Wrapper executable
         run: chmod +x ./mvnw
 
-      - name: Compile and verify project metadata and formatting
-        run: ./mvnw --batch-mode --no-transfer-progress -DskipTests -Djacoco.skip=true verify
+      - name: First clean public build
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress
+          -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am clean package
+
+      - name: Assemble first bundle
+        shell: pwsh
+        run: >-
+          ./release/assemble-local-rc.ps1
+          -Version $env:STACKMATE_VERSION
+          -OutputRoot "$env:RUNNER_TEMP/stackmate-repro/first"
+
+      - name: Second clean public build
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress
+          -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am clean package
+
+      - name: Compare clean-build payloads
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP "stackmate-repro"
+          ./release/assemble-local-rc.ps1 `
+            -Version $env:STACKMATE_VERSION `
+            -OutputRoot (Join-Path $root "second")
+          $first = Join-Path $root "first/stackmate-$env:STACKMATE_VERSION"
+          $second = Join-Path $root "second/stackmate-$env:STACKMATE_VERSION"
+          $output = "target/qualification-reproducibility"
+          New-Item -ItemType Directory -Path $output -Force | Out-Null
+          ./release/compare-release-bundles.ps1 `
+            -First $first `
+            -Second $second `
+            -Report (Join-Path $output "comparison.json")
+          Copy-Item (Join-Path $first "checksums/manifest.json") (Join-Path $output "first-manifest.json")
+          Copy-Item (Join-Path $second "checksums/manifest.json") (Join-Path $output "second-manifest.json")
+
+      - name: Upload reproducibility evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reproducibility-Ubuntu-${{ github.sha }}
+          path: target/qualification-reproducibility/**
+          if-no-files-found: error
+          retention-days: 7

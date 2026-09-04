@@ -60,7 +60,11 @@ function Stop-ProcessTree([System.Diagnostics.Process]$Process) {
         $Process.Kill($true)
     }
     catch {
-        & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
+        if ($IsWindows) {
+            & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
+        } else {
+            $Process.Kill()
+        }
     }
     $Process.WaitForExit(5000) | Out-Null
 }
@@ -74,12 +78,17 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory, [string]$JavaExec
         $errorLog = Join-Path $RunDirectory ("{0}-{1:D2}.err.log" -f $Mode.Name, ($index + 1))
         $arguments = @("-jar", ('"{0}"' -f $Mode.Jar), "--server.address=127.0.0.1", "--server.port=0", "--spring.main.banner-mode=off") + $Mode.Arguments
         $watch = [System.Diagnostics.Stopwatch]::StartNew()
-        $process = Start-Process -FilePath $JavaExecutable `
-            -ArgumentList $arguments `
-            -WindowStyle Hidden `
-            -RedirectStandardOutput $log `
-            -RedirectStandardError $errorLog `
-            -PassThru
+        $startOptions = @{
+            FilePath = $JavaExecutable
+            ArgumentList = $arguments
+            RedirectStandardOutput = $log
+            RedirectStandardError = $errorLog
+            PassThru = $true
+        }
+        if ($IsWindows) {
+            $startOptions.WindowStyle = "Hidden"
+        }
+        $process = Start-Process @startOptions
         $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
         $ready = $false
         try {
@@ -122,7 +131,8 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory, [string]$JavaExec
 
 $baseline = Resolve-RequiredFile $BaselineJar "BaselineJar"
 $deterministic = Resolve-RequiredFile $DeterministicJar "DeterministicJar"
-$java = Resolve-RequiredFile (Join-Path $env:JAVA_HOME "bin/java.exe") "JAVA_HOME java executable"
+$javaPath = Join-Path $env:JAVA_HOME $(if ($IsWindows) { "bin/java.exe" } else { "bin/java" })
+$java = Resolve-RequiredFile $javaPath "JAVA_HOME java executable"
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $OutputDirectory ([DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss-fff"))))
 [System.IO.Directory]::CreateDirectory($runDirectory) | Out-Null
 $modes = @(
@@ -132,17 +142,28 @@ $modes = @(
 )
 
 $results = foreach ($mode in $modes) { Measure-Mode $mode $runDirectory $java }
-$machine = Get-CimInstance Win32_ComputerSystem
-$processor = Get-CimInstance Win32_Processor | Select-Object -First 1
+$machine = if ($IsWindows) { Get-CimInstance Win32_ComputerSystem } else { $null }
+$processor = if ($IsWindows) { Get-CimInstance Win32_Processor | Select-Object -First 1 } else { $null }
+$processorName = if ($IsWindows) {
+    $processor.Name
+} else {
+    [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString()
+}
+$logicalProcessors = if ($IsWindows) {
+    $machine.NumberOfLogicalProcessors
+} else {
+    [System.Environment]::ProcessorCount
+}
+$memoryBytes = if ($IsWindows) { [long]$machine.TotalPhysicalMemory } else { $null }
 $report = [ordered]@{
     measuredAtUtc = [DateTime]::UtcNow.ToString("O")
     command = $MyInvocation.Line
     warmupPolicy = "Fresh JVM per sample; first $WarmupIterations runs per mode excluded; OS file cache not cleared"
     java = (& $java -version 2>&1 | Out-String).Trim()
-    os = [System.Environment]::OSVersion.VersionString
-    cpu = $processor.Name
-    logicalProcessors = $machine.NumberOfLogicalProcessors
-    memoryBytes = [long]$machine.TotalPhysicalMemory
+    os = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
+    cpu = $processorName
+    logicalProcessors = $logicalProcessors
+    memoryBytes = $memoryBytes
     results = @($results)
 }
 $reportPath = Join-Path $runDirectory "startup-report.json"
