@@ -2,7 +2,7 @@
 
 > Spring MVC hataları için deterministik, yerel tanılama.
 
-StackMate `0.1.0-rc.1`, Java 21 Spring Boot uygulamaları için bir public alpha sürümüdür. Spring MVC servlet
+StackMate `0.1.0-rc.2`, Java 21 Spring Boot uygulamaları için bir public alpha sürümüdür. Spring MVC servlet
 zincirinden kaçan exception'ları gözlemler; sınırlı ve sanitize edilmiş snapshot üretir; kanıta dayalı tanı çıkarır;
 tekrarlanan incident'ları dedup eder ve uygulama loguna kısa bir İngilizce tanı yazar. İsteğe bağlı export, aynı
 sanitize edilmiş deterministik kanıtı yerel dosya sistemine yazar.
@@ -15,10 +15,11 @@ model deneyleri [docs/research/local-llm-findings.md](docs/research/local-llm-fi
 
 ## Alpha durumu
 
-Public API ve davranışlar kararlı sürümden önce değişebilir. RC public-release install geçti; external consumer 6/6
-contract kontrolünü ve 1/1 packaged-process kontrolünü geçti; full reactor 543 Surefire ve 5 Failsafe testini sıfır
-failure, error ve skip ile tamamladı. Maven Central'a artifact yayımlanmadı, remote release oluşturulmadı ve GPG
-imzalama yapılmadı.
+Public API ve davranışlar kararlı sürümden önce değişebilir. RC2 yerel public-release install, 6/6 external-consumer
+contract kontrolü, 1/1 packaged-process kontrolü ve 543 Surefire + 5 Failsafe reactor testini sıfır failure, error ve
+skip ile geçti. Hosted Linux, Windows ve macOS qualification hâlâ bekliyor. RC1 sabit, yalnız yerel bir checkpoint
+olarak kalır ve RC2'nin CI/Central metadata düzeltmeleriyle superseded durumdadır. Maven Central'a artifact
+yayımlanmadı, remote release oluşturulmadı ve GPG imzalama yapılmadı.
 
 ## Neler yapar?
 
@@ -59,7 +60,7 @@ Public Maven coordinates şöyledir:
 <dependency>
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-spring-boot-starter</artifactId>
-  <version>0.1.0-rc.1</version>
+  <version>0.1.0-rc.2</version>
 </dependency>
 ```
 

@@ -2,7 +2,7 @@
 
 > Deterministic, local diagnostics for Spring MVC failures.
 
-StackMate `0.1.0-rc.1` is a public alpha for Java 21 Spring Boot applications. It observes exceptions that escape
+StackMate `0.1.0-rc.2` is a public alpha for Java 21 Spring Boot applications. It observes exceptions that escape
 the Spring MVC servlet chain, creates a bounded and sanitized snapshot, derives evidence-backed diagnostics,
 deduplicates repeated incidents, and writes a concise English diagnosis to the application log. Optional export
 writes the same sanitized deterministic evidence to the local filesystem.
@@ -15,10 +15,11 @@ Turkish documentation: [README.tr.md](README.tr.md)
 
 ## Alpha status
 
-The public API and behavior may change before a stable release. The RC public-release install passed, the external
-consumer passed 6/6 contract checks plus 1/1 packaged-process check, and the full reactor passed 543 Surefire plus
-5 Failsafe tests with zero failures, errors, or skips. No artifact has been published to Maven Central, no remote
-release has been created, and no GPG signing has been performed.
+The public API and behavior may change before a stable release. RC2 passes the local public-release install, 6/6
+external-consumer contract checks, 1/1 packaged-process check, and 543 Surefire plus 5 Failsafe reactor tests with
+zero failures, errors, or skips. Its hosted Linux, Windows and macOS qualification is still pending. RC1 remains a
+frozen local-only checkpoint and is superseded by RC2's CI and Central-metadata corrections. No artifact has been
+published to Maven Central, no remote release has been created, and no GPG signing has been performed.
 
 ## What it does
 
@@ -59,7 +60,7 @@ The public Maven coordinates are:
 <dependency>
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-spring-boot-starter</artifactId>
-  <version>0.1.0-rc.1</version>
+  <version>0.1.0-rc.2</version>
 </dependency>
 ```
 

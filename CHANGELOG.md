@@ -6,7 +6,19 @@ All notable public product changes are documented here. The format follows
 
 ## [Unreleased]
 
-No public product change is recorded after `0.1.0-rc.1`.
+### Changed for 0.1.0-rc.2 qualification
+
+- Kept deterministic runtime behavior and the four-coordinate public allowlist unchanged.
+- Added README-based sources and Javadoc placeholder JARs for the dependency-only starter, as required by current
+  Maven Central rules for non-POM artifacts.
+- Added full hosted Linux, Windows and macOS qualification, external-consumer checks, API/artifact evidence,
+  seven-day artifact retention, Ubuntu OSV/performance smoke and same-OS reproducibility.
+- Made release preflight manual-only and kept publication/signing absent.
+- Corrected CodeQL to use the official v3 target commit rather than its annotated-tag object.
+- Made the packaged performance harness portable across Windows, Linux and macOS PowerShell.
+
+RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
+frozen local-only checkpoint and will not be moved or pushed.
 
 ## [0.1.0-rc.1]
 
