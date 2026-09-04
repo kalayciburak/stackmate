@@ -1,0 +1,167 @@
+{
+  "accessControl": {
+    "attemptsPerSystem": 1,
+    "generationLabelsOnClasspath": false,
+    "generationLoadsLabels": false,
+    "generationWritesScores": false,
+    "scoringMayBeRepeatedWithoutGeneration": true
+  },
+  "artifacts": {
+    "adapterSelection": {
+      "path": "research/model-alignment/reports/phase-5-4-1-selected-adapter.json",
+      "sha256": "410a53337658b715e0446548bfb7b23102d58469d74df16d445dba8637b10284",
+      "sizeBytes": 2993
+    },
+    "baseModelManifest": {
+      "path": "research/model-alignment/reports/base-model-manifest.json",
+      "sha256": "1dc49db3fd0a49ee7bf33190b04c1bac5d1ed489e87855a81c64ac7344571981",
+      "sizeBytes": 3264
+    },
+    "corpusAudit": {
+      "path": "research/model-alignment/reports/phase-5-4-3-corpus-audit.json",
+      "sha256": "579d6211796c543987f6b2ed2fbd0ce88704e5d0271d76bcc3395f5007b46cb1",
+      "sizeBytes": 3869
+    },
+    "crossLanguageParity": {
+      "path": "research/model-alignment/reports/phase-5-4-2-t1-cross-language-parity.json",
+      "sha256": "6dbfd9271a9bbea33731e42a0bbe4a69370968118a091f83f7b0132d05e8e2c4",
+      "sizeBytes": 16505
+    },
+    "existingFamilyInventory": {
+      "path": "research/model-alignment/reports/phase-5-4-3-existing-family-inventory.json",
+      "records": 318,
+      "sha256": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
+      "sizeBytes": 514737
+    },
+    "exporter": {
+      "path": "stackmate-benchmark/src/test/java/io/github/kalayciburak/stackmate/benchmark/corpus/freshfinal/FreshFinalV2CorpusExportLab.java",
+      "sha256": "828129dfdcb29bf17feed59b27d9f2b103cacb3ff8da4853b4937f3139a4db8c",
+      "sizeBytes": 68074
+    },
+    "familyNovelty": {
+      "path": "research/model-alignment/reports/phase-5-4-3-family-novelty.json",
+      "records": 30,
+      "sha256": "471d7a2b78dc8b8aa1beb2eaaefe4e57a73e85f06b556c1c59e19613027107d3",
+      "sizeBytes": 68163
+    },
+    "generationConfig": {
+      "path": "research/model-alignment/configs/phase-5-4-3-generation.json",
+      "sha256": "9625c62a83aab30e1a5f788c8bf164df4074fb9ace181df626ab398b0dc8392b",
+      "sizeBytes": 641
+    },
+    "generationInputs": {
+      "path": "stackmate-benchmark/src/main/resources/corpus-v6-fresh-final/generation-inputs/fresh-final.jsonl",
+      "records": 30,
+      "sha256": "8d1020d58bb31303bc6649a6a7088084091d80d5ae3287eb289220e20b02ffe8",
+      "sizeBytes": 448794
+    },
+    "generationRunner": {
+      "path": "research/model-alignment/scripts/run_phase543_generation.py",
+      "sha256": "4f3adf07d49c4a80d25f5b3fd6d99da0d49fad99188c8ab4edd9b953a189045c",
+      "sizeBytes": 36178
+    },
+    "groundTruthReview": {
+      "path": "research/model-alignment/reports/phase-5-4-3-ground-truth-review.json",
+      "records": 30,
+      "sha256": "c3d724b5dbced7c4ddd34e414e8cc51d7fee64d85ad59c722121347f1d987d8d",
+      "sizeBytes": 7551
+    },
+    "javaParser": {
+      "path": "research/model-alignment/scripts/T1Contract.java",
+      "sha256": "eccdb6a198ffecc333506ceb74eb7d13849dd1320d24d9246a459876f2f98f38",
+      "sizeBytes": 6467
+    },
+    "javaParserCli": {
+      "path": "research/model-alignment/scripts/T1ContractCli.java",
+      "sha256": "edd276d53d18c0193cc9e05ec0db02f2f842718c63ce1e2a20788661dfc2524f",
+      "sizeBytes": 721
+    },
+    "pythonParser": {
+      "path": "research/model-alignment/scripts/t1_contract.py",
+      "sha256": "2ce683265308786c5993d426ac258174d5cc43c75721c325d6391ffe223db8d9",
+      "sizeBytes": 5245
+    },
+    "reproduction": {
+      "path": "research/model-alignment/reports/phase-5-4-3-reproduction.json",
+      "records": 24,
+      "sha256": "02a57674877f28617a16ae87aaa3097993d02dfec980766f441b4cd2ddb92435",
+      "sizeBytes": 22686
+    },
+    "resolvedDescriptors": {
+      "path": "stackmate-benchmark/src/main/resources/corpus-v6-fresh-final/descriptors/resolved.json",
+      "records": 30,
+      "sha256": "59d518e2a17dca84266bceb29048ec5b0fd6917bbc5ee7b85336f5fa4b9318d5",
+      "sizeBytes": 367735
+    },
+    "scorer": {
+      "path": "research/model-alignment/scripts/score_phase543.py",
+      "sha256": "6ab28056bbc5bba0e1f86eea98801b2c1dbe3037ee62c99739933c1fbe848637",
+      "sizeBytes": 26611
+    },
+    "scoringLabels": {
+      "path": "research/model-alignment/sealed/phase-5-4-3-labels/scoring-labels.jsonl",
+      "records": 30,
+      "sha256": "c44e481fe9ea1a019e1bfdc7bd1360428580b98808ccc605e5c82dc224e10fd3",
+      "sizeBytes": 19096
+    },
+    "sourceDescriptors": {
+      "path": "stackmate-benchmark/src/main/resources/corpus-v6-fresh-final/descriptors/manifest.json",
+      "records": 30,
+      "sha256": "abedc872456538290144aadc8b416f80dc431bc70cd473646431687106cf311a",
+      "sizeBytes": 26997
+    },
+    "t1Schema": {
+      "path": "research/model-alignment/contracts/t1-output.schema.json",
+      "sha256": "efb7f14276ddb108d5111622a92f3e5730b8cb3724336fdc913a4efc0c6ccb52",
+      "sizeBytes": 1282
+    }
+  },
+  "bindings": {
+    "adapterId": "P5.4.1-T1-checkpoint-18",
+    "adapterSelectionCommit": "08b5b55adee82a83c3d81e599deca8ca6b3458ca",
+    "adapterSha256": "7848c9a140d2616e009b5179aa4a02867590f95dd261154c0b983ee45c187b49",
+    "baseModelManifestSha256": "1dc49db3fd0a49ee7bf33190b04c1bac5d1ed489e87855a81c64ac7344571981",
+    "baseModelRepository": "Qwen/Qwen3.5-2B",
+    "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+    "crossLanguageParitySha256": "6dbfd9271a9bbea33731e42a0bbe4a69370968118a091f83f7b0132d05e8e2c4",
+    "generationConfigSha256": "9625c62a83aab30e1a5f788c8bf164df4074fb9ace181df626ab398b0dc8392b",
+    "generationInputsSha256": "8d1020d58bb31303bc6649a6a7088084091d80d5ae3287eb289220e20b02ffe8",
+    "generationRunnerSha256": "4f3adf07d49c4a80d25f5b3fd6d99da0d49fad99188c8ab4edd9b953a189045c",
+    "javaParserCliSha256": "edd276d53d18c0193cc9e05ec0db02f2f842718c63ce1e2a20788661dfc2524f",
+    "javaParserSha256": "eccdb6a198ffecc333506ceb74eb7d13849dd1320d24d9246a459876f2f98f38",
+    "pythonParserSha256": "2ce683265308786c5993d426ac258174d5cc43c75721c325d6391ffe223db8d9",
+    "scorerSha256": "6ab28056bbc5bba0e1f86eea98801b2c1dbe3037ee62c99739933c1fbe848637",
+    "scorerVersion": "phase-5-4-3-t1-scorer-v1",
+    "t1PromptSha256": "9daee6dc707ff1c347346f5f0c667cba2b03035ab3966ddaf362744e0c528897",
+    "t1SchemaExampleSha256": "c04d55dc313934f78b78900cf3ebd3413ae9a523d17195a1f014a1f7a40ccd67",
+    "t1SchemaSha256": "efb7f14276ddb108d5111622a92f3e5730b8cb3724336fdc913a4efc0c6ccb52",
+    "tokenizerClass": "Qwen2Tokenizer",
+    "tokenizerRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc"
+  },
+  "corpusId": "phase-5-4-3-fresh-final-t1",
+  "counts": {
+    "candidateOrdersPerFamily": 2,
+    "diagnoseFamilies": 19,
+    "families": 30,
+    "generationRequestsPerModelSystem": 60,
+    "realFamilies": 24,
+    "restraintFamilies": 11,
+    "syntheticFamilies": 6
+  },
+  "frozenDate": "2026-09-04",
+  "network": {
+    "modelLoad": "OFFLINE_LOCAL_ONLY",
+    "telemetry": false,
+    "uploads": false
+  },
+  "orderingPolicy": {
+    "causeOrderSalt": "phase543-order-v4",
+    "checkOrderSalt": "phase543-order-v6",
+    "familyMetric": "both ORIGINAL and PERMUTED must be correct",
+    "original": "SHA-256 sort by fixed aggregate-balancing salt, family ID and candidate ID",
+    "permuted": "one-position rotation of the frozen original order"
+  },
+  "schemaVersion": "1",
+  "status": "FROZEN"
+}

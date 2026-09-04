@@ -220,3 +220,20 @@ flowchart LR
 - Distinguished implemented controls from remaining OS sandbox, host logging, supply-chain, and cross-platform risks.
 - Re-reviewed the Phase 4 native/GGUF lab: official runtime archive and model artifacts are immutable-input research
   evidence, not a production sandbox, approved model catalog, or trustworthy third-party conversion chain.
+
+## Phase 5.4.3 research-boundary addendum
+
+| Surface | New control | Residual risk |
+|---|---|---|
+| Fresh-final generation input | Expected IDs/indexes and disposition are absent; harness identities and private paths are rejected | Semantic clues can still make some cases easier; automated similarity cannot prove conceptual independence |
+| Sealed scoring root | Not on the benchmark classpath; opened only by the separate scorer after three receipts exist | Same-user filesystem access is not a confidentiality boundary |
+| Exactly-once generation | Annotated freeze tag, clean HEAD, tagged manifest blob hash, one system directory, D0→B0→A1 receipt order | Power loss after first raw row leaves an intentionally non-rerunnable partial system |
+| Candidate permutation | Stable-ID sets fixed; aggregate-balanced hash order; second order rotates one position | Two orders detect simple position bias but not every ordering interaction |
+| Local model/adapter | Exact official base manifest and checkpoint-18 adapter directory hashes; offline load; no remote code | Native ML libraries run with WSL-user privileges and hashes do not sandbox them |
+| PostgreSQL reproduction | Exact local image digest, isolated schemas/roles, bounded timeouts and cleanup | Docker daemon and image contents remain privileged external software |
+| Conditional merge/GGUF | Gate remains closed unless safety, quality, and practical-value checks all pass | A future converter/native parser would add a separate memory-unsafe boundary |
+
+The fail-closed exactly-once policy deliberately trades availability for research
+integrity: an infrastructure failure after any raw model output is preserved and
+cannot be silently retried. This control applies only to the research runner and
+does not add a production inference endpoint.

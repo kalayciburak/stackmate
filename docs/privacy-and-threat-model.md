@@ -231,3 +231,26 @@ Invalid F1 outputs never entered a product response. The future plan permits one
 separately authorized bounded run only after rechecking hashes; it does not permit
 cloud training, data upload, prompt tuning against final, model merge, GGUF export,
 worker integration, or provisioning.
+
+## Phase 5.4.3 fresh-final and exactly-once boundary
+
+Phase 5.4.3 adds a 30-family controlled fresh-final corpus, not production
+telemetry. Twenty-four families execute local JDK, Spring, Jackson, loopback, or
+ephemeral PostgreSQL code; six are explicit synthetic/adversarial selection
+cases. Decoded JSON scans and offline audits reject private paths, credentials,
+fixture identities in model messages, and scoring fields in generation inputs.
+
+Generation inputs are packaged only in the benchmark research resource. Expected
+T1 labels remain under a separate sealed research root that is absent from the
+generation classpath. The model process accepts no label path and writes raw
+predictions plus hash-bound receipts without scoring. A distinct process verifies
+all raw hashes before opening labels. An annotated freeze tag, clean HEAD, manifest
+blob SHA-256, adapter SHA-256, and D0/B0/A1 receipt order are mandatory.
+
+This separation limits accidental final-set leakage but is not an OS security
+boundary. A malicious same-user process can read both repository roots, replace
+local caches before a hash check, or inspect process memory. PyTorch/CUDA,
+Transformers/PEFT, Docker/PostgreSQL, SafeTensors, and any conditional llama.cpp
+conversion remain third-party native/parser trust boundaries. No cloud inference,
+telemetry, upload, persistent worker, product adapter, or provisioning path is
+introduced.

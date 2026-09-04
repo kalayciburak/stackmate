@@ -157,8 +157,7 @@ final class FreshFinalV2RuntimeFixtures {
                 variant == 0
                         ? new byte[] {0x00, 0x01, 0x02, 0x03}
                         : new byte[] {0x1f, (byte) 0x8a, 0x08, 0x00};
-        try (GZIPInputStream ignored =
-                new GZIPInputStream(new ByteArrayInputStream(bytes))) {
+        try (GZIPInputStream ignored = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
             // Construction validates the controlled header.
         }
     }
@@ -206,13 +205,11 @@ final class FreshFinalV2RuntimeFixtures {
 
     private static Throwable missingRequiredMultipartPart(int variant) {
         return resolvedMvcFailure(
-                multipart("/fixture/multipart")
-                        .param("variant", Integer.toString(variant)),
+                multipart("/fixture/multipart").param("variant", Integer.toString(variant)),
                 "missing required multipart part");
     }
 
-    private static Throwable resolvedMvcFailure(
-            RequestBuilder request, String description) {
+    private static Throwable resolvedMvcFailure(RequestBuilder request, String description) {
         try {
             MockMvc mvc = MockMvcBuilders.standaloneSetup(new RequiredInputController()).build();
             MvcResult result = mvc.perform(request).andReturn();
@@ -293,8 +290,10 @@ final class FreshFinalV2RuntimeFixtures {
         } finally {
             executor.shutdownNow();
             try {
-                if (!executor.awaitTermination(COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
-                    throw new IllegalStateException("malformed HTTP fixture thread did not terminate");
+                if (!executor.awaitTermination(
+                        COORDINATION_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                    throw new IllegalStateException(
+                            "malformed HTTP fixture thread did not terminate");
                 }
             } catch (InterruptedException interrupted) {
                 Thread.currentThread().interrupt();
@@ -310,7 +309,8 @@ final class FreshFinalV2RuntimeFixtures {
         return server;
     }
 
-    private static void serveMalformedStatusLine(ServerSocket server, int variant) throws IOException {
+    private static void serveMalformedStatusLine(ServerSocket server, int variant)
+            throws IOException {
         try (Socket socket = server.accept()) {
             socket.setSoTimeout((int) COORDINATION_TIMEOUT_MILLIS);
             readRequestHeaders(socket);

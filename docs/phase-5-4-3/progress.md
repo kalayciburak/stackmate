@@ -5,7 +5,7 @@
 | Gate A: repository, adapter and contract integrity | PASS |
 | Gate B: exposed-family inventory and novelty design | PASS |
 | Gate C: fresh 30-family corpus and reproduction | PASS |
-| Gate D: freeze and access control | IN_PROGRESS |
+| Gate D: freeze and access control | PASS |
 | Gate E: D0/B0/A1 T1 qualification | NOT_RUN |
 | Gate F: merge/GGUF qualification | NOT_RUN |
 

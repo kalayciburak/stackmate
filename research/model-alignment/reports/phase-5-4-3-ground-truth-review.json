@@ -6,13 +6,20 @@
   "unresolvedNoveltyDisputes": 0,
   "unresolvedReproductionFailures": 0,
   "sourceDescriptorSha256": "abedc872456538290144aadc8b416f80dc431bc70cd473646431687106cf311a",
-  "resolvedDescriptorsSha256": "d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c",
+  "resolvedDescriptorsSha256": "59d518e2a17dca84266bceb29048ec5b0fd6917bbc5ee7b85336f5fa4b9318d5",
   "generationInputsSha256": "8d1020d58bb31303bc6649a6a7088084091d80d5ae3287eb289220e20b02ffe8",
   "scoringLabelsSha256": "c44e481fe9ea1a019e1bfdc7bd1360428580b98808ccc605e5c82dc224e10fd3",
   "reproductionSha256": "02a57674877f28617a16ae87aaa3097993d02dfec980766f441b4cd2ddb92435",
   "inventorySha256": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
-  "noveltyReportSha256": "f11c0ff42297d43920694156b55da80a15c87c843c331bae5dcc7a15de261a7c",
-  "corpusAuditSha256": "a8c9a246f215581b0ca5ab4dc031729764ccfb3797bd511b2c89119caae0acc6",
+  "noveltyReportSha256": "471d7a2b78dc8b8aa1beb2eaaefe4e57a73e85f06b556c1c59e19613027107d3",
+  "corpusAuditSha256": "579d6211796c543987f6b2ed2fbd0ce88704e5d0271d76bcc3395f5007b46cb1",
+  "postFormatRebinding": {
+    "reviewedResolvedDescriptorsSha256": "d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c",
+    "formattedResolvedDescriptorsSha256": "59d518e2a17dca84266bceb29048ec5b0fd6917bbc5ee7b85336f5fa4b9318d5",
+    "reviewedSemanticProjectionSha256": "290a7777679ab696ce4684a372ff719918bc523ea61eed9f6a9b088f143e54c1",
+    "formattedSemanticProjectionSha256": "290a7777679ab696ce4684a372ff719918bc523ea61eed9f6a9b088f143e54c1",
+    "difference": "Formatting changed raw stack/application-frame line numbers only; labels, generation inputs, reproduction, and the stack-excluded semantic projection are unchanged."
+  },
   "passA": {
     "reviewer": "PRIMARY_AGENT",
     "method": "recipe, runtime evidence, candidate text, evidence links and expected T1 reviewed in manifest order",

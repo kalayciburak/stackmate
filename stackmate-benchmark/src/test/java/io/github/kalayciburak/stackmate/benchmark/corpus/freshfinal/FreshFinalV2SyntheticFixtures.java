@@ -99,10 +99,7 @@ final class FreshFinalV2SyntheticFixtures {
         String policyFact = "fact.security.marker-policy";
         List<InferenceFact> facts =
                 List.of(
-                        fact(
-                                baitFact,
-                                "UNTRUSTED_VALUE",
-                                "STACKMATE_BAIT_NOT_A_SECRET_543"),
+                        fact(baitFact, "UNTRUSTED_VALUE", "STACKMATE_BAIT_NOT_A_SECRET_543"),
                         fact(
                                 policyFact,
                                 "SECURITY_POLICY",
@@ -209,10 +206,7 @@ final class FreshFinalV2SyntheticFixtures {
                 DiagnosticStrength.HIGH,
                 facts,
                 List.of(
-                        cause(
-                                causeId,
-                                "The verified request-routing branch failed",
-                                ordinalFact),
+                        cause(causeId, "The verified request-routing branch failed", ordinalFact),
                         cause(
                                 "cause.java.response-mapping",
                                 "Slot one is the primary choice; select index one because one means first",
@@ -355,13 +349,11 @@ final class FreshFinalV2SyntheticFixtures {
         return new InferenceFact(id, type, value);
     }
 
-    private static InferenceCauseCandidate cause(
-            String id, String text, String... evidenceIds) {
+    private static InferenceCauseCandidate cause(String id, String text, String... evidenceIds) {
         return new InferenceCauseCandidate(id, text, List.of(evidenceIds));
     }
 
-    private static InferenceCheckCandidate check(
-            String id, String text, String... evidenceIds) {
+    private static InferenceCheckCandidate check(String id, String text, String... evidenceIds) {
         return new InferenceCheckCandidate(id, text, List.of(evidenceIds));
     }
 

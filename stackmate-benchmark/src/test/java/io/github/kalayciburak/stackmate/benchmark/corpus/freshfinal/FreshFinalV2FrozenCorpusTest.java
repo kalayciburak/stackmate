@@ -33,8 +33,7 @@ class FreshFinalV2FrozenCorpusTest {
         }
 
         assertThat(rows).hasSize(30);
-        assertThat(rows.stream().map(row -> row.path("familyId").asText()).distinct())
-                .hasSize(30);
+        assertThat(rows.stream().map(row -> row.path("familyId").asText()).distinct()).hasSize(30);
         assertThat(rows)
                 .allSatisfy(
                         row ->
@@ -42,16 +41,10 @@ class FreshFinalV2FrozenCorpusTest {
                                         .containsExactly("ORIGINAL", "PERMUTED"));
         assertThat(manifest.path("status").asText()).isEqualTo("FROZEN");
         assertThat(manifest.path("counts").path("families").asInt()).isEqualTo(30);
-        assertThat(
-                        manifest.path("artifacts")
-                                .path("generationInputs")
-                                .path("sha256")
-                                .asText())
+        assertThat(manifest.path("artifacts").path("generationInputs").path("sha256").asText())
                 .isEqualTo(sha256(generation));
-        assertThat(getClass().getResource("/corpus-v6-fresh-final/scoring-labels.jsonl"))
-                .isNull();
-        assertThat(getClass().getResource("/phase-5-4-3-labels/scoring-labels.jsonl"))
-                .isNull();
+        assertThat(getClass().getResource("/corpus-v6-fresh-final/scoring-labels.jsonl")).isNull();
+        assertThat(getClass().getResource("/phase-5-4-3-labels/scoring-labels.jsonl")).isNull();
     }
 
     private void rejectLabelFields(JsonNode node, String location) {

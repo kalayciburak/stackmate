@@ -53,12 +53,7 @@ final class FreshFinalV2PostgresFixtures {
             prepareIsolation(familyId, schema, role, connectionProvider);
             result =
                     executeResolved(
-                            familyId,
-                            expectedState,
-                            variant,
-                            schema,
-                            role,
-                            connectionProvider);
+                            familyId, expectedState, variant, schema, role, connectionProvider);
             return result;
         } catch (RuntimeException failure) {
             primaryFailure = failure;
@@ -228,9 +223,7 @@ final class FreshFinalV2PostgresFixtures {
                     "CREATE TABLE "
                             + shifts
                             + " (doctor_id bigint PRIMARY KEY, on_call boolean NOT NULL)",
-                    "INSERT INTO "
-                            + shifts
-                            + " (doctor_id, on_call) VALUES (1, TRUE), (2, TRUE)");
+                    "INSERT INTO " + shifts + " (doctor_id, on_call) VALUES (1, TRUE), (2, TRUE)");
             beginSerializableTransaction(familyId, first);
             beginSerializableTransaction(familyId, second);
 
@@ -238,13 +231,9 @@ final class FreshFinalV2PostgresFixtures {
             RuntimeException primaryFailure = null;
             try {
                 executeQuerySetup(
-                        familyId,
-                        first,
-                        "SELECT on_call FROM " + shifts + " WHERE doctor_id = 1");
+                        familyId, first, "SELECT on_call FROM " + shifts + " WHERE doctor_id = 1");
                 executeQuerySetup(
-                        familyId,
-                        second,
-                        "SELECT on_call FROM " + shifts + " WHERE doctor_id = 1");
+                        familyId, second, "SELECT on_call FROM " + shifts + " WHERE doctor_id = 1");
                 setup(
                         familyId,
                         first,
@@ -297,10 +286,7 @@ final class FreshFinalV2PostgresFixtures {
     }
 
     private static void prepareIsolation(
-            String familyId,
-            String schema,
-            String role,
-            ConnectionProvider connectionProvider) {
+            String familyId, String schema, String role, ConnectionProvider connectionProvider) {
         try (Connection connection = requireConnection(connectionProvider.open(), familyId)) {
             configureTimeouts(connection);
             executeUpdate(
@@ -315,10 +301,7 @@ final class FreshFinalV2PostgresFixtures {
     }
 
     private static void cleanupIsolation(
-            String familyId,
-            String schema,
-            String role,
-            ConnectionProvider connectionProvider) {
+            String familyId, String schema, String role, ConnectionProvider connectionProvider) {
         try (Connection connection = requireConnection(connectionProvider.open(), familyId)) {
             configureTimeouts(connection);
             executeUpdate(
@@ -508,10 +491,7 @@ final class FreshFinalV2PostgresFixtures {
     }
 
     private static String schemaName(String familyId, int variant) {
-        return "stackmate_"
-                + familyId.toLowerCase(Locale.ROOT).replace('-', '_')
-                + "_v"
-                + variant;
+        return "stackmate_" + familyId.toLowerCase(Locale.ROOT).replace('-', '_') + "_v" + variant;
     }
 
     private static String objectName(String base, int variant) {

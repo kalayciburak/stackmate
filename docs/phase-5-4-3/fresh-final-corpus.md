@@ -32,7 +32,7 @@ Final pre-freeze hashes:
 
 ```text
 Source descriptors  abedc872456538290144aadc8b416f80dc431bc70cd473646431687106cf311a
-Resolved descriptors d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c
+Resolved descriptors 59d518e2a17dca84266bceb29048ec5b0fd6917bbc5ee7b85336f5fa4b9318d5
 Generation inputs   8d1020d58bb31303bc6649a6a7088084091d80d5ae3287eb289220e20b02ffe8
 Scoring labels      c44e481fe9ea1a019e1bfdc7bd1360428580b98808ccc605e5c82dc224e10fd3
 ```

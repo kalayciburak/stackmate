@@ -150,6 +150,12 @@ does not redistribute that image; its PostgreSQL and Alpine component notices
 remain governed by their upstream terms. None of these dependencies is added to a
 published runtime module.
 
+Phase 5.4.3 reuses the same test-scoped PostgreSQL JDBC/Testcontainers stack and
+pins the local image to
+`postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73`.
+It adds no Maven or Python dependency. The official Qwen checkpoint and selected
+adapter remain local research artifacts and are not redistributed.
+
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the
 deterministic starter. Their exact resolved versions and licenses are reviewable through the Maven dependency
 tree and generated build reports.

@@ -48,7 +48,8 @@ class FreshFinalV2FixtureProbeLab {
     private final ThrowableSnapshotter snapshotter =
             new ThrowableSnapshotter(ThrowableSnapshotLimits.defaults(), sanitizer);
     private final ApplicationFrameSelector applicationFrameSelector =
-            new ApplicationFrameSelector(List.of("io.github.kalayciburak.stackmate", "com.example"), 8);
+            new ApplicationFrameSelector(
+                    List.of("io.github.kalayciburak.stackmate", "com.example"), 8);
     private final DeterministicDiagnosticEngine diagnosticEngine =
             new DeterministicDiagnosticEngine(
                     DefaultDiagnosticAnalyzers.aggregator(), new IncidentFingerprinter());
@@ -62,7 +63,9 @@ class FreshFinalV2FixtureProbeLab {
         manifest.path("families")
                 .forEach(
                         family -> {
-                            if (family.path("classification").asText().startsWith("CONTROLLED_REAL_")) {
+                            if (family.path("classification")
+                                    .asText()
+                                    .startsWith("CONTROLLED_REAL_")) {
                                 real.add(family);
                             }
                         });
@@ -86,8 +89,12 @@ class FreshFinalV2FixtureProbeLab {
                                     + first
                                     + " second="
                                     + second);
-                    assertThat(first).as(familyId + "/v" + variant).containsExactlyElementsOf(expected);
-                    assertThat(second).as(familyId + "/v" + variant + " rerun").containsExactlyElementsOf(expected);
+                    assertThat(first)
+                            .as(familyId + "/v" + variant)
+                            .containsExactlyElementsOf(expected);
+                    assertThat(second)
+                            .as(familyId + "/v" + variant + " rerun")
+                            .containsExactlyElementsOf(expected);
                     if (variant == 0) {
                         printDeterministicRequest(familyId, firstFailure);
                     }

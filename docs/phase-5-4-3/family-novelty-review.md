@@ -38,6 +38,6 @@ Artifact hashes:
 
 ```text
 Descriptor design: abedc872456538290144aadc8b416f80dc431bc70cd473646431687106cf311a
-Resolved task: d5a8c8cc106159a31014f3ecbe1288da722c30ebacfc9d0e5a185df1a296b36c
-Novelty report: f11c0ff42297d43920694156b55da80a15c87c843c331bae5dcc7a15de261a7c
+Resolved task: 59d518e2a17dca84266bceb29048ec5b0fd6917bbc5ee7b85336f5fa4b9318d5
+Novelty report: 471d7a2b78dc8b8aa1beb2eaaefe4e57a73e85f06b556c1c59e19613027107d3
 ```

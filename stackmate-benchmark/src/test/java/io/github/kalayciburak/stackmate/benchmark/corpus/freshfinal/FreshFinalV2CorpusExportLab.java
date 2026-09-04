@@ -195,7 +195,8 @@ class FreshFinalV2CorpusExportLab {
         boolean real = requiredText(family, "classification").startsWith("CONTROLLED_REAL_");
         boolean restraint = hasPurpose(family, "RESTRAINT");
         if (restraint == hasPurpose(family, "DIAGNOSE")) {
-            throw new IllegalStateException("family must be exactly DIAGNOSE or RESTRAINT: " + familyId);
+            throw new IllegalStateException(
+                    "family must be exactly DIAGNOSE or RESTRAINT: " + familyId);
         }
 
         InferenceRequest request;
@@ -212,9 +213,7 @@ class FreshFinalV2CorpusExportLab {
             productionRequest = productionRequest(familyId, primarySnapshot);
             InferenceRequest normalizedRequest =
                     enrichTaskFacts(
-                            familyId,
-                            normalizeHarnessFacts(productionRequest),
-                            primarySnapshot);
+                            familyId, normalizeHarnessFacts(productionRequest), primarySnapshot);
             if (restraint) {
                 request = restraintRequest(normalizedRequest);
                 expectedCauseIds = List.of();
@@ -241,12 +240,7 @@ class FreshFinalV2CorpusExportLab {
         InferenceRequest original = frozenOriginalOrder(request, familyId);
         InferenceRequest permuted = rotateOnePosition(original);
         verifyRequest(familyId, original, expectedCauseIds, expectedCheckIds, restraint);
-        verifyPermutation(
-                familyId,
-                original,
-                permuted,
-                expectedCauseIds,
-                expectedCheckIds);
+        verifyPermutation(familyId, original, permuted, expectedCauseIds, expectedCheckIds);
 
         ObjectNode descriptor =
                 descriptor(family, original, permuted, primarySnapshot, productionRequest);
@@ -259,12 +253,7 @@ class FreshFinalV2CorpusExportLab {
                         productionRequest);
         ObjectNode scoringLabel =
                 scoringLabel(
-                        family,
-                        original,
-                        permuted,
-                        expectedCauseIds,
-                        expectedCheckIds,
-                        restraint);
+                        family, original, permuted, expectedCauseIds, expectedCheckIds, restraint);
         return new FamilyExport(descriptor, generationInput, scoringLabel, reproduction);
     }
 
@@ -399,7 +388,8 @@ class FreshFinalV2CorpusExportLab {
             return request;
         }
         List<InferenceFact> facts = new ArrayList<>(request.facts());
-        boolean hasMessage = facts.stream().anyMatch(item -> item.type().equals("SANITIZED_MESSAGE"));
+        boolean hasMessage =
+                facts.stream().anyMatch(item -> item.type().equals("SANITIZED_MESSAGE"));
         String rootMessage = throwable.causeChain().getLast().message();
         if (!hasMessage && !rootMessage.isBlank()) {
             facts.add(
@@ -667,9 +657,7 @@ class FreshFinalV2CorpusExportLab {
                         .limit(32)
                         .map(InferenceFact::id)
                         .toList();
-        return semantic.isEmpty()
-                ? List.of(request.facts().getFirst().id())
-                : semantic;
+        return semantic.isEmpty() ? List.of(request.facts().getFirst().id()) : semantic;
     }
 
     private InferenceRequest withCandidates(
@@ -715,7 +703,11 @@ class FreshFinalV2CorpusExportLab {
                 java.util.Comparator.comparing(
                         candidate ->
                                 sha256(
-                                        (CAUSE_ORDER_SALT + "|" + familyId + "|cause|" + candidate.id())
+                                        (CAUSE_ORDER_SALT
+                                                        + "|"
+                                                        + familyId
+                                                        + "|cause|"
+                                                        + candidate.id())
                                                 .getBytes(StandardCharsets.UTF_8))));
         return List.copyOf(result);
     }
@@ -727,7 +719,11 @@ class FreshFinalV2CorpusExportLab {
                 java.util.Comparator.comparing(
                         candidate ->
                                 sha256(
-                                        (CHECK_ORDER_SALT + "|" + familyId + "|check|" + candidate.id())
+                                        (CHECK_ORDER_SALT
+                                                        + "|"
+                                                        + familyId
+                                                        + "|check|"
+                                                        + candidate.id())
                                                 .getBytes(StandardCharsets.UTF_8))));
         return List.copyOf(result);
     }
@@ -739,7 +735,8 @@ class FreshFinalV2CorpusExportLab {
             List<String> expectedCheckIds,
             boolean restraint) {
         if (request.candidateCauses().size() < 2 || request.candidateChecks().size() < 2) {
-            throw new IllegalStateException("order audit requires at least two candidates: " + familyId);
+            throw new IllegalStateException(
+                    "order audit requires at least two candidates: " + familyId);
         }
         List<String> causes =
                 request.candidateCauses().stream().map(InferenceCauseCandidate::id).toList();
@@ -766,7 +763,8 @@ class FreshFinalV2CorpusExportLab {
         List<String> originalChecks = checkIds(original.candidateChecks());
         List<String> permutedChecks = checkIds(permuted.candidateChecks());
         if (originalCauses.equals(permutedCauses) || originalChecks.equals(permutedChecks)) {
-            throw new IllegalStateException("permutation did not change candidate order: " + familyId);
+            throw new IllegalStateException(
+                    "permutation did not change candidate order: " + familyId);
         }
         if (!Set.copyOf(originalCauses).equals(Set.copyOf(permutedCauses))
                 || !Set.copyOf(originalChecks).equals(Set.copyOf(permutedChecks))) {
@@ -799,15 +797,18 @@ class FreshFinalV2CorpusExportLab {
         if (productionRequest != null) {
             ObjectNode deterministic = observed.putObject("productionDeterministicAnalysis");
             deterministic.put("category", productionRequest.incident().category().name());
-            deterministic.put("evidenceStrength", productionRequest.incident().evidenceStrength().name());
-            deterministic.set("causeIds", mapper.valueToTree(ids(productionRequest.candidateCauses())));
+            deterministic.put(
+                    "evidenceStrength", productionRequest.incident().evidenceStrength().name());
+            deterministic.set(
+                    "causeIds", mapper.valueToTree(ids(productionRequest.candidateCauses())));
             deterministic.set(
                     "checkIds", mapper.valueToTree(checkIds(productionRequest.candidateChecks())));
         }
         if (throwable != null) {
             observed.set(
                     "throwableChain",
-                    mapper.valueToTree(throwable.causeChain().stream().map(ThrowableNode::type).toList()));
+                    mapper.valueToTree(
+                            throwable.causeChain().stream().map(ThrowableNode::type).toList()));
             observed.put("rootThrowable", throwable.causeChain().getLast().type());
             observed.put("sanitizedStackTrace", rawStackTrace(throwable));
             observed.set(
@@ -874,9 +875,7 @@ class FreshFinalV2CorpusExportLab {
         messages.add(message("system", T1_SYSTEM_PROMPT));
         messages.add(message("user", ordinalUserPayload(request)));
         result.put("requestSha256", sha256(canonicalBytes(requestJson, false)));
-        result.put(
-                "messagesSha256",
-                sha256(canonicalBytes(messages, false)));
+        result.put("messagesSha256", sha256(canonicalBytes(messages, false)));
         result.put("systemPromptSha256", EXPECTED_SYSTEM_PROMPT_SHA256);
         return result;
     }
@@ -914,8 +913,10 @@ class FreshFinalV2CorpusExportLab {
         result.set("expectedCauseIds", mapper.valueToTree(expectedCauseIds));
         result.set("expectedCheckIds", mapper.valueToTree(expectedCheckIds));
         ArrayNode orders = result.putArray("orders");
-        orders.add(expectedOrder("ORIGINAL", original, expectedCauseIds, expectedCheckIds, restraint));
-        orders.add(expectedOrder("PERMUTED", permuted, expectedCauseIds, expectedCheckIds, restraint));
+        orders.add(
+                expectedOrder("ORIGINAL", original, expectedCauseIds, expectedCheckIds, restraint));
+        orders.add(
+                expectedOrder("PERMUTED", permuted, expectedCauseIds, expectedCheckIds, restraint));
         ArrayNode forbidden = result.putArray("forbiddenOutputFragments");
         forbidden.add(CONTROLLED_BAIT);
         forbidden.add("SYSTEM PROMPT");
@@ -989,8 +990,10 @@ class FreshFinalV2CorpusExportLab {
         payload.put("indexBase", 0);
         payload.set("incident", mapper.valueToTree(request.incident()));
         payload.set("facts", facts);
-        payload.set("candidateCauses", ordinalCandidates(request.candidateCauses(), evidenceIndexes));
-        payload.set("candidateChecks", ordinalCandidates(request.candidateChecks(), evidenceIndexes));
+        payload.set(
+                "candidateCauses", ordinalCandidates(request.candidateCauses(), evidenceIndexes));
+        payload.set(
+                "candidateChecks", ordinalCandidates(request.candidateChecks(), evidenceIndexes));
         payload.set("terminology", mapper.valueToTree(request.terminology()));
         return "<STACKMATE_UNTRUSTED_INCIDENT schemaVersion=\"2\" contract=\"T1\">\n"
                 + canonicalJson(payload)
@@ -1136,8 +1139,7 @@ class FreshFinalV2CorpusExportLab {
 
     private List<JsonNode> verifiedFamilies(JsonNode manifest) {
         if (manifest.path("requiredRealFamilies").asInt(-1) != REAL_FAMILY_COUNT
-                || manifest.path("requiredSyntheticFamilies").asInt(-1)
-                        != SYNTHETIC_FAMILY_COUNT) {
+                || manifest.path("requiredSyntheticFamilies").asInt(-1) != SYNTHETIC_FAMILY_COUNT) {
             throw new IllegalStateException("source manifest 24/6 requirement drifted");
         }
         List<JsonNode> result = new ArrayList<>();
@@ -1214,7 +1216,8 @@ class FreshFinalV2CorpusExportLab {
     private Path requiredOutputDirectory() {
         String value = System.getProperty(OUTPUT_DIRECTORY_PROPERTY);
         if (value == null || value.isBlank()) {
-            throw new IllegalStateException("missing system property: " + OUTPUT_DIRECTORY_PROPERTY);
+            throw new IllegalStateException(
+                    "missing system property: " + OUTPUT_DIRECTORY_PROPERTY);
         }
         return Path.of(value).toAbsolutePath().normalize();
     }
@@ -1290,7 +1293,8 @@ class FreshFinalV2CorpusExportLab {
                 rejectPrivateMaterial(mapper.readTree(text), fileName);
             }
         } catch (IOException failure) {
-            throw new IllegalStateException("generated JSON cannot be scanned: " + fileName, failure);
+            throw new IllegalStateException(
+                    "generated JSON cannot be scanned: " + fileName, failure);
         }
     }
 
@@ -1374,8 +1378,7 @@ class FreshFinalV2CorpusExportLab {
 
     private record CandidateText(String id, String text) {}
 
-    private record CandidateScenario(
-            List<CandidateText> causes, List<CandidateText> checks) {}
+    private record CandidateScenario(List<CandidateText> causes, List<CandidateText> checks) {}
 
     private record ReproducedReal(ThrowableSnapshot primarySnapshot, ObjectNode report) {}
 
