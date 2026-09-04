@@ -25,7 +25,7 @@ class ChildCommandFactoryTest {
                 new ChildCommandFactory(Path.of("/opt/jdk-21"), "Linux", "classes:libs/*")
                         .command(model);
 
-        assertThat(windows.getFirst()).endsWith("bin\\java.exe");
+        assertThat(Path.of(windows.getFirst()).getFileName().toString()).isEqualTo("java.exe");
         assertThat(Path.of(unix.getFirst()).getFileName().toString()).isEqualTo("java");
         assertThat(windows)
                 .containsSubsequence(

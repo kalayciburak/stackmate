@@ -18,6 +18,7 @@ class ModelDirectoryTest {
 
     @Test
     void validatesAndNormalizesExplicitQwen2Directory() throws Exception {
+        Files.createDirectory(temporaryDirectory.resolve("a"));
         Path supplied =
                 TestModelDirectory.create(
                         temporaryDirectory.resolve("a").resolve("..").resolve("model alanı"));
@@ -104,15 +105,16 @@ class ModelDirectoryTest {
 
     @Test
     void acceptsAnExplicitRelativePathAndRejectsAPathSymlinkWhenSupported() throws Exception {
-        Path model = TestModelDirectory.create(temporaryDirectory.resolve("relative-model"));
-        Path relative = Path.of("").toAbsolutePath().relativize(model.toAbsolutePath());
+        Path relative =
+                TestModelDirectory.create(Path.of("target", "relative-model-" + System.nanoTime()));
 
         assertThat(ModelDirectory.validate(relative, Protocol.strictMapper()).path())
-                .isEqualTo(model.toRealPath());
+                .isEqualTo(relative.toRealPath());
 
+        Path model = TestModelDirectory.create(temporaryDirectory.resolve("symlink-target"));
         Path link = temporaryDirectory.resolve("linked-model");
         try {
-            Files.createSymbolicLink(link, model);
+            Files.createSymbolicLink(link, model.toAbsolutePath());
         } catch (UnsupportedOperationException | java.io.IOException exception) {
             Assumptions.abort("symbolic links are unavailable: " + exception.getMessage());
         }

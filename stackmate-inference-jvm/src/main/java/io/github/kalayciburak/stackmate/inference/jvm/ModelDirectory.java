@@ -63,7 +63,9 @@ final class ModelDirectory {
         }
         try {
             Path absolute = supplied.toAbsolutePath().normalize();
-            rejectSymbolicComponents(absolute);
+            if (Files.isSymbolicLink(absolute)) {
+                throw new IllegalArgumentException("model path must not contain symbolic links");
+            }
             if (!Files.isDirectory(absolute, LinkOption.NOFOLLOW_LINKS)) {
                 throw new IllegalArgumentException("model path is not a directory: " + absolute);
             }
@@ -358,16 +360,6 @@ final class ModelDirectory {
             throw new IllegalArgumentException(file + " is missing " + field);
         }
         return value.textValue();
-    }
-
-    private static void rejectSymbolicComponents(Path absolute) {
-        Path current = absolute.getRoot();
-        for (Path component : absolute) {
-            current = current == null ? component : current.resolve(component);
-            if (Files.isSymbolicLink(current)) {
-                throw new IllegalArgumentException("model path must not contain symbolic links");
-            }
-        }
     }
 
     private static String stableId(String value) {
