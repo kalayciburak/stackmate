@@ -159,3 +159,17 @@ adapter remain local research artifacts and are not redistributed.
 JUnit, AssertJ, JaCoCo, Maven plugins, JMH, and other test/build tooling are not runtime dependencies of the
 deterministic starter. Their exact resolved versions and licenses are reviewable through the Maven dependency
 tree and generated build reports.
+
+## Phase 5.5 pairwise feasibility
+
+Phase 5.5 adds no third-party dependency and distributes no third-party artifact.
+Its tokenizer audit reused the local official Apache-2.0 Qwen3.5-2B checkpoint at
+revision `15852e8c16360a2fea060d615a32b45270f8a8fc` with remote code disabled. The
+pairwise source audit is Python-standard-library code over already committed
+controlled data. No model inference, training, adapter, merge, GGUF conversion,
+native runtime, cloud service, telemetry, upload, or Maven runtime change occurred.
+
+One accidental Windows-side `uv run --frozen` invocation downloaded the existing
+lock's research packages into the user's local cache. Those files are not part of
+StackMate, are not committed or redistributed, and add no product/runtime license
+obligation beyond the already documented Phase 5.2 research environment.

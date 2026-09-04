@@ -18,3 +18,8 @@
 - Exposed diagnostic corpora remain unavailable until contract, training,
   checkpoint selection, validation thresholds, and aggregation are frozen.
 - Create local commits where the phase requires them; perform no remote push.
+- Gate B is closed as `FAIL_CONTRADICTED_CLASS_ABSENT`: preserve the valid
+  one-token contract and source audit, create no semantically invalid two-class
+  substitute, and leave Gates C-F unopened.
+- Classify the pairwise role as `NOT_EVALUATED`; this data blocker neither proves
+  nor disproves the pairwise model hypothesis.

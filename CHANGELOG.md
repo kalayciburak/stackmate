@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.5 freezes a one-token pairwise entailment contract and audits the
+  Phase 5.3 real-world source without changing frozen data. TRAIN yields
+  102 `SUPPORTED`, 0 `CONTRADICTED`, and 104 `UNKNOWN` native pairs;
+  VALIDATION yields 18/0/36. Because listwise omission is not contradiction,
+  Gate B fails and base inference, training, calibration, exposed diagnostics,
+  merge, and GGUF work remain unrun.
 - Phase 5.4.3 freezes a genuinely new 30-family T1 final corpus and runs D0,
   official-base B0, and checkpoint-18 A1 exactly once. A1 improves joint family
   accuracy from B0's 3/30 to 16/30, but deterministic D0 reaches 15/30 with
@@ -61,6 +67,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.5 pairwise label-token audit, contract prompt, conservative source
+  auditor, leakage evidence, regression tests, and explicit blocked-gate reports.
+  No pairwise dataset rows, adapter, model output, or product dependency were added.
 - Phase 5.4.3 exposed-family inventory, real-runtime recipes, task-level novelty
   audit, two-pass labels, separated generation/scoring artifacts, formal T1
   schema, exactly-once runner, scorer-only defect repair, and fresh-final result

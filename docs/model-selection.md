@@ -351,3 +351,23 @@ false-secret classification.
 The adapter therefore fails safety, quality, and practical-value gates. It
 remains `EXPERIMENTAL`; fine-tuning value is `NOT_JUSTIFIED`. No merged model or
 fine-tuned GGUF was created, and no production model selection changed.
+
+## Phase 5.5 pairwise evidence-entailment feasibility
+
+Phase 5.5 tested the data and output-contract prerequisites for a materially
+different architecture: classify one candidate against trusted evidence as one
+of `SUPPORTED`, `CONTRADICTED`, or `UNKNOWN`, using exactly one tokenizer-verified
+digit token. The contract passed offline tokenizer checks, but the frozen Phase
+5.3 source cannot supply the requested three classes without inventing labels.
+
+The 70 TRAIN families expose 206 native cause/check pairs with class counts
+102/0/104; the 20 VALIDATION families expose 54 pairs with counts 18/0/36.
+No candidate has explicit candidate-local counterevidence or negative polarity.
+An unselected listwise candidate may be plausible, generic, or co-occurring and
+therefore cannot be relabeled `CONTRADICTED`.
+
+Gate B is `FAIL_CONTRADICTED_CLASS_ABSENT`. Base feasibility, LoRA training,
+calibration, exposed diagnostics, merge, and GGUF conversion were not run. The
+pairwise role is `NOT_EVALUATED`, not `NOT_VIABLE`; the historical listwise role
+remains rejected and deterministic diagnostics remain ready. No product model
+selection changes.

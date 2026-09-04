@@ -263,3 +263,27 @@ restraint families also received contradictory non-empty selections. These
 outputs remained in the external research cache and scorer report; none entered
 a product response. Gate E failed, so merged-weight and native GGUF boundaries
 were not opened.
+
+## Phase 5.5 pairwise annotation boundary
+
+Phase 5.5 adds a research-only one-token classification contract and a read-only
+aggregate source auditor. Candidate text and evidence are still untrusted. The
+contract excludes sibling candidates, indexes, persistent IDs, explanations,
+hidden reasoning, and arbitrary output tokens; any invalid token would map to
+`UNKNOWN`. No model was executed, so these are contract controls rather than
+observed model-safety results.
+
+The primary new integrity threat is annotation laundering: interpreting a
+listwise omission as pairwise contradiction, or moving a candidate to another
+incident and calling it negative. Either path could train false certainty and
+inflate apparent precision. The audit therefore requires explicit
+candidate-local negative evidence or polarity and fails when that class is
+absent. It records only source hashes, aggregate counts, and overlap counts;
+individual exposed diagnostic labels and private absolute paths are excluded.
+
+No product data flow changed. No pairwise dataset, model output, adapter, merge,
+GGUF, runtime worker, endpoint, telemetry, upload, or production dependency was
+created. PyTorch/Transformers execution remained unopened for Phase 5.5. A
+mistaken Windows-side frozen `uv` environment download left a local user-cache
+copy of research packages after cleanup was safety-policy rejected; it contains
+no model or StackMate dataset copy and is outside Git.
