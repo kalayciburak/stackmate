@@ -196,3 +196,15 @@ New ontology, controlled synthetic development data, audits and reports are
 StackMate research artifacts. No adapter, optimizer state, merged checkpoint,
 GGUF, llama.cpp binary, cloud service, telemetry client, upload or Maven runtime
 dependency was added or redistributed.
+
+## Phase 5.5.3 deterministic-solvability audit
+
+Phase 5.5.3 adds no third-party dependency and executes no model or native ML
+runtime. Its deterministic-solvability command uses the already locked Python
+environment but imports only repository code and Python standard-library
+facilities for the authoritative audit. The existing official Qwen3.5-2B local
+checkpoint is neither opened nor redistributed.
+
+No LoRA adapter, optimizer state, merged checkpoint, GGUF, llama.cpp binary,
+cloud service, telemetry client, upload mechanism or Maven runtime dependency is
+added, committed, published or distributed.

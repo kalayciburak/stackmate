@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.5.3 audits deterministic solvability before opening another training
+  path. The ontology construction oracle and an independent interpreter both
+  reproduce all 612 frozen atomic labels with perfect candidate, family,
+  restraint and security metrics. Because the labels were generated from those
+  same predicates, Gate B closes `LLM_TASK_DETERMINISTIC`; no model-eligible
+  split, evaluator rerun, LoRA, calibration or exposed diagnostic run occurs.
 - Phase 5.5.2 replaces compound/listwise candidates with a reviewed 60-entry
   atomic ontology and a 60/25-family contrastive binary dataset. Dataset and
   shortcut gates pass, but official BF16 base feasibility fails: validation
@@ -80,6 +86,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.5.3 label-blind deterministic prediction receipts, D0 applicability
+  audit, independent flat-predicate interpreter, frozen base-report rescore and
+  machine-readable solvability report. No model, adapter or product dependency
+  was added.
 - Phase 5.5.2 controlled atomic development families, predicate-derived pair
   reviews, independent semantic review, S0-S4 plus evidence-shape shortcut
   baselines, offline tokenization audit and direct next-token-logit base report.
@@ -146,6 +156,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
+- Phase 5.5.3 physically separates label-blind deterministic predictions from
+  scoring metadata, strips only the exact untrusted-pattern envelope, and gives
+  negative evidence no power unless an ontology disqualifier declares it. Both
+  deterministic paths reject every unsupported security pair; model execution,
+  network access, telemetry and uploads remain unopened.
 - Phase 5.4.3 binds generation to an annotated freeze tag, clean HEAD, base and
   adapter hashes, prompt/schema/config hashes, label-free messages, and one
   receipt per system. A1 had zero secret leakage, hidden thinking, unknown
@@ -169,6 +184,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Known limitations
 
+- `LLM_TASK_DETERMINISTIC` applies only to the predicate-generated Phase 5.5.2
+  atomic corpus. It does not prove that the current product selector solves all
+  real incidents; the product selector also lacks a frozen crosswalk to the
+  atomized research checks. No Phase 5.5.3 model was trained or evaluated.
 - The historical Phase 5.2 blocked report predates checkpoint acquisition. The
   resumed F1/F2 adapter remains `EXPERIMENTAL` because locked qualification failed;
   no merged model or fine-tuned GGUF was created. Transformers 5.14.1 still does

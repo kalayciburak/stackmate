@@ -413,3 +413,28 @@ Gate E is BINARY_BASE_NOT_PROMISING. The binary base role is NOT_VIABLE for this
 frozen contract; the single LoRA run, calibration, exposed diagnostics and fresh
 qualification were not authorized. Deterministic diagnostics remain READY and no
 product model selection changes.
+
+## Phase 5.5.3 deterministic-solvability decision
+
+Phase 5.5.3 removed the earlier requirement that the untrained base already
+solve the supervised task, but first asked whether the repaired task needs a
+model at all. It does not: the Phase 5.5.2 manifest declares that predicate
+truth determines labels, and both the reusable ontology evaluator (D1) and a
+separately implemented flat-predicate interpreter (D2) reproduce all 426 TRAIN
+and 186 VALIDATION pairs.
+
+Both paths reach 100% SUPPORTED and NOT_SUPPORTED precision/recall, 100% macro
+F1, 100% family cause/check/joint accuracy, 100% strict restraint and zero
+security false support. D1 is a construction oracle and D2 is
+construction-equivalent, not independent generalization evidence.
+
+The historical product D0 selector cannot be projected onto the atomic corpus
+without inventing a product-ID to atomic-check crosswalk, so its atomic coverage
+is reported as 0/612 and its metrics are not applicable. Its native Phase 5.4.3
+result remains historical and non-comparable.
+
+Gate B therefore closes `LLM_TASK_DETERMINISTIC`. Qwen3.5-2B is not loaded or
+trained in this phase, no adapter or hybrid H1 is created, and no product model
+selection changes. The narrow conclusion is that this frozen predicate-generated
+binary dataset does not justify a local model; it is not a claim that every
+real-world diagnosis is deterministic.

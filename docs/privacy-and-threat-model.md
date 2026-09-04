@@ -340,3 +340,29 @@ boundary.
 No adapter, optimizer state, threshold, worker, endpoint, merge, GGUF, upload or
 production dependency was created. PyTorch, CUDA and Transformers remain
 local-user native/parser trust boundaries during the explicit research command.
+
+## Phase 5.5.3 deterministic-solvability boundary
+
+Phase 5.5.3 opens no model trust boundary. A Python-standard-library audit reads
+only frozen controlled ontology, dataset and historical reports. It creates a
+label-blind projection containing D0/D1/D2 decisions, hashes that projection,
+and only then joins expected labels and family/pair identities for scoring.
+Prediction code receives no expected label, rationale, pair kind or family ID.
+
+Candidate and evidence values remain untrusted data. D2 recognizes candidates
+only by exact type and canonical ontology text and strips only the generator's
+exact trailing untrusted-pattern envelope. Required support comes only from the
+positive trusted-evidence block. Negative evidence has no effect unless an
+ontology entry explicitly names a matching disqualifier; the frozen ontology
+currently names none. All unsupported security rows remain rejected.
+
+The main integrity risk is circular evidence: Phase 5.5.2 generated labels from
+the same ontology predicates now used by D1 and independently reimplemented by
+D2. Perfect metrics therefore establish deterministic solvability of this
+published task, not independent generalization or universal product coverage.
+The absent product-candidate-to-atomic-semantic crosswalk also prevents a
+faithful D0 projection and is reported rather than inferred.
+
+No model weights, CUDA kernel, adapter, network, telemetry, upload, cloud,
+llama.cpp, product inference path or provisioning path was used. The report and
+source stay in Git; no private absolute model path or credential is recorded.
