@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS_ATOMIC_STRUCTURE_COVERAGE_PENDING",
+  "ontologyId": "stackmate-atomic-candidates-v1",
+  "ontologySha256": "4ee991459cab75124b65679ff421ddec3ac3c40d55dd5c7de62d971ad8c3d3d9",
+  "sourceBindings": [
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/evidence/EvidenceType.java",
+      "sha256": "0642b7ece0e0682e05a637860b4c5478c2ce927a2259cdb2cbeffe5c0255d1df"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/DatabaseAnalyzer.java",
+      "sha256": "2bede61a91753e9316099f9d62db8d159dbbe1bfd1d83a269053dcba87a29221"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/GeneralJavaAnalyzer.java",
+      "sha256": "da2a27928934ea49d94b9cfdc897c1a606645bf6166b5f41ddf5ae6600ed426f"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/InfrastructureAnalyzer.java",
+      "sha256": "475a28badddf306095b4f41def70601e4cc3c4056e93c991ef464ec8c99363a5"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/SpringDependencyConfigurationAnalyzer.java",
+      "sha256": "9bbd834d62b76a547edc72759765dbef75f691d98e7b6772eb5b162ec604a3b8"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/SpringSecurityAnalyzer.java",
+      "sha256": "0a87d41f54abfc82c8bc766f17d06b4e177b34c29462ac3f29ccbce2c441d86f"
+    },
+    {
+      "file": "stackmate-core/src/main/java/io/github/kalayciburak/stackmate/analysis/WebRequestAnalyzer.java",
+      "sha256": "ca0b04dec944ad319f08856f90b67dd785e1d9ac5bb4f9d61ae712a53f6a176d"
+    }
+  ],
+  "reviewPasses": [
+    {
+      "pass": 1,
+      "owner": "phase-5-5-2-ontology-owner",
+      "order": "semanticId lexical ascending",
+      "orderSha256": "039fb5678955af0f5ff453fbcd82f1f58b5ec867e2638f886e680e5031a03cf1",
+      "entriesReviewed": 60,
+      "issues": 0
+    },
+    {
+      "pass": 2,
+      "owner": "independent-atomicity-reviewer",
+      "order": "SHA-256(semanticId) ascending",
+      "orderSha256": "640ec3149621e58f8665325d6440161bb11c64a0265284edc3a6067043c80f8c",
+      "entriesReviewed": 60,
+      "issues": 0
+    }
+  ],
+  "checks": {
+    "atomicity": "PASS",
+    "hedging": "PASS",
+    "idDependence": "PASS",
+    "predicateReferences": "PASS",
+    "checkCauseLinks": "PASS",
+    "canonicalTextUniqueness": "PASS",
+    "unresolvedDisputes": 0
+  },
+  "counts": {
+    "causes": 15,
+    "checks": 45,
+    "total": 60
+  },
+  "modelDatasetCoveragePending": true,
+  "modelWeightsLoaded": false
+}

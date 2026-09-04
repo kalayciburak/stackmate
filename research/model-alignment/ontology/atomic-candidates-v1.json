@@ -1,0 +1,1510 @@
+{
+  "schemaVersion": "1",
+  "ontologyId": "stackmate-atomic-candidates-v1",
+  "binarySemantics": {
+    "SUPPORTED": "trusted evidence satisfies the complete required predicate",
+    "NOT_SUPPORTED": "trusted evidence does not satisfy the complete required predicate",
+    "notSupportedIsUniversalFalsehood": false
+  },
+  "canonicalTextPolicy": {
+    "encoding": "UTF-8",
+    "normalization": "NFC",
+    "asciiOnly": true,
+    "finalPeriod": true,
+    "runtimeInterpolation": false
+  },
+  "modelInputExclusions": [
+    "semanticId",
+    "familyId",
+    "candidateIndex",
+    "expectedLabel",
+    "category",
+    "reviewRationale"
+  ],
+  "predicates": [
+    {
+      "predicateId": "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "org.springframework.beans.factory.support.BeanDefinitionOverrideException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_CLASS_NOT_FOUND",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "java.lang.ClassNotFoundException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_CONCURRENT_MODIFICATION",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "java.util.ConcurrentModificationException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_CONVERTER_NOT_FOUND",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "org.springframework.core.convert.ConverterNotFoundException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_HTTP_TIMEOUT",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "java.net.http.HttpTimeoutException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_INVALID_FORMAT",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT_ANY",
+      "values": [
+        "com.fasterxml.jackson.databind.exc.InvalidFormatException",
+        "tools.jackson.databind.exc.InvalidFormatException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_LOCKED",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "org.springframework.security.authentication.LockedException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_NO_RESOURCE_FOUND",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "org.springframework.web.servlet.resource.NoResourceFoundException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_SSL_HANDSHAKE",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "javax.net.ssl.SSLHandshakeException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_STACK_OVERFLOW",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "java.lang.StackOverflowError"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "EXCEPTION_CLASS_UNSUPPORTED_OPERATION",
+      "evidenceType": "EXCEPTION_CLASS",
+      "operator": "EXACT",
+      "values": [
+        "java.lang.UnsupportedOperationException"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "SQLSTATE_CLASS_22",
+      "evidenceType": "SQL_STATE",
+      "operator": "PREFIX",
+      "values": [
+        "22"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "SQLSTATE_CLASS_23",
+      "evidenceType": "SQL_STATE",
+      "operator": "PREFIX",
+      "values": [
+        "23"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "SQLSTATE_EXACT_55P03",
+      "evidenceType": "SQL_STATE",
+      "operator": "EXACT",
+      "values": [
+        "55P03"
+      ],
+      "reliability": "HIGH"
+    },
+    {
+      "predicateId": "SQLSTATE_EXACT_57014",
+      "evidenceType": "SQL_STATE",
+      "operator": "EXACT",
+      "values": [
+        "57014"
+      ],
+      "reliability": "HIGH"
+    }
+  ],
+  "entries": [
+    {
+      "semanticId": "CAUSE_ACCOUNT_LOCKED",
+      "type": "CAUSE",
+      "canonicalText": "Authentication failed because the account was locked.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_LOCKED"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "AUTHENTICATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "AUTHENTICATION_STATE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_BEAN_DEFINITION_OVERRIDE",
+      "type": "CAUSE",
+      "canonicalText": "Spring rejected a bean definition override.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "PROPERTY_NAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_CLASS_NOT_FOUND",
+      "type": "CAUSE",
+      "canonicalText": "The requested class was unavailable.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CLASS_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_CONCURRENT_MODIFICATION",
+      "type": "CAUSE",
+      "canonicalText": "The collection changed during traversal.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONCURRENT_MODIFICATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "CONCURRENCY"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_CONVERTER_NOT_FOUND",
+      "type": "CAUSE",
+      "canonicalText": "Spring lacked the required converter.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONVERTER_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_DB_DATA_EXCEPTION",
+      "type": "CAUSE",
+      "canonicalText": "The database rejected a value under SQLSTATE class 22.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_22"
+      ],
+      "optionalEvidence": [
+        "DATABASE_COLUMN",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "DATABASE"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
+      "type": "CAUSE",
+      "canonicalText": "The database rejected a change under SQLSTATE class 23.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_23"
+      ],
+      "optionalEvidence": [
+        "DATABASE_CONSTRAINT",
+        "DATABASE_TABLE",
+        "DATABASE_COLUMN"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "DATABASE_CONSTRAINT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_DB_LOCK_UNAVAILABLE",
+      "type": "CAUSE",
+      "canonicalText": "The requested database lock was unavailable under SQLSTATE 55P03.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_55P03"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "DATABASE_LOCKING"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_DB_QUERY_CANCELED",
+      "type": "CAUSE",
+      "canonicalText": "The database canceled the query under SQLSTATE 57014.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_57014"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_HTTP_TIMEOUT",
+      "type": "CAUSE",
+      "canonicalText": "The HTTP operation timed out.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_HTTP_TIMEOUT"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_JSON_INVALID_FORMAT",
+      "type": "CAUSE",
+      "canonicalText": "The JSON value had an invalid format.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_INVALID_FORMAT"
+      ],
+      "optionalEvidence": [
+        "PROPERTY_NAME",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "SERIALIZATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_STACK_OVERFLOW",
+      "type": "CAUSE",
+      "canonicalText": "The thread stack was exhausted.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_TLS_HANDSHAKE",
+      "type": "CAUSE",
+      "canonicalText": "The TLS handshake failed.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_SSL_HANDSHAKE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "TLS"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_UNSUPPORTED_OPERATION",
+      "type": "CAUSE",
+      "canonicalText": "The requested operation was unsupported.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_UNSUPPORTED_OPERATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CAUSE_WEB_RESOURCE_NOT_FOUND",
+      "type": "CAUSE",
+      "canonicalText": "The requested web resource was not found.",
+      "atomicUnit": "PROPOSITION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_NO_RESOURCE_FOUND"
+      ],
+      "optionalEvidence": [
+        "REQUEST_PATH",
+        "HANDLER_METHOD",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": null,
+      "categories": [
+        "WEB_REQUEST"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_ACCOUNT_LOCK_EVENT",
+      "type": "CHECK",
+      "canonicalText": "Identify the account lock event.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_LOCKED"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_ACCOUNT_LOCKED",
+      "categories": [
+        "AUTHENTICATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "AUTHENTICATION_STATE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_ACCOUNT_LOCK_POLICY",
+      "type": "CHECK",
+      "canonicalText": "Inspect the account lock policy.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_LOCKED"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_ACCOUNT_LOCKED",
+      "categories": [
+        "AUTHENTICATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "AUTHENTICATION_STATE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_ACCOUNT_LOCK_STATUS",
+      "type": "CHECK",
+      "canonicalText": "Verify the account lock status.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_LOCKED"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_ACCOUNT_LOCKED",
+      "categories": [
+        "AUTHENTICATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "AUTHENTICATION_STATE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_BEAN_OVERRIDE_POLICY",
+      "type": "CHECK",
+      "canonicalText": "Verify the bean override policy.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "PROPERTY_NAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_BEAN_DEFINITION_OVERRIDE",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_CLASS_NAME",
+      "type": "CHECK",
+      "canonicalText": "Verify the requested class name.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CLASS_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CLASS_NOT_FOUND",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_COLLECTION_MUTABILITY",
+      "type": "CHECK",
+      "canonicalText": "Inspect the collection mutability contract.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_UNSUPPORTED_OPERATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_UNSUPPORTED_OPERATION",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_COLLECTION_MUTATION",
+      "type": "CHECK",
+      "canonicalText": "Inspect collection mutation during traversal.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONCURRENT_MODIFICATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONCURRENT_MODIFICATION",
+      "categories": [
+        "CONCURRENCY"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_CONFIGURATION_IMPORT",
+      "type": "CHECK",
+      "canonicalText": "Inspect configuration imports for duplicate registration.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "PROPERTY_NAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_BEAN_DEFINITION_OVERRIDE",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_CONVERTER_REGISTRATION",
+      "type": "CHECK",
+      "canonicalText": "Verify the required converter registration.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONVERTER_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONVERTER_NOT_FOUND",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_CONVERTER_SOURCE_TYPE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the converter source type.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONVERTER_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONVERTER_NOT_FOUND",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_CONVERTER_TARGET_TYPE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the converter target type.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONVERTER_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONVERTER_NOT_FOUND",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_BLOCK_DURATION",
+      "type": "CHECK",
+      "canonicalText": "Measure the blocked query duration.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_57014"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_QUERY_CANCELED",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_CANCELLATION_SOURCE",
+      "type": "CHECK",
+      "canonicalText": "Identify the query cancellation source.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_57014"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_QUERY_CANCELED",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_COMPETING_TRANSACTION",
+      "type": "CHECK",
+      "canonicalText": "Identify the competing transaction.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_55P03"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_LOCK_UNAVAILABLE",
+      "categories": [
+        "DATABASE_LOCKING"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_CONSTRAINT",
+      "type": "CHECK",
+      "canonicalText": "Inspect the violated database constraint.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_23"
+      ],
+      "optionalEvidence": [
+        "DATABASE_CONSTRAINT",
+        "DATABASE_TABLE",
+        "DATABASE_COLUMN"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
+      "categories": [
+        "DATABASE_CONSTRAINT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_DATA_RANGE",
+      "type": "CHECK",
+      "canonicalText": "Verify the target value range.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_22"
+      ],
+      "optionalEvidence": [
+        "DATABASE_COLUMN",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_DATA_EXCEPTION",
+      "categories": [
+        "DATABASE"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_DATA_TYPE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the target database type.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_22"
+      ],
+      "optionalEvidence": [
+        "DATABASE_COLUMN",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_DATA_EXCEPTION",
+      "categories": [
+        "DATABASE"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_DATA_VALUE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the rejected database value.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_22"
+      ],
+      "optionalEvidence": [
+        "DATABASE_COLUMN",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_DATA_EXCEPTION",
+      "categories": [
+        "DATABASE"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_LOCK_MODE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the requested lock mode.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_55P03"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_LOCK_UNAVAILABLE",
+      "categories": [
+        "DATABASE_LOCKING"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_LOCK_TIMEOUT",
+      "type": "CHECK",
+      "canonicalText": "Verify the configured lock timeout.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_55P03"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_LOCK_UNAVAILABLE",
+      "categories": [
+        "DATABASE_LOCKING"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_REJECTED_ROW",
+      "type": "CHECK",
+      "canonicalText": "Inspect the rejected row value.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_23"
+      ],
+      "optionalEvidence": [
+        "DATABASE_CONSTRAINT",
+        "DATABASE_TABLE",
+        "DATABASE_COLUMN"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
+      "categories": [
+        "DATABASE_CONSTRAINT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_RELATED_ROW",
+      "type": "CHECK",
+      "canonicalText": "Verify the related row state.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_CLASS_23"
+      ],
+      "optionalEvidence": [
+        "DATABASE_CONSTRAINT",
+        "DATABASE_TABLE",
+        "DATABASE_COLUMN"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
+      "categories": [
+        "DATABASE_CONSTRAINT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_STATEMENT_TIMEOUT",
+      "type": "CHECK",
+      "canonicalText": "Inspect the configured statement timeout.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_57014"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_QUERY_CANCELED",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DUPLICATE_BEAN_NAME",
+      "type": "CHECK",
+      "canonicalText": "Inspect duplicate bean definition names.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "PROPERTY_NAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_BEAN_DEFINITION_OVERRIDE",
+      "categories": [
+        "SPRING_CONFIGURATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_HTTP_DEADLINE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the request deadline.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_HTTP_TIMEOUT"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_HTTP_TIMEOUT",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_HTTP_LATENCY",
+      "type": "CHECK",
+      "canonicalText": "Measure the upstream response latency.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_HTTP_TIMEOUT"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_HTTP_TIMEOUT",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_HTTP_TIMEOUT",
+      "type": "CHECK",
+      "canonicalText": "Verify the configured HTTP timeout.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_HTTP_TIMEOUT"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_HTTP_TIMEOUT",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_ITERATOR_OWNERSHIP",
+      "type": "CHECK",
+      "canonicalText": "Verify the iterator ownership.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONCURRENT_MODIFICATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONCURRENT_MODIFICATION",
+      "categories": [
+        "CONCURRENCY"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_JSON_FIELD_CONTRACT",
+      "type": "CHECK",
+      "canonicalText": "Compare the JSON value with the field contract.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_INVALID_FORMAT"
+      ],
+      "optionalEvidence": [
+        "PROPERTY_NAME",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_JSON_INVALID_FORMAT",
+      "categories": [
+        "SERIALIZATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_JSON_FIELD_TYPE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the target JSON field type.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_INVALID_FORMAT"
+      ],
+      "optionalEvidence": [
+        "PROPERTY_NAME",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_JSON_INVALID_FORMAT",
+      "categories": [
+        "SERIALIZATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_JSON_TEXT_FORMAT",
+      "type": "CHECK",
+      "canonicalText": "Verify the accepted textual format.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_INVALID_FORMAT"
+      ],
+      "optionalEvidence": [
+        "PROPERTY_NAME",
+        "EXPECTED_TYPE",
+        "RECEIVED_VALUE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_JSON_INVALID_FORMAT",
+      "categories": [
+        "SERIALIZATION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_MUTATING_THREAD",
+      "type": "CHECK",
+      "canonicalText": "Identify the mutating thread.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CONCURRENT_MODIFICATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CONCURRENT_MODIFICATION",
+      "categories": [
+        "CONCURRENCY"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_OPERATION_IMPLEMENTATION",
+      "type": "CHECK",
+      "canonicalText": "Inspect the concrete operation implementation.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_UNSUPPORTED_OPERATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_UNSUPPORTED_OPERATION",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_OPERATION_SUPPORT",
+      "type": "CHECK",
+      "canonicalText": "Verify support for the requested operation.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_UNSUPPORTED_OPERATION"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_UNSUPPORTED_OPERATION",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_RECURSION_TERMINATION",
+      "type": "CHECK",
+      "canonicalText": "Verify the recursion termination condition.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_RECURSIVE_CYCLE",
+      "type": "CHECK",
+      "canonicalText": "Identify the recursive call cycle.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_REPEATED_FRAMES",
+      "type": "CHECK",
+      "canonicalText": "Inspect repeated stack frames.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_RUNTIME_CLASSPATH",
+      "type": "CHECK",
+      "canonicalText": "Inspect the runtime classpath.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CLASS_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CLASS_NOT_FOUND",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_RUNTIME_MODULE_PATH",
+      "type": "CHECK",
+      "canonicalText": "Inspect the runtime module path.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_CLASS_NOT_FOUND"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "APPLICATION_FRAME"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_CLASS_NOT_FOUND",
+      "categories": [
+        "GENERAL_JAVA"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_TLS_HOST_NAME",
+      "type": "CHECK",
+      "canonicalText": "Compare the requested host name with the certificate.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_SSL_HANDSHAKE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_TLS_HANDSHAKE",
+      "categories": [
+        "TLS"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_TLS_TRUST_CHAIN",
+      "type": "CHECK",
+      "canonicalText": "Verify the certificate trust chain.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_SSL_HANDSHAKE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_TLS_HANDSHAKE",
+      "categories": [
+        "TLS"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_TLS_VALIDITY",
+      "type": "CHECK",
+      "canonicalText": "Inspect the certificate validity period.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_SSL_HANDSHAKE"
+      ],
+      "optionalEvidence": [
+        "SANITIZED_MESSAGE",
+        "CAUSE_RELATIONSHIP"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_TLS_HANDSHAKE",
+      "categories": [
+        "TLS"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_WEB_CONTROLLER_MAPPING",
+      "type": "CHECK",
+      "canonicalText": "Inspect the controller mapping.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_NO_RESOURCE_FOUND"
+      ],
+      "optionalEvidence": [
+        "REQUEST_PATH",
+        "HANDLER_METHOD",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_WEB_RESOURCE_NOT_FOUND",
+      "categories": [
+        "WEB_REQUEST"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_WEB_REQUEST_PATH",
+      "type": "CHECK",
+      "canonicalText": "Inspect the request path.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_NO_RESOURCE_FOUND"
+      ],
+      "optionalEvidence": [
+        "REQUEST_PATH",
+        "HANDLER_METHOD",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_WEB_RESOURCE_NOT_FOUND",
+      "categories": [
+        "WEB_REQUEST"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_WEB_RESOURCE_LOCATION",
+      "type": "CHECK",
+      "canonicalText": "Verify the static resource location.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_NO_RESOURCE_FOUND"
+      ],
+      "optionalEvidence": [
+        "REQUEST_PATH",
+        "HANDLER_METHOD",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_WEB_RESOURCE_NOT_FOUND",
+      "categories": [
+        "WEB_REQUEST"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    }
+  ],
+  "counts": {
+    "causes": 15,
+    "checks": 45,
+    "total": 60
+  },
+  "datasetCoverageStatus": "PENDING_GATE_C"
+}
