@@ -11,8 +11,41 @@ jobs:
     name: Review dependency changes
     runs-on: ubuntu-latest
     steps:
-      - name: Check out sources
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check out full PR history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Review dependency changes
-        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+      - name: Set up Java 21
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: "**/pom.xml"
+
+      - name: Make Maven Wrapper executable
+        run: chmod +x ./mvnw
+
+      - name: Build public dependency graph
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress
+          -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am clean package
+
+      - name: Review declared and runtime dependency changes
+        shell: pwsh
+        run: >-
+          ./release/review-dependency-changes.ps1
+          -BaseRevision "${{ github.event.pull_request.base.sha }}"
+          -HeadRevision "${{ github.event.pull_request.head.sha }}"
+
+      - name: Upload bounded dependency-review evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dependency-review-${{ github.sha }}
+          path: target/dependency-review/**
+          if-no-files-found: error
+          retention-days: 7
