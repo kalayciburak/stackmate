@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.kalayciburak</groupId>
     <artifactId>stackmate-parent</artifactId>
-    <version>0.1.0-rc.1</version>
+    <version>0.1.0-rc.2</version>
   </parent>
   <artifactId>stackmate-spring-boot-starter</artifactId>
   <name>StackMate Spring Boot Starter</name>
@@ -21,4 +21,41 @@
       <artifactId>stackmate-spring-boot-autoconfigure</artifactId>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>public-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-placeholder-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <classifier>sources</classifier>
+                  <classesDirectory>${project.basedir}/src/release/sources</classesDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>attach-placeholder-javadoc</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <classifier>javadoc</classifier>
+                  <classesDirectory>${project.basedir}/src/release/javadoc</classesDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

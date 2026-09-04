@@ -122,6 +122,14 @@ class ReleaseSurfaceContractTest {
                                                 "StackMateJvmInferenceAutoConfiguration.java");
                             });
         }
+
+        Path starter = repository.resolve("stackmate-spring-boot-starter");
+        String starterPom = Files.readString(starter.resolve("pom.xml"));
+        assertThat(starterPom)
+                .contains("<id>attach-placeholder-sources</id>")
+                .contains("<id>attach-placeholder-javadoc</id>");
+        assertThat(starter.resolve("src/release/sources/README.md")).isRegularFile();
+        assertThat(starter.resolve("src/release/javadoc/README.md")).isRegularFile();
     }
 
     @Test

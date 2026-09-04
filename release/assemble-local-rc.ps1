@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "0.1.0-rc.1",
+    [string]$Version = "0.1.0-rc.2",
     [string]$OutputRoot = "target/release"
 )
 
@@ -18,8 +18,8 @@ $expected = @(
 if (@(Compare-Object $expected $publicArtifacts).Count -ne 0) {
     throw "Release allowlist differs from the four frozen public coordinates"
 }
-if ($allowlist.release -ne "0.1.0-rc.1") {
-    throw "Release allowlist version is not the frozen RC version"
+if ($allowlist.release -ne $Version) {
+    throw "Release allowlist version $($allowlist.release) does not match $Version"
 }
 
 [xml]$rootPom = Get-Content -LiteralPath (Join-Path $repository "pom.xml") -Raw
@@ -145,14 +145,10 @@ foreach ($artifactId in $publicArtifacts | Where-Object { $_ -ne "stackmate-pare
     $bom = Join-Path $target "bom.json"
 
     Copy-RequiredFile $mainJar (Join-Path $artifacts ([System.IO.Path]::GetFileName($mainJar)))
-    $sourcesEntries = $null
-    $javadocEntries = $null
-    if ($artifactId -ne "stackmate-spring-boot-starter") {
-        Copy-RequiredFile $sourcesJar (Join-Path $artifacts ([System.IO.Path]::GetFileName($sourcesJar)))
-        Copy-RequiredFile $javadocJar (Join-Path $artifacts ([System.IO.Path]::GetFileName($javadocJar)))
-        $sourcesEntries = Assert-CleanArchive $sourcesJar $false
-        $javadocEntries = Assert-CleanArchive $javadocJar $false
-    }
+    Copy-RequiredFile $sourcesJar (Join-Path $artifacts ([System.IO.Path]::GetFileName($sourcesJar)))
+    Copy-RequiredFile $javadocJar (Join-Path $artifacts ([System.IO.Path]::GetFileName($javadocJar)))
+    $sourcesEntries = Assert-CleanArchive $sourcesJar $false
+    $javadocEntries = Assert-CleanArchive $javadocJar $false
     Copy-RequiredFile $pom (Join-Path $artifacts "$artifactId-$Version.pom")
     Copy-RequiredFile $bom (Join-Path $sbom "$artifactId-$Version-bom.json")
 
@@ -165,7 +161,7 @@ foreach ($artifactId in $publicArtifacts | Where-Object { $_ -ne "stackmate-pare
             sourcesJarEntries = $sourcesEntries
             javadocJarEntries = $javadocEntries
             attachmentNote = if ($artifactId -eq "stackmate-spring-boot-starter") {
-                "Dependency-only starter has no Java sources or Javadoc archive"
+                "Central-compatible explanatory placeholder sources and Javadoc attached"
             } else {
                 "Sources and Javadoc attached"
             }
@@ -184,8 +180,8 @@ Copy-RequiredFile `
 Copy-RequiredFile `
     (Join-Path $repository "release/reproducibility-result.json") `
     (Join-Path $reports "reproducibility-result.json")
-$releaseNotes = Join-Path $repository "docs/phase-6/release-notes.md"
-$verificationCommands = Join-Path $repository "docs/phase-6/verification-commands.md"
+$releaseNotes = Join-Path $repository "docs/phase-6-1/release-notes.md"
+$verificationCommands = Join-Path $repository "docs/phase-6-1/verification-commands.md"
 Copy-RequiredFile $releaseNotes (Join-Path $bundle "release-notes.md")
 Copy-RequiredFile $verificationCommands (Join-Path $bundle "verification-commands.md")
 

@@ -4,7 +4,7 @@
 
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-parent</artifactId>
-  <version>0.1.0-rc.1</version>
+  <version>0.1.0-rc.2</version>
   <packaging>pom</packaging>
 
   <name>StackMate</name>
@@ -44,7 +44,7 @@
   <scm>
     <connection>scm:git:https://github.com/kalayciburak/stackmate.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/kalayciburak/stackmate.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v0.1.0-rc.2</tag>
     <url>https://github.com/kalayciburak/stackmate</url>
   </scm>
 
@@ -61,6 +61,7 @@
     <spring-boot.version>4.1.0</spring-boot.version>
     <jmh.version>1.37</jmh.version>
     <maven.compiler.version>3.15.0</maven.compiler.version>
+    <central.publishing.version>0.11.0</central.publishing.version>
     <maven.deploy.version>3.1.4</maven.deploy.version>
     <maven.gpg.version>3.0.1</maven.gpg.version>
     <maven.jar.version>3.5.0</maven.jar.version>
@@ -321,6 +322,24 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>central-publish</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${central.publishing.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <autoPublish>false</autoPublish>
+              <checksums>all</checksums>
+              <publishingServerId>central</publishingServerId>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>public-release</id>
       <build>

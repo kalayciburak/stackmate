@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.kalayciburak</groupId>
     <artifactId>stackmate-parent</artifactId>
-    <version>0.1.0-rc.1</version>
+    <version>0.1.0-rc.2</version>
   </parent>
   <artifactId>stackmate-e2e</artifactId>
   <name>StackMate Packaged End-to-End Tests</name>
