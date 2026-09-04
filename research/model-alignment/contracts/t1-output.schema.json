@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stackmate.local/contracts/t1-output.schema.json",
+  "title": "StackMate T1 selection-only output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "selectedCauseIndexes",
+    "selectedCheckIndexes",
+    "limitation"
+  ],
+  "properties": {
+    "selectedCauseIndexes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "uniqueItems": true
+    },
+    "selectedCheckIndexes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "uniqueItems": true
+    },
+    "limitation": {
+      "enum": [
+        null,
+        "EVIDENCE_INSUFFICIENT"
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "selectedCauseIndexes": {
+          "minItems": 1
+        },
+        "selectedCheckIndexes": {
+          "minItems": 1
+        },
+        "limitation": {
+          "type": "null"
+        }
+      }
+    },
+    {
+      "properties": {
+        "selectedCauseIndexes": {
+          "maxItems": 0
+        },
+        "selectedCheckIndexes": {
+          "maxItems": 0
+        },
+        "limitation": {
+          "const": "EVIDENCE_INSUFFICIENT"
+        }
+      }
+    }
+  ]
+}

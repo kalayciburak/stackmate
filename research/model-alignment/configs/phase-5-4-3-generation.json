@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1",
+  "profileId": "P5.4.3-T1-EXACTLY-ONCE",
+  "contract": "T1_SELECTION_ONLY_ORDINAL",
+  "baseRepository": "Qwen/Qwen3.5-2B",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "precision": "BF16",
+  "maximumSequenceLength": 2048,
+  "maxNewTokens": 128,
+  "doSample": false,
+  "numBeams": 1,
+  "enableThinking": false,
+  "useCache": true,
+  "batchSize": 1,
+  "candidateOrders": [
+    "ORIGINAL",
+    "PERMUTED"
+  ],
+  "systems": [
+    "D0",
+    "B0",
+    "A1"
+  ],
+  "executionAttemptsPerSystem": 1,
+  "localFilesOnly": true,
+  "trustRemoteCode": false,
+  "telemetry": false,
+  "remoteReporting": false
+}

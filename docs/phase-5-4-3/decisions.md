@@ -10,6 +10,13 @@
 - Reject lexical novelty and compare each proposal against every exposed family
   using normalized semantic signatures plus manual review.
 - Complete all D0/B0/A1 generation before loading labels or computing scores.
+- Use aggregate-balanced SHA-256 candidate ordering independent of expected
+  IDs, followed by a one-position permutation; require every supported
+  cause/check to move.
+- Count a family correct only when both ORIGINAL and PERMUTED predictions are
+  correct.
+- Reuse only specific existing deterministic-analyzer selections in D0;
+  generic fallbacks and benchmark-only candidates require abstention.
 - Stop before merge/GGUF if any fresh-final safety, quality, or practical-value
   gate fails.
 - Create local commits and tags where required; perform no remote push.
