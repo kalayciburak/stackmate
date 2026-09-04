@@ -183,3 +183,16 @@ artifact. Its tokenizer-only audit reused the local official Apache-2.0
 disabled. Dataset validity failed before model loading, inference or training.
 No model, adapter, merged checkpoint, GGUF, native runtime or Maven dependency was
 added, committed, published or uploaded.
+
+## Phase 5.5.2 atomic contrastive feasibility
+
+Phase 5.5.2 adds no third-party dependency and distributes no model or native
+artifact. It reuses the existing locked research environment and the local
+official Apache-2.0 Qwen3.5-2B checkpoint at revision
+15852e8c16360a2fea060d615a32b45270f8a8fc. The tokenizer and one BF16 base-logit
+evaluation ran offline with trust_remote_code=false.
+
+New ontology, controlled synthetic development data, audits and reports are
+StackMate research artifacts. No adapter, optimizer state, merged checkpoint,
+GGUF, llama.cpp binary, cloud service, telemetry client, upload or Maven runtime
+dependency was added or redistributed.

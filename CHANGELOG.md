@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Phase 5.5.2 replaces compound/listwise candidates with a reviewed 60-entry
+  atomic ontology and a 60/25-family contrastive binary dataset. Dataset and
+  shortcut gates pass, but official BF16 base feasibility fails: validation
+  macro F1 is 45.20%, support recall is 12.90%, three unsupported attacks are
+  accepted, and six pair predictions change with batch order. Training,
+  calibration and exposed diagnostics remain unrun.
 - Phase 5.5.1 freezes an offline two-label, one-token-output
   `SUPPORTED`/`NOT_SUPPORTED` classification contract, then stops at dataset
   validity. A conservative audit
@@ -74,6 +80,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Phase 5.5.2 controlled atomic development families, predicate-derived pair
+  reviews, independent semantic review, S0-S4 plus evidence-shape shortcut
+  baselines, offline tokenization audit and direct next-token-logit base report.
+  No adapter, model artifact or production runtime dependency was added.
 - Phase 5.5.1 binary prompt/token audit, family-level candidate audit,
   ambiguity/security coverage evidence and explicit blocked-gate reports. No
   binary dataset rows, model output, adapter or product dependency were added.

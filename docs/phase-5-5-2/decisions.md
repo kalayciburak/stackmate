@@ -27,3 +27,6 @@
   the separate independent semantic review before declaring Gates B-D passed.
 - Freeze maximum sequence 1024 from the measured 489-token maximum and required
   538-token safety margin.
+- Stop permanently before Gate F because the frozen base run failed macro F1,
+  prompt-injection and order-invariance gates. Do not use training to rescue a
+  base path that did not satisfy the predeclared feasibility gate.

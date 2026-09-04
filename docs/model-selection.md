@@ -394,3 +394,22 @@ Gate B is `BINARY_VALIDATION_CLASS_INSUFFICIENT`. The binary role remains
 calibration and exposed diagnostics were not run. Deterministic diagnostics and
 the prior listwise rejection remain unchanged, and no product model selection
 changes.
+
+## Phase 5.5.2 atomic contrastive binary feasibility
+
+Phase 5.5.2 repaired the development layer before loading a model. It froze 15
+atomic cause propositions, 45 linked atomic checks, 30 new controlled
+development families and 612 same-text contrastive pair rows. Every semantic
+appears under both labels in both splits. Exact/normalized model-input overlap is
+zero, and all declared S0-S4 plus evidence-shape shortcut baselines pass.
+
+The exact official Qwen3.5-2B BF16 base was then evaluated with direct restricted
+token logits. VALIDATION reached 100% finite labels and exactly 80% SUPPORTED
+precision, but recall was 12.90% and macro F1 45.20%. Three unsupported security
+attacks were classified SUPPORTED. Different batch order changed six of 612
+predictions and produced a maximum 0.25 label-logit difference.
+
+Gate E is BINARY_BASE_NOT_PROMISING. The binary base role is NOT_VIABLE for this
+frozen contract; the single LoRA run, calibration, exposed diagnostics and fresh
+qualification were not authorized. Deterministic diagnostics remain READY and no
+product model selection changes.

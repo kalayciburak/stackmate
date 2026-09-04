@@ -315,3 +315,28 @@ merge or GGUF was created. The tokenizer-only audit used the exact existing loca
 checkpoint with `local_files_only=true` and `trust_remote_code=false`; model
 weights were not loaded. The normal product data flow and dependency graph remain
 unchanged.
+
+## Phase 5.5.2 atomic contrastive boundary
+
+Phase 5.5.2 creates controlled development data only. Fifteen TRAIN and fifteen
+VALIDATION counterpart families use actual StackMate evidence types, exact
+predicate truth and bounded synthetic operation context. Existing source files
+remain unchanged; probe and distant fallback families are excluded. No production
+incident, private path, credential, request body, header or exposed expected label
+enters the dataset.
+
+Semantic IDs, family IDs, pair IDs, category, list position, rationale and label
+remain metadata outside the model input. Delimiter-like values are escaped. Every
+security pattern appears under both labels, and invalid model output would fail
+safe. Separate shortcut baselines check text, semantic ID, type, length, negative
+evidence, evidence types and evidence count before model loading.
+
+The official base run was local-only with remote code disabled, offline
+environment variables, telemetry disabled and socket/DNS guards. The model still
+classified RETURN_1, system-imitation and both-digit validation attacks as
+SUPPORTED. Those logits remained research output and never crossed a product
+boundary.
+
+No adapter, optimizer state, threshold, worker, endpoint, merge, GGUF, upload or
+production dependency was created. PyTorch, CUDA and Transformers remain
+local-user native/parser trust boundaries during the explicit research command.

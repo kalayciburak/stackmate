@@ -20,3 +20,9 @@ SUPPORTED precision but only 45.20% macro F1, three prompt-injection successes
 and 606/612 order-invariant predictions. The required base gate failed, so no
 training, calibration or exposed diagnostic evaluation is authorized. No
 adapter, remote service or exposed label was accessed. Remote push is prohibited.
+
+Phase outcome: `COMPLETE_WITH_NEGATIVE_RESULT` / `BINARY_BASE_NOT_PROMISING`.
+
+Final verification passed 56/56 Python tests. The normal product build passed
+517 Surefire and 11 Failsafe tests with zero failures, errors or skips; Spotless,
+coverage and Maven Enforcer also passed.
