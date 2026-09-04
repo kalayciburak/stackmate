@@ -15,3 +15,12 @@
 - Keep all new implementation research-only. Do not add Maven runtime ML
   dependencies, production integration, provisioning or automatic downloads.
 - Keep model and adapter artifacts outside Git and do not push this branch.
+- Record D0 as `NOT_APPLICABLE` on the atomic pair corpus. The product selector
+  has no frozen product-candidate-to-atomic-semantic crosswalk, so assigning
+  atomic check decisions would invent behavior. Its historical 30-family result
+  remains a scope-limited reference only.
+- Classify D1 as `CONSTRUCTION_ORACLE` and D2 as
+  `CONSTRUCTION_EQUIVALENT`. D2 uses an independent predicate interpreter but
+  consumes the same ontology relation that generated the labels.
+- Close Gate B as `TASK_DETERMINISTIC` and do not create a model-eligible
+  subset, nested validation split, evaluator matrix, adapter or calibration.
