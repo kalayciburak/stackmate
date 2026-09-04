@@ -92,6 +92,16 @@ checkout recorded synthetic merge commit
 Workflows now explicitly check out and name evidence with the PR head SHA. A
 new exact-head run is mandatory before final qualification.
 
+## Fifth hosted run
+
+Exact checkout head `6d6be9c0cf165d8bc53a62688c170b3a5d5af0de` passed CI
+`33926362199`, CodeQL `33926362151` and dependency review `33926362200`.
+All downloaded artifact names carried the head SHA, but qualification summaries
+still recorded the PR merge SHA through `GITHUB_SHA`. Independent payload audit
+passed test/API/dependency/JAR-entry/reproducibility/OSV/file-repository gates,
+and all six CodeQL XSS results were test-fixture-only. The collector now uses
+validated checkout HEAD; the final identity rerun remains pending.
+
 ## Publication boundary
 
 No signing, Central credential use, Central deployment, GitHub Release, merge,

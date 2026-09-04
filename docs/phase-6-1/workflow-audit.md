@@ -97,6 +97,17 @@ Downloaded artifact names and summaries exposed standard PR merge SHA
 bound to the PR head SHA. The green merge-ref set is not used as final identity
 evidence.
 
+The fifth run set checked out exact head `6d6be9c...` and passed CI
+[33926362199](https://github.com/kalayciburak/stackmate/actions/runs/33926362199),
+CodeQL
+[33926362151](https://github.com/kalayciburak/stackmate/actions/runs/33926362151)
+and dependency review
+[33926362200](https://github.com/kalayciburak/stackmate/actions/runs/33926362200).
+Artifact names were correct, but qualification summaries still read the PR
+merge SHA from `GITHUB_SHA`. The collector now records validated checked-out
+HEAD. A final rerun is required; no permission, trigger or publication scope
+changed.
+
 The first manual release-preflight dispatch returned HTTP 404 because GitHub
 only exposes new `workflow_dispatch` definitions after they exist on the
 default branch. The phase will not merge or push directly to that branch to

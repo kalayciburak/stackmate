@@ -75,6 +75,30 @@ workflow revision checks out `${{ github.event.pull_request.head.sha }}` on PRs
 and uses the same head SHA in every qualification artifact name. No final
 qualification claim is derived from the fourth set.
 
+## Preserved fifth exact-checkout run
+
+Commit `6d6be9c0cf165d8bc53a62688c170b3a5d5af0de` passed every hosted
+job: CI [33926362199](https://github.com/kalayciburak/stackmate/actions/runs/33926362199),
+CodeQL [33926362151](https://github.com/kalayciburak/stackmate/actions/runs/33926362151)
+and dependency review
+[33926362200](https://github.com/kalayciburak/stackmate/actions/runs/33926362200).
+Checkout logs and artifact names used the exact head SHA. However, the three
+qualification summaries still preferred inherited `GITHUB_SHA` and recorded
+synthetic merge commit `977a7abfabc055682c6d815c0957091d3cdddb41`.
+
+The downloaded evidence otherwise passed independent audit: all OS summaries
+reported 549 Surefire + 6 Failsafe with zero failures/errors/skips; API hash
+`41f718f0479f10daf502012a54b20e7569699d1318efe4fe0b91b95b9878bea7`;
+OSV zero results; Ubuntu 23/23 byte-identical payloads; Windows 13 required
+file-repository payloads, 26 checksum sidecars and 6+1 consumer tests. CodeQL
+reported six XSS paths, all confined to controlled benchmark test controllers
+under `stackmate-benchmark/src/test/java`; none is part of a public coordinate.
+
+The collector now resolves and validates checked-out `git HEAD` directly and
+ignores `GITHUB_SHA`. A local run with an injected all-zero `GITHUB_SHA` still
+reported exact HEAD `6d6be9c...`, 549+6 tests and `publicationPerformed=false`.
+One more hosted run is required before final identity is accepted.
+
 ## Required runs
 
 | Workflow/job | Commit SHA | Run ID | Immutable URL | Result | Required evidence |

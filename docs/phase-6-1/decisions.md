@@ -159,3 +159,14 @@ GitHub's standard `pull_request` checkout tested a synthetic merge commit and
 the PR head SHA for checkout and artifact identity; dependency review likewise
 checks out the head while retaining full history for the explicit base/head
 comparison. Push-event behavior continues to use `github.sha`.
+
+## D18 - Derive summary identity from the checked-out repository
+
+Status: accepted after downloading run `33926362199` artifacts.
+
+Artifact names correctly used the PR head, but the collector's `commit` field
+preferred GitHub's synthetic `GITHUB_SHA`. Qualification evidence must describe
+the tree actually inspected. The collector now runs `git rev-parse HEAD`,
+requires a 40-character lowercase commit ID and fails closed otherwise. A local
+test with a deliberately false `GITHUB_SHA` proved that the checked-out HEAD is
+reported instead.

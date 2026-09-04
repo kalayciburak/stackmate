@@ -86,3 +86,21 @@ also passed. Expected read-only warnings state that private-repository Code
 Scanning API features are unavailable without GHAS; no upload to Code Scanning,
 setting change or write permission was introduced. Both workflows must rerun
 after exact-head checkout is pinned.
+
+Exact-head CodeQL run
+[33926362151](https://github.com/kalayciburak/stackmate/actions/runs/33926362151)
+passed tested construction, analysis and SARIF upload. Artifact digest was
+`b8b668ee3897517c481f157477803bff2c8c1a99c33d3c40d2055530ab6fd7a6`;
+downloaded `java.sarif` SHA-256 was
+`341cf6d3537826a6f028e0fde010fd9cea7ce304eb64acf7d3758cf2e6a0ca1d`.
+Its six `java/xss` paths all terminate in controlled echo endpoints inside two
+benchmark test-fixture classes. Those classes are under `src/test/java`, are
+absent from all four public coordinates and intentionally reproduce MVC input
+behavior. Disposition: `TEST_FIXTURE_ONLY / NOT_RELEASE_SURFACE`; no suppression
+or product security relaxation was added.
+
+The same head's dependency-review artifact passed with base/head declaration
+counts 58/64, 20 additions, 14 removals and zero runtime-policy violations.
+Linux OSV report contained zero results. Private-repository Code Scanning API
+warnings remain a known capability limitation; local SARIF evidence is retained
+for seven days and no security write permission is present.

@@ -193,10 +193,9 @@ if (-not [System.IO.File]::Exists($apiInventoryPath)) {
 }
 $apiInventory = Get-Content -LiteralPath $apiInventoryPath -Raw | ConvertFrom-Json
 $bundleManifest = Join-Path $bundle "checksums/manifest.json"
-$commit = if ([string]::IsNullOrWhiteSpace($env:GITHUB_SHA)) {
-    (& git -C $repository rev-parse HEAD).Trim()
-} else {
-    $env:GITHUB_SHA
+$commit = (& git -C $repository rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $commit -notmatch '^[0-9a-f]{40}$') {
+    throw "Unable to resolve the checked-out qualification commit"
 }
 $javaExecutable = Join-Path $env:JAVA_HOME $(if ($IsWindows) { "bin/java.exe" } else { "bin/java" })
 $java = [string]@(& $javaExecutable -version 2>&1)[0]

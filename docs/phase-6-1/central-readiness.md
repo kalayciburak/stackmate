@@ -22,10 +22,16 @@ plus 1 Failsafe test with no failures, errors or skips. Starter sources and
 Javadoc attachments were present, and every required MD5/SHA1 sidecar matched
 a fresh digest calculation.
 
+Hosted Windows job `101195648060` in run `33926362199` repeated the public
+install, external consumer and local file-repository path. Its downloaded report
+records 13 required payloads, 26 verified MD5/SHA1 sidecars, clean-repository
+resolution, 6 contract tests, 1 packaged-process test, no credentials and no
+publication.
+
 ## Readiness blockers
 
-- All hosted qualification, release-preflight and uploaded-artifact results are
-  `UNVERIFIED`.
+- Hosted qualification passed, but one final summary-identity rerun and the
+  default-branch-only manual release-preflight remain outstanding.
 - Namespace verification, Central credentials and PGP signing are absent.
 - No Central deployment or Portal validation has been attempted.
 

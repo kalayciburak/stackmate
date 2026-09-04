@@ -32,6 +32,14 @@ documents are finalized after the successful exact-commit hosted run.
 The frozen public API contains 73 types with signature SHA-256
 `41f718f0479f10daf502012a54b20e7569699d1318efe4fe0b91b95b9878bea7`.
 
+## Interim exact-checkout identity
+
+Commit `6d6be9c0cf165d8bc53a62688c170b3a5d5af0de` passed every workflow,
+and all six artifact names used that exact SHA. The embedded qualification
+summaries nevertheless recorded PR merge SHA `977a7ab...` from `GITHUB_SHA`.
+The collector is corrected and locally verified, so this commit is preserved
+as a successful intermediate run rather than declared final rc2 identity.
+
 ## Main update after authorized remote qualification
 
 Main must bind all evidence to one exact final rc2 commit by filling the final
