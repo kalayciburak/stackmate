@@ -24,6 +24,7 @@
   "predicates": [
     {
       "predicateId": "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE",
+      "confusionGroup": "SPRING_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -33,6 +34,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_CLASS_NOT_FOUND",
+      "confusionGroup": "JVM_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -42,6 +44,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_CONCURRENT_MODIFICATION",
+      "confusionGroup": "JVM_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -51,6 +54,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_CONVERTER_NOT_FOUND",
+      "confusionGroup": "SPRING_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -60,6 +64,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_HTTP_TIMEOUT",
+      "confusionGroup": "NETWORK_SECURITY",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -69,6 +74,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_INVALID_FORMAT",
+      "confusionGroup": "WEB_REQUEST",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT_ANY",
       "values": [
@@ -79,6 +85,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_LOCKED",
+      "confusionGroup": "SPRING_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -88,6 +95,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_NO_RESOURCE_FOUND",
+      "confusionGroup": "WEB_REQUEST",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -97,6 +105,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_SSL_HANDSHAKE",
+      "confusionGroup": "NETWORK_SECURITY",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -106,6 +115,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_STACK_OVERFLOW",
+      "confusionGroup": "JVM_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -115,6 +125,7 @@
     },
     {
       "predicateId": "EXCEPTION_CLASS_UNSUPPORTED_OPERATION",
+      "confusionGroup": "JVM_RUNTIME",
       "evidenceType": "EXCEPTION_CLASS",
       "operator": "EXACT",
       "values": [
@@ -124,6 +135,7 @@
     },
     {
       "predicateId": "SQLSTATE_CLASS_22",
+      "confusionGroup": "DATABASE_SQLSTATE",
       "evidenceType": "SQL_STATE",
       "operator": "PREFIX",
       "values": [
@@ -133,6 +145,7 @@
     },
     {
       "predicateId": "SQLSTATE_CLASS_23",
+      "confusionGroup": "DATABASE_SQLSTATE",
       "evidenceType": "SQL_STATE",
       "operator": "PREFIX",
       "values": [
@@ -142,6 +155,7 @@
     },
     {
       "predicateId": "SQLSTATE_EXACT_55P03",
+      "confusionGroup": "DATABASE_SQLSTATE",
       "evidenceType": "SQL_STATE",
       "operator": "EXACT",
       "values": [
@@ -151,6 +165,7 @@
     },
     {
       "predicateId": "SQLSTATE_EXACT_57014",
+      "confusionGroup": "DATABASE_SQLSTATE",
       "evidenceType": "SQL_STATE",
       "operator": "EXACT",
       "values": [
@@ -274,7 +289,7 @@
     {
       "semanticId": "CAUSE_DB_DATA_EXCEPTION",
       "type": "CAUSE",
-      "canonicalText": "The database rejected a value under SQLSTATE class 22.",
+      "canonicalText": "The database reported a data exception under SQLSTATE class 22.",
       "atomicUnit": "PROPOSITION",
       "parameters": [],
       "requiredEvidence": [
@@ -297,7 +312,7 @@
     {
       "semanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
       "type": "CAUSE",
-      "canonicalText": "The database rejected a change under SQLSTATE class 23.",
+      "canonicalText": "The database reported an integrity violation under SQLSTATE class 23.",
       "atomicUnit": "PROPOSITION",
       "parameters": [],
       "requiredEvidence": [
@@ -608,7 +623,7 @@
     {
       "semanticId": "CHECK_COLLECTION_MUTABILITY",
       "type": "CHECK",
-      "canonicalText": "Inspect the collection mutability contract.",
+      "canonicalText": "Inspect the failed operation contract.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -741,9 +756,9 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_DB_BLOCK_DURATION",
+      "semanticId": "CHECK_DB_CANCELED_QUERY",
       "type": "CHECK",
-      "canonicalText": "Measure the blocked query duration.",
+      "canonicalText": "Inspect the canceled database query.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -763,9 +778,31 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_DB_CANCELLATION_SOURCE",
+      "semanticId": "CHECK_DB_CANCELLATION_SIGNAL",
       "type": "CHECK",
-      "canonicalText": "Identify the query cancellation source.",
+      "canonicalText": "Inspect the query cancellation signal.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "SQLSTATE_EXACT_57014"
+      ],
+      "optionalEvidence": [
+        "DATABASE_TABLE",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_DB_QUERY_CANCELED",
+      "categories": [
+        "TIMEOUT"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_DB_CANCELLATION_SQLSTATE",
+      "type": "CHECK",
+      "canonicalText": "Verify the captured cancellation SQLState.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -832,7 +869,7 @@
     {
       "semanticId": "CHECK_DB_DATA_RANGE",
       "type": "CHECK",
-      "canonicalText": "Verify the target value range.",
+      "canonicalText": "Inspect the data-exception SQLState detail.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -878,7 +915,7 @@
     {
       "semanticId": "CHECK_DB_DATA_VALUE",
       "type": "CHECK",
-      "canonicalText": "Inspect the rejected database value.",
+      "canonicalText": "Inspect the database operation input.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -945,7 +982,7 @@
     {
       "semanticId": "CHECK_DB_REJECTED_ROW",
       "type": "CHECK",
-      "canonicalText": "Inspect the rejected row value.",
+      "canonicalText": "Inspect the affected database change.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -968,7 +1005,7 @@
     {
       "semanticId": "CHECK_DB_RELATED_ROW",
       "type": "CHECK",
-      "canonicalText": "Verify the related row state.",
+      "canonicalText": "Inspect the constraint SQLState detail.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -983,28 +1020,6 @@
       "linkedCauseSemanticId": "CAUSE_DB_INTEGRITY_CONSTRAINT",
       "categories": [
         "DATABASE_CONSTRAINT"
-      ],
-      "mutualExclusionGroup": null,
-      "securitySensitivity": "NONE",
-      "deprecationStatus": "ACTIVE"
-    },
-    {
-      "semanticId": "CHECK_DB_STATEMENT_TIMEOUT",
-      "type": "CHECK",
-      "canonicalText": "Inspect the configured statement timeout.",
-      "atomicUnit": "ACTION",
-      "parameters": [],
-      "requiredEvidence": [
-        "SQLSTATE_EXACT_57014"
-      ],
-      "optionalEvidence": [
-        "DATABASE_TABLE",
-        "SANITIZED_MESSAGE"
-      ],
-      "disqualifyingEvidence": [],
-      "linkedCauseSemanticId": "CAUSE_DB_QUERY_CANCELED",
-      "categories": [
-        "TIMEOUT"
       ],
       "mutualExclusionGroup": null,
       "securitySensitivity": "NONE",
@@ -1035,7 +1050,7 @@
     {
       "semanticId": "CHECK_HTTP_DEADLINE",
       "type": "CHECK",
-      "canonicalText": "Inspect the request deadline.",
+      "canonicalText": "Verify the HTTP deadline setting.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1055,9 +1070,9 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_HTTP_LATENCY",
+      "semanticId": "CHECK_HTTP_REQUEST",
       "type": "CHECK",
-      "canonicalText": "Measure the upstream response latency.",
+      "canonicalText": "Inspect the timed-out HTTP request.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1079,7 +1094,7 @@
     {
       "semanticId": "CHECK_HTTP_TIMEOUT",
       "type": "CHECK",
-      "canonicalText": "Verify the configured HTTP timeout.",
+      "canonicalText": "Inspect the captured HTTP timeout.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1192,7 +1207,7 @@
     {
       "semanticId": "CHECK_MUTATING_THREAD",
       "type": "CHECK",
-      "canonicalText": "Identify the mutating thread.",
+      "canonicalText": "Inspect the mutation source.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1250,50 +1265,6 @@
       "linkedCauseSemanticId": "CAUSE_UNSUPPORTED_OPERATION",
       "categories": [
         "GENERAL_JAVA"
-      ],
-      "mutualExclusionGroup": null,
-      "securitySensitivity": "NONE",
-      "deprecationStatus": "ACTIVE"
-    },
-    {
-      "semanticId": "CHECK_RECURSION_TERMINATION",
-      "type": "CHECK",
-      "canonicalText": "Verify the recursion termination condition.",
-      "atomicUnit": "ACTION",
-      "parameters": [],
-      "requiredEvidence": [
-        "EXCEPTION_CLASS_STACK_OVERFLOW"
-      ],
-      "optionalEvidence": [
-        "APPLICATION_FRAME",
-        "SANITIZED_MESSAGE"
-      ],
-      "disqualifyingEvidence": [],
-      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
-      "categories": [
-        "RESOURCE_EXHAUSTION"
-      ],
-      "mutualExclusionGroup": null,
-      "securitySensitivity": "NONE",
-      "deprecationStatus": "ACTIVE"
-    },
-    {
-      "semanticId": "CHECK_RECURSIVE_CYCLE",
-      "type": "CHECK",
-      "canonicalText": "Identify the recursive call cycle.",
-      "atomicUnit": "ACTION",
-      "parameters": [],
-      "requiredEvidence": [
-        "EXCEPTION_CLASS_STACK_OVERFLOW"
-      ],
-      "optionalEvidence": [
-        "APPLICATION_FRAME",
-        "SANITIZED_MESSAGE"
-      ],
-      "disqualifyingEvidence": [],
-      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
-      "categories": [
-        "RESOURCE_EXHAUSTION"
       ],
       "mutualExclusionGroup": null,
       "securitySensitivity": "NONE",
@@ -1366,9 +1337,53 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_TLS_HOST_NAME",
+      "semanticId": "CHECK_STACK_GROWTH_SOURCE",
       "type": "CHECK",
-      "canonicalText": "Compare the requested host name with the certificate.",
+      "canonicalText": "Identify the stack growth source.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_STACK_TRACE",
+      "type": "CHECK",
+      "canonicalText": "Inspect the overflowing stack trace.",
+      "atomicUnit": "ACTION",
+      "parameters": [],
+      "requiredEvidence": [
+        "EXCEPTION_CLASS_STACK_OVERFLOW"
+      ],
+      "optionalEvidence": [
+        "APPLICATION_FRAME",
+        "SANITIZED_MESSAGE"
+      ],
+      "disqualifyingEvidence": [],
+      "linkedCauseSemanticId": "CAUSE_STACK_OVERFLOW",
+      "categories": [
+        "RESOURCE_EXHAUSTION"
+      ],
+      "mutualExclusionGroup": null,
+      "securitySensitivity": "NONE",
+      "deprecationStatus": "ACTIVE"
+    },
+    {
+      "semanticId": "CHECK_TLS_EXCEPTION",
+      "type": "CHECK",
+      "canonicalText": "Inspect the captured TLS exception.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1388,9 +1403,9 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_TLS_TRUST_CHAIN",
+      "semanticId": "CHECK_TLS_HANDSHAKE",
       "type": "CHECK",
-      "canonicalText": "Verify the certificate trust chain.",
+      "canonicalText": "Inspect the failed TLS handshake.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1410,9 +1425,9 @@
       "deprecationStatus": "ACTIVE"
     },
     {
-      "semanticId": "CHECK_TLS_VALIDITY",
+      "semanticId": "CHECK_TLS_PEER_RESULT",
       "type": "CHECK",
-      "canonicalText": "Inspect the certificate validity period.",
+      "canonicalText": "Verify the TLS peer result.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1434,7 +1449,7 @@
     {
       "semanticId": "CHECK_WEB_CONTROLLER_MAPPING",
       "type": "CHECK",
-      "canonicalText": "Inspect the controller mapping.",
+      "canonicalText": "Inspect the handler lookup result.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [
@@ -1480,7 +1495,7 @@
     {
       "semanticId": "CHECK_WEB_RESOURCE_LOCATION",
       "type": "CHECK",
-      "canonicalText": "Verify the static resource location.",
+      "canonicalText": "Inspect the resource resolution trace.",
       "atomicUnit": "ACTION",
       "parameters": [],
       "requiredEvidence": [

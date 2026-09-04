@@ -23,72 +23,84 @@ FORBIDDEN_CHARACTERS = re.compile(r"[,;/\n\r]")
 
 PREDICATES: dict[str, dict[str, Any]] = {
     "SQLSTATE_CLASS_22": {
+        "confusionGroup": "DATABASE_SQLSTATE",
         "evidenceType": "SQL_STATE",
         "operator": "PREFIX",
         "values": ["22"],
         "reliability": "HIGH",
     },
     "SQLSTATE_CLASS_23": {
+        "confusionGroup": "DATABASE_SQLSTATE",
         "evidenceType": "SQL_STATE",
         "operator": "PREFIX",
         "values": ["23"],
         "reliability": "HIGH",
     },
     "SQLSTATE_EXACT_55P03": {
+        "confusionGroup": "DATABASE_SQLSTATE",
         "evidenceType": "SQL_STATE",
         "operator": "EXACT",
         "values": ["55P03"],
         "reliability": "HIGH",
     },
     "SQLSTATE_EXACT_57014": {
+        "confusionGroup": "DATABASE_SQLSTATE",
         "evidenceType": "SQL_STATE",
         "operator": "EXACT",
         "values": ["57014"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_HTTP_TIMEOUT": {
+        "confusionGroup": "NETWORK_SECURITY",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["java.net.http.HttpTimeoutException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_SSL_HANDSHAKE": {
+        "confusionGroup": "NETWORK_SECURITY",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["javax.net.ssl.SSLHandshakeException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_CLASS_NOT_FOUND": {
+        "confusionGroup": "JVM_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["java.lang.ClassNotFoundException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_CONCURRENT_MODIFICATION": {
+        "confusionGroup": "JVM_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["java.util.ConcurrentModificationException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_STACK_OVERFLOW": {
+        "confusionGroup": "JVM_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["java.lang.StackOverflowError"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_UNSUPPORTED_OPERATION": {
+        "confusionGroup": "JVM_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["java.lang.UnsupportedOperationException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_LOCKED": {
+        "confusionGroup": "SPRING_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["org.springframework.security.authentication.LockedException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_BEAN_DEFINITION_OVERRIDE": {
+        "confusionGroup": "SPRING_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": [
@@ -97,12 +109,14 @@ PREDICATES: dict[str, dict[str, Any]] = {
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_CONVERTER_NOT_FOUND": {
+        "confusionGroup": "SPRING_RUNTIME",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["org.springframework.core.convert.ConverterNotFoundException"],
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_INVALID_FORMAT": {
+        "confusionGroup": "WEB_REQUEST",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT_ANY",
         "values": [
@@ -112,6 +126,7 @@ PREDICATES: dict[str, dict[str, Any]] = {
         "reliability": "HIGH",
     },
     "EXCEPTION_CLASS_NO_RESOURCE_FOUND": {
+        "confusionGroup": "WEB_REQUEST",
         "evidenceType": "EXCEPTION_CLASS",
         "operator": "EXACT",
         "values": ["org.springframework.web.servlet.resource.NoResourceFoundException"],
@@ -123,29 +138,29 @@ BUNDLES: tuple[dict[str, Any], ...] = (
     {
         "cause": (
             "CAUSE_DB_DATA_EXCEPTION",
-            "The database rejected a value under SQLSTATE class 22.",
+            "The database reported a data exception under SQLSTATE class 22.",
         ),
         "predicate": "SQLSTATE_CLASS_22",
         "category": "DATABASE",
         "optional": ["DATABASE_COLUMN", "EXPECTED_TYPE", "RECEIVED_VALUE"],
         "checks": (
-            ("CHECK_DB_DATA_VALUE", "Inspect the rejected database value."),
+            ("CHECK_DB_DATA_VALUE", "Inspect the database operation input."),
             ("CHECK_DB_DATA_TYPE", "Inspect the target database type."),
-            ("CHECK_DB_DATA_RANGE", "Verify the target value range."),
+            ("CHECK_DB_DATA_RANGE", "Inspect the data-exception SQLState detail."),
         ),
     },
     {
         "cause": (
             "CAUSE_DB_INTEGRITY_CONSTRAINT",
-            "The database rejected a change under SQLSTATE class 23.",
+            "The database reported an integrity violation under SQLSTATE class 23.",
         ),
         "predicate": "SQLSTATE_CLASS_23",
         "category": "DATABASE_CONSTRAINT",
         "optional": ["DATABASE_CONSTRAINT", "DATABASE_TABLE", "DATABASE_COLUMN"],
         "checks": (
             ("CHECK_DB_CONSTRAINT", "Inspect the violated database constraint."),
-            ("CHECK_DB_REJECTED_ROW", "Inspect the rejected row value."),
-            ("CHECK_DB_RELATED_ROW", "Verify the related row state."),
+            ("CHECK_DB_REJECTED_ROW", "Inspect the affected database change."),
+            ("CHECK_DB_RELATED_ROW", "Inspect the constraint SQLState detail."),
         ),
     },
     {
@@ -171,9 +186,9 @@ BUNDLES: tuple[dict[str, Any], ...] = (
         "category": "TIMEOUT",
         "optional": ["DATABASE_TABLE", "SANITIZED_MESSAGE"],
         "checks": (
-            ("CHECK_DB_STATEMENT_TIMEOUT", "Inspect the configured statement timeout."),
-            ("CHECK_DB_CANCELLATION_SOURCE", "Identify the query cancellation source."),
-            ("CHECK_DB_BLOCK_DURATION", "Measure the blocked query duration."),
+            ("CHECK_DB_CANCELED_QUERY", "Inspect the canceled database query."),
+            ("CHECK_DB_CANCELLATION_SIGNAL", "Inspect the query cancellation signal."),
+            ("CHECK_DB_CANCELLATION_SQLSTATE", "Verify the captured cancellation SQLState."),
         ),
     },
     {
@@ -182,9 +197,9 @@ BUNDLES: tuple[dict[str, Any], ...] = (
         "category": "TIMEOUT",
         "optional": ["SANITIZED_MESSAGE", "APPLICATION_FRAME"],
         "checks": (
-            ("CHECK_HTTP_LATENCY", "Measure the upstream response latency."),
-            ("CHECK_HTTP_TIMEOUT", "Verify the configured HTTP timeout."),
-            ("CHECK_HTTP_DEADLINE", "Inspect the request deadline."),
+            ("CHECK_HTTP_REQUEST", "Inspect the timed-out HTTP request."),
+            ("CHECK_HTTP_TIMEOUT", "Inspect the captured HTTP timeout."),
+            ("CHECK_HTTP_DEADLINE", "Verify the HTTP deadline setting."),
         ),
     },
     {
@@ -193,11 +208,11 @@ BUNDLES: tuple[dict[str, Any], ...] = (
         "category": "TLS",
         "optional": ["SANITIZED_MESSAGE", "CAUSE_RELATIONSHIP"],
         "checks": (
-            ("CHECK_TLS_TRUST_CHAIN", "Verify the certificate trust chain."),
-            ("CHECK_TLS_VALIDITY", "Inspect the certificate validity period."),
+            ("CHECK_TLS_HANDSHAKE", "Inspect the failed TLS handshake."),
+            ("CHECK_TLS_EXCEPTION", "Inspect the captured TLS exception."),
             (
-                "CHECK_TLS_HOST_NAME",
-                "Compare the requested host name with the certificate.",
+                "CHECK_TLS_PEER_RESULT",
+                "Verify the TLS peer result.",
             ),
         ),
     },
@@ -225,7 +240,7 @@ BUNDLES: tuple[dict[str, Any], ...] = (
                 "CHECK_COLLECTION_MUTATION",
                 "Inspect collection mutation during traversal.",
             ),
-            ("CHECK_MUTATING_THREAD", "Identify the mutating thread."),
+            ("CHECK_MUTATING_THREAD", "Inspect the mutation source."),
             ("CHECK_ITERATOR_OWNERSHIP", "Verify the iterator ownership."),
         ),
     },
@@ -235,11 +250,11 @@ BUNDLES: tuple[dict[str, Any], ...] = (
         "category": "RESOURCE_EXHAUSTION",
         "optional": ["APPLICATION_FRAME", "SANITIZED_MESSAGE"],
         "checks": (
+            ("CHECK_STACK_TRACE", "Inspect the overflowing stack trace."),
             ("CHECK_REPEATED_FRAMES", "Inspect repeated stack frames."),
-            ("CHECK_RECURSIVE_CYCLE", "Identify the recursive call cycle."),
             (
-                "CHECK_RECURSION_TERMINATION",
-                "Verify the recursion termination condition.",
+                "CHECK_STACK_GROWTH_SOURCE",
+                "Identify the stack growth source.",
             ),
         ),
     },
@@ -262,7 +277,7 @@ BUNDLES: tuple[dict[str, Any], ...] = (
             ),
             (
                 "CHECK_COLLECTION_MUTABILITY",
-                "Inspect the collection mutability contract.",
+                "Inspect the failed operation contract.",
             ),
         ),
     },
@@ -353,9 +368,9 @@ BUNDLES: tuple[dict[str, Any], ...] = (
             ("CHECK_WEB_REQUEST_PATH", "Inspect the request path."),
             (
                 "CHECK_WEB_RESOURCE_LOCATION",
-                "Verify the static resource location.",
+                "Inspect the resource resolution trace.",
             ),
-            ("CHECK_WEB_CONTROLLER_MAPPING", "Inspect the controller mapping."),
+            ("CHECK_WEB_CONTROLLER_MAPPING", "Inspect the handler lookup result."),
         ),
     },
 )
@@ -500,6 +515,14 @@ def validate_ontology(ontology: dict[str, Any]) -> None:
     predicate_ids = {item["predicateId"] for item in predicates}
     if predicate_ids != set(PREDICATES):
         raise ValueError("predicate set drifted")
+    group_counts: dict[str, int] = {}
+    for predicate in predicates:
+        group = predicate.get("confusionGroup")
+        if not isinstance(group, str) or not group:
+            raise ValueError("predicate confusion group is missing")
+        group_counts[group] = group_counts.get(group, 0) + 1
+    if min(group_counts.values()) < 2:
+        raise ValueError("every confusion group needs at least two predicates")
     semantic_ids = [item["semanticId"] for item in entries]
     texts = [item["canonicalText"] for item in entries]
     if len(entries) != 60 or len(set(semantic_ids)) != 60 or len(set(texts)) != 60:

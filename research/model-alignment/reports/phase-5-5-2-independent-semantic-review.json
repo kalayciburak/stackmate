@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1",
+  "reviewId": "stackmate-phase-5-5-2-independent-semantic-review-v1",
+  "status": "PASS",
+  "artifactBindings": {
+    "ontologySha256": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+    "ontologyReviewSha256": "eaf35e665c794a44dce137ca2a44dcee6c3f24c44cd6752276062bcda2e831c8",
+    "datasetManifestSha256": "3a48c4e4721b5b7cb590ff16f7b95ef1afaa557a439f12dc6002065df260f67a",
+    "trainSha256": "cb5f1ef1611b4f4383226dcc0fb10729cb2bac1aafacfb374cc29141f1769313",
+    "validationSha256": "d6496481d7073a76605c744f11dd03e0d8a3fcc79ff9e8418bba187391373701",
+    "familiesSha256": "49a1fca8c42781be3d472f45edb8ef7a195b815a7c855bbbfdff0c66dd1816a4",
+    "pairReviewsSha256": "5d6d94a3cf62b962c2a54f39e9a6f5a73c12dd13452b77f9270cf8c77ae28622",
+    "pairReviewReportSha256": "f6fc16e9f4a0b29ea6d223d8ccbb56af46ccfcf2bd4594d9ae8fff3eec9901d7",
+    "generatorSha256": "9878e0160380b2e8321fd8beae1725bb732985f8f8334cccf5175c98fe35d39c"
+  },
+  "reviewPasses": [
+    {
+      "pass": 1,
+      "owner": "phase-5-5-2-experiment-owner",
+      "method": "full ontology and generator semantic review",
+      "ontologyEntriesReviewed": 60,
+      "pairRulesReviewed": 15,
+      "issuesFound": 5,
+      "issuesResolved": 5,
+      "unresolvedIssues": 0,
+      "result": "PASS_AFTER_CORRECTION"
+    },
+    {
+      "pass": 2,
+      "owner": "independent-adversarial-reviewer",
+      "method": "separate-context read-only ontology dataset and shortcut audit",
+      "ontologyEntriesReviewed": 60,
+      "datasetRowsStructurallyCovered": 612,
+      "issuesFoundAfterCorrection": 0,
+      "unresolvedIssues": 0,
+      "result": "PASS_WITH_RECORDED_LIMITATIONS"
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "finding": "OVER_SPECIFIC_CHECK_SEMANTICS",
+      "resolution": "Replaced blocked-duration certificate-specific and recursion-specific actions with predicate-grounded inspection actions."
+    },
+    {
+      "finding": "DISTANT_NO_SIGNAL_NEGATIVES",
+      "resolution": "Reduced the source pool to 45 TRAIN and 10 VALIDATION near-context families and retained same-group negative matching."
+    },
+    {
+      "finding": "LABEL_CONDITIONED_NEGATIVE_EVIDENCE_PROSE",
+      "resolution": "Replaced prose with typed negative facts that require comparison with the candidate predicate."
+    },
+    {
+      "finding": "EXCEPTION_TYPE_GROUP_TOO_BROAD",
+      "resolution": "Split hard-negative matching into database network JVM Spring and web confusion groups."
+    },
+    {
+      "finding": "DUPLICATE_MODEL_INPUTS",
+      "resolution": "Added bounded sanitized runtime context and verified 612 unique model inputs with zero cross-split overlap."
+    }
+  ],
+  "gateRecommendations": {
+    "gateBAtomicOntology": "PASS",
+    "gateCBinaryDataset": "PASS",
+    "gateDShortcutAudit": "PASS"
+  },
+  "limitations": [
+    "LEXICAL and HASH pair-review rows are deterministic predicate-consistency checks and are not represented as independent semantic reviewers.",
+    "The additional controlled families are development-only synthetic contexts rather than production incidents.",
+    "Candidate semantic and exact text overlap across splits is intentional; exact and normalized full model-input overlap is zero.",
+    "This review is not model evaluation or production qualification."
+  ],
+  "modelWeightsLoaded": false,
+  "exposedDiagnosticLabelsAccessed": false
+}

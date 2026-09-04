@@ -35,13 +35,16 @@ complete predicate be absent or disqualified; listwise omission is never enough.
 No candidate is deprecated and no unsupported mutual-exclusion relation is
 invented.
 
-Two reviews completed in semantic-ID lexical order and independently in
-SHA-256 semantic-ID order. Structural atomicity, predicate references, links,
-text uniqueness, hedging and ID dependence passed with zero disputes.
+The generated lexical and SHA-256-order passes verify deterministic structural
+consistency; they are not described as independent semantic reviewers. A
+separate experiment-owner review and separate-context adversarial review found
+five initial defects, corrected them, then recorded zero unresolved semantic
+issues against the final hashes.
 
 ~~~text
-Ontology SHA-256 4ee991459cab75124b65679ff421ddec3ac3c40d55dd5c7de62d971ad8c3d3d9
-Review SHA-256   34d8644a6863210c6caf0988e9d7998ef9a1569192bc5ca4ead2eb371f10b8fe
+Ontology SHA-256          f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793
+Structural review SHA-256 eaf35e665c794a44dce137ca2a44dcee6c3f24c44cd6752276062bcda2e831c8
+Independent review SHA-256 b83b511bd0b3e9448a68e87ba76e6bc3f4724f0271daef54fd4a4ed2e724d47f
 ~~~
 
 Ontology structure is reviewed; model-dataset eligibility remains pending until
