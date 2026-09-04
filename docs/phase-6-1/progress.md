@@ -2,8 +2,8 @@
 
 Audit date: 2026-09-05
 
-Status: local rc2 pre-push qualification is complete; every remote gate is
-`PENDING` / `UNVERIFIED`.
+Status: local rc2 qualification is complete. Two failed hosted run sets are
+preserved; final-commit remote gates remain `PENDING` / `UNVERIFIED`.
 
 ## Release-candidate boundary
 
@@ -57,11 +57,23 @@ artifact failed: all failures occurred before artifact qualification, in
 historical test portability or unavailable repository capability. Focused
 repairs are locally verified and the final hosted rerun is pending.
 
+## Second hosted run
+
+Commit `b6821d68f99e130988324d375fc1a3c0f86725c9` produced CI run
+`33923226270`, CodeQL run `33923226567` and dependency-review run
+`33923226273`. Dependency review passed. CI exposed the remaining Windows
+relative-path fixture, Linux scripted-process race and macOS canonical-path
+result. CodeQL's tested build then exposed Linux TLS exception-chain variation
+and a parity corpus byte-serialization defect. The narrow fixes preserve all
+frozen cases and expected answers. Focused tests passed 77/77 and the full
+reactor passed 543 Surefire + 5 Failsafe locally with zero skips.
+
 ## Publication boundary
 
-No signing, Central credential use, Central deployment, GitHub Release, PR,
-push, merge, remote tag or package publication has occurred. Phase 6.1
-pre-push evidence is qualification material only.
+No signing, Central credential use, Central deployment, GitHub Release, merge,
+remote tag or package publication has occurred. Only the qualification branch
+and draft PR have been pushed. Phase 6.1 evidence is qualification material
+only.
 
 ## Main update after authorized remote runs
 

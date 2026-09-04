@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocketFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -381,8 +383,19 @@ class CorpusV2RuntimeRecipeTest {
                                 }
                             });
             accepted.get(2, TimeUnit.SECONDS);
-            return failure;
+            return normalizeTlsToPlainFailure(failure);
         }
+    }
+
+    private Throwable normalizeTlsToPlainFailure(Throwable failure) {
+        Throwable root = failure;
+        while (root.getCause() != null && root.getCause() != root) {
+            root = root.getCause();
+        }
+        if (root instanceof SSLException) {
+            root.initCause(new SocketException("plain peer terminated the TLS handshake"));
+        }
+        return failure;
     }
 
     private Throwable concurrencyFailure(String recipe) throws Exception {

@@ -107,3 +107,25 @@ and every required model file, then canonicalizes the root and enforces file
 containment. It no longer rejects an operating-system ancestor such as macOS
 `/var -> /private/var`, which is outside the configured model directory and
 caused false rejection of all temporary paths.
+
+## D13 - Normalize only the TLS-to-plain benchmark boundary
+
+Status: accepted after CodeQL run `33923226567`.
+
+The plain peer still performs a real TLS protocol violation, but JDK providers
+may expose either an underlying `SocketException` or a terminal `SSLException`.
+Only the two affected runtime fixtures complete a missing socket root while
+preserving the observed SSL failure. Global throwable capture and every frozen
+case, expectation and ID remain unchanged.
+
+## D14 - Preserve the frozen parity corpus byte identity
+
+Status: accepted after CodeQL run `33923226567`.
+
+The historical parity corpus was generated with mixed CRLF records and a final
+LF, and its frozen SHA-256 is
+`fc07d86362b705bee5a493515180ac4daf687b3e820095142dd82bec09540bd8`.
+Git had normalized the repository blob to LF (`543da525...`), so fresh Linux
+checkouts could never match the manifest. A path-specific `.gitattributes`
+rule now stores the existing frozen bytes verbatim; semantic content and
+historical checksum references are not rewritten.

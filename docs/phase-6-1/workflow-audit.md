@@ -65,6 +65,15 @@ After the first authorized remote runs, the main Phase 6.1 document must record:
 
 No row may be changed to `PASS` from configuration inspection alone.
 
+The second run set is also retained: CI
+[33923226270](https://github.com/kalayciburak/stackmate/actions/runs/33923226270)
+and CodeQL
+[33923226567](https://github.com/kalayciburak/stackmate/actions/runs/33923226567)
+failed on additional deterministic test-harness portability defects, while the
+replacement dependency review
+[33923226273](https://github.com/kalayciburak/stackmate/actions/runs/33923226273)
+passed. These intermediate results do not fill the final-commit placeholders.
+
 The first manual release-preflight dispatch returned HTTP 404 because GitHub
 only exposes new `workflow_dispatch` definitions after they exist on the
 default branch. The phase will not merge or push directly to that branch to

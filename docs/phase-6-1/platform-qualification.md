@@ -17,8 +17,8 @@ Windows-only executable, CIM and hidden-window assumptions.
 
 ## Hosted platform matrix
 
-The rc2 workflow is implemented locally to run the following scope. No hosted
-runner has executed it yet.
+The rc2 workflow implements the following scope. Two hosted attempts are
+preserved below, but no final rc2 commit has passed the complete matrix yet.
 
 | Hosted platform | Full clean verify | Public install | Consumer | API/bundle/evidence | Extra gates | Result |
 |---|---|---|---|---|---|---|
@@ -53,3 +53,21 @@ normalization parent, constructs the relative-path fixture beneath module
 `target`, and rejects the configured model directory itself plus required model
 files when they are symlinks. Canonical root/file containment remains enforced.
 The focused Windows suite passed 12/12 with no skips; hosted rerun is pending.
+
+## Second hosted failure disposition
+
+- Windows: the relative-path fixture still crossed the hosted `D:` workspace
+  and `C:` temporary drive; the fixture now lives below module `target`.
+- Linux: a scripted child emitted its one response and exited before the
+  parent liveness check; the controlled script now serves until shutdown.
+- macOS: the configured path was correctly accepted but returned `/var/...`
+  instead of its canonical `/private/var/...`; accepted roots now return
+  `toRealPath()` after the final-component symlink check.
+- CodeQL/Linux: TLS-to-plain can end at `SSLException` without an underlying
+  `SocketException`, and Git converted the frozen parity corpus's historical
+  mixed line endings. Fixture-local root completion and exact blob-byte
+  preservation address those two deterministic harness defects.
+
+The second fix set passed the affected 77-test benchmark subset and the full
+Windows reactor. No hosted success is claimed until the exact pushed commit
+passes.

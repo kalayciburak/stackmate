@@ -1,6 +1,6 @@
 # Phase 6.1 remote-run ledger
 
-The first hosted run set failed and is preserved below. The required final-commit
+Two hosted run sets failed and are preserved below. The required final-commit
 run IDs, artifact identities and qualification conclusions remain `PENDING` /
 `UNVERIFIED` until the focused fixes are pushed and rerun.
 
@@ -19,6 +19,24 @@ run set used commit `9a8f67357a60124fe7ef5e80c0f55a8d049ca7d7`.
 The focused repair keeps all mandatory tests enabled. It does not use retries,
 timeout inflation, platform skips, `continue-on-error` or repository-setting
 changes.
+
+## Preserved second run set
+
+The second run set used commit
+`b6821d68f99e130988324d375fc1a3c0f86725c9`.
+
+| Workflow | Run | Conclusion | Classification and evidence |
+|---|---|---|---|
+| CI | [33923226270](https://github.com/kalayciburak/stackmate/actions/runs/33923226270) | `FAIL` | `TEST_PORTABILITY_DEFECT`: Windows retained the cross-drive relative-path fixture, Linux exposed a fast-exit scripted-process race, and macOS exposed the `/var` versus `/private/var` canonical path result. Ubuntu reproducibility was skipped because the matrix dependency failed. |
+| CodeQL | [33923226567](https://github.com/kalayciburak/stackmate/actions/runs/33923226567) | `FAIL` | The tested build reached the benchmark module. Linux exposed provider-dependent TLS-to-plain root exceptions and a frozen parity corpus whose recorded mixed-line-ending byte identity had not been preserved by Git. Analysis did not run and no finding was produced. |
+| Dependency review | [33923226273](https://github.com/kalayciburak/stackmate/actions/runs/33923226273) | `PASS` | The replacement private-repository review completed its public graph build, base/head declaration comparison, runtime denylist audit and seven-day evidence upload. This is historical evidence only; the final rc2 commit must rerun it. |
+
+The second repair keeps the real TLS handshake failure while completing its
+platform-stable frozen transport root only inside the two affected fixtures.
+It also stores the already-frozen parity corpus bytes without Git line-ending
+conversion; the staged blob remains
+`fc07d86362b705bee5a493515180ac4daf687b3e820095142dd82bec09540bd8`.
+No case, expected answer, ID or model-evaluation result changed.
 
 ## Required runs
 

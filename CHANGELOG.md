@@ -20,6 +20,10 @@ All notable public product changes are documented here. The format follows
   aliases without adding inference to the public release.
 - Replaced unavailable private-repository dependency-review integration with a PR base/head declaration diff and
   fail-closed public runtime dependency audit.
+- Stabilized the historical TLS-to-plain fixtures across JDK providers without changing frozen cases or expected
+  answers.
+- Preserved the frozen parity corpus's recorded byte identity across Git checkouts without changing its semantic
+  content or checksum.
 
 RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
 frozen local-only checkpoint and will not be moved or pushed.

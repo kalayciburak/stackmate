@@ -69,7 +69,7 @@ final class ModelDirectory {
             if (!Files.isDirectory(absolute, LinkOption.NOFOLLOW_LINKS)) {
                 throw new IllegalArgumentException("model path is not a directory: " + absolute);
             }
-            Path root = absolute.toRealPath(LinkOption.NOFOLLOW_LINKS);
+            Path root = absolute.toRealPath();
             Path config = requiredRegularFile(root, "config.json", MAXIMUM_CONFIG_BYTES);
             Path tokenizer = requiredRegularFile(root, "tokenizer.json", MAXIMUM_TOKENIZER_BYTES);
             Path tokenizerConfig =

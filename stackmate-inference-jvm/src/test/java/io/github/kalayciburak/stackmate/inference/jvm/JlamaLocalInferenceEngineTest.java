@@ -60,7 +60,7 @@ class JlamaLocalInferenceEngineTest {
     @Test
     void rejectsMalformedModelJsonWithoutTrustingIt() throws Exception {
         JlamaLocalInferenceEngine engine =
-                engine(Duration.ofSeconds(1), command -> responseOnce("not-json"));
+                engine(Duration.ofSeconds(1), command -> responseLoop("not-json"));
 
         InferenceFailure failure = failure(engine.infer(request()));
 
@@ -135,13 +135,13 @@ class JlamaLocalInferenceEngineTest {
                 engine(
                         Duration.ofSeconds(1),
                         0,
-                        command -> responseOnce("```json\n" + VALID_OUTPUT + "\n```"));
+                        command -> responseLoop("```json\n" + VALID_OUTPUT + "\n```"));
         JlamaLocalInferenceEngine commentary =
                 engine(
                         Duration.ofSeconds(1),
                         0,
                         command ->
-                                responseOnce("Here is JSON:\n```json\n" + VALID_OUTPUT + "\n```"));
+                                responseLoop("Here is JSON:\n```json\n" + VALID_OUTPUT + "\n```"));
 
         assertThat(failure(fenced.infer(request())).kind())
                 .isEqualTo(InferenceFailure.Kind.INVALID_OUTPUT);
@@ -585,27 +585,35 @@ class JlamaLocalInferenceEngineTest {
                 launcher);
     }
 
-    private ScriptedProcess responseOnce(String modelOutput) throws java.io.IOException {
+    private ScriptedProcess responseLoop(String modelOutput) throws java.io.IOException {
         return new ScriptedProcess(
                 (input, output) -> {
                     DataInputStream dataInput = new DataInputStream(input);
                     DataOutputStream dataOutput = new DataOutputStream(output);
-                    Protocol.Request request =
-                            Protocol.readFrame(
-                                    dataInput,
-                                    Protocol.Request.class,
-                                    mapper,
-                                    Protocol.MAXIMUM_REQUEST_BYTES);
-                    Protocol.writeFrame(
-                            dataOutput,
-                            new Protocol.Response(
-                                    Protocol.VERSION,
-                                    request.requestId(),
-                                    true,
-                                    mapper.getNodeFactory().textNode(modelOutput),
-                                    ""),
-                            mapper,
-                            Protocol.MAXIMUM_RESPONSE_BYTES);
+                    while (true) {
+                        Protocol.Request request =
+                                Protocol.readFrame(
+                                        dataInput,
+                                        Protocol.Request.class,
+                                        mapper,
+                                        Protocol.MAXIMUM_REQUEST_BYTES);
+                        boolean shutdown = "shutdown".equals(request.operation());
+                        Protocol.writeFrame(
+                                dataOutput,
+                                new Protocol.Response(
+                                        Protocol.VERSION,
+                                        request.requestId(),
+                                        true,
+                                        shutdown
+                                                ? mapper.createObjectNode().put("closed", true)
+                                                : mapper.getNodeFactory().textNode(modelOutput),
+                                        ""),
+                                mapper,
+                                Protocol.MAXIMUM_RESPONSE_BYTES);
+                        if (shutdown) {
+                            return;
+                        }
+                    }
                 });
     }
 
