@@ -22,15 +22,33 @@ public final class ApplicationFrameSelector {
                     "org.springframework.",
                     "org.apache.catalina.",
                     "org.apache.tomcat.",
+                    "com.zaxxer.hikari.",
+                    "org.hibernate.",
+                    "com.fasterxml.jackson.",
+                    "org.eclipse.jetty.",
+                    "io.undertow.",
                     "io.netty.",
                     "reactor.core.");
 
     private static final List<String> GENERATED_MARKERS =
-            List.of("$$SpringCGLIB$$", "$$EnhancerBySpringCGLIB$$", "$Proxy", "jdk.proxy");
+            List.of(
+                    "$$SpringCGLIB$$",
+                    "$$EnhancerBySpringCGLIB$$",
+                    "$$ByteBuddy$$",
+                    "$$Lambda$",
+                    "$HibernateProxy$",
+                    "$Proxy",
+                    "jdk.proxy");
 
     private final List<String> applicationPackages;
     private final int maxFrames;
 
+    /**
+     * Creates a selector for explicitly configured application packages.
+     *
+     * @param applicationPackages package prefixes considered application-owned
+     * @param maxFrames maximum number of frames returned
+     */
     public ApplicationFrameSelector(List<String> applicationPackages, int maxFrames) {
         Objects.requireNonNull(applicationPackages, "applicationPackages");
         if (applicationPackages.isEmpty()) {
@@ -56,15 +74,22 @@ public final class ApplicationFrameSelector {
         this.maxFrames = maxFrames;
     }
 
+    /**
+     * Selects and ranks unique application-owned frames from a throwable snapshot.
+     *
+     * @param snapshot captured throwable structure to inspect
+     * @return an immutable, bounded list ordered by diagnostic relevance
+     */
     public List<StackFrameSnapshot> select(ThrowableSnapshot snapshot) {
         Objects.requireNonNull(snapshot, "snapshot");
         List<RankedFrame> candidates = new ArrayList<>();
+        int[] encounterOrder = {0};
         for (ThrowableNode node : snapshot.causeChain()) {
-            collect(node, candidates, new int[] {0});
+            collect(node, false, candidates, encounterOrder);
         }
         candidates.sort(
-                Comparator.comparingInt(RankedFrame::causalDepth)
-                        .reversed()
+                Comparator.comparingInt(RankedFrame::provenanceRank)
+                        .thenComparing(Comparator.comparingInt(RankedFrame::causalDepth).reversed())
                         .thenComparingInt(RankedFrame::frameIndex)
                         .thenComparingInt(RankedFrame::encounterOrder));
 
@@ -82,15 +107,25 @@ public final class ApplicationFrameSelector {
         return List.copyOf(selected);
     }
 
-    private void collect(ThrowableNode node, List<RankedFrame> candidates, int[] encounterOrder) {
+    private void collect(
+            ThrowableNode node,
+            boolean suppressedProvenance,
+            List<RankedFrame> candidates,
+            int[] encounterOrder) {
         for (int index = 0; index < node.frames().size(); index++) {
             StackFrameSnapshot frame = node.frames().get(index);
             if (isApplicationFrame(frame.className()) && !isGeneratedNoise(frame.className())) {
-                candidates.add(new RankedFrame(frame, node.depth(), index, encounterOrder[0]++));
+                candidates.add(
+                        new RankedFrame(
+                                frame,
+                                suppressedProvenance ? 1 : 0,
+                                node.depth(),
+                                index,
+                                encounterOrder[0]++));
             }
         }
         for (ThrowableNode suppressed : node.suppressed()) {
-            collect(suppressed, candidates, encounterOrder);
+            collect(suppressed, true, candidates, encounterOrder);
         }
     }
 
@@ -115,7 +150,11 @@ public final class ApplicationFrameSelector {
     }
 
     private record RankedFrame(
-            StackFrameSnapshot frame, int causalDepth, int frameIndex, int encounterOrder) {}
+            StackFrameSnapshot frame,
+            int provenanceRank,
+            int causalDepth,
+            int frameIndex,
+            int encounterOrder) {}
 
     private record FrameKey(String className, String methodName, String fileName, int lineNumber) {
         private static FrameKey from(StackFrameSnapshot frame) {

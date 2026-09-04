@@ -249,6 +249,76 @@ class DefaultSanitizerTest {
     }
 
     @Test
+    void redactsControlledCredentialTokenAndUserPathCorpusIdempotently() {
+        String input =
+                String.join(
+                        " | ",
+                        "Bearer bearerSynthetic123.abc.def",
+                        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzeW50aGV0aWMifQ.syntheticSignature",
+                        "api_key=synthetic-api-key",
+                        "password='synthetic password'",
+                        "jdbc:postgresql://synthetic_user:synthetic_password@localhost/db",
+                        "jdbc:mysql://localhost/db?user=synthetic_user&password=synthetic_password",
+                        "person@example.test",
+                        "10000000146",
+                        "4111 1111 1111 1111",
+                        "-----BEGIN PRIVATE KEY-----\nSYNTHETICKEYMATERIAL12345678901234567890\n-----END PRIVATE KEY-----",
+                        "AKIAABCDEFGHIJKLMNOP",
+                        "ghp_abcdefghijklmnopqrstuvwxyz123456",
+                        "ya29.syntheticOAuthToken1234567890",
+                        "sk-syntheticApiKey1234567890",
+                        "Cookie: sessionId=synthetic-cookie",
+                        "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVo0123456789",
+                        "0123456789abcdef0123456789abcdef",
+                        "C:\\Users\\SyntheticUser\\workspace\\app.log",
+                        "/home/synthetic-user/workspace/app.log",
+                        "~/workspace/app.log",
+                        "\\\\synthetic-server\\private-share\\app.log");
+
+        String sanitized = sanitizer.sanitize("message", input);
+
+        assertThat(sanitized)
+                .doesNotContain(
+                        "bearerSynthetic123",
+                        "eyJhbGci",
+                        "synthetic-api-key",
+                        "synthetic password",
+                        "synthetic_user",
+                        "person@example.test",
+                        "10000000146",
+                        "4111 1111 1111 1111",
+                        "SYNTHETICKEYMATERIAL",
+                        "AKIAABCDEFGHIJKLMNOP",
+                        "ghp_abcdefghijklmnopqrstuvwxyz123456",
+                        "ya29.syntheticOAuthToken1234567890",
+                        "sk-syntheticApiKey1234567890",
+                        "synthetic-cookie",
+                        "QUJDREVGR0",
+                        "0123456789abcdef",
+                        "SyntheticUser",
+                        "synthetic-user",
+                        "synthetic-server")
+                .contains("[REDACTED]");
+        assertThat(sanitizer.sanitize("message", sanitized)).isEqualTo(sanitized);
+    }
+
+    @Test
+    void neutralizesCsiOscHyperlinksAndDirectionalControlsButPreservesSafeUnicode() {
+        String hostile =
+                "Türkçe العربية 中文 🙂"
+                        + "\u001B[2JCSI"
+                        + "\u001B]8;;https://synthetic.invalid\u0007link\u001B]8;;\u0007"
+                        + "\rrewrite\bX\u0001\u200Bz\u200El\u200Fr\u061Ca\u202Ed\u2066i";
+
+        String sanitized = sanitizer.sanitize(hostile);
+
+        assertThat(sanitized)
+                .isEqualTo("Türkçe العربية 中文 🙂CSIlink rewrite X z l r a d i")
+                .doesNotContain("synthetic.invalid", "\u001B", "\r", "\b", "\u200B");
+        assertThat(sanitizer.sanitize("safe\u001B]8;;unterminated-secret")).isEqualTo("safe");
+    }
+
+    @Test
     void rejectsEveryUnsafeReplacementControlRangeWithoutRejectingAdjacentCodePoints() {
         assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\uFEFF"))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -256,12 +326,18 @@ class DefaultSanitizerTest {
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\u2066"))
                 .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\u061C"))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\u200E"))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\u200F"))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new SanitizerPattern(Pattern.compile("x"), "\u206A"))
+                .isInstanceOf(IllegalArgumentException.class);
 
         assertThat(new SanitizerPattern(Pattern.compile("x"), "\u2029").replacement())
                 .isEqualTo("\u2029");
         assertThat(new SanitizerPattern(Pattern.compile("x"), "\u202F").replacement())
                 .isEqualTo("\u202F");
-        assertThat(new SanitizerPattern(Pattern.compile("x"), "\u206A").replacement())
-                .isEqualTo("\u206A");
     }
 }

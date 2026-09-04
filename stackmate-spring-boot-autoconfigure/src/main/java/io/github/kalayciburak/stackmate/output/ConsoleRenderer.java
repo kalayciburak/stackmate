@@ -13,12 +13,34 @@ import io.github.kalayciburak.stackmate.fingerprint.ExceptionFingerprint;
  */
 public interface ConsoleRenderer {
 
+    /**
+     * Renders the full deterministic diagnosis for a first occurrence.
+     *
+     * @param result analyzed incident and its fingerprint
+     * @param options per-call presentation options
+     * @return rendered plain-text diagnosis
+     */
     String render(DeterministicResult result, RenderOptions options);
 
+    /**
+     * Renders a concise message for a repeated fingerprint.
+     *
+     * @param result analyzed incident and its fingerprint
+     * @param duplicate deduplication state including the occurrence count
+     * @param options per-call presentation options
+     * @return rendered plain-text duplicate message
+     */
     String renderDuplicate(
             DeterministicResult result, DeduplicationResult duplicate, RenderOptions options);
 
-    /** Minimal, allocation-conscious message for severe JVM failures. */
+    /**
+     * Renders a minimal message for a severe JVM failure.
+     *
+     * @param fingerprint stable fingerprint of the failure
+     * @param failureType throwable type name
+     * @param options per-call presentation options
+     * @return rendered plain-text severe-failure message
+     */
     String renderSevereJvmFailure(
             ExceptionFingerprint fingerprint, String failureType, RenderOptions options);
 }

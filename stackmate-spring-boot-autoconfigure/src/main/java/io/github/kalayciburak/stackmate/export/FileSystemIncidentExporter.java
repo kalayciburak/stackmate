@@ -36,6 +36,13 @@ public final class FileSystemIncidentExporter implements IncidentExporter {
     private final int maximumIncidents;
     private final Sanitizer sanitizer;
 
+    /**
+     * Creates an exporter rooted at the normalized absolute form of the configured directory.
+     *
+     * @param configuredRoot root directory for published incident bundles
+     * @param maximumIncidents retained incident-directory bound from 1 through 10,000
+     * @param sanitizer sanitizer applied to exported diagnostic text
+     */
     public FileSystemIncidentExporter(
             Path configuredRoot, int maximumIncidents, Sanitizer sanitizer) {
         this.configuredRoot =

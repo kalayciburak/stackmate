@@ -4,7 +4,7 @@
 
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-parent</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0-rc.1</version>
   <packaging>pom</packaging>
 
   <name>StackMate</name>
@@ -19,11 +19,20 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>kalayciburak</id>
+      <name>Burak Kalayci</name>
+      <url>https://github.com/kalayciburak</url>
+    </developer>
+  </developers>
+
   <modules>
     <module>stackmate-core</module>
     <module>stackmate-inference-api</module>
     <module>stackmate-inference-jvm</module>
     <module>stackmate-spring-boot-autoconfigure</module>
+    <module>stackmate-spring-boot-autoconfigure-local</module>
     <module>stackmate-spring-boot-starter</module>
     <module>stackmate-spring-boot-starter-local</module>
     <module>stackmate-sample</module>
@@ -32,21 +41,44 @@
     <module>stackmate-benchmark</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:https://github.com/kalayciburak/stackmate.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/kalayciburak/stackmate.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/kalayciburak/stackmate</url>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/kalayciburak/stackmate/issues</url>
+  </issueManagement>
+
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputTimestamp>2026-08-01T00:00:00Z</project.build.outputTimestamp>
     <spring-boot.version>4.1.0</spring-boot.version>
-    <jlama.version>0.8.4</jlama.version>
     <jmh.version>1.37</jmh.version>
     <maven.compiler.version>3.15.0</maven.compiler.version>
+    <maven.deploy.version>3.1.4</maven.deploy.version>
+    <maven.gpg.version>3.0.1</maven.gpg.version>
+    <maven.jar.version>3.5.0</maven.jar.version>
+    <maven.javadoc.version>3.11.3</maven.javadoc.version>
+    <maven.resources.version>3.4.0</maven.resources.version>
+    <maven.source.version>3.3.1</maven.source.version>
     <maven.surefire.version>3.5.6</maven.surefire.version>
     <maven.enforcer.version>3.6.3</maven.enforcer.version>
     <maven.failsafe.version>3.5.6</maven.failsafe.version>
     <jacoco.version>0.8.15</jacoco.version>
     <spotless.version>3.9.0</spotless.version>
     <google-java-format.version>1.28.0</google-java-format.version>
+    <cyclonedx.version>2.9.1</cyclonedx.version>
+    <cyclonedx.skip>true</cyclonedx.skip>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
+    <stackmate.release.resources.skip>true</stackmate.release.resources.skip>
+    <stackmate.public.enforcer.skip>true</stackmate.public.enforcer.skip>
     <argLine />
   </properties>
 
@@ -66,16 +98,6 @@
       </dependency>
       <dependency>
         <groupId>io.github.kalayciburak</groupId>
-        <artifactId>stackmate-inference-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.kalayciburak</groupId>
-        <artifactId>stackmate-inference-jvm</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.kalayciburak</groupId>
         <artifactId>stackmate-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -83,16 +105,6 @@
         <groupId>io.github.kalayciburak</groupId>
         <artifactId>stackmate-spring-boot-starter</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.kalayciburak</groupId>
-        <artifactId>stackmate-spring-boot-starter-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.tjake</groupId>
-        <artifactId>jlama-core</artifactId>
-        <version>${jlama.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -112,6 +124,36 @@
               <arg>-Xlint:all</arg>
             </compilerArgs>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${maven.deploy.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${maven.gpg.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven.jar.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven.javadoc.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven.resources.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven.source.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -139,6 +181,11 @@
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>${jacoco.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.cyclonedx</groupId>
+          <artifactId>cyclonedx-maven-plugin</artifactId>
+          <version>${cyclonedx.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -180,6 +227,26 @@
                     <exclude>org.projectlombok:lombok</exclude>
                     <exclude>org.springframework.ai:*</exclude>
                     <exclude>dev.langchain4j:*</exclude>
+                  </excludes>
+                  <searchTransitive>true</searchTransitive>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-public-release-boundary</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>${stackmate.public.enforcer.skip}</skip>
+              <rules>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>io.github.kalayciburak:stackmate-inference-*</exclude>
+                    <exclude>io.github.kalayciburak:stackmate-spring-boot-autoconfigure-local</exclude>
+                    <exclude>io.github.kalayciburak:stackmate-spring-boot-starter-local</exclude>
+                    <exclude>com.github.tjake:*</exclude>
                   </excludes>
                   <searchTransitive>true</searchTransitive>
                 </bannedDependencies>
@@ -252,4 +319,121 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>public-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>include-release-legal-files</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>process-resources</phase>
+                <configuration>
+                  <skip>${stackmate.release.resources.skip}</skip>
+                  <outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${maven.multiModuleProjectDirectory}</directory>
+                      <filtering>false</filtering>
+                      <includes>
+                        <include>LICENSE</include>
+                        <include>NOTICE</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-release-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <skipSource>${maven.source.skip}</skipSource>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-release-javadoc</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <doclint>all</doclint>
+                  <failOnWarnings>true</failOnWarnings>
+                  <notimestamp>true</notimestamp>
+                  <skip>${maven.javadoc.skip}</skip>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.cyclonedx</groupId>
+            <artifactId>cyclonedx-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>release-sbom</id>
+                <goals>
+                  <goal>makeBom</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <skipAttach>false</skipAttach>
+                  <includeBomSerialNumber>false</includeBomSerialNumber>
+                  <includeCompileScope>true</includeCompileScope>
+                  <includeProvidedScope>false</includeProvidedScope>
+                  <includeRuntimeScope>true</includeRuntimeScope>
+                  <includeTestScope>false</includeTestScope>
+                  <outputFormat>json</outputFormat>
+                  <outputName>bom</outputName>
+                  <outputTimestamp>${project.build.outputTimestamp}</outputTimestamp>
+                  <skip>${cyclonedx.skip}</skip>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>release-sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-release-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>verify</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

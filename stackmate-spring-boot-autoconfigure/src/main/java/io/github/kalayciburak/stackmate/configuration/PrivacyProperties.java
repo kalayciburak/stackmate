@@ -3,79 +3,39 @@ package io.github.kalayciburak.stackmate.configuration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
-/**
- * Privacy controls; unsupported request-value collection is rejected instead of silently enabled.
- */
+/** Additional bounded literal values that the mandatory sanitizer must redact. */
 public class PrivacyProperties {
 
-    private boolean includeRequestBody;
-    private boolean includeQueryValues;
-    private boolean includeHeaders;
-    private boolean piiRedaction = true;
-    private List<String> customRedactionPatterns = new ArrayList<>();
+    private List<String> redactValues = new ArrayList<>();
 
-    public boolean isIncludeRequestBody() {
-        return includeRequestBody;
+    /** Creates privacy properties with no additional literal redaction values. */
+    public PrivacyProperties() {}
+
+    /**
+     * Returns the additional literal values removed by the sanitizer.
+     *
+     * @return unmodifiable copy of configured literal redaction values
+     */
+    public List<String> getRedactValues() {
+        return List.copyOf(redactValues);
     }
 
-    public void setIncludeRequestBody(boolean includeRequestBody) {
-        rejectUnavailable(includeRequestBody, "privacy.includeRequestBody");
-        this.includeRequestBody = false;
-    }
-
-    public boolean isIncludeQueryValues() {
-        return includeQueryValues;
-    }
-
-    public void setIncludeQueryValues(boolean includeQueryValues) {
-        rejectUnavailable(includeQueryValues, "privacy.includeQueryValues");
-        this.includeQueryValues = false;
-    }
-
-    public boolean isIncludeHeaders() {
-        return includeHeaders;
-    }
-
-    public void setIncludeHeaders(boolean includeHeaders) {
-        rejectUnavailable(includeHeaders, "privacy.includeHeaders");
-        this.includeHeaders = false;
-    }
-
-    public boolean isPiiRedaction() {
-        return piiRedaction;
-    }
-
-    public void setPiiRedaction(boolean piiRedaction) {
-        this.piiRedaction = piiRedaction;
-    }
-
-    public List<String> getCustomRedactionPatterns() {
-        return List.copyOf(customRedactionPatterns);
-    }
-
-    public void setCustomRedactionPatterns(List<String> customRedactionPatterns) {
-        Objects.requireNonNull(customRedactionPatterns, "customRedactionPatterns");
+    /**
+     * Replaces the additional literal values removed by the sanitizer.
+     *
+     * @param redactValues up to 32 nonblank values, each containing 3 through 256 characters
+     */
+    public void setRedactValues(List<String> redactValues) {
+        Objects.requireNonNull(redactValues, "redactValues");
         List<String> validated =
-                PropertyValidation.textList(
-                        customRedactionPatterns, "privacy.customRedactionPatterns", 32, 1_024);
-        for (String expression : validated) {
-            try {
-                Pattern.compile(expression);
-            } catch (PatternSyntaxException failure) {
+                PropertyValidation.textList(redactValues, "privacy.redactValues", 32, 256);
+        for (String value : validated) {
+            if (value.codePointCount(0, value.length()) < 3) {
                 throw new IllegalArgumentException(
-                        "privacy.customRedactionPatterns contains an invalid regular expression",
-                        failure);
+                        "privacy.redactValues entries must contain at least three characters");
             }
         }
-        this.customRedactionPatterns = new ArrayList<>(validated);
-    }
-
-    private static void rejectUnavailable(boolean value, String name) {
-        if (value) {
-            throw new IllegalArgumentException(name + " is unavailable in this StackMate version");
-        }
+        this.redactValues = new ArrayList<>(validated);
     }
 }

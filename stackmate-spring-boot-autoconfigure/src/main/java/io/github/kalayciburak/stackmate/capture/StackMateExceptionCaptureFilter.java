@@ -18,6 +18,12 @@ public final class StackMateExceptionCaptureFilter extends OncePerRequestFilter 
     private final ServletExceptionCaptureHandler captureHandler;
     private final ThreadLocal<Boolean> captureInProgress = new ThreadLocal<>();
 
+    /**
+     * Creates a fail-open filter that captures exceptions escaping the downstream chain.
+     *
+     * @param contextExtractor extractor for bounded servlet and Spring context
+     * @param captureHandler observer invoked before the original exception is rethrown
+     */
     public StackMateExceptionCaptureFilter(
             ServletContextExtractor contextExtractor,
             ServletExceptionCaptureHandler captureHandler) {

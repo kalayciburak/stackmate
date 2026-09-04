@@ -2,8 +2,10 @@ package io.github.kalayciburak.stackmate.configuration;
 
 import java.time.Duration;
 import java.util.Objects;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/** Bounded controls for the optional local inference subsystem. */
+/** Bounded controls retained for the historical, unsupported local inference subsystem. */
+@ConfigurationProperties(prefix = "stackmate-research.inference", ignoreUnknownFields = false)
 public class InferenceProperties {
 
     /** Selects an installed local inference engine. */

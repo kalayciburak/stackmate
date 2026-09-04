@@ -6,7 +6,17 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Immutable privacy controls. Expensive patterns only ever receive {@code maxLength} input. */
+/**
+ * Immutable privacy controls. Expensive patterns only ever receive {@code maxLength} input.
+ *
+ * @param maxLength maximum number of input characters processed by the sanitizer
+ * @param replacement safe text substituted for redacted values
+ * @param redactEmail whether email-address redaction is enabled
+ * @param redactTurkishIdentityNumber whether Turkish identity-number redaction is enabled
+ * @param redactPaymentCard whether payment-card redaction is enabled
+ * @param sensitiveFieldNames field names whose values are always redacted
+ * @param customPatterns additional bounded-input redaction rules
+ */
 public record SanitizerConfig(
         int maxLength,
         String replacement,
@@ -38,6 +48,17 @@ public record SanitizerConfig(
                     "privatekey",
                     "credential");
 
+    /**
+     * Validates and creates privacy controls.
+     *
+     * @param maxLength maximum number of input characters processed by the sanitizer
+     * @param replacement safe text substituted for redacted values
+     * @param redactEmail whether email-address redaction is enabled
+     * @param redactTurkishIdentityNumber whether Turkish identity-number redaction is enabled
+     * @param redactPaymentCard whether payment-card redaction is enabled
+     * @param sensitiveFieldNames field names whose values are always redacted
+     * @param customPatterns additional bounded-input redaction rules
+     */
     public SanitizerConfig {
         if (maxLength < 1) {
             throw new IllegalArgumentException("maxLength must be positive");
@@ -58,11 +79,24 @@ public record SanitizerConfig(
         customPatterns = List.copyOf(Objects.requireNonNull(customPatterns, "customPatterns"));
     }
 
+    /**
+     * Creates the standard privacy configuration.
+     *
+     * @return conservative default privacy controls
+     */
     public static SanitizerConfig defaults() {
         return new SanitizerConfig(
                 4_096, "[REDACTED]", true, true, true, DEFAULT_SENSITIVE_FIELDS, List.of());
     }
 
+    /**
+     * Copies these controls with selected built-in PII rules enabled or disabled.
+     *
+     * @param email whether email-address redaction is enabled
+     * @param turkishIdentityNumber whether Turkish identity-number redaction is enabled
+     * @param paymentCard whether payment-card redaction is enabled
+     * @return copied sanitizer controls
+     */
     public SanitizerConfig withPiiRedaction(
             boolean email, boolean turkishIdentityNumber, boolean paymentCard) {
         return new SanitizerConfig(
@@ -87,9 +121,12 @@ public record SanitizerConfig(
                 .forEach(
                         codePoint -> {
                             if (Character.isISOControl(codePoint)
+                                    || codePoint == 0x061C
+                                    || codePoint == 0x200E
+                                    || codePoint == 0x200F
                                     || codePoint == 0xFEFF
                                     || (codePoint >= 0x202A && codePoint <= 0x202E)
-                                    || (codePoint >= 0x2066 && codePoint <= 0x2069)) {
+                                    || (codePoint >= 0x2066 && codePoint <= 0x206F)) {
                                 throw new IllegalArgumentException(
                                         name + " must not contain control characters");
                             }

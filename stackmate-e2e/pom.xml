@@ -4,10 +4,13 @@
   <parent>
     <groupId>io.github.kalayciburak</groupId>
     <artifactId>stackmate-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-rc.1</version>
   </parent>
   <artifactId>stackmate-e2e</artifactId>
   <name>StackMate Packaged End-to-End Tests</name>
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
@@ -28,6 +31,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <excludes>
+            <exclude>**/PackagedFakeChildIT.java</exclude>
             <exclude>**/PackagedRealModelIT.java</exclude>
           </excludes>
           <systemPropertyVariables>

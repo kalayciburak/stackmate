@@ -1,7 +1,6 @@
 package io.github.kalayciburak.stackmate.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.kalayciburak.stackmate.evidence.EvidenceItem;
 import io.github.kalayciburak.stackmate.evidence.EvidenceReliability;
@@ -70,7 +69,7 @@ class DiagnosisAggregatorTest {
 
                     @Override
                     public AnalysisContribution analyze(IncidentSnapshot incident) {
-                        throw new IllegalStateException("analyzer failure");
+                        throw new AssertionError("analyzer failure");
                     }
                 };
         DiagnosticAnalyzer empty =
@@ -102,7 +101,7 @@ class DiagnosisAggregatorTest {
     }
 
     @Test
-    void validatesAnalyzerIdentityAndUniqueness() {
+    void skipsInvalidThrowingAndDuplicateAnalyzerIdentitiesWithoutFailingStartup() {
         DiagnosticAnalyzer first =
                 analyzer("same", "1", 1, ignored -> AnalysisContribution.empty("same"));
         DiagnosticAnalyzer second =
@@ -113,11 +112,28 @@ class DiagnosisAggregatorTest {
                         "not valid",
                         1,
                         ignored -> AnalysisContribution.empty("version"));
+        DiagnosticAnalyzer throwingIdentity =
+                new DiagnosticAnalyzer() {
+                    @Override
+                    public String id() {
+                        throw new LinkageError("synthetic extension failure");
+                    }
 
-        assertThatThrownBy(() -> new DiagnosisAggregator(List.of(first, second)))
-                .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> new DiagnosisAggregator(List.of(invalidVersion)))
-                .isInstanceOf(IllegalArgumentException.class);
+                    @Override
+                    public int order() {
+                        return 0;
+                    }
+
+                    @Override
+                    public AnalysisContribution analyze(IncidentSnapshot incident) {
+                        throw new AssertionError("invalid analyzer must not execute");
+                    }
+                };
+
+        DiagnosisAggregator aggregator =
+                new DiagnosisAggregator(List.of(first, second, invalidVersion, throwingIdentity));
+
+        assertThat(aggregator.analyzers()).containsExactly(first);
     }
 
     @Test

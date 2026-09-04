@@ -13,12 +13,23 @@ public final class ProductionProfileGuard {
 
     private final Decision decision;
 
+    /**
+     * Evaluates the active profiles against the configured production safety policy.
+     *
+     * @param environment source of active Spring profiles
+     * @param properties StackMate safety configuration
+     */
     public ProductionProfileGuard(Environment environment, StackMateProperties properties) {
         Objects.requireNonNull(environment, "environment");
         Objects.requireNonNull(properties, "properties");
         this.decision = evaluate(environment, properties);
     }
 
+    /**
+     * Returns the production-profile decision computed during construction.
+     *
+     * @return precomputed safety decision
+     */
     public Decision decision() {
         return decision;
     }
@@ -41,12 +52,19 @@ public final class ProductionProfileGuard {
         return new Decision(!blocked, blocked, matches);
     }
 
-    /** Immutable startup decision; {@code warningRequired} is intended for one-time logging. */
+    /**
+     * Immutable result of evaluating active profiles against the production safety settings.
+     *
+     * @param analysisAllowed whether incident analysis may run
+     * @param warningRequired whether callers should report that analysis was blocked
+     * @param matchedProductionProfiles active profiles that matched configured production names
+     */
     public record Decision(
             boolean analysisAllowed,
             boolean warningRequired,
             List<String> matchedProductionProfiles) {
 
+        /** Copies the matched profile list into an unmodifiable list. */
         public Decision {
             matchedProductionProfiles = List.copyOf(matchedProductionProfiles);
         }

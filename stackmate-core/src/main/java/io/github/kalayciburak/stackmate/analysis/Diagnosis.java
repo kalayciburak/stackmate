@@ -5,7 +5,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/** Complete deterministic diagnosis suitable for inference or rendering boundaries. */
+/**
+ * Complete deterministic diagnosis suitable for inference or rendering boundaries.
+ *
+ * @param evidence immutable evidence available to consumers
+ * @param causes ranked or composed causes supported by the evidence
+ * @param checks safe follow-up checks supported by the evidence
+ * @param analyzerTokens stable analyzer identifiers paired with their versions
+ * @param fallback whether the diagnosis was produced by the fallback path
+ */
 public record Diagnosis(
         List<EvidenceItem> evidence,
         List<DiagnosedCause> causes,
@@ -16,6 +24,15 @@ public record Diagnosis(
     private static final Pattern ANALYZER_TOKEN =
             Pattern.compile("[a-z0-9][a-z0-9._-]{0,127}@[A-Za-z0-9][A-Za-z0-9._-]{0,31}");
 
+    /**
+     * Validates and creates a complete diagnosis.
+     *
+     * @param evidence immutable evidence available to consumers
+     * @param causes ranked or composed causes supported by the evidence
+     * @param checks safe follow-up checks supported by the evidence
+     * @param analyzerTokens stable analyzer identifiers paired with their versions
+     * @param fallback whether the diagnosis was produced by the fallback path
+     */
     public Diagnosis {
         evidence = List.copyOf(Objects.requireNonNull(evidence, "evidence"));
         causes = List.copyOf(Objects.requireNonNull(causes, "causes"));

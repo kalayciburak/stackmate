@@ -109,6 +109,19 @@ class AnalysisContractSafetyTest {
     }
 
     @Test
+    void contributionRejectsUnboundedItemCounts() {
+        List<EvidenceItem> evidence = new ArrayList<>();
+        for (int index = 0; index < 129; index++) {
+            evidence.add(evidence("evidence." + index, "value-" + index));
+        }
+
+        assertThatThrownBy(
+                        () -> new AnalysisContribution("bounded", evidence, List.of(), List.of()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("bounded item counts");
+    }
+
+    @Test
     void diagnosisRejectsEmptyCausesDuplicateTokensAndUnresolvedReferences() {
         EvidenceItem item = evidence("evidence.one", "one");
         DiagnosedCause cause =

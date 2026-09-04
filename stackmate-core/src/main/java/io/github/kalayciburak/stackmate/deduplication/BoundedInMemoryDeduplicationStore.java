@@ -16,11 +16,25 @@ public final class BoundedInMemoryDeduplicationStore implements DeduplicationSto
     private final Duration ttl;
     private final Clock clock;
     private final LinkedHashMap<String, Entry> entries = new LinkedHashMap<>();
+    private Instant latestObservedTime;
 
+    /**
+     * Creates a process-local store that uses the UTC system clock.
+     *
+     * @param maxEntries maximum fingerprints retained at once
+     * @param ttl deduplication window duration
+     */
     public BoundedInMemoryDeduplicationStore(int maxEntries, Duration ttl) {
         this(maxEntries, ttl, Clock.systemUTC());
     }
 
+    /**
+     * Creates a process-local store with an explicit clock for runtime wiring or verification.
+     *
+     * @param maxEntries maximum fingerprints retained at once
+     * @param ttl deduplication window duration
+     * @param clock clock used to evaluate the window
+     */
     public BoundedInMemoryDeduplicationStore(int maxEntries, Duration ttl, Clock clock) {
         if (maxEntries < 1) {
             throw new IllegalArgumentException("maxEntries must be positive");
@@ -37,20 +51,20 @@ public final class BoundedInMemoryDeduplicationStore implements DeduplicationSto
     @Override
     public synchronized DeduplicationResult record(String fingerprint, boolean requestInference) {
         validateFingerprint(fingerprint);
-        Instant now = clock.instant();
+        Instant now = monotonicNow();
         removeExpired(now);
 
-        Entry entry = entries.get(fingerprint);
+        Entry entry = entries.remove(fingerprint);
         boolean duplicate = entry != null;
         if (entry == null) {
             entry = new Entry(now);
-            entries.put(fingerprint, entry);
         } else {
             if (entry.occurrenceCount < Long.MAX_VALUE) {
                 entry.occurrenceCount++;
             }
             entry.lastSeen = now;
         }
+        entries.put(fingerprint, entry);
 
         boolean inferenceReserved = requestInference && !entry.inferenceReserved;
         if (inferenceReserved) {
@@ -68,7 +82,7 @@ public final class BoundedInMemoryDeduplicationStore implements DeduplicationSto
     @Override
     public synchronized boolean releaseInferenceReservation(String fingerprint) {
         validateFingerprint(fingerprint);
-        Instant now = clock.instant();
+        Instant now = monotonicNow();
         removeExpired(now);
         Entry entry = entries.get(fingerprint);
         if (entry == null || !entry.inferenceReserved) {
@@ -80,7 +94,7 @@ public final class BoundedInMemoryDeduplicationStore implements DeduplicationSto
 
     @Override
     public synchronized int size() {
-        removeExpired(clock.instant());
+        removeExpired(monotonicNow());
         return entries.size();
     }
 
@@ -93,11 +107,19 @@ public final class BoundedInMemoryDeduplicationStore implements DeduplicationSto
         Iterator<Map.Entry<String, Entry>> iterator = entries.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry entry = iterator.next().getValue();
-            if (!now.isBefore(entry.lastSeen)
-                    && Duration.between(entry.lastSeen, now).compareTo(ttl) >= 0) {
-                iterator.remove();
+            if (Duration.between(entry.lastSeen, now).compareTo(ttl) < 0) {
+                break;
             }
+            iterator.remove();
         }
+    }
+
+    private Instant monotonicNow() {
+        Instant observed = Objects.requireNonNull(clock.instant(), "clock instant");
+        if (latestObservedTime == null || observed.isAfter(latestObservedTime)) {
+            latestObservedTime = observed;
+        }
+        return latestObservedTime;
     }
 
     private void enforceBound() {

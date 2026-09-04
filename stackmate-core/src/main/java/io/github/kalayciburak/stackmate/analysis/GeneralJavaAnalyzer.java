@@ -6,6 +6,10 @@ import java.util.Map;
 /** Diagnoses common JDK failures and records wrapper nodes without treating them as root causes. */
 public final class GeneralJavaAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in general Java diagnostic analyzer. */
+    public GeneralJavaAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "general-java";
 
     private static final Map<String, Rule> RULES =

@@ -38,6 +38,14 @@ public final class ServletContextExtractor {
     private final StackMateProperties properties;
     private final Sanitizer sanitizer;
 
+    /**
+     * Creates an extractor backed by the current environment, bean factory, and configuration.
+     *
+     * @param environment source of application and profile properties
+     * @param beanFactory source of Spring Boot auto-configuration packages
+     * @param properties StackMate capture configuration
+     * @param sanitizer sanitizer applied to captured text
+     */
     public ServletContextExtractor(
             Environment environment,
             BeanFactory beanFactory,
@@ -49,6 +57,13 @@ public final class ServletContextExtractor {
         this.sanitizer = Objects.requireNonNull(sanitizer, "sanitizer");
     }
 
+    /**
+     * Extracts bounded, sanitized request and Spring facts available at the exception boundary.
+     *
+     * @param request current servlet request
+     * @param response current servlet response
+     * @return immutable captured servlet context
+     */
     public ServletIncidentContext extract(
             HttpServletRequest request, HttpServletResponse response) {
         Objects.requireNonNull(request, "request");

@@ -4,5 +4,10 @@ package io.github.kalayciburak.stackmate.capture;
 @FunctionalInterface
 public interface ServletExceptionCaptureHandler {
 
+    /**
+     * Observes an exception and its bounded context without handling the HTTP failure.
+     *
+     * @param capturedException escaping exception and captured servlet context
+     */
     void capture(CapturedServletException capturedException);
 }

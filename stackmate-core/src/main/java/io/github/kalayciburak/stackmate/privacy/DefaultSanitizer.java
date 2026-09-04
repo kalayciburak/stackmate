@@ -7,38 +7,74 @@ import java.util.regex.Pattern;
 /** Default deterministic sanitizer for logs, evidence, prompts, and exports. */
 public final class DefaultSanitizer implements Sanitizer {
 
-    private static final Pattern TERMINAL_ESCAPE =
-            Pattern.compile(
-                    "\\u001B(?:\\[[0-?]*[ -/]*[@-~]|\\][^\\u0007]*(?:\\u0007|\\u001B\\\\)|[@-_])");
-    private static final Pattern BEARER = Pattern.compile("(?i)\\bBearer\\s+[A-Za-z0-9._~+/=-]+");
+    private static final int MAX_PATTERN_CHARS = 4_096;
+    private static final Pattern BEARER =
+            Pattern.compile("(?i)\\bBearer\\s+[A-Za-z0-9._~+/=-]{1," + MAX_PATTERN_CHARS + "}");
     private static final Pattern JWT =
             Pattern.compile(
-                    "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}(?![A-Za-z0-9_-])");
+                    "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,2048}\\.[A-Za-z0-9_-]{2,2048}\\.[A-Za-z0-9_-]{2,2048}(?![A-Za-z0-9_-])");
     private static final Pattern TRUNCATED_JWT_PREFIX =
-            Pattern.compile("(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,}(?:\\.[A-Za-z0-9_-]*){0,2}$");
+            Pattern.compile(
+                    "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{2,2048}(?:\\.[A-Za-z0-9_-]{0,2048}){0,2}$");
     private static final Pattern SECRET_ASSIGNMENT =
             Pattern.compile(
-                    "(?i)([\\\"]?(?:authorization|proxy[_-]?authorization|cookie|set[_-]?cookie|password|passwd|pwd|secret|client[_-]?secret|api[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|jwt|bearer|session|private[_-]?key|credential)[\\\"]?\\s*[:=]\\s*[\\\"]?)([^\\s,;&\\\"]+)");
+                    "(?i)([\\\"']?(?:authorization|proxy[_-]?authorization|cookie|set[_-]?cookie|password|passwd|pwd|secret|client[_-]?secret|oauth[_-]?(?:token|client[_-]?secret)|api[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|jwt|bearer|session|private[_-]?key|credential)[\\\"']?\\s*[:=]\\s*)(?:\\\"[^\\\"\\r\\n]{0,4096}\\\"|'[^'\\r\\n]{0,4096}'|[^\\s,;&}\\\"']{1,4096})");
+    private static final Pattern PRIVATE_KEY =
+            Pattern.compile(
+                    "(?i)-----BEGIN [A-Z0-9 ]{0,48}PRIVATE KEY-----[\\s\\S]{0,4096}?(?:-----END [A-Z0-9 ]{0,48}PRIVATE KEY-----|\\z)");
+    private static final Pattern AWS_ACCESS_KEY =
+            Pattern.compile(
+                    "(?<![A-Z0-9])(?:AKIA|ASIA|AIDA|AROA|AIPA|ANPA|ANVA|ASCA)[A-Z0-9]{16}(?![A-Z0-9])");
+    private static final Pattern GITHUB_TOKEN =
+            Pattern.compile(
+                    "(?<![A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{20,255}|github_pat_[A-Za-z0-9_]{20,255})(?![A-Za-z0-9_])");
+    private static final Pattern OAUTH_TOKEN =
+            Pattern.compile(
+                    "(?<![A-Za-z0-9._~-])ya29\\.[A-Za-z0-9._~-]{20,2048}(?![A-Za-z0-9._~-])");
+    private static final Pattern PREFIXED_API_KEY =
+            Pattern.compile(
+                    "(?<![A-Za-z0-9_-])(?:sk-[A-Za-z0-9_-]{20,255}|(?:sk|pk)_(?:live|test)_[A-Za-z0-9]{16,255})(?![A-Za-z0-9_-])");
     private static final Pattern LONG_HEX =
-            Pattern.compile("(?i)(?<![A-F0-9])[A-F0-9]{32,}(?![A-F0-9])");
+            Pattern.compile("(?i)(?<![A-F0-9])[A-F0-9]{32,4096}(?![A-F0-9])");
     private static final Pattern LONG_BASE64 =
-            Pattern.compile("(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{40,}={0,2}(?![A-Za-z0-9+/_-])");
+            Pattern.compile(
+                    "(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{40,4096}={0,2}(?![A-Za-z0-9+/_-])");
     private static final Pattern JDBC_AUTHORITY =
-            Pattern.compile("(?i)(jdbc:[^\\s]+?://)([^:/@\\s]+):([^@\\s]+)@");
+            Pattern.compile(
+                    "(?i)(jdbc:[A-Za-z0-9._-]{1,32}://)([^:/@\\s]{1,256}):([^@\\s/?#]{1,1024})@");
     private static final Pattern JDBC_USER_PROPERTY =
-            Pattern.compile("(?i)(jdbc:[^\\s]*?[?;&]user(?:name)?=)([^;&\\s]+)");
+            Pattern.compile("(?i)(jdbc:[^\\s]{0,4096}[?;&]user(?:name)?=)([^;&\\s]{1,1024})");
+    private static final Pattern WINDOWS_USER_PATH =
+            Pattern.compile(
+                    "(?i)(?<![A-Za-z0-9])(?:[A-Z]:[\\\\/](?:Users|Documents and Settings)[\\\\/])[^\\\\/\\s\\\"']{1,255}(?:[\\\\/][^\\s\\\"']{0,2048})?");
+    private static final Pattern UNIX_HOME_PATH =
+            Pattern.compile(
+                    "(?<![\\p{L}\\p{N}])(?:(?:/home|/Users)/[^/\\s\\\"']{1,255}|~)(?:/[^\\s\\\"']{0,2048})?");
+    private static final Pattern UNC_PATH =
+            Pattern.compile(
+                    "(?<!\\\\)\\\\\\\\[^\\\\\\s\\\"']{1,255}\\\\[^\\\\\\s\\\"']{1,255}(?:\\\\[^\\s\\\"']{0,2048})?");
     private static final Pattern EMAIL =
             Pattern.compile(
-                    "(?iu)(?<![\\p{L}\\p{N}._%+-])[\\p{L}\\p{N}._%+-]+@[\\p{L}\\p{N}.-]+\\.[\\p{L}]{2,}(?![\\p{L}\\p{N}._%+-])");
+                    "(?iu)(?<![\\p{L}\\p{N}._%+-])[\\p{L}\\p{N}._%+-]{1,64}@[\\p{L}\\p{N}.-]{1,253}\\.[\\p{L}]{2,63}(?![\\p{L}\\p{N}._%+-])");
     private static final Pattern TURKISH_ID = Pattern.compile("(?<!\\d)[1-9]\\d{10}(?!\\d)");
     private static final Pattern CARD = Pattern.compile("(?<!\\d)(?:\\d[ -]?){12,18}\\d(?!\\d)");
 
     private final SanitizerConfig config;
 
+    /**
+     * Creates a sanitizer from immutable privacy controls.
+     *
+     * @param config privacy and redaction controls
+     */
     public DefaultSanitizer(SanitizerConfig config) {
         this.config = Objects.requireNonNull(config, "config");
     }
 
+    /**
+     * Creates the standard sanitizer.
+     *
+     * @return a sanitizer configured with the default privacy controls
+     */
     public static DefaultSanitizer defaults() {
         return new DefaultSanitizer(SanitizerConfig.defaults());
     }
@@ -84,15 +120,23 @@ public final class DefaultSanitizer implements Sanitizer {
 
     private String redactDefiniteSecrets(String value) {
         String replacement = Matcher.quoteReplacement(config.replacement());
-        String sanitized = BEARER.matcher(value).replaceAll("Bearer " + replacement);
+        String sanitized = PRIVATE_KEY.matcher(value).replaceAll(replacement);
+        sanitized = BEARER.matcher(sanitized).replaceAll("Bearer " + replacement);
         sanitized = JWT.matcher(sanitized).replaceAll(replacement);
         sanitized = TRUNCATED_JWT_PREFIX.matcher(sanitized).replaceAll(replacement);
         sanitized = SECRET_ASSIGNMENT.matcher(sanitized).replaceAll("$1" + replacement);
+        sanitized = AWS_ACCESS_KEY.matcher(sanitized).replaceAll(replacement);
+        sanitized = GITHUB_TOKEN.matcher(sanitized).replaceAll(replacement);
+        sanitized = OAUTH_TOKEN.matcher(sanitized).replaceAll(replacement);
+        sanitized = PREFIXED_API_KEY.matcher(sanitized).replaceAll(replacement);
         sanitized =
                 JDBC_AUTHORITY
                         .matcher(sanitized)
                         .replaceAll("$1" + replacement + ':' + replacement + '@');
         sanitized = JDBC_USER_PROPERTY.matcher(sanitized).replaceAll("$1" + replacement);
+        sanitized = WINDOWS_USER_PATH.matcher(sanitized).replaceAll(replacement);
+        sanitized = UNIX_HOME_PATH.matcher(sanitized).replaceAll(replacement);
+        sanitized = UNC_PATH.matcher(sanitized).replaceAll(replacement);
         return sanitized;
     }
 
@@ -103,26 +147,74 @@ public final class DefaultSanitizer implements Sanitizer {
     }
 
     private String stripTerminalAndControlCharacters(String value) {
-        String withoutEscapes = TERMINAL_ESCAPE.matcher(value).replaceAll("");
-        StringBuilder safe = new StringBuilder(withoutEscapes.length());
-        withoutEscapes
-                .codePoints()
-                .forEach(
-                        codePoint -> {
-                            if (isZeroWidthControl(codePoint)) {
-                                return;
-                            }
-                            if (codePoint >= Character.MIN_SURROGATE
-                                    && codePoint <= Character.MAX_SURROGATE) {
-                                safe.append('\uFFFD');
-                            } else if (Character.isISOControl(codePoint)
-                                    || isUnsafeFormatControl(codePoint)) {
-                                safe.append(' ');
-                            } else {
-                                safe.appendCodePoint(codePoint);
-                            }
-                        });
+        StringBuilder safe = new StringBuilder(value.length());
+        int index = 0;
+        while (index < value.length()) {
+            char character = value.charAt(index);
+            if (character == '\u001B') {
+                index = skipEscapeSequence(value, index);
+                continue;
+            }
+            if (character == '\u009B') {
+                index = skipCsi(value, index + 1);
+                continue;
+            }
+            if (character == '\u009D') {
+                index = skipOsc(value, index + 1);
+                continue;
+            }
+            int codePoint = value.codePointAt(index);
+            index += Character.charCount(codePoint);
+            if (isZeroWidthControl(codePoint)) {
+                continue;
+            }
+            if (codePoint >= Character.MIN_SURROGATE && codePoint <= Character.MAX_SURROGATE) {
+                safe.append('\uFFFD');
+            } else if (Character.isISOControl(codePoint) || isUnsafeFormatControl(codePoint)) {
+                safe.append(' ');
+            } else {
+                safe.appendCodePoint(codePoint);
+            }
+        }
         return safe.toString();
+    }
+
+    private static int skipEscapeSequence(String value, int escapeIndex) {
+        int next = escapeIndex + 1;
+        if (next >= value.length()) {
+            return next;
+        }
+        char introducer = value.charAt(next);
+        if (introducer == '[') {
+            return skipCsi(value, next + 1);
+        }
+        if (introducer == ']') {
+            return skipOsc(value, next + 1);
+        }
+        return next + 1;
+    }
+
+    private static int skipCsi(String value, int index) {
+        while (index < value.length()) {
+            char character = value.charAt(index++);
+            if (character >= 0x40 && character <= 0x7E) {
+                return index;
+            }
+        }
+        return index;
+    }
+
+    private static int skipOsc(String value, int index) {
+        while (index < value.length()) {
+            char character = value.charAt(index++);
+            if (character == '\u0007') {
+                return index;
+            }
+            if (character == '\u001B' && index < value.length() && value.charAt(index) == '\\') {
+                return index + 1;
+            }
+        }
+        return index;
     }
 
     private String redactValidatedMatches(
@@ -185,8 +277,11 @@ public final class DefaultSanitizer implements Sanitizer {
     }
 
     private static boolean isUnsafeFormatControl(int codePoint) {
-        return (codePoint >= 0x202A && codePoint <= 0x202E)
-                || (codePoint >= 0x2066 && codePoint <= 0x2069);
+        return codePoint == 0x061C
+                || codePoint == 0x200E
+                || codePoint == 0x200F
+                || (codePoint >= 0x202A && codePoint <= 0x202E)
+                || (codePoint >= 0x2066 && codePoint <= 0x206F);
     }
 
     private static boolean isZeroWidthControl(int codePoint) {

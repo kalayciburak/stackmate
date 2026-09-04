@@ -20,15 +20,24 @@ class ConfigurationMetadataTest {
             assertThat(metadata)
                     .contains("stackmate.capture.mvc-unhandled")
                     .contains("stackmate.diagnostics.maximum-cause-depth")
-                    .contains("stackmate.privacy.include-request-body")
-                    .contains("stackmate.inference.executor.queue-capacity")
-                    .contains("stackmate.inference.trigger-policy")
-                    .contains("stackmate.inference.circuit-breaker.cooldown")
+                    .contains("stackmate.privacy.redact-values")
                     .contains("stackmate.deduplication.maximum-entries")
                     .contains("stackmate.console.maximum-width")
                     .contains("stackmate.console.debug-logging")
                     .contains("stackmate.export.directory")
-                    .contains("stackmate.safety.allow-in-production");
+                    .contains("stackmate.safety.allow-in-production")
+                    .doesNotContain(
+                            "stackmate.mode",
+                            "stackmate.inference",
+                            "stackmate.console.ansi",
+                            "stackmate.privacy.include-request-body",
+                            "stackmate.privacy.custom-redaction-patterns");
+            assertThat(metadata.split("\\\"description\\\"")).hasSizeGreaterThan(25);
+            assertThat(metadata)
+                    .contains("Additional literal values redacted")
+                    .contains("Regular expressions are not accepted")
+                    .contains("Multi-line boxed diagnostic output")
+                    .contains("Short compact diagnostic output");
         }
     }
 }

@@ -4,7 +4,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/** A bounded possible cause whose factual basis is expressed only through evidence IDs. */
+/**
+ * A bounded possible cause whose factual basis is expressed only through evidence IDs.
+ *
+ * @param id stable identifier of the candidate
+ * @param category diagnostic category assigned to the candidate
+ * @param title concise display title
+ * @param explanation evidence-grounded explanation of the possible cause
+ * @param evidenceIds identifiers of the evidence supporting the candidate
+ */
 public record CauseCandidate(
         String id,
         DiagnosticCategory category,
@@ -14,6 +22,15 @@ public record CauseCandidate(
 
     private static final Pattern STABLE_ID = Pattern.compile("[a-z0-9][a-z0-9._-]{0,127}");
 
+    /**
+     * Validates and creates a cause candidate.
+     *
+     * @param id stable identifier of the candidate
+     * @param category diagnostic category assigned to the candidate
+     * @param title concise display title
+     * @param explanation evidence-grounded explanation of the possible cause
+     * @param evidenceIds identifiers of the evidence supporting the candidate
+     */
     public CauseCandidate {
         id = requireStableId(id);
         category = Objects.requireNonNull(category, "category");

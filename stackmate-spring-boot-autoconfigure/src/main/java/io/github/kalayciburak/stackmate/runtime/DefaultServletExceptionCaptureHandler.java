@@ -40,10 +40,19 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
     private final ConsoleRenderer consoleRenderer;
     private final StackMateProperties properties;
     private final ProductionProfileGuard productionGuard;
-    private final AsyncLocalInferenceCoordinator inferenceCoordinator;
     private final IncidentExporter incidentExporter;
     private final AtomicLong incidentSequence = new AtomicLong();
 
+    /**
+     * Creates a capture handler without filesystem incident export.
+     *
+     * @param snapshotter bounded throwable snapshotter
+     * @param diagnosticEngine deterministic incident analyzer
+     * @param deduplicationStore duplicate fingerprint store
+     * @param consoleRenderer renderer for diagnostic log messages
+     * @param properties StackMate runtime configuration
+     * @param productionGuard precomputed production-profile policy
+     */
     public DefaultServletExceptionCaptureHandler(
             ThrowableSnapshotter snapshotter,
             DeterministicDiagnosticEngine diagnosticEngine,
@@ -58,10 +67,20 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                 consoleRenderer,
                 properties,
                 productionGuard,
-                null,
                 null);
     }
 
+    /**
+     * Creates a capture handler with optional filesystem incident export.
+     *
+     * @param snapshotter bounded throwable snapshotter
+     * @param diagnosticEngine deterministic incident analyzer
+     * @param deduplicationStore duplicate fingerprint store
+     * @param consoleRenderer renderer for diagnostic log messages
+     * @param properties StackMate runtime configuration
+     * @param productionGuard precomputed production-profile policy
+     * @param incidentExporter exporter for first occurrences, or {@code null} to disable export
+     */
     public DefaultServletExceptionCaptureHandler(
             ThrowableSnapshotter snapshotter,
             DeterministicDiagnosticEngine diagnosticEngine,
@@ -69,26 +88,6 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
             ConsoleRenderer consoleRenderer,
             StackMateProperties properties,
             ProductionProfileGuard productionGuard,
-            AsyncLocalInferenceCoordinator inferenceCoordinator) {
-        this(
-                snapshotter,
-                diagnosticEngine,
-                deduplicationStore,
-                consoleRenderer,
-                properties,
-                productionGuard,
-                inferenceCoordinator,
-                null);
-    }
-
-    public DefaultServletExceptionCaptureHandler(
-            ThrowableSnapshotter snapshotter,
-            DeterministicDiagnosticEngine diagnosticEngine,
-            DeduplicationStore deduplicationStore,
-            ConsoleRenderer consoleRenderer,
-            StackMateProperties properties,
-            ProductionProfileGuard productionGuard,
-            AsyncLocalInferenceCoordinator inferenceCoordinator,
             IncidentExporter incidentExporter) {
         this.snapshotter = Objects.requireNonNull(snapshotter, "snapshotter");
         this.diagnosticEngine = Objects.requireNonNull(diagnosticEngine, "diagnosticEngine");
@@ -96,7 +95,6 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
         this.consoleRenderer = Objects.requireNonNull(consoleRenderer, "consoleRenderer");
         this.properties = Objects.requireNonNull(properties, "properties");
         this.productionGuard = Objects.requireNonNull(productionGuard, "productionGuard");
-        this.inferenceCoordinator = inferenceCoordinator;
         this.incidentExporter = incidentExporter;
         warnWhenProductionGuardBlocksAnalysis();
     }
@@ -114,7 +112,7 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
         }
         try {
             ThrowableSnapshot throwable = snapshotter.capture(failure);
-            List<String> applicationPackages = applicationPackages(capturedException, throwable);
+            List<String> applicationPackages = applicationPackages(capturedException);
             ApplicationFrameSelector frameSelector =
                     new ApplicationFrameSelector(
                             applicationPackages,
@@ -129,11 +127,9 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                             capturedException.context().springRuntime(),
                             JvmRuntimeContext.current());
             DeterministicResult result = diagnosticEngine.analyze(incident);
-            DeduplicationResult duplicate =
-                    recordOccurrence(result.fingerprint(), inferenceCoordinator != null);
+            DeduplicationResult duplicate = recordOccurrence(result.fingerprint());
             render(result, duplicate);
             export(result, duplicate);
-            submitInference(result, duplicate);
         } catch (Throwable internalFailure) {
             debugInternalFailure(internalFailure);
         }
@@ -155,20 +151,9 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
         }
     }
 
-    private List<String> applicationPackages(
-            CapturedServletException capturedException, ThrowableSnapshot throwable) {
+    private List<String> applicationPackages(CapturedServletException capturedException) {
         List<String> packages = new ArrayList<>(properties.getApplicationPackages());
         addIfPresent(packages, capturedException.context().springRuntime().applicationPackage());
-        if (packages.isEmpty()) {
-            for (var frame : throwable.root().frames()) {
-                String className = frame.className();
-                int packageEnd = className.lastIndexOf('.');
-                if (packageEnd > 0 && !isFrameworkPackage(className)) {
-                    addIfPresent(packages, className.substring(0, packageEnd));
-                    break;
-                }
-            }
-        }
         if (packages.isEmpty()) {
             packages.add("stackmate.application.not.detected");
         }
@@ -181,38 +166,12 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
         }
     }
 
-    private boolean isFrameworkPackage(String className) {
-        return className.startsWith("java.")
-                || className.startsWith("jdk.")
-                || className.startsWith("jakarta.")
-                || className.startsWith("org.springframework.");
-    }
-
-    private DeduplicationResult recordOccurrence(
-            ExceptionFingerprint fingerprint, boolean requestInference) {
+    private DeduplicationResult recordOccurrence(ExceptionFingerprint fingerprint) {
         if (properties.getDeduplication().isEnabled()) {
-            return deduplicationStore.record(fingerprint.value(), requestInference);
+            return deduplicationStore.record(fingerprint.value(), false);
         }
         Instant now = Instant.now();
-        return new DeduplicationResult(1, false, requestInference, now, now);
-    }
-
-    private void submitInference(DeterministicResult result, DeduplicationResult duplicate) {
-        if (inferenceCoordinator == null || !duplicate.inferenceReserved()) {
-            return;
-        }
-        Runnable release =
-                () -> deduplicationStore.releaseInferenceReservation(result.fingerprint().value());
-        try {
-            inferenceCoordinator.submit(result, release);
-        } catch (Throwable submissionFailure) {
-            try {
-                release.run();
-            } catch (RuntimeException ignored) {
-                // Dedup release failures are internal and must remain fail-open.
-            }
-            debugInferenceFailure("SUBMISSION_FAILURE");
-        }
+        return new DeduplicationResult(1, false, false, now, now);
     }
 
     private void render(DeterministicResult result, DeduplicationResult duplicate) {
@@ -246,7 +205,7 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
         }
         LOGGER.error(
                 MARKER,
-                "[StackMate] Severe JVM failure observed: {}. Local inference was skipped.",
+                "[StackMate] Severe JVM failure observed: {}.",
                 failure.getClass().getName());
     }
 
@@ -267,12 +226,6 @@ public final class DefaultServletExceptionCaptureHandler implements ServletExcep
                     MARKER,
                     "StackMate deterministic analysis failed safely: {}",
                     failure.getClass().getName());
-        }
-    }
-
-    private void debugInferenceFailure(String reason) {
-        if (properties.getConsole().isDebugLogging()) {
-            LOGGER.debug(MARKER, "StackMate local inference skipped safely: {}", reason);
         }
     }
 }

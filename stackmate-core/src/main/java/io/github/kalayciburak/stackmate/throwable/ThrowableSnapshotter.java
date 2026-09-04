@@ -14,19 +14,38 @@ import java.util.concurrent.ExecutionException;
 /** Copies hostile or unusual throwable graphs into bounded immutable data. */
 public final class ThrowableSnapshotter {
 
+    private static final int MAX_SEVERE_FAILURE_CAUSE_SCAN = 64;
+
     private final ThrowableSnapshotLimits limits;
     private final Sanitizer sanitizer;
 
+    /**
+     * Creates a snapshotter with explicit defensive limits and sanitization policy.
+     *
+     * @param limits work and output limits applied during capture
+     * @param sanitizer sanitizer applied before throwable text is retained
+     */
     public ThrowableSnapshotter(ThrowableSnapshotLimits limits, Sanitizer sanitizer) {
         this.limits = Objects.requireNonNull(limits, "limits");
         this.sanitizer = Objects.requireNonNull(sanitizer, "sanitizer");
     }
 
+    /**
+     * Creates the standard throwable snapshotter.
+     *
+     * @return snapshotter with default capture limits and privacy controls
+     */
     public static ThrowableSnapshotter defaults() {
         return new ThrowableSnapshotter(
                 ThrowableSnapshotLimits.defaults(), DefaultSanitizer.defaults());
     }
 
+    /**
+     * Copies a throwable graph into bounded immutable sanitized data.
+     *
+     * @param throwable throwable graph to capture
+     * @return captured outer-to-root cause chain and aggregate truncation state
+     */
     public ThrowableSnapshot capture(Throwable throwable) {
         Objects.requireNonNull(throwable, "throwable");
         preserveInterrupt(throwable);
@@ -57,9 +76,35 @@ public final class ThrowableSnapshotter {
         return new ThrowableSnapshot(chain, state.nodeCount, state.truncated);
     }
 
+    /**
+     * Detects fatal JVM conditions in a bounded cause-chain scan.
+     *
+     * @param failure throwable chain to inspect
+     * @return whether a severe JVM failure occurs in the inspected chain
+     */
     @SuppressWarnings("removal")
     public static boolean isSevereJvmFailure(Throwable failure) {
         Objects.requireNonNull(failure, "failure");
+        Throwable current = failure;
+        for (int scanned = 0;
+                current != null && scanned < MAX_SEVERE_FAILURE_CAUSE_SCAN;
+                scanned++) {
+            preserveInterrupt(current);
+            if (isDirectSevereJvmFailure(current)) {
+                return true;
+            }
+            try {
+                current = current.getCause();
+            } catch (Throwable causeAccessFailure) {
+                preserveInterrupt(causeAccessFailure);
+                current = causeAccessFailure;
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings("removal")
+    private static boolean isDirectSevereJvmFailure(Throwable failure) {
         return failure instanceof VirtualMachineError
                 || failure instanceof ThreadDeath
                 || failure instanceof LinkageError;
@@ -71,6 +116,10 @@ public final class ThrowableSnapshotter {
             IdentityHashMap<Throwable, Boolean> activePath,
             CaptureState state) {
         state.nodeCount++;
+        if (isDirectSevereJvmFailure(throwable)) {
+            state.truncated = true;
+            return new NodeCapture(captureSevereNode(throwable, depth), null);
+        }
         List<String> failures = new ArrayList<>();
         String message = captureMessage(throwable, failures);
         FrameCapture frameCapture = captureFrames(throwable, depth, failures);
@@ -93,6 +142,22 @@ public final class ThrowableSnapshotter {
                         suppressed.truncated(),
                         failures);
         return new NodeCapture(node, cause);
+    }
+
+    private ThrowableNode captureSevereNode(Throwable throwable, int depth) {
+        return new ThrowableNode(
+                throwable.getClass().getName(),
+                "",
+                List.of(),
+                List.of(),
+                SqlExceptionDetails.none(),
+                depth,
+                false,
+                false,
+                false,
+                true,
+                true,
+                List.of("severe-jvm-failure:minimal-snapshot"));
     }
 
     private SuppressedCapture captureSuppressedNodes(

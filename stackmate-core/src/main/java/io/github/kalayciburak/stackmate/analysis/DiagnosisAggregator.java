@@ -24,32 +24,47 @@ public final class DiagnosisAggregator {
 
     private static final String FALLBACK_EVIDENCE_ID = "diagnosis.fallback.no-match";
     private static final Pattern VERSION = Pattern.compile("[A-Za-z0-9][A-Za-z0-9._-]{0,31}");
-    private static final Comparator<DiagnosticAnalyzer> ANALYZER_ORDER =
-            Comparator.comparingInt(DiagnosticAnalyzer::order)
-                    .thenComparing(DiagnosticAnalyzer::id);
+    private static final Comparator<RegisteredAnalyzer> ANALYZER_ORDER =
+            Comparator.comparingInt(RegisteredAnalyzer::order)
+                    .thenComparing(RegisteredAnalyzer::id);
 
-    private final List<DiagnosticAnalyzer> analyzers;
+    private final List<RegisteredAnalyzer> analyzers;
 
+    /**
+     * Creates an aggregator with analyzers sorted into deterministic execution order.
+     *
+     * @param analyzers stateless analyzers to execute
+     */
     public DiagnosisAggregator(Collection<? extends DiagnosticAnalyzer> analyzers) {
         Objects.requireNonNull(analyzers, "analyzers");
-        this.analyzers =
-                analyzers.stream().map(Objects::requireNonNull).sorted(ANALYZER_ORDER).toList();
-        this.analyzers.forEach(DiagnosisAggregator::validateAnalyzerIdentity);
-        if (this.analyzers.stream().map(DiagnosticAnalyzer::id).distinct().count()
-                != this.analyzers.size()) {
-            throw new IllegalArgumentException("analyzer IDs must be unique");
+        List<RegisteredAnalyzer> registered =
+                analyzers.stream()
+                        .filter(Objects::nonNull)
+                        .map(DiagnosisAggregator::registerSafely)
+                        .filter(Objects::nonNull)
+                        .sorted(ANALYZER_ORDER)
+                        .toList();
+        LinkedHashMap<String, RegisteredAnalyzer> unique = new LinkedHashMap<>();
+        for (RegisteredAnalyzer analyzer : registered) {
+            unique.putIfAbsent(analyzer.id(), analyzer);
         }
+        this.analyzers = List.copyOf(unique.values());
     }
 
+    /**
+     * Runs all analyzers and composes internally consistent evidence-backed output.
+     *
+     * @param incident incident snapshot to diagnose
+     * @return composed diagnosis, including deterministic fallback output when no cause matches
+     */
     public Diagnosis diagnose(IncidentSnapshot incident) {
         Objects.requireNonNull(incident, "incident");
         Map<String, EvidenceItem> evidenceById = new LinkedHashMap<>();
         Map<String, CauseCandidate> causesById = new LinkedHashMap<>();
         Map<String, CheckCandidate> checksById = new LinkedHashMap<>();
-        List<String> analyzerTokens =
-                analyzers.stream().map(DiagnosisAggregator::analyzerToken).toList();
+        List<String> analyzerTokens = analyzers.stream().map(RegisteredAnalyzer::token).toList();
 
-        for (DiagnosticAnalyzer analyzer : analyzers) {
+        for (RegisteredAnalyzer analyzer : analyzers) {
             AnalysisContribution contribution = safelyAnalyze(analyzer, incident);
             if (contribution == null || !isInternallyConsistent(contribution)) {
                 continue;
@@ -73,18 +88,24 @@ public final class DiagnosisAggregator {
                 false);
     }
 
+    /**
+     * Exposes the configured analyzer sequence for runtime inspection.
+     *
+     * @return immutable analyzers in their deterministic execution order
+     */
     public List<DiagnosticAnalyzer> analyzers() {
-        return analyzers;
+        return analyzers.stream().map(RegisteredAnalyzer::analyzer).toList();
     }
 
     private AnalysisContribution safelyAnalyze(
-            DiagnosticAnalyzer analyzer, IncidentSnapshot incident) {
+            RegisteredAnalyzer analyzer, IncidentSnapshot incident) {
         try {
-            AnalysisContribution contribution = analyzer.analyze(incident);
+            AnalysisContribution contribution = analyzer.analyzer().analyze(incident);
             if (contribution != null && analyzer.id().equals(contribution.analyzerId())) {
                 return contribution;
             }
-        } catch (RuntimeException ignored) {
+        } catch (Throwable failure) {
+            preserveInterrupt(failure);
             // An analyzer is advisory and must not replace the application's failure path.
         }
         return null;
@@ -340,15 +361,32 @@ public final class DiagnosisAggregator {
         return value.isEmpty() ? "application-frame-present" : value.toString();
     }
 
-    private static void validateAnalyzerIdentity(DiagnosticAnalyzer analyzer) {
-        new AnalysisContribution(analyzer.id(), List.of(), List.of(), List.of());
-        Objects.requireNonNull(analyzer.version(), "analyzer version");
-        if (!VERSION.matcher(analyzer.version()).matches()) {
-            throw new IllegalArgumentException("analyzer version must be a stable token");
+    private static RegisteredAnalyzer registerSafely(DiagnosticAnalyzer analyzer) {
+        try {
+            String id =
+                    new AnalysisContribution(analyzer.id(), List.of(), List.of(), List.of())
+                            .analyzerId();
+            String version = Objects.requireNonNull(analyzer.version(), "analyzer version");
+            if (!VERSION.matcher(version).matches()) {
+                return null;
+            }
+            return new RegisteredAnalyzer(analyzer, id, version, analyzer.order());
+        } catch (Throwable failure) {
+            preserveInterrupt(failure);
+            return null;
         }
     }
 
-    private static String analyzerToken(DiagnosticAnalyzer analyzer) {
-        return analyzer.id() + "@" + analyzer.version();
+    private static void preserveInterrupt(Throwable failure) {
+        if (failure instanceof InterruptedException) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private record RegisteredAnalyzer(
+            DiagnosticAnalyzer analyzer, String id, String version, int order) {
+        private String token() {
+            return id + "@" + version;
+        }
     }
 }

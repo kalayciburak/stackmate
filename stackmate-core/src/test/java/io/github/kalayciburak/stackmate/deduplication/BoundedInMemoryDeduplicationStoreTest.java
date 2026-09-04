@@ -127,6 +127,82 @@ class BoundedInMemoryDeduplicationStoreTest {
         assertThat(store.size()).isZero();
     }
 
+    @Test
+    void clampsClockRollbackAndExpiresFromTheLatestObservedTime() {
+        MutableClock clock = new MutableClock(Instant.parse("2026-08-01T10:00:00Z"));
+        var store = new BoundedInMemoryDeduplicationStore(10, Duration.ofSeconds(30), clock);
+        store.record("same");
+        clock.advance(Duration.ofSeconds(20));
+        Instant latest = store.record("same").lastSeen();
+
+        clock.advance(Duration.ofSeconds(-15));
+        DeduplicationResult afterRollback = store.record("same");
+        clock.advance(Duration.ofSeconds(24));
+
+        assertThat(afterRollback.lastSeen()).isEqualTo(latest);
+        assertThat(store.size()).isOne();
+        clock.advance(Duration.ofSeconds(21));
+        assertThat(store.record("same").duplicate()).isFalse();
+    }
+
+    @Test
+    void keepsCapacityBoundedUnderChurnAndEvictsReservationsWithTheirEntry() {
+        var store = new BoundedInMemoryDeduplicationStore(3, Duration.ofHours(1));
+        assertThat(store.record("reserved", true).inferenceReserved()).isTrue();
+        for (int index = 0; index < 100; index++) {
+            store.record("fingerprint-" + index);
+            assertThat(store.size()).isLessThanOrEqualTo(3);
+        }
+
+        assertThat(store.releaseInferenceReservation("reserved")).isFalse();
+        assertThat(store.record("reserved", true).duplicate()).isFalse();
+        assertThat(store.releaseInferenceReservation("reserved")).isTrue();
+    }
+
+    @Test
+    void reservationReleaseDoesNotHideOlderExpiredEntriesBehindFreshEntries() {
+        MutableClock clock = new MutableClock(Instant.parse("2026-08-01T10:00:00Z"));
+        var store = new BoundedInMemoryDeduplicationStore(10, Duration.ofSeconds(30), clock);
+        store.record("older", true);
+        clock.advance(Duration.ofSeconds(5));
+        store.record("newer");
+        clock.advance(Duration.ofSeconds(5));
+        assertThat(store.releaseInferenceReservation("older")).isTrue();
+        clock.advance(Duration.ofSeconds(20));
+
+        assertThat(store.size()).isOne();
+        assertThat(store.record("newer").duplicate()).isTrue();
+        assertThat(store.record("older").duplicate()).isFalse();
+    }
+
+    @Test
+    void remainsBoundedWithConcurrentDifferentFingerprints() throws Exception {
+        int capacity = 16;
+        int taskCount = 128;
+        var store = new BoundedInMemoryDeduplicationStore(capacity, Duration.ofMinutes(1));
+        CountDownLatch start = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        try {
+            List<Future<DeduplicationResult>> futures = new ArrayList<>();
+            for (int index = 0; index < taskCount; index++) {
+                int fingerprint = index;
+                futures.add(
+                        executor.submit(
+                                () -> {
+                                    start.await();
+                                    return store.record("different-" + fingerprint, true);
+                                }));
+            }
+            start.countDown();
+            for (Future<DeduplicationResult> future : futures) {
+                assertThat(future.get().duplicate()).isFalse();
+            }
+            assertThat(store.size()).isEqualTo(capacity);
+        } finally {
+            executor.close();
+        }
+    }
+
     private static final class MutableClock extends Clock {
         private Instant instant;
 

@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
  */
 public final class DatabaseAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in database diagnostic analyzer. */
+    public DatabaseAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "database";
 
     private static final Pattern SQL_STATE = Pattern.compile("[A-Za-z0-9]{2,5}");

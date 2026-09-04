@@ -105,6 +105,69 @@ class ApplicationFrameSelectorTest {
                 .containsExactly("org.springframework.samples.App");
     }
 
+    @Test
+    void alwaysPrefersMainCauseProvenanceOverDeeperSuppressedFrames() {
+        RuntimeException root = new RuntimeException("root");
+        root.setStackTrace(new StackTraceElement[] {frame("com.example.RootService", "load", 30)});
+        RuntimeException outer = new RuntimeException("outer", root);
+        RuntimeException suppressed = new RuntimeException("suppressed");
+        RuntimeException nestedSuppressed = new RuntimeException("nested-suppressed");
+        nestedSuppressed.setStackTrace(
+                new StackTraceElement[] {frame("com.example.SuppressedService", "check", 40)});
+        suppressed.addSuppressed(nestedSuppressed);
+        outer.addSuppressed(suppressed);
+
+        var selected =
+                new ApplicationFrameSelector(List.of("com.example"), 1)
+                        .select(ThrowableSnapshotter.defaults().capture(outer));
+
+        assertThat(selected)
+                .extracting(frame -> frame.className())
+                .containsExactly("com.example.RootService");
+    }
+
+    @Test
+    void filtersCommonFrameworkAndGeneratedFramesForBroadOwnership() {
+        RuntimeException exception = new RuntimeException("failed");
+        exception.setStackTrace(
+                new StackTraceElement[] {
+                    frame("com.zaxxer.hikari.pool.HikariPool", "getConnection", 1),
+                    frame("org.hibernate.engine.Session", "flush", 2),
+                    frame("com.fasterxml.jackson.databind.ObjectMapper", "readValue", 3),
+                    frame("org.eclipse.jetty.server.Handler", "handle", 4),
+                    frame("io.undertow.servlet.Handler", "handle", 5),
+                    frame("com.example.Service$$ByteBuddy$$Synthetic", "run", 6),
+                    frame("com.example.Service$$Lambda$1", "run", 7),
+                    frame("com.example.Entity$HibernateProxy$abc", "load", 8),
+                    frame("com.example.$Proxy12", "invoke", 9)
+                });
+
+        var selected =
+                new ApplicationFrameSelector(List.of("com", "org", "io"), 20)
+                        .select(ThrowableSnapshotter.defaults().capture(exception));
+
+        assertThat(selected).isEmpty();
+    }
+
+    @Test
+    void keepsInnerAndSourceLessApplicationFramesWithoutInventingSourceMetadata() {
+        RuntimeException exception = new RuntimeException("failed");
+        exception.setStackTrace(
+                new StackTraceElement[] {
+                    new StackTraceElement("com.example.Outer$Inner", "run", null, -1),
+                    frame("DefaultPackageClass", "main", 1)
+                });
+
+        var selected =
+                new ApplicationFrameSelector(List.of("com.example"), 10)
+                        .select(ThrowableSnapshotter.defaults().capture(exception));
+
+        assertThat(selected).hasSize(1);
+        assertThat(selected.getFirst().className()).isEqualTo("com.example.Outer$Inner");
+        assertThat(selected.getFirst().fileName()).isEmpty();
+        assertThat(selected.getFirst().lineNumber()).isEqualTo(-1);
+    }
+
     private static StackTraceElement frame(String className, String methodName, int lineNumber) {
         return new StackTraceElement(className, methodName, "Example.java", lineNumber);
     }

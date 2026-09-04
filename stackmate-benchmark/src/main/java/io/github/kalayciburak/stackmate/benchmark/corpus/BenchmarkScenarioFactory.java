@@ -229,8 +229,7 @@ public final class BenchmarkScenarioFactory {
     private static IncidentSnapshot capture(String caseId, Throwable throwable) {
         throwable.setStackTrace(new StackTraceElement[] {APP_STACK_FRAME});
         ThrowableSnapshot snapshot = SNAPSHOTTER.capture(throwable);
-        StackFrameSnapshot applicationFrame = snapshot.root().frames().getFirst();
-        return IncidentSnapshot.of(caseId, CAPTURE_TIME, snapshot, List.of(applicationFrame));
+        return IncidentSnapshot.of(caseId, CAPTURE_TIME, snapshot, List.of(APP_FRAME));
     }
 
     private static IncidentSnapshot syntheticIncident(String caseId, String type, String message) {

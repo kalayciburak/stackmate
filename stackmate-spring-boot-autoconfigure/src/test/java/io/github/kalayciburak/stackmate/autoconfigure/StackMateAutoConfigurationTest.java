@@ -6,23 +6,16 @@ import io.github.kalayciburak.stackmate.analysis.AnalysisContribution;
 import io.github.kalayciburak.stackmate.analysis.DiagnosisAggregator;
 import io.github.kalayciburak.stackmate.analysis.DiagnosticAnalyzer;
 import io.github.kalayciburak.stackmate.capture.ServletExceptionCaptureHandler;
+import io.github.kalayciburak.stackmate.capture.StackMateExceptionCaptureFilter;
 import io.github.kalayciburak.stackmate.configuration.ProductionProfileGuard;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.incident.IncidentSnapshot;
-import io.github.kalayciburak.stackmate.inference.InferenceAvailability;
-import io.github.kalayciburak.stackmate.inference.InferenceRequest;
-import io.github.kalayciburak.stackmate.inference.InferenceResult;
-import io.github.kalayciburak.stackmate.inference.LocalInferenceEngine;
-import io.github.kalayciburak.stackmate.inference.LocalInferenceMetrics;
-import io.github.kalayciburak.stackmate.inference.ModelCapabilities;
-import io.github.kalayciburak.stackmate.inference.ModelDescriptor;
-import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
-import io.github.kalayciburak.stackmate.runtime.AsyncLocalInferenceCoordinator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.FilteredClassLoader;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +28,6 @@ class StackMateAutoConfigurationTest {
             new WebApplicationContextRunner()
                     .withConfiguration(AutoConfigurations.of(StackMateAutoConfiguration.class));
 
-    private final WebApplicationContextRunner inferenceContextRunner =
-            new WebApplicationContextRunner()
-                    .withConfiguration(
-                            AutoConfigurations.of(
-                                    StackMateAutoConfiguration.class,
-                                    StackMateJvmInferenceAutoConfiguration.class,
-                                    StackMateInferenceAutoConfiguration.class));
-
     @Test
     void should_enable_deterministic_servlet_diagnostics_with_safe_defaults() {
         contextRunner.run(
@@ -51,8 +36,6 @@ class StackMateAutoConfigurationTest {
                     assertThat(context).hasSingleBean(ServletExceptionCaptureHandler.class);
                     assertThat(context).hasSingleBean(FilterRegistrationBean.class);
                     assertThat(context).hasSingleBean(DiagnosisAggregator.class);
-                    assertThat(context.getBean(StackMateProperties.class).getMode())
-                            .isEqualTo(StackMateProperties.Mode.DETERMINISTIC);
                 });
     }
 
@@ -70,6 +53,28 @@ class StackMateAutoConfigurationTest {
     }
 
     @Test
+    void should_remain_inert_when_disabled_even_with_irrelevant_invalid_configuration() {
+        contextRunner
+                .withPropertyValues("stackmate.enabled=false", "stackmate.console.maximum-width=10")
+                .run(
+                        context -> {
+                            assertThat(context).hasNotFailed();
+                            assertThat(context).doesNotHaveBean(StackMateProperties.class);
+                        });
+    }
+
+    @Test
+    void should_not_turn_a_non_web_application_into_a_web_application() {
+        new ApplicationContextRunner()
+                .withConfiguration(AutoConfigurations.of(StackMateAutoConfiguration.class))
+                .run(
+                        context -> {
+                            assertThat(context).hasNotFailed();
+                            assertThat(context).doesNotHaveBean(StackMateProperties.class);
+                        });
+    }
+
+    @Test
     void should_back_off_without_spring_mvc() {
         contextRunner
                 .withClassLoader(new FilteredClassLoader(DispatcherServlet.class))
@@ -81,14 +86,20 @@ class StackMateAutoConfigurationTest {
     }
 
     @Test
-    void should_honor_user_sanitizer_and_custom_analyzer_beans() {
+    void should_keep_mandatory_sanitizer_primary_and_honor_custom_analyzers() {
         contextRunner
                 .withUserConfiguration(UserExtensions.class)
                 .run(
                         context -> {
-                            assertThat(context).hasSingleBean(Sanitizer.class);
+                            assertThat(context).hasBean("stackMateSanitizer");
+                            assertThat(context).hasBean("customSanitizer");
                             assertThat(context.getBean(Sanitizer.class))
-                                    .isSameAs(context.getBean("customSanitizer"));
+                                    .isSameAs(context.getBean("stackMateSanitizer"))
+                                    .isNotSameAs(context.getBean("customSanitizer"));
+                            assertThat(
+                                            context.getBean(Sanitizer.class)
+                                                    .sanitize("password=synthetic-secret"))
+                                    .doesNotContain("synthetic-secret");
                             assertThat(context.getBean(DiagnosisAggregator.class).analyzers())
                                     .extracting(DiagnosticAnalyzer::id)
                                     .contains("sample-custom");
@@ -99,6 +110,16 @@ class StackMateAutoConfigurationTest {
     void should_fail_context_early_for_invalid_bounded_properties() {
         contextRunner
                 .withPropertyValues("stackmate.console.maximum-width=10")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
+    void should_reject_removed_or_unknown_stackmate_properties() {
+        contextRunner
+                .withPropertyValues("stackmate.mode=HYBRID")
+                .run(context -> assertThat(context).hasFailed());
+        contextRunner
+                .withPropertyValues("stackmate.privacy.include-request-body=true")
                 .run(context -> assertThat(context).hasFailed());
     }
 
@@ -128,64 +149,14 @@ class StackMateAutoConfigurationTest {
     }
 
     @Test
-    void should_create_lazy_hybrid_coordinator_with_or_without_local_engine() {
-        inferenceContextRunner
-                .withPropertyValues(
-                        "stackmate.mode=HYBRID",
-                        "stackmate.inference.model-path=missing-local-model")
+    void should_back_off_when_the_application_supplies_the_capture_filter() {
+        contextRunner
+                .withUserConfiguration(UserCaptureFilter.class)
                 .run(
                         context -> {
-                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
-                            assertThat(context.getBean(LocalInferenceEngine.class))
-                                    .isInstanceOf(
-                                            io.github.kalayciburak.stackmate.inference
-                                                    .LazyLocalInferenceEngine.class);
-                        });
-
-        inferenceContextRunner
-                .withPropertyValues("stackmate.mode=HYBRID")
-                .run(
-                        context -> {
-                            assertThat(context).hasSingleBean(AsyncLocalInferenceCoordinator.class);
-                            assertThat(context).hasSingleBean(LocalInferenceMetrics.class);
-                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
-                        });
-
-        inferenceContextRunner
-                .withPropertyValues("stackmate.mode=HYBRID")
-                .withUserConfiguration(LocalEngineConfiguration.class)
-                .run(
-                        context -> {
-                            assertThat(context).hasSingleBean(LocalInferenceEngine.class);
-                            assertThat(context).hasSingleBean(AsyncLocalInferenceCoordinator.class);
-                        });
-    }
-
-    @Test
-    void should_not_create_inference_beans_when_disabled_or_api_is_absent() {
-        inferenceContextRunner
-                .withPropertyValues("stackmate.mode=HYBRID", "stackmate.inference.enabled=false")
-                .run(
-                        context ->
-                                assertThat(context)
-                                        .doesNotHaveBean(AsyncLocalInferenceCoordinator.class));
-
-        inferenceContextRunner
-                .withPropertyValues("stackmate.enabled=false", "stackmate.mode=HYBRID")
-                .run(
-                        context -> {
-                            assertThat(context).doesNotHaveBean(StackMateProperties.class);
                             assertThat(context)
-                                    .doesNotHaveBean(AsyncLocalInferenceCoordinator.class);
-                        });
-
-        inferenceContextRunner
-                .withClassLoader(new FilteredClassLoader(LocalInferenceEngine.class))
-                .run(
-                        context -> {
-                            assertThat(context).hasSingleBean(ServletExceptionCaptureHandler.class);
-                            assertThat(context)
-                                    .doesNotHaveBean(AsyncLocalInferenceCoordinator.class);
+                                    .hasSingleBean(StackMateExceptionCaptureFilter.class);
+                            assertThat(context).doesNotHaveBean("stackMateCaptureFilter");
                         });
     }
 
@@ -194,7 +165,17 @@ class StackMateAutoConfigurationTest {
 
         @Bean
         Sanitizer customSanitizer() {
-            return DefaultSanitizer.defaults();
+            return new Sanitizer() {
+                @Override
+                public String sanitize(String value) {
+                    return value;
+                }
+
+                @Override
+                public String sanitize(String fieldName, String value) {
+                    return value;
+                }
+            };
         }
 
         @Bean
@@ -219,33 +200,13 @@ class StackMateAutoConfigurationTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    static class LocalEngineConfiguration {
+    static class UserCaptureFilter {
 
         @Bean
-        LocalInferenceEngine localInferenceEngine() {
-            return new LocalInferenceEngine() {
-                @Override
-                public InferenceAvailability availability() {
-                    return InferenceAvailability.available();
-                }
-
-                @Override
-                public ModelDescriptor model() {
-                    return new ModelDescriptor(
-                            "test/local",
-                            "Test Local",
-                            "1",
-                            new ModelCapabilities(true, 16_000, 8_192));
-                }
-
-                @Override
-                public InferenceResult infer(InferenceRequest request) {
-                    throw new AssertionError("auto-configuration must stay lazy");
-                }
-
-                @Override
-                public void close() {}
-            };
+        StackMateExceptionCaptureFilter userStackMateCaptureFilter(
+                io.github.kalayciburak.stackmate.context.ServletContextExtractor extractor,
+                ServletExceptionCaptureHandler handler) {
+            return new StackMateExceptionCaptureFilter(extractor, handler);
         }
     }
 }

@@ -5,11 +5,6 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$DeterministicJar,
 
-    [Parameter(Mandatory = $true)]
-    [string]$LocalJar,
-
-    [string]$ModelPath = "",
-
     [ValidateRange(3, 100)]
     [int]$Iterations = 10,
 
@@ -32,7 +27,7 @@ function Resolve-RequiredFile([string]$Value, [string]$Name) {
     return $resolved
 }
 
-function Percentile([long[]]$Values, [double]$Rate) {
+function Get-Percentile([long[]]$Values, [double]$Rate) {
     $sorted = @($Values | Sort-Object)
     $index = [Math]::Ceiling($Rate * $sorted.Count) - 1
     return $sorted[[Math]::Max(0, [Math]::Min($index, $sorted.Count - 1))]
@@ -42,12 +37,7 @@ function Read-SharedText([string]$Path) {
     if (-not [System.IO.File]::Exists($Path)) {
         return ""
     }
-    $stream = [System.IO.File]::Open(
-        $Path,
-        [System.IO.FileMode]::Open,
-        [System.IO.FileAccess]::Read,
-        [System.IO.FileShare]::ReadWrite
-    )
+    $stream = [System.IO.File]::Open($Path, "Open", "Read", "ReadWrite")
     try {
         $reader = [System.IO.StreamReader]::new($stream)
         try {
@@ -62,16 +52,29 @@ function Read-SharedText([string]$Path) {
     }
 }
 
-function Measure-Mode([hashtable]$Mode, [string]$RunDirectory) {
+function Stop-ProcessTree([System.Diagnostics.Process]$Process) {
+    if ($null -eq $Process -or $Process.HasExited) {
+        return
+    }
+    try {
+        $Process.Kill($true)
+    }
+    catch {
+        & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
+    }
+    $Process.WaitForExit(5000) | Out-Null
+}
+
+function Measure-Mode([hashtable]$Mode, [string]$RunDirectory, [string]$JavaExecutable) {
     $all = [System.Collections.Generic.List[long]]::new()
     $measured = [System.Collections.Generic.List[long]]::new()
     $total = $WarmupIterations + $Iterations
     for ($index = 0; $index -lt $total; $index++) {
         $log = Join-Path $RunDirectory ("{0}-{1:D2}.log" -f $Mode.Name, ($index + 1))
         $errorLog = Join-Path $RunDirectory ("{0}-{1:D2}.err.log" -f $Mode.Name, ($index + 1))
-        $arguments = @("-jar", $Mode.Jar, "--server.port=0", "--spring.main.banner-mode=off") + $Mode.Arguments
+        $arguments = @("-jar", ('"{0}"' -f $Mode.Jar), "--server.address=127.0.0.1", "--server.port=0", "--spring.main.banner-mode=off") + $Mode.Arguments
         $watch = [System.Diagnostics.Stopwatch]::StartNew()
-        $process = Start-Process -FilePath (Join-Path $env:JAVA_HOME "bin/java.exe") `
+        $process = Start-Process -FilePath $JavaExecutable `
             -ArgumentList $arguments `
             -WindowStyle Hidden `
             -RedirectStandardOutput $log `
@@ -81,12 +84,9 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory) {
         $ready = $false
         try {
             while ([DateTime]::UtcNow -lt $deadline -and -not $process.HasExited) {
-                if ([System.IO.File]::Exists($log)) {
-                    $content = Read-SharedText $log
-                    if ($content -match "Started .*Application in") {
-                        $ready = $true
-                        break
-                    }
+                if ((Read-SharedText $log) -match "Started .*Application in") {
+                    $ready = $true
+                    break
                 }
                 Start-Sleep -Milliseconds 25
                 $process.Refresh()
@@ -102,19 +102,18 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory) {
             }
         }
         finally {
-            if (-not $process.HasExited) {
-                $process.Kill($true)
-                $process.WaitForExit(5000) | Out-Null
-            }
+            Stop-ProcessTree $process
         }
     }
     return [ordered]@{
         name = $Mode.Name
+        jar = $Mode.Jar
+        arguments = @($Mode.Arguments)
         warmupIterations = $WarmupIterations
         measuredIterations = $Iterations
         minimumMilliseconds = ($measured | Measure-Object -Minimum).Minimum
-        medianMilliseconds = Percentile $measured.ToArray() 0.50
-        p95Milliseconds = Percentile $measured.ToArray() 0.95
+        medianMilliseconds = Get-Percentile $measured.ToArray() 0.50
+        p95Milliseconds = Get-Percentile $measured.ToArray() 0.95
         maximumMilliseconds = ($measured | Measure-Object -Maximum).Maximum
         allSamplesMilliseconds = $all.ToArray()
         measuredSamplesMilliseconds = $measured.ToArray()
@@ -123,36 +122,31 @@ function Measure-Mode([hashtable]$Mode, [string]$RunDirectory) {
 
 $baseline = Resolve-RequiredFile $BaselineJar "BaselineJar"
 $deterministic = Resolve-RequiredFile $DeterministicJar "DeterministicJar"
-$local = Resolve-RequiredFile $LocalJar "LocalJar"
-$model = if ([string]::IsNullOrWhiteSpace($ModelPath)) { "" } else { Resolve-Path $ModelPath | Select-Object -ExpandProperty Path }
-$runDirectory = [System.IO.Path]::GetFullPath((Join-Path $OutputDirectory ([DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss"))))
+$java = Resolve-RequiredFile (Join-Path $env:JAVA_HOME "bin/java.exe") "JAVA_HOME java executable"
+$runDirectory = [System.IO.Path]::GetFullPath((Join-Path $OutputDirectory ([DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss-fff"))))
 [System.IO.Directory]::CreateDirectory($runDirectory) | Out-Null
-
 $modes = @(
     @{ Name = "without-stackmate"; Jar = $baseline; Arguments = @() },
-    @{ Name = "deterministic-starter"; Jar = $deterministic; Arguments = @("--stackmate.mode=deterministic", "--stackmate.inference.enabled=false") }
+    @{ Name = "disabled-starter"; Jar = $deterministic; Arguments = @("--stackmate.enabled=false") },
+    @{ Name = "enabled-deterministic"; Jar = $deterministic; Arguments = @() }
 )
-if (-not [string]::IsNullOrWhiteSpace($model)) {
-    $modes += @{ Name = "local-starter-lazy"; Jar = $local; Arguments = @("--stackmate.mode=hybrid", "--stackmate.inference.enabled=true", "--stackmate.inference.lazy-load=true", "--stackmate.inference.model-path=$model") }
-    $modes += @{ Name = "local-adapter-eager"; Jar = $local; Arguments = @("--stackmate.mode=hybrid", "--stackmate.inference.enabled=true", "--stackmate.inference.lazy-load=false", "--stackmate.inference.model-path=$model") }
-}
 
-$results = foreach ($mode in $modes) { Measure-Mode $mode $runDirectory }
+$results = foreach ($mode in $modes) { Measure-Mode $mode $runDirectory $java }
 $machine = Get-CimInstance Win32_ComputerSystem
 $processor = Get-CimInstance Win32_Processor | Select-Object -First 1
 $report = [ordered]@{
     measuredAtUtc = [DateTime]::UtcNow.ToString("O")
     command = $MyInvocation.Line
     warmupPolicy = "Fresh JVM per sample; first $WarmupIterations runs per mode excluded; OS file cache not cleared"
-    java = (& (Join-Path $env:JAVA_HOME "bin/java.exe") -version 2>&1 | Out-String).Trim()
+    java = (& $java -version 2>&1 | Out-String).Trim()
     os = [System.Environment]::OSVersion.VersionString
     cpu = $processor.Name
     logicalProcessors = $machine.NumberOfLogicalProcessors
     memoryBytes = [long]$machine.TotalPhysicalMemory
     results = @($results)
-    limitation = "local-adapter-eager initializes and validates the adapter; Jlama weights remain demand-loaded until inference"
 }
 $reportPath = Join-Path $runDirectory "startup-report.json"
-$report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding utf8
-$report | ConvertTo-Json -Depth 8
+$json = $report | ConvertTo-Json -Depth 8
+$json | Set-Content -LiteralPath $reportPath -Encoding utf8
+$json
 Write-Output "Report: $reportPath"

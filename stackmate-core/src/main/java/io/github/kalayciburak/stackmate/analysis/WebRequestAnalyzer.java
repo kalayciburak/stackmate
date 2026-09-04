@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
 /** Diagnoses MVC request, validation, and serialization failures using optional type names only. */
 public final class WebRequestAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in web-request diagnostic analyzer. */
+    public WebRequestAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "web-request";
 
     private static final List<Pattern> PROPERTY_PATTERNS =

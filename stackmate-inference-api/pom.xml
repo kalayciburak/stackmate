@@ -4,10 +4,13 @@
   <parent>
     <groupId>io.github.kalayciburak</groupId>
     <artifactId>stackmate-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-rc.1</version>
   </parent>
   <artifactId>stackmate-inference-api</artifactId>
   <name>StackMate Inference API</name>
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>

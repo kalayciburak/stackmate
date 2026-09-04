@@ -10,5 +10,4 @@ logging:
 
 stackmate:
   console:
-    ansi: never
     debug-logging: true

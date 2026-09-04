@@ -1,6 +1,6 @@
 package io.github.kalayciburak.stackmate.inference;
 
-import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
+import io.github.kalayciburak.stackmate.configuration.InferenceProperties;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -12,10 +12,10 @@ public final class LocalModelPathResolver {
 
     private LocalModelPathResolver() {}
 
-    public static Path resolve(StackMateProperties properties) {
+    public static Path resolve(InferenceProperties properties) {
         Objects.requireNonNull(properties, "properties");
         return resolve(
-                properties.getInference().getModelPath(),
+                properties.getModelPath(),
                 environment(ENVIRONMENT_NAME),
                 systemProperty("user.home"));
     }

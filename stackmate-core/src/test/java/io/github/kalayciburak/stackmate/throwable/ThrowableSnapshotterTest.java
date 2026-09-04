@@ -195,6 +195,85 @@ class ThrowableSnapshotterTest {
     }
 
     @Test
+    void boundsVeryDeepCauseChainsAndVeryWideSuppressedLists() {
+        RuntimeException deep = new RuntimeException("root");
+        for (int index = 0; index < 200; index++) {
+            deep = new RuntimeException("level-" + index, deep);
+        }
+        RuntimeException wide = new RuntimeException("wide");
+        for (int index = 0; index < 100; index++) {
+            wide.addSuppressed(new IllegalStateException("suppressed-" + index));
+        }
+        ThrowableSnapshotLimits limits = new ThrowableSnapshotLimits(8, 1, 3, 12, 32, 4);
+        ThrowableSnapshotter snapshotter =
+                new ThrowableSnapshotter(limits, DefaultSanitizer.defaults());
+
+        ThrowableSnapshot deepSnapshot = snapshotter.capture(deep);
+        ThrowableSnapshot wideSnapshot = snapshotter.capture(wide);
+
+        assertThat(deepSnapshot.causeChain()).hasSize(8);
+        assertThat(deepSnapshot.nodeCount()).isEqualTo(8);
+        assertThat(deepSnapshot.root().depthTruncated()).isTrue();
+        assertThat(wideSnapshot.outer().suppressed()).hasSize(3);
+        assertThat(wideSnapshot.outer().suppressedTruncated()).isTrue();
+        assertThat(wideSnapshot.nodeCount()).isEqualTo(4);
+    }
+
+    @Test
+    void capturesWrappedSevereJvmFailureAsMinimalBoundedNode() {
+        RuntimeException wrapper =
+                new RuntimeException("wrapper", new OutOfMemoryError("synthetic pressure"));
+
+        ThrowableSnapshot snapshot = ThrowableSnapshotter.defaults().capture(wrapper);
+
+        assertThat(snapshot.causeChain())
+                .extracting(ThrowableNode::type)
+                .containsExactly(
+                        RuntimeException.class.getName(), OutOfMemoryError.class.getName());
+        assertThat(snapshot.root().message()).isEmpty();
+        assertThat(snapshot.root().frames()).isEmpty();
+        assertThat(snapshot.root().suppressed()).isEmpty();
+        assertThat(snapshot.root().framesTruncated()).isTrue();
+        assertThat(snapshot.root().suppressedTruncated()).isTrue();
+        assertThat(snapshot.root().captureFailures())
+                .containsExactly("severe-jvm-failure:minimal-snapshot");
+        assertThat(snapshot.truncated()).isTrue();
+    }
+
+    @Test
+    void detectsWrappedSevereFailuresWithBoundedCycleSafeCauseScan() {
+        assertThat(
+                        ThrowableSnapshotter.isSevereJvmFailure(
+                                new RuntimeException(
+                                        "wrapper", new ExceptionInInitializerError("synthetic"))))
+                .isTrue();
+        assertThat(
+                        ThrowableSnapshotter.isSevereJvmFailure(
+                                new RuntimeException("ordinary", new IllegalStateException())))
+                .isFalse();
+
+        LoopingThrowable first = new LoopingThrowable("first");
+        LoopingThrowable second = new LoopingThrowable("second");
+        first.cause = second;
+        second.cause = first;
+        assertThat(ThrowableSnapshotter.isSevereJvmFailure(first)).isFalse();
+    }
+
+    @Test
+    void rethrowsSanitizerFailureThatWrapsSevereJvmFailureWithoutRawFallback() {
+        RuntimeException exception = new RuntimeException("raw-secret");
+
+        assertThatThrownBy(
+                        () ->
+                                new ThrowableSnapshotter(
+                                                ThrowableSnapshotLimits.defaults(),
+                                                new WrappedSevereSanitizer())
+                                        .capture(exception))
+                .isInstanceOf(IllegalStateException.class)
+                .hasCauseInstanceOf(LinkageError.class);
+    }
+
+    @Test
     void recordsNullMessageStackAndFrameWithoutFailingCapture() {
         ThrowableSnapshot nullMessage =
                 ThrowableSnapshotter.defaults().capture(new RuntimeException());
@@ -369,6 +448,18 @@ class ThrowableSnapshotterTest {
         @Override
         public String sanitize(String fieldName, String value) {
             return "className".equals(fieldName) ? null : value;
+        }
+    }
+
+    private static final class WrappedSevereSanitizer implements Sanitizer {
+        @Override
+        public String sanitize(String value) {
+            throw new IllegalStateException("sanitizer failed", new LinkageError("synthetic"));
+        }
+
+        @Override
+        public String sanitize(String fieldName, String value) {
+            return sanitize(value);
         }
     }
 

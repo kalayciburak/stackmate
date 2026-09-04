@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.kalayciburak.stackmate.analysis.DefaultDiagnosticAnalyzers;
 import io.github.kalayciburak.stackmate.analysis.DeterministicDiagnosticEngine;
 import io.github.kalayciburak.stackmate.analysis.DeterministicResult;
+import io.github.kalayciburak.stackmate.configuration.InferenceProperties;
 import io.github.kalayciburak.stackmate.configuration.InferenceTriggerPolicy;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.fingerprint.IncidentFingerprinter;
@@ -63,8 +64,8 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
 
     @Test
     void interrupts_timeout_and_keeps_untrusted_output_hidden() throws Exception {
-        StackMateProperties properties = properties();
-        properties.getInference().setTimeout(Duration.ofMillis(40));
+        InferenceProperties properties = properties();
+        properties.setTimeout(Duration.ofMillis(40));
         CountDownLatch interrupted = new CountDownLatch(1);
         LocalInferenceEngine engine =
                 engine(
@@ -106,8 +107,8 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                                             List.of()),
                                     Duration.ofMillis(3));
                         });
-        StackMateProperties properties = properties();
-        properties.getInference().getCircuitBreaker().setFailureThreshold(1);
+        InferenceProperties properties = properties();
+        properties.getCircuitBreaker().setFailureThreshold(1);
         RecordingRenderer renderer = new RecordingRenderer(new CountDownLatch(1));
         DefaultAsyncLocalInferenceCoordinator coordinator =
                 coordinator(invalidEngine, properties, renderer);
@@ -143,7 +144,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
 
     @Test
     void releases_reservation_when_engine_is_missing_or_queue_rejects() throws Exception {
-        StackMateProperties properties = properties();
+        InferenceProperties properties = properties();
         DefaultAsyncLocalInferenceCoordinator missing =
                 coordinator(null, properties, new RecordingRenderer(new CountDownLatch(1)));
         CountDownLatch missingRelease = new CountDownLatch(1);
@@ -194,7 +195,7 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
 
     private DefaultAsyncLocalInferenceCoordinator coordinator(
             LocalInferenceEngine engine,
-            StackMateProperties properties,
+            InferenceProperties properties,
             LocalExplanationRenderer renderer) {
         LocalInferenceMetrics metrics = new LocalInferenceMetrics();
         DefaultAsyncLocalInferenceCoordinator coordinator =
@@ -202,11 +203,12 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                         provider(engine),
                         new DefaultInferenceOutputValidator(),
                         new InMemoryInferenceCircuitBreaker(
-                                properties.getInference().getCircuitBreaker().getFailureThreshold(),
-                                properties.getInference().getCircuitBreaker().getCooldown()),
+                                properties.getCircuitBreaker().getFailureThreshold(),
+                                properties.getCircuitBreaker().getCooldown()),
                         new DeterministicInferenceRequestFactory(DefaultSanitizer.defaults()),
                         renderer,
                         metrics,
+                        new StackMateProperties(),
                         properties,
                         DefaultSanitizer.defaults());
         coordinatorMetrics.put(coordinator, metrics);
@@ -279,12 +281,11 @@ class DefaultAsyncLocalInferenceCoordinatorTest {
                 Duration.ofMillis(5));
     }
 
-    private static StackMateProperties properties() {
-        StackMateProperties properties = new StackMateProperties();
-        properties.setMode(StackMateProperties.Mode.HYBRID);
-        properties.getInference().setTriggerPolicy(InferenceTriggerPolicy.ALWAYS);
-        properties.getInference().getExecutor().setThreads(1);
-        properties.getInference().getExecutor().setQueueCapacity(1);
+    private static InferenceProperties properties() {
+        InferenceProperties properties = new InferenceProperties();
+        properties.setTriggerPolicy(InferenceTriggerPolicy.ALWAYS);
+        properties.getExecutor().setThreads(1);
+        properties.getExecutor().setQueueCapacity(1);
         return properties;
     }
 

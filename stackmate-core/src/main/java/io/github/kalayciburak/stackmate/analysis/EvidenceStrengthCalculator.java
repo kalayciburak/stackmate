@@ -13,6 +13,12 @@ public final class EvidenceStrengthCalculator {
 
     private EvidenceStrengthCalculator() {}
 
+    /**
+     * Calculates diagnostic strength from evidence reliability, type, and source diversity.
+     *
+     * @param evidence deterministic evidence supporting a diagnosis
+     * @return the composed diagnostic strength
+     */
     public static DiagnosticStrength calculate(Collection<EvidenceItem> evidence) {
         Objects.requireNonNull(evidence, "evidence");
         if (evidence.isEmpty()) {

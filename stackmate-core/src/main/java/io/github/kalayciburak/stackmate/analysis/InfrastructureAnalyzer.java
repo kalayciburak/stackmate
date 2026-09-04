@@ -6,6 +6,10 @@ import java.util.List;
 /** Diagnoses generic JDK DNS, TLS, socket, connection, and timeout causes. */
 public final class InfrastructureAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in infrastructure diagnostic analyzer. */
+    public InfrastructureAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "infrastructure";
 
     private static final List<TypeRule> TYPE_RULES =

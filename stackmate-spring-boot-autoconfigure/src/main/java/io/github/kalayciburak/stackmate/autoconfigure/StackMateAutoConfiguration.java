@@ -25,7 +25,6 @@ import io.github.kalayciburak.stackmate.privacy.DefaultSanitizer;
 import io.github.kalayciburak.stackmate.privacy.Sanitizer;
 import io.github.kalayciburak.stackmate.privacy.SanitizerConfig;
 import io.github.kalayciburak.stackmate.privacy.SanitizerPattern;
-import io.github.kalayciburak.stackmate.runtime.AsyncLocalInferenceCoordinator;
 import io.github.kalayciburak.stackmate.runtime.DefaultServletExceptionCaptureHandler;
 import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotLimits;
 import io.github.kalayciburak.stackmate.throwable.ThrowableSnapshotter;
@@ -37,12 +36,14 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingFilterBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -55,25 +56,28 @@ import org.springframework.web.servlet.DispatcherServlet;
 @EnableConfigurationProperties(StackMateProperties.class)
 public class StackMateAutoConfiguration {
 
+    /** Creates the servlet auto-configuration container used by Spring Boot. */
+    public StackMateAutoConfiguration() {}
+
     @Bean
-    @ConditionalOnMissingBean
+    @Primary
     Sanitizer stackMateSanitizer(StackMateProperties properties) {
         SanitizerConfig defaults = SanitizerConfig.defaults();
         List<SanitizerPattern> customPatterns =
-                properties.getPrivacy().getCustomRedactionPatterns().stream()
+                properties.getPrivacy().getRedactValues().stream()
                         .map(
                                 value ->
                                         new SanitizerPattern(
-                                                Pattern.compile(value), defaults.replacement()))
+                                                Pattern.compile(Pattern.quote(value)),
+                                                defaults.replacement()))
                         .toList();
-        boolean redactPii = properties.getPrivacy().isPiiRedaction();
         SanitizerConfig config =
                 new SanitizerConfig(
                         properties.getDiagnostics().getMaximumMessageLength(),
                         defaults.replacement(),
-                        redactPii,
-                        redactPii,
-                        redactPii,
+                        true,
+                        true,
+                        true,
                         defaults.sensitiveFieldNames(),
                         customPatterns);
         return new DefaultSanitizer(config);
@@ -86,7 +90,7 @@ public class StackMateAutoConfiguration {
         var diagnostics = properties.getDiagnostics();
         int maximumNodes =
                 Math.min(
-                        512,
+                        64,
                         diagnostics.getMaximumCauseDepth()
                                 * Math.max(1, diagnostics.getMaximumSuppressedExceptions() + 1));
         ThrowableSnapshotLimits limits =
@@ -206,7 +210,6 @@ public class StackMateAutoConfiguration {
             ConsoleRenderer consoleRenderer,
             StackMateProperties properties,
             ProductionProfileGuard productionGuard,
-            ObjectProvider<AsyncLocalInferenceCoordinator> inferenceCoordinator,
             ObjectProvider<IncidentExporter> incidentExporter) {
         return new DefaultServletExceptionCaptureHandler(
                 snapshotter,
@@ -215,11 +218,11 @@ public class StackMateAutoConfiguration {
                 consoleRenderer,
                 properties,
                 productionGuard,
-                inferenceCoordinator.getIfAvailable(),
                 incidentExporter.getIfAvailable());
     }
 
     @Bean
+    @ConditionalOnMissingFilterBean(StackMateExceptionCaptureFilter.class)
     @ConditionalOnProperty(
             prefix = "stackmate.capture",
             name = "mvc-unhandled",

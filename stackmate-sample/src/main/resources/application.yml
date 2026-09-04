@@ -6,8 +6,3 @@ stackmate:
   enabled: true
   application-packages:
     - io.github.kalayciburak.stackmate.sample
-  mode: deterministic
-  inference:
-    enabled: false
-    lazy-load: true
-    timeout: 2s

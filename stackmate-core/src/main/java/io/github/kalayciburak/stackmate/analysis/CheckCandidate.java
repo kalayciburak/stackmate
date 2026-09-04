@@ -4,11 +4,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/** A safe next check tied to the evidence that made it relevant. */
+/**
+ * A safe next check tied to the evidence that made it relevant.
+ *
+ * @param id stable identifier of the check
+ * @param instruction action to perform when investigating the incident
+ * @param evidenceIds identifiers of the evidence that makes the check relevant
+ */
 public record CheckCandidate(String id, String instruction, List<String> evidenceIds) {
 
     private static final Pattern STABLE_ID = Pattern.compile("[a-z0-9][a-z0-9._-]{0,127}");
 
+    /**
+     * Validates and creates a follow-up check.
+     *
+     * @param id stable identifier of the check
+     * @param instruction action to perform when investigating the incident
+     * @param evidenceIds identifiers of the evidence that makes the check relevant
+     */
     public CheckCandidate {
         id = requireStableId(id);
         instruction = Objects.requireNonNull(instruction, "instruction");

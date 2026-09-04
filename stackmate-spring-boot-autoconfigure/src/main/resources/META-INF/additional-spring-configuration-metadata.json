@@ -1,0 +1,119 @@
+{
+  "properties": [
+    {
+      "name": "stackmate.enabled",
+      "description": "Enables deterministic StackMate diagnostics. Set false for an inert starter."
+    },
+    {
+      "name": "stackmate.application-packages",
+      "description": "Application package prefixes used to rank application-owned stack frames."
+    },
+    {
+      "name": "stackmate.capture.mvc-unhandled",
+      "description": "Captures exceptions that escape the Servlet MVC filter boundary."
+    },
+    {
+      "name": "stackmate.capture.selected-mdc-keys",
+      "description": "Bounded MDC keys copied as sanitized diagnostic context; values are never configured here."
+    },
+    {
+      "name": "stackmate.diagnostics.maximum-cause-depth",
+      "description": "Maximum cause-chain depth copied into a diagnostic snapshot; allowed range is 1 to 64."
+    },
+    {
+      "name": "stackmate.diagnostics.maximum-suppressed-exceptions",
+      "description": "Maximum suppressed exceptions copied per throwable; allowed range is 0 to 16."
+    },
+    {
+      "name": "stackmate.diagnostics.maximum-stack-frames",
+      "description": "Maximum stack frames copied per throwable; allowed range is 0 to 256."
+    },
+    {
+      "name": "stackmate.diagnostics.maximum-application-frames",
+      "description": "Maximum application frames rendered in a diagnosis; allowed range is 1 to 32."
+    },
+    {
+      "name": "stackmate.diagnostics.maximum-message-length",
+      "description": "Maximum code points retained from each sanitized message; allowed range is 1 to 4096."
+    },
+    {
+      "name": "stackmate.privacy.redact-values",
+      "description": "Additional literal values redacted after mandatory built-in secret and PII rules. Regular expressions are not accepted."
+    },
+    {
+      "name": "stackmate.deduplication.enabled",
+      "description": "Enables bounded in-memory duplicate occurrence tracking."
+    },
+    {
+      "name": "stackmate.deduplication.ttl",
+      "description": "Retention window for duplicate fingerprints; must be positive and no more than one day."
+    },
+    {
+      "name": "stackmate.deduplication.maximum-entries",
+      "description": "Maximum retained fingerprint entries; allowed range is 1 to 10000."
+    },
+    {
+      "name": "stackmate.console.enabled",
+      "description": "Enables StackMate-controlled diagnostic console output."
+    },
+    {
+      "name": "stackmate.console.style",
+      "description": "Selects the BOX or COMPACT deterministic console layout."
+    },
+    {
+      "name": "stackmate.console.maximum-width",
+      "description": "Maximum console layout width; allowed range is 60 to 200 characters."
+    },
+    {
+      "name": "stackmate.console.show-application-trace",
+      "description": "Includes sanitized application-owned frames when real package matches exist."
+    },
+    {
+      "name": "stackmate.console.show-technical-details",
+      "description": "Includes bounded deterministic technical evidence in console output."
+    },
+    {
+      "name": "stackmate.console.show-cause-chain",
+      "description": "Includes the bounded sanitized cause chain in console output."
+    },
+    {
+      "name": "stackmate.console.debug-logging",
+      "description": "Logs bounded StackMate internal failure classes without raw incident values."
+    },
+    {
+      "name": "stackmate.export.enabled",
+      "description": "Enables optional local sanitized incident-bundle export; disabled by default."
+    },
+    {
+      "name": "stackmate.export.directory",
+      "description": "Local directory for atomic sanitized incident bundles."
+    },
+    {
+      "name": "stackmate.export.maximum-incidents",
+      "description": "Maximum recognized incident bundles retained in the export directory."
+    },
+    {
+      "name": "stackmate.safety.allow-in-production",
+      "description": "Allows analysis when an active profile matches the configured production profile names."
+    },
+    {
+      "name": "stackmate.safety.production-profiles",
+      "description": "Profile names treated as production by the convenience guard; this is not a security boundary."
+    }
+  ],
+  "hints": [
+    {
+      "name": "stackmate.console.style",
+      "values": [
+        {
+          "value": "box",
+          "description": "Multi-line boxed diagnostic output."
+        },
+        {
+          "value": "compact",
+          "description": "Short compact diagnostic output."
+        }
+      ]
+    }
+  ]
+}

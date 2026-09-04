@@ -11,9 +11,19 @@ import java.util.Objects;
 
 /** Produces deterministic fingerprints without retaining incident text. */
 public final class IncidentFingerprinter {
+
+    /** Creates the deterministic incident fingerprinter. */
+    public IncidentFingerprinter() {}
+
     static final int MAX_COMPONENT_CHARS = 256;
     static final int MAX_FRAME_CHARS = 512;
 
+    /**
+     * Hashes normalized incident characteristics into a stable privacy-safe identifier.
+     *
+     * @param input bounded framework-neutral fingerprint input
+     * @return lowercase SHA-256 incident fingerprint
+     */
     public ExceptionFingerprint fingerprint(FingerprintInput input) {
         Objects.requireNonNull(input, "input");
         MessageDigest digest = sha256();

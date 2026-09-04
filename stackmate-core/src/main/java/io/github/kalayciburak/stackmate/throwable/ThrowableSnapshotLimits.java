@@ -1,6 +1,15 @@
 package io.github.kalayciburak.stackmate.throwable;
 
-/** Work and output limits for defensive throwable capture. */
+/**
+ * Work and output limits for defensive throwable capture.
+ *
+ * @param maxCauseDepth maximum number of cause levels to capture
+ * @param maxFramesPerThrowable maximum stack frames captured for each throwable
+ * @param maxSuppressedPerThrowable maximum suppressed throwables captured for each throwable
+ * @param maxTotalNodes maximum cause and suppressed nodes captured in total
+ * @param maxMessageLength maximum characters retained from each throwable message
+ * @param maxCaptureFailures maximum safe capture-failure descriptions retained
+ */
 public record ThrowableSnapshotLimits(
         int maxCauseDepth,
         int maxFramesPerThrowable,
@@ -9,6 +18,16 @@ public record ThrowableSnapshotLimits(
         int maxMessageLength,
         int maxCaptureFailures) {
 
+    /**
+     * Validates and creates defensive capture limits.
+     *
+     * @param maxCauseDepth maximum number of cause levels to capture
+     * @param maxFramesPerThrowable maximum stack frames captured for each throwable
+     * @param maxSuppressedPerThrowable maximum suppressed throwables captured for each throwable
+     * @param maxTotalNodes maximum cause and suppressed nodes captured in total
+     * @param maxMessageLength maximum characters retained from each throwable message
+     * @param maxCaptureFailures maximum safe capture-failure descriptions retained
+     */
     public ThrowableSnapshotLimits {
         requirePositive(maxCauseDepth, "maxCauseDepth");
         requireNonNegative(maxFramesPerThrowable, "maxFramesPerThrowable");
@@ -18,6 +37,11 @@ public record ThrowableSnapshotLimits(
         requireNonNegative(maxCaptureFailures, "maxCaptureFailures");
     }
 
+    /**
+     * Creates the standard defensive capture limits.
+     *
+     * @return conservative default limits for throwable capture
+     */
     public static ThrowableSnapshotLimits defaults() {
         return new ThrowableSnapshotLimits(16, 64, 8, 64, 2_048, 8);
     }

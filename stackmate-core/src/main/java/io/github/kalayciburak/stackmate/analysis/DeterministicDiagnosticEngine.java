@@ -13,6 +13,12 @@ public final class DeterministicDiagnosticEngine {
     private final DiagnosisAggregator diagnosisAggregator;
     private final IncidentFingerprinter incidentFingerprinter;
 
+    /**
+     * Creates the deterministic analysis pipeline.
+     *
+     * @param diagnosisAggregator component that combines analyzer contributions
+     * @param incidentFingerprinter component that creates privacy-safe incident identifiers
+     */
     public DeterministicDiagnosticEngine(
             DiagnosisAggregator diagnosisAggregator, IncidentFingerprinter incidentFingerprinter) {
         this.diagnosisAggregator =
@@ -21,6 +27,12 @@ public final class DeterministicDiagnosticEngine {
                 Objects.requireNonNull(incidentFingerprinter, "incidentFingerprinter");
     }
 
+    /**
+     * Diagnoses and fingerprints an immutable incident snapshot.
+     *
+     * @param incident incident to process
+     * @return complete deterministic result
+     */
     public DeterministicResult analyze(IncidentSnapshot incident) {
         Objects.requireNonNull(incident, "incident");
         Diagnosis diagnosis = diagnosisAggregator.diagnose(incident);

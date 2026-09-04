@@ -39,6 +39,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
     private final LocalExplanationRenderer renderer;
     private final LocalInferenceMetrics metrics;
     private final StackMateProperties properties;
+    private final InferenceProperties inferenceProperties;
     private final Sanitizer sanitizer;
     private final EvidenceAwareInferencePolicy triggerPolicy = new EvidenceAwareInferencePolicy();
     private final ThreadPoolExecutor executor;
@@ -54,6 +55,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
             LocalExplanationRenderer renderer,
             LocalInferenceMetrics metrics,
             StackMateProperties properties,
+            InferenceProperties inferenceProperties,
             Sanitizer sanitizer) {
         this.engineProvider = Objects.requireNonNull(engineProvider, "engineProvider");
         this.outputValidator = Objects.requireNonNull(outputValidator, "outputValidator");
@@ -62,9 +64,11 @@ public final class DefaultAsyncLocalInferenceCoordinator
         this.renderer = Objects.requireNonNull(renderer, "renderer");
         this.metrics = Objects.requireNonNull(metrics, "metrics");
         this.properties = Objects.requireNonNull(properties, "properties");
+        this.inferenceProperties =
+                Objects.requireNonNull(inferenceProperties, "inferenceProperties");
         this.sanitizer = Objects.requireNonNull(sanitizer, "sanitizer");
         InferenceProperties.ExecutorProperties executorProperties =
-                properties.getInference().getExecutor();
+                inferenceProperties.getExecutor();
         this.executor =
                 new ThreadPoolExecutor(
                         executorProperties.getThreads(),
@@ -84,7 +88,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
     public void submit(DeterministicResult result, Runnable releaseReservation) {
         Objects.requireNonNull(result, "result");
         Objects.requireNonNull(releaseReservation, "releaseReservation");
-        if (!triggerPolicy.shouldInfer(result, properties.getInference().getTriggerPolicy())) {
+        if (!triggerPolicy.shouldInfer(result, inferenceProperties.getTriggerPolicy())) {
             debug("POLICY_SKIPPED");
             return;
         }
@@ -123,11 +127,11 @@ public final class DefaultAsyncLocalInferenceCoordinator
             }
             int maximumInput =
                     Math.min(
-                            properties.getInference().getMaximumInputCharacters(),
+                            inferenceProperties.getMaximumInputCharacters(),
                             model.capabilities().maximumInputCharacters());
             int maximumOutput =
                     Math.min(
-                            outputCharacters(properties.getInference().getMaximumOutputTokens()),
+                            outputCharacters(inferenceProperties.getMaximumOutputTokens()),
                             model.capabilities().maximumOutputCharacters());
             request = requestFactory.create(result, maximumInput, maximumOutput);
         } catch (Throwable setupFailure) {
@@ -157,7 +161,7 @@ public final class DefaultAsyncLocalInferenceCoordinator
             timeout =
                     timeoutExecutor.schedule(
                             () -> timeout(completed, permit, worker),
-                            properties.getInference().getTimeout().toNanos(),
+                            inferenceProperties.getTimeout().toNanos(),
                             TimeUnit.NANOSECONDS);
         } catch (RejectedExecutionException shutdown) {
             fail(permit, LocalInferenceMetrics.FailureReason.SHUTDOWN);

@@ -6,6 +6,10 @@ import java.util.List;
 /** Diagnoses Spring Security failures without linking Spring Security classes into the core. */
 public final class SpringSecurityAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in Spring Security diagnostic analyzer. */
+    public SpringSecurityAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "spring-security";
 
     private static final List<TypeRule> TYPE_RULES =

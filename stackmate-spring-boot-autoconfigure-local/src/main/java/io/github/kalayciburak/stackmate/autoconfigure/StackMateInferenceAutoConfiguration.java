@@ -1,5 +1,6 @@
 package io.github.kalayciburak.stackmate.autoconfigure;
 
+import io.github.kalayciburak.stackmate.configuration.InferenceProperties;
 import io.github.kalayciburak.stackmate.configuration.StackMateProperties;
 import io.github.kalayciburak.stackmate.inference.DefaultAsyncLocalInferenceCoordinator;
 import io.github.kalayciburak.stackmate.inference.DefaultInferenceOutputValidator;
@@ -19,19 +20,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-/** Isolated optional auto-configuration for asynchronous local inference. */
+/**
+ * Historical auto-configuration for unsupported asynchronous local inference.
+ *
+ * <p>Known limitation: the coordinator is intentionally detached from the public deterministic
+ * servlet capture handler, so this module does not submit captured incidents for inference.
+ */
 @AutoConfiguration(after = StackMateAutoConfiguration.class)
 @ConditionalOnClass(name = "io.github.kalayciburak.stackmate.inference.LocalInferenceEngine")
 @ConditionalOnBean(StackMateProperties.class)
 @ConditionalOnProperty(prefix = "stackmate", name = "enabled", matchIfMissing = true)
-@ConditionalOnProperty(prefix = "stackmate", name = "mode", havingValue = "HYBRID")
 @ConditionalOnProperty(
-        prefix = "stackmate.inference",
+        prefix = "stackmate-research.inference",
         name = "enabled",
         havingValue = "true",
         matchIfMissing = true)
+@EnableConfigurationProperties(InferenceProperties.class)
 public class StackMateInferenceAutoConfiguration {
 
     @Bean
@@ -42,8 +49,9 @@ public class StackMateInferenceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    InferenceCircuitBreaker stackMateInferenceCircuitBreaker(StackMateProperties properties) {
-        var breaker = properties.getInference().getCircuitBreaker();
+    InferenceCircuitBreaker stackMateInferenceCircuitBreaker(
+            InferenceProperties inferenceProperties) {
+        var breaker = inferenceProperties.getCircuitBreaker();
         return new InMemoryInferenceCircuitBreaker(
                 breaker.getFailureThreshold(), breaker.getCooldown());
     }
@@ -68,7 +76,7 @@ public class StackMateInferenceAutoConfiguration {
 
     @Bean(destroyMethod = "close")
     @ConditionalOnMissingBean(AsyncLocalInferenceCoordinator.class)
-    DefaultAsyncLocalInferenceCoordinator stackMateAsyncLocalInferenceCoordinator(
+    DefaultAsyncLocalInferenceCoordinator stackMateHistoricalAsyncLocalInferenceCoordinator(
             ObjectProvider<LocalInferenceEngine> engineProvider,
             InferenceOutputValidator outputValidator,
             InferenceCircuitBreaker circuitBreaker,
@@ -76,6 +84,7 @@ public class StackMateInferenceAutoConfiguration {
             LocalExplanationRenderer renderer,
             LocalInferenceMetrics metrics,
             StackMateProperties properties,
+            InferenceProperties inferenceProperties,
             Sanitizer sanitizer) {
         return new DefaultAsyncLocalInferenceCoordinator(
                 engineProvider,
@@ -85,6 +94,7 @@ public class StackMateInferenceAutoConfiguration {
                 renderer,
                 metrics,
                 properties,
+                inferenceProperties,
                 sanitizer);
     }
 }

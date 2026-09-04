@@ -3,7 +3,16 @@ package io.github.kalayciburak.stackmate.incident;
 import java.util.Map;
 import java.util.Objects;
 
-/** Bounded request facts supplied by an adapter after privacy filtering. */
+/**
+ * Bounded request facts supplied by an adapter after privacy filtering.
+ *
+ * @param method HTTP method, or an empty string when unavailable
+ * @param path request path without a query string, or an empty string when unavailable
+ * @param handlerClass selected handler class name, or an empty string when unavailable
+ * @param handlerMethod selected handler method name, or an empty string when unavailable
+ * @param responseStatus HTTP response status, or {@code 0} when unavailable
+ * @param selectedCorrelationIds allowlisted, sanitized correlation identifiers
+ */
 public record RequestContext(
         String method,
         String path,
@@ -12,6 +21,16 @@ public record RequestContext(
         int responseStatus,
         Map<String, String> selectedCorrelationIds) {
 
+    /**
+     * Validates and creates sanitized request context.
+     *
+     * @param method HTTP method, or an empty string when unavailable
+     * @param path request path without a query string, or an empty string when unavailable
+     * @param handlerClass selected handler class name, or an empty string when unavailable
+     * @param handlerMethod selected handler method name, or an empty string when unavailable
+     * @param responseStatus HTTP response status, or {@code 0} when unavailable
+     * @param selectedCorrelationIds allowlisted, sanitized correlation identifiers
+     */
     public RequestContext {
         method = Objects.requireNonNull(method, "method");
         path = Objects.requireNonNull(path, "path");
@@ -28,6 +47,11 @@ public record RequestContext(
         }
     }
 
+    /**
+     * Creates a request context with no available request facts.
+     *
+     * @return an empty request context for incidents captured outside an HTTP request
+     */
     public static RequestContext none() {
         return new RequestContext("", "", "", "", 0, Map.of());
     }

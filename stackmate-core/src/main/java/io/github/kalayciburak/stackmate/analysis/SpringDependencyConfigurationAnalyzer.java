@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
 /** Diagnoses Spring dependency-injection and configuration failures by captured type name. */
 public final class SpringDependencyConfigurationAnalyzer implements DiagnosticAnalyzer {
 
+    /** Creates the built-in Spring dependency and configuration analyzer. */
+    public SpringDependencyConfigurationAnalyzer() {}
+
+    /** Stable identifier used in analyzer tokens and contributions. */
     public static final String ID = "spring-di-config";
 
     private static final List<Pattern> PROPERTY_PATTERNS =

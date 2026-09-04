@@ -45,7 +45,7 @@ final class PackagedSample implements AutoCloseable {
                 Path.of(
                                 System.getProperty(
                                         "stackmate.e2e.sample-jar",
-                                        "../stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar"))
+                                        "../stackmate-sample/target/stackmate-sample-0.1.0-rc.1.jar"))
                         .toAbsolutePath()
                         .normalize();
         if (!Files.isRegularFile(jar)) {

@@ -22,6 +22,11 @@ public final class DefaultConsoleRenderer implements ConsoleRenderer {
 
     private final Sanitizer sanitizer;
 
+    /**
+     * Creates the default renderer.
+     *
+     * @param sanitizer sanitizer applied to all rendered diagnostic text
+     */
     public DefaultConsoleRenderer(Sanitizer sanitizer) {
         this.sanitizer = Objects.requireNonNull(sanitizer, "sanitizer");
     }

@@ -4,10 +4,14 @@
   <parent>
     <groupId>io.github.kalayciburak</groupId>
     <artifactId>stackmate-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-rc.1</version>
   </parent>
   <artifactId>stackmate-spring-boot-starter-local</artifactId>
   <name>StackMate Spring Boot Local Inference Starter</name>
+  <description>Non-publishable historical starter for unsupported local inference research.</description>
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
@@ -15,11 +19,18 @@
     </dependency>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
+      <artifactId>stackmate-spring-boot-autoconfigure-local</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.kalayciburak</groupId>
       <artifactId>stackmate-inference-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.kalayciburak</groupId>
       <artifactId>stackmate-inference-jvm</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
