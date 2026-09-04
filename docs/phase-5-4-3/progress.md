@@ -3,7 +3,7 @@
 | Gate | State |
 |---|---|
 | Gate A: repository, adapter and contract integrity | PASS |
-| Gate B: exposed-family inventory and novelty design | IN_PROGRESS |
+| Gate B: exposed-family inventory and novelty design | Inventory PASS; design IN_PROGRESS |
 | Gate C: fresh 30-family corpus and reproduction | NOT_RUN |
 | Gate D: freeze and access control | NOT_RUN |
 | Gate E: D0/B0/A1 T1 qualification | NOT_RUN |
