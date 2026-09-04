@@ -1,8 +1,9 @@
 # Phase 6.1 remote-run ledger
 
-Three hosted run sets failed and are preserved below. The required final-commit
-run IDs, artifact identities and qualification conclusions remain `PENDING` /
-`UNVERIFIED` until the focused fixes are pushed and rerun.
+Three failed hosted sets and one fully green but non-final identity set are
+preserved below. The required exact-head run IDs, artifact identities and
+qualification conclusions remain `PENDING` / `UNVERIFIED` until the checkout
+identity fix is pushed and rerun.
 
 ## Preserved first failed run set
 
@@ -54,6 +55,25 @@ existing export tests; the explicit symlink-rejection scenario and production
 export policy remain unchanged. CodeQL receives read-only `actions: read` and
 moves from the deprecated v3 line to immutable official v4.37.9 commit
 `cdf488f595d80d6e07e03d4674febd5ab45fa938`.
+
+## Preserved fourth green behavior run
+
+The fourth run set reports branch head
+`e087961eb05c28d2e3fa667b43c6bdba5d5698be`, but the standard
+`pull_request` checkout and `${{ github.sha }}` artifact suffix used synthetic
+merge commit `8b5211345d272c97d52d6193303c1b7a38ef7432`.
+
+| Workflow | Run | Conclusion | Evidence and limitation |
+|---|---|---|---|
+| CI | [33925474151](https://github.com/kalayciburak/stackmate/actions/runs/33925474151) | `PASS` | Linux 5m23s, macOS 2m34s and Windows 6m57s passed every configured qualification step. Ubuntu reproducibility passed in 1m26s. Four platform artifacts plus reproducibility evidence were retained through 2026-09-11 UTC. |
+| CodeQL | [33925474078](https://github.com/kalayciburak/stackmate/actions/runs/33925474078) | `PASS` | v4.37.9 passed tested construction, analysis and bounded SARIF upload in 7m03s. Private-repository Code Scanning API warnings remain expected because GHAS is unavailable; no write permission or repository-setting change was made. |
+| Dependency review | [33925474039](https://github.com/kalayciburak/stackmate/actions/runs/33925474039) | `PASS` | Public graph, declaration diff, runtime denylist and bounded evidence upload passed in 1m01s. |
+
+This set proves the behavior of the corrected tree, but its artifacts claim the
+synthetic merge commit rather than the requested exact branch head. The next
+workflow revision checks out `${{ github.event.pull_request.head.sha }}` on PRs
+and uses the same head SHA in every qualification artifact name. No final
+qualification claim is derived from the fourth set.
 
 ## Required runs
 

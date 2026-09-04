@@ -25,6 +25,8 @@ All notable public product changes are documented here. The format follows
 - Preserved the frozen parity corpus's recorded byte identity across Git checkouts without changing its semantic
   content or checksum.
 - Canonicalized the macOS JUnit temporary-directory fixture without weakening production export symlink rejection.
+- Bound pull-request qualification checkouts and evidence names to the exact head commit instead of GitHub's
+  synthetic merge commit.
 
 RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
 frozen local-only checkpoint and will not be moved or pushed.

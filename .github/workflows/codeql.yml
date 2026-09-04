@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Check out sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Java 21
         uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
@@ -50,7 +52,7 @@ jobs:
       - name: Upload bounded CodeQL SARIF
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: codeql-sarif-${{ github.sha }}
+          name: codeql-sarif-${{ github.event.pull_request.head.sha || github.sha }}
           path: target/codeql-results/**
           if-no-files-found: error
           retention-days: 7

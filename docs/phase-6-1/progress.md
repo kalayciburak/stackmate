@@ -2,8 +2,9 @@
 
 Audit date: 2026-09-05
 
-Status: local rc2 qualification is complete. Three failed hosted run sets are
-preserved; final-commit remote gates remain `PENDING` / `UNVERIFIED`.
+Status: local rc2 qualification is complete. Three failed hosted sets and one
+fully green synthetic-merge set are preserved; exact-head remote gates remain
+`PENDING` / `UNVERIFIED`.
 
 ## Release-candidate boundary
 
@@ -79,6 +80,17 @@ Java files, but lacked `actions: read` for post-analysis workflow metadata.
 Dependency review passed again. The macOS fixture canonicalization passed 6/6
 locally; CodeQL is updated to immutable official v4.37.9 with read-only
 workflow metadata access. Final hosted rerun remains pending.
+
+## Fourth hosted run
+
+Head `e087961eb05c28d2e3fa667b43c6bdba5d5698be` produced successful CI
+run `33925474151`, CodeQL run `33925474078` and dependency-review run
+`33925474039`. All three OS jobs, Ubuntu reproducibility, CodeQL v4/SARIF and
+dependency review passed. The downloaded artifacts revealed that standard PR
+checkout recorded synthetic merge commit
+`8b5211345d272c97d52d6193303c1b7a38ef7432`, not the exact branch head.
+Workflows now explicitly check out and name evidence with the PR head SHA. A
+new exact-head run is mandatory before final qualification.
 
 ## Publication boundary
 

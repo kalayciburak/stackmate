@@ -17,8 +17,9 @@ Windows-only executable, CIM and hidden-window assumptions.
 
 ## Hosted platform matrix
 
-The rc2 workflow implements the following scope. Three hosted attempts are
-preserved below, but no final rc2 commit has passed the complete matrix yet.
+The rc2 workflow implements the following scope. The fourth attempt passed the
+complete matrix, but its evidence used GitHub's synthetic PR merge checkout;
+no exact-head final claim is made yet.
 
 | Hosted platform | Full clean verify | Public install | Consumer | API/bundle/evidence | Extra gates | Result |
 |---|---|---|---|---|---|---|
@@ -83,3 +84,13 @@ JUnit exposed the real temporary directory through the leading `/var` system
 alias. The existing test class now canonicalizes only its injected temp root
 before each case. Its deliberate user-created symlink rejection remains active,
 and the focused class passed 6/6 locally.
+
+## Fourth hosted behavior result
+
+Run [33925474151](https://github.com/kalayciburak/stackmate/actions/runs/33925474151)
+passed Linux, Windows, macOS and dependent Ubuntu reproducibility. Every OS
+completed full clean verification, public install, consumer, API/bundle and
+evidence collection; Linux additionally passed OSV/performance and Windows
+passed file-repository deployment/clean consumption. The evidence commit is
+the synthetic PR merge `8b521134...`, so this remains behavior proof rather
+than the final exact-head platform qualification.

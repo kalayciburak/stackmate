@@ -148,3 +148,14 @@ CodeQL completed queries and SARIF export but failed its workflow-run metadata
 lookup. Add only `actions: read`; retain `contents: read`, no
 `security-events: write`, `upload=false`, disabled database upload and bounded
 SARIF artifact retention.
+
+## D17 - Qualify and label the exact PR head
+
+Status: accepted after artifact download from green run `33925474151`.
+
+GitHub's standard `pull_request` checkout tested a synthetic merge commit and
+`${{ github.sha }}` propagated that identity into every artifact name. Phase
+6.1 requires one exact final rc2 commit. CI, reproducibility and CodeQL now use
+the PR head SHA for checkout and artifact identity; dependency review likewise
+checks out the head while retaining full history for the explicit base/head
+comparison. Push-event behavior continues to use `github.sha`.

@@ -86,6 +86,17 @@ metadata; dependency review
 [33924591939](https://github.com/kalayciburak/stackmate/actions/runs/33924591939)
 passed.
 
+The fourth set passed all configured jobs: CI
+[33925474151](https://github.com/kalayciburak/stackmate/actions/runs/33925474151),
+CodeQL
+[33925474078](https://github.com/kalayciburak/stackmate/actions/runs/33925474078)
+and dependency review
+[33925474039](https://github.com/kalayciburak/stackmate/actions/runs/33925474039).
+Downloaded artifact names and summaries exposed standard PR merge SHA
+`8b521134...`; therefore checkout refs and artifact suffixes are now explicitly
+bound to the PR head SHA. The green merge-ref set is not used as final identity
+evidence.
+
 The first manual release-preflight dispatch returned HTTP 404 because GitHub
 only exposes new `workflow_dispatch` definitions after they exist on the
 default branch. The phase will not merge or push directly to that branch to

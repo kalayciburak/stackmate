@@ -76,3 +76,13 @@ SARIF. It failed only when the action queried workflow-run metadata without
 was uploaded. The next run adds only read-only workflow metadata permission and
 uses official v4.37.9 commit
 `cdf488f595d80d6e07e03d4674febd5ab45fa938`.
+
+The fourth CodeQL run
+[33925474078](https://github.com/kalayciburak/stackmate/actions/runs/33925474078)
+passed full tests, v4.37.9 analysis and seven-day SARIF artifact upload. The
+replacement dependency review
+[33925474039](https://github.com/kalayciburak/stackmate/actions/runs/33925474039)
+also passed. Expected read-only warnings state that private-repository Code
+Scanning API features are unavailable without GHAS; no upload to Code Scanning,
+setting change or write permission was introduced. Both workflows must rerun
+after exact-head checkout is pinned.
