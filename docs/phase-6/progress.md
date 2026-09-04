@@ -49,8 +49,8 @@ assembly passed against the frozen allowlist.
   payload files with zero differences. The finalized 21-file payload comparison
   also passed with zero differences.
 - Final local bundle: `target/release/stackmate-0.1.0-rc.1`, 24 files,
-  1,166,288 bytes; manifest SHA-256
-  `bc7ba3da624c6e4363cc7627ccf5c391f95c049193204bae4c03e80382a81f39`.
+  1,166,290 bytes; manifest SHA-256
+  `108dbbb31f207fa1db68355ae536c63572468293dddfc79ffcc3a0557447b3da`.
 
 ## Remaining external qualification
 

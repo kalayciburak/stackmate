@@ -30,7 +30,7 @@ Recorded result: `PASS`, 6/6 contract plus 1/1 packaged process.
 ```powershell
 .\mvnw.cmd --batch-mode --no-transfer-progress `
   -f release\consumer\pom.xml `
-  -Dstackmate.version=0.1.0-rc.1 verify
+  "-Dstackmate.version=0.1.0-rc.1" verify
 ```
 
 ## 4. Regenerate and compare the public API

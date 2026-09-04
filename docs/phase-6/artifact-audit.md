@@ -29,7 +29,7 @@ forbidden public POM dependencies, and public SBOMs containing research/Jlama
 dependencies. It writes a release audit and SHA-256 manifest without publishing
 anything.
 
-The final local bundle contains 24 files totaling 1,166,288 bytes. Its
+The final local bundle contains 24 files totaling 1,166,290 bytes. Its
 archive-entry, public-POM and SBOM checks all passed. The bundle includes the
 allowlist, API inventory and reproducibility report under `reports/`; no model,
 inference, research, dataset, native or machine-local artifact is present.
@@ -46,9 +46,9 @@ Public coordinates built     4/4
 RC sources/Javadoc           PASS where applicable; starter N/A
 RC SBOM generation           PASS
 Final local RC assembly      PASS, target/release/stackmate-0.1.0-rc.1
-Bundle files/bytes           24 / 1,166,288
-Bundle manifest SHA-256      bc7ba3da624c6e4363cc7627ccf5c391f95c049193204bae4c03e80382a81f39
-SHA256SUMS file SHA-256      4094de8427ec07278be83573ecd9f908b220b12636ff071b8af15e307e694fd5
+Bundle files/bytes           24 / 1,166,290
+Bundle manifest SHA-256      108dbbb31f207fa1db68355ae536c63572468293dddfc79ffcc3a0557447b3da
+SHA256SUMS file SHA-256      286b461c4c35734a306dfbb1341f1ff5a9f360d225f0e24198edd7108ef8a065
 Publication                  NOT PERFORMED
 Signing                      NOT PERFORMED
 ```

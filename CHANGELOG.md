@@ -44,7 +44,7 @@ and this version has not been published remotely.
 - Full reactor: 543 Surefire plus 5 Failsafe tests passed; failures/errors/skips `0/0/0`.
 - Two clean public-release builds produced 18 byte-identical compared payload files with zero differences.
 - Local RC bundle assembled and audited; manifest SHA-256
-  `bc7ba3da624c6e4363cc7627ccf5c391f95c049193204bae4c03e80382a81f39`.
+  `108dbbb31f207fa1db68355ae536c63572468293dddfc79ffcc3a0557447b3da`.
 - Maven Central publication, remote release creation, and GPG signing: not performed.
 
 ### Known limitations

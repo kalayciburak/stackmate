@@ -45,6 +45,7 @@ Second clean-build manifest   bb708acdd3bcd100f60695c6e1a7500e84094095c91550bd8b
 Clean-build comparison        PASS, 18 payload files / 0 differences
 Comparison report SHA-256     15afd9d8b14ff1e94c9eb69a361f4f0206225a39c18835be0d649d2e104ec3c2
 Final payload comparison      PASS, 21 payload files / 0 differences
-Final bundle manifest         bc7ba3da624c6e4363cc7627ccf5c391f95c049193204bae4c03e80382a81f39
+Final payload report SHA-256  1d73bcb11c5c60d991e8df18c208563f4dd4dabde2f1916293a3c90b27eb7070
+Final bundle manifest         108dbbb31f207fa1db68355ae536c63572468293dddfc79ffcc3a0557447b3da
 Remote CI URLs/results        UNVERIFIED
 ```

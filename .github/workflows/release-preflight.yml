@@ -33,7 +33,7 @@ jobs:
         run: >-
           .\mvnw.cmd --batch-mode --no-transfer-progress
           -f release\consumer\pom.xml
-          -Dstackmate.version=0.1.0-rc.1 verify
+          "-Dstackmate.version=0.1.0-rc.1" verify
 
       - name: Verify the frozen public API baseline
         shell: pwsh
