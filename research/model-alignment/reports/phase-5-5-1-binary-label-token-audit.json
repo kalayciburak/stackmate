@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "tokenizerClass": "Qwen2Tokenizer",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "promptFile": "binary-evidence-support-v1.txt",
+  "promptSha256": "fc4c3569a17ab5b902b88c6105f5b0d7587087eabd129b779395c7400ce01ddb",
+  "labelMapping": {
+    "0": {
+      "semantic": "NOT_SUPPORTED",
+      "tokenId": 15
+    },
+    "1": {
+      "semantic": "SUPPORTED",
+      "tokenId": 16
+    }
+  },
+  "labelMappingSha256": "fa98365a55f91f7902890b4fad5b034d945f9bacaa43d1ec90d70a59af3873d8",
+  "labels": {
+    "0": {
+      "semantic": "NOT_SUPPORTED",
+      "tokenId": 15,
+      "plainTokenCount": 1,
+      "leadingSpaceIds": [
+        220,
+        15
+      ],
+      "leadingNewlineIds": [
+        198,
+        15
+      ]
+    },
+    "1": {
+      "semantic": "SUPPORTED",
+      "tokenId": 16,
+      "plainTokenCount": 1,
+      "leadingSpaceIds": [
+        220,
+        16
+      ],
+      "leadingNewlineIds": [
+        198,
+        16
+      ]
+    }
+  },
+  "contexts": [
+    {
+      "context": 0,
+      "promptTokens": 237,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ]
+      }
+    },
+    {
+      "context": 1,
+      "promptTokens": 234,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ]
+      }
+    },
+    {
+      "context": 2,
+      "promptTokens": 241,
+      "assistantSuffixIds": {
+        "0": [
+          15,
+          248046,
+          198
+        ],
+        "1": [
+          16,
+          248046,
+          198
+        ]
+      }
+    }
+  ],
+  "assistantGenerationSuffixIds": [
+    248046,
+    198
+  ],
+  "assistantTargetPolicy": "train on exactly one frozen label token; mask every prompt and assistant-termination token",
+  "invalidTokenPolicy": "any output other than exactly one plain label token maps to NOT_SUPPORTED; do not repair output",
+  "localFilesOnly": true,
+  "trustRemoteCode": false,
+  "networkAccess": false
+}
