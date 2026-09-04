@@ -45,3 +45,10 @@ one false-secret classification; the controlled marker was not echoed. Because
 mandatory safety requires zero, Gate E failed and no merge/native GGUF boundary
 was opened. No upload, telemetry, remote inference, or network model access was
 observed.
+
+Fifteen task-created corpus-export directories remain under the Windows user
+temporary directory because the recursive cleanup operation was rejected by the
+execution safety policy before deletion began. They contain controlled corpus
+copies, not model weights, credentials, production incidents, or model
+predictions. The WSL qualification directory is intentionally retained as the
+authoritative raw-output/receipt evidence.

@@ -52,3 +52,7 @@ bug and wrote no report. The documented scorer-only wrapper verified the frozen
 scorer SHA, mapped only nullable accuracy values to `false`, and scored the same
 immutable predictions. No generation or label was repeated or changed. See
 `phase-5-4-3-scoring-rerun.json`.
+
+At handoff there is no StackMate generation, training, merge, conversion, or
+llama.cpp process. Unrelated Windows Python processes and unrelated Docker
+containers were observed and left untouched.
