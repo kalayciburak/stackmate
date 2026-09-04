@@ -162,7 +162,8 @@ comparison. Push-event behavior continues to use `github.sha`.
 
 ## D18 - Derive summary identity from the checked-out repository
 
-Status: accepted after downloading run `33926362199` artifacts.
+Status: accepted after downloading run `33926362199` artifacts; verified by
+final run `33927462896`.
 
 Artifact names correctly used the PR head, but the collector's `commit` field
 preferred GitHub's synthetic `GITHUB_SHA`. Qualification evidence must describe
@@ -170,3 +171,14 @@ the tree actually inspected. The collector now runs `git rev-parse HEAD`,
 requires a 40-character lowercase commit ID and fails closed otherwise. A local
 test with a deliberately false `GITHUB_SHA` proved that the checked-out HEAD is
 reported instead.
+
+## D19 - Create rc2 locally and withhold the remote tag
+
+Status: accepted after final exact-head qualification.
+
+Local annotated tag `v0.1.0-rc.2` points to
+`357ca1418eb3786e861e4436fe55005c8c6456cd`. It was created only after all
+mandatory jobs and downloaded artifact audits passed. Tag push remains optional
+and is withheld because Phase 6.1 does not publish, the manual release-preflight
+cannot run before a default-branch merge, and the next phase must make the
+explicit release decision.

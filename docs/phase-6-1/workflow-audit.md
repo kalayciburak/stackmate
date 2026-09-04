@@ -48,22 +48,20 @@ the actions during this documentation task.
   reproducibility. Windows release preflight includes clean `file://` deploy/consume.
 - Keep permissions least-privileged and keep publish/sign/merge absent.
 
-All four workflow files passed official actionlint 1.7.12 locally. These are
-configuration facts only; hosted behavior remains unverified until the PR runs.
+All four workflow files passed official actionlint 1.7.12 locally. Hosted
+behavior is recorded below.
 
-## Remote evidence placeholders
+## Final remote evidence
 
-After the first authorized remote runs, the main Phase 6.1 document must record:
-
-| Evidence | Status now | Required update |
+| Evidence | Status | Observed result |
 |---|---|---|
-| CI/qualification run URL and commit | `UNVERIFIED` | Add immutable run URL and exact commit SHA |
-| Ubuntu result | `UNVERIFIED` | Record full verify, consumer, API and bundle conclusions |
-| Windows result | `UNVERIFIED` | Record full verify, consumer, API and bundle conclusions |
-| macOS result | `UNVERIFIED` | Record full verify, consumer, API and bundle conclusions |
-| CodeQL | `UNVERIFIED` | Record run URL, tested build result and findings conclusion |
-| Dependency review | `UNVERIFIED` | Record PR/run URL and conclusion |
-| Uploaded artifacts | `UNVERIFIED` | Record names, checksums, retention days and expiry |
+| CI/qualification run URL and commit | `PASS` | Run `33927462896`; exact source commit `357ca141...` |
+| Ubuntu result | `PASS` | Full qualification plus 23/23 reproducibility |
+| Windows result | `PASS` | Full qualification plus file-repository consume |
+| macOS result | `PASS` | Full qualification, not smoke-only |
+| CodeQL | `PASS` | Run `33927462894`; six test-fixture-only XSS paths triaged |
+| Dependency review | `PASS` | Run `33927462908`; zero policy violations |
+| Uploaded artifacts | `PASS` | Six exact-head artifacts, seven-day retention; digests in `remote-runs.md` |
 
 No row may be changed to `PASS` from configuration inspection alone.
 
@@ -107,6 +105,15 @@ Artifact names were correct, but qualification summaries still read the PR
 merge SHA from `GITHUB_SHA`. The collector now records validated checked-out
 HEAD. A final rerun is required; no permission, trigger or publication scope
 changed.
+
+The sixth set is final source-commit evidence. CI
+[33927462896](https://github.com/kalayciburak/stackmate/actions/runs/33927462896),
+CodeQL
+[33927462894](https://github.com/kalayciburak/stackmate/actions/runs/33927462894)
+and dependency review
+[33927462908](https://github.com/kalayciburak/stackmate/actions/runs/33927462908)
+all passed with checkout, artifact and summary identity
+`357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
 The first manual release-preflight dispatch returned HTTP 404 because GitHub
 only exposes new `workflow_dispatch` definitions after they exist on the

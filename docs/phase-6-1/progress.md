@@ -1,10 +1,9 @@
-# Phase 6.1 pre-push progress
+# Phase 6.1 progress
 
 Audit date: 2026-09-05
 
-Status: local rc2 qualification is complete. Three failed hosted sets and one
-fully green synthetic-merge set are preserved; exact-head remote gates remain
-`PENDING` / `UNVERIFIED`.
+Status: Phase 6.1 remote qualification is complete for source commit
+`357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
 ## Release-candidate boundary
 
@@ -12,8 +11,8 @@ fully green synthetic-merge set are preserved; exact-head remote gates remain
   `248476f68ed3a3aa49e9fa1cba33d68a746a5469` and is absent from the remote.
 - Workflow, release metadata and Central attachment changes require
   `0.1.0-rc.2`. The rc1 tag will not be moved, reused or pushed.
-- The working version is `0.1.0-rc.2`. No final rc2 commit or tag identity is
-  claimed before the authorized remote checkpoint is created.
+- Version `0.1.0-rc.2` is qualified at source commit `357ca141...`; the local
+  annotated tag was created only after the green exact-commit run.
 
 ## Local rc2 evidence
 
@@ -44,9 +43,8 @@ qualification and do not authorize publication.
 - Manual-only `workflow_dispatch` release preflight, including local
   `file://` repository verification; no publish path.
 
-Configuration inspection is not a remote result. All workflow run IDs, URLs,
-commit conclusions, uploaded artifact identities and security conclusions are
-still `PENDING` / `UNVERIFIED`.
+At the pre-push checkpoint, configuration inspection was not treated as a
+remote result; all remote fields were still `PENDING` / `UNVERIFIED`.
 
 ## First hosted run
 
@@ -102,6 +100,15 @@ passed test/API/dependency/JAR-entry/reproducibility/OSV/file-repository gates,
 and all six CodeQL XSS results were test-fixture-only. The collector now uses
 validated checkout HEAD; the final identity rerun remains pending.
 
+## Final exact-head result
+
+CI `33927462896`, CodeQL `33927462894` and dependency review `33927462908`
+all passed with checkout, artifact names and embedded summaries bound to
+`357ca1418eb3786e861e4436fe55005c8c6456cd`. The local annotated
+`v0.1.0-rc.2` tag points to that commit and remains unpushed. Remote artifacts
+were downloaded and audited outside Git. No publication, merge, signing or
+remote tag occurred.
+
 ## Publication boundary
 
 No signing, Central credential use, Central deployment, GitHub Release, merge,
@@ -109,18 +116,16 @@ remote tag or package publication has occurred. Only the qualification branch
 and draft PR have been pushed. Phase 6.1 evidence is qualification material
 only.
 
-## Main update after authorized remote runs
-
-Main must replace the placeholders in `remote-runs.md` and then record here:
+## Final remote summary
 
 | Field | Value |
 |---|---|
-| Final rc2 commit SHA | `PENDING` |
-| Remote branch/ref | `PENDING` |
-| Three-OS qualification conclusion | `UNVERIFIED` |
-| Ubuntu reproducibility conclusion | `UNVERIFIED` |
-| CodeQL conclusion | `UNVERIFIED` |
-| Dependency-review conclusion | `UNVERIFIED` |
-| Release-preflight conclusion | `UNVERIFIED` |
-| Final artifact names, checksums and expiry | `PENDING` |
-| Final go/no-go conclusion | `PENDING` |
+| Final rc2 source commit SHA | `357ca1418eb3786e861e4436fe55005c8c6456cd` |
+| Remote branch/ref | `origin/phase-6-public-alpha-hardening` contained the qualified source commit; an evidence-only closing commit follows |
+| Three-OS qualification conclusion | `PASS` |
+| Ubuntu reproducibility conclusion | `PASS`: 23/23 identical |
+| CodeQL conclusion | `PASS`: six test-fixture-only XSS paths triaged |
+| Dependency-review conclusion | `PASS`: zero policy violations |
+| Release-preflight conclusion | `NOT_RUN`: unavailable before default-branch merge; equivalent Windows PR gate passed |
+| Final artifact names, checksums and expiry | Recorded in `remote-runs.md`; six artifacts, seven-day retention |
+| Final go/no-go conclusion | `REMOTE_CI_QUALIFIED_RC_READY` |

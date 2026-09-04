@@ -38,13 +38,16 @@ artifact reached a repository.
 - Full reactor: 543 Surefire plus 5 Failsafe tests passed; failures/errors/skips `0/0/0`.
 - Reproducibility: two clean builds, 23 compared payload files, zero differences.
 - Local RC2 bundle manifest: `61a806934c50c8c89eb0d4b5f5f8eeab816ac9ce0a304c55b9d3adbb89eb3a1f`.
-- RC2 tag: not created before final hosted qualification.
+- Hosted qualification: passed for exact source commit `357ca1418eb3786e861e4436fe55005c8c6456cd` on Ubuntu x64,
+  Windows x64, and macOS arm64; CodeQL, dependency review, OSV and reproducibility also passed.
+- RC2 tag: local annotated `v0.1.0-rc.2` points to the qualified source commit; not pushed.
 - Maven Central publication: not performed.
 - Remote release creation: not performed.
 - GPG signing: not performed.
 - CI signing/publication: preflight-only.
 
-Remote CI and cross-platform qualification remain unverified and must not be inferred from the local Windows RC2.
+Remote CI and cross-platform qualification are verified only for the exact hosted environments documented in
+`docs/phase-6-1/platform-qualification.md`; they are not a general production-support claim.
 
 ## Failure handling
 

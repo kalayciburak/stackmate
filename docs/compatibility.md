@@ -1,11 +1,14 @@
 # Compatibility
 
 This matrix describes `0.1.0-rc.2` public-alpha qualification. "Verified" means exercised in the stated environment;
-it is not a production-support or SLA statement. Hosted results remain unverified until the draft-PR jobs finish.
+it is not a production-support or SLA statement.
 
 | Surface | Status | Evidence or boundary |
 | --- | --- | --- |
-| Windows 11 | Locally verified | Current local release environment |
+| Windows 11 | Locally verified | Amazon Corretto 21.0.12.1 local release environment |
+| Ubuntu 24.04 x64 | Hosted verified | GitHub-hosted exact-commit qualification with Temurin 21.0.12.1 |
+| Windows Server 2025 x64 | Hosted verified | GitHub-hosted exact-commit qualification with Temurin 21.0.12.1 |
+| macOS 26 arm64 | Hosted verified | GitHub-hosted exact-commit qualification with Temurin 21.0.12.1 |
 | Amazon Corretto Java 21.0.12.1 | Locally verified | Current local release environment |
 | Java 21 language/runtime target | Supported alpha baseline | Build and public contract require Java 21 |
 | Spring Boot 4.1.0 | Locally verified | Current project and consumer baseline |
@@ -14,8 +17,9 @@ it is not a production-support or SLA statement. Hosted results remain unverifie
 | Public-release install | Locally verified | RC2 main, sources, Javadoc and SBOM artifacts built and installed |
 | External consumer RC | Locally verified | 6/6 contract checks plus 1/1 packaged-process check |
 | Full reactor | Locally verified | 543 Surefire plus 5 Failsafe; zero failures, errors or skips |
-| Linux | Unverified | Full hosted qualification is configured but has not run |
-| macOS | Unverified | Full hosted qualification is configured but has not run |
+| Other Linux distributions/versions | Unverified | Do not generalize beyond the tested Ubuntu runner |
+| Other Windows versions/architectures | Unverified | Do not generalize beyond local Windows 11 and hosted Windows Server 2025 x64 |
+| Other macOS versions/architectures | Unverified | Do not generalize beyond the tested macOS 26 arm64 runner |
 | Containers | Unverified | No container compatibility claim |
 | Other Java 21 distributions/patches | Unverified | May work, but not part of current evidence |
 | Spring Boot 4.1.x other than 4.1.0 | Unverified | Do not infer patch-line compatibility from coordinates |

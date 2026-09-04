@@ -29,8 +29,9 @@ All notable public product changes are documented here. The format follows
   synthetic merge commit.
 - Bound qualification-summary identity to validated checked-out Git HEAD instead of the pull-request event SHA.
 
-RC2 passes local verification but remains remotely unqualified until the draft-PR workflow set completes. RC1 is a
-frozen local-only checkpoint and will not be moved or pushed.
+RC2 passed local and exact-commit hosted qualification on Ubuntu x64, Windows x64, and macOS arm64. The local
+annotated `v0.1.0-rc.2` tag points to the qualified source commit and remains unpushed. RC1 is a frozen local-only
+checkpoint and will not be moved or pushed.
 
 ## [0.1.0-rc.1]
 

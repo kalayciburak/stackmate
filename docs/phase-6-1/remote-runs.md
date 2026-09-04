@@ -1,9 +1,8 @@
 # Phase 6.1 remote-run ledger
 
-Three failed hosted sets and one fully green but non-final identity set are
-preserved below. The required exact-head run IDs, artifact identities and
-qualification conclusions remain `PENDING` / `UNVERIFIED` until the checkout
-identity fix is pushed and rerun.
+Three failed sets and two green intermediate sets are preserved below. The
+sixth set is the final exact-head qualification for source commit
+`357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
 ## Preserved first failed run set
 
@@ -97,39 +96,45 @@ under `stackmate-benchmark/src/test/java`; none is part of a public coordinate.
 The collector now resolves and validates checked-out `git HEAD` directly and
 ignores `GITHUB_SHA`. A local run with an injected all-zero `GITHUB_SHA` still
 reported exact HEAD `6d6be9c...`, 549+6 tests and `publicationPerformed=false`.
-One more hosted run is required before final identity is accepted.
+One more hosted run was required before final identity could be accepted.
+
+## Final exact-head qualification run
+
+All mandatory jobs passed with checkout, artifact names and embedded summaries
+bound to `357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
 ## Required runs
 
 | Workflow/job | Commit SHA | Run ID | Immutable URL | Result | Required evidence |
 |---|---|---|---|---|---|
-| CI / Full qualification (Linux) | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Full clean verify, public install, consumer, API/bundle/evidence, OSV and performance smoke |
-| CI / Full qualification (Windows) | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Full clean verify, public install, consumer, API/bundle/evidence |
-| CI / Full qualification (macOS) | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Full clean verify, public install, consumer, API/bundle/evidence |
-| CI / Ubuntu reproducibility | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Two clean public builds, comparison report and both manifests |
-| CodeQL / Java-Kotlin | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Full tested construction and analysis conclusion |
-| Dependency review / PR | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | PR number, dependency-review conclusion and findings |
-| Release preflight / Windows | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` | Manual dispatch, public dry run, clean file-repository consume and uploaded evidence |
+| CI / Full qualification (Linux) | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [job 101198969478](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/job/101198969478) | `PASS` | 4m14s; full clean verify, public install, 6+1 consumer, API/bundle/evidence, OSV zero results and bounded performance smoke |
+| CI / Full qualification (Windows) | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [job 101198969235](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/job/101198969235) | `PASS` | 7m02s; full clean verify, public install, 6+1 consumer, API/bundle/evidence and clean file-repository consume |
+| CI / Full qualification (macOS) | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [job 101198969500](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/job/101198969500) | `PASS` | 1m49s; full clean verify, public install, 6+1 consumer and API/bundle/evidence |
+| CI / Ubuntu reproducibility | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [job 101200359697](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/job/101200359697) | `PASS` | 1m37s; two clean public builds, 23/23 byte-identical payloads and uploaded comparison evidence |
+| CodeQL / Java-Kotlin | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462894` | [job 101198969102](https://github.com/kalayciburak/stackmate/actions/runs/33927462894/job/101198969102) | `PASS` | 5m58s; full tested construction, v4.37.9 analysis and SARIF upload; six test-fixture-only XSS paths triaged |
+| Dependency review / PR | `357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462908` | [job 101198968939](https://github.com/kalayciburak/stackmate/actions/runs/33927462908/job/101198968939) | `PASS` | 1m06s; 20 additions, 14 removals, zero public runtime policy violations |
+| Release preflight / Windows | `357ca1418eb3786e861e4436fe55005c8c6456cd` | no run | [workflow](https://github.com/kalayciburak/stackmate/actions/workflows/release-preflight.yml) | `NOT_RUN` | New manual workflow is unavailable until present on the default branch. Equivalent public dry-run and file-repository gates passed in the Windows PR job; no merge was made. |
 
 ## Uploaded artifacts
 
-The workflows are configured for seven-day retention, but no upload is claimed
-until the corresponding run is observed.
+All six observed artifacts use seven-day retention.
 
 | Artifact | Run ID | Download/attestation URL | SHA-256 | Retention expiry | Result |
 |---|---|---|---|---|---|
-| `qualification-Linux-<commit>` | `PENDING` | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` |
-| `qualification-Windows-<commit>` | `PENDING` | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` |
-| `qualification-macOS-<commit>` | `PENDING` | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` |
-| `reproducibility-Ubuntu-<commit>` | `PENDING` | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` |
-| `release-preflight-Windows-<commit>` | `PENDING` | `PENDING` | `PENDING` | `PENDING` | `UNVERIFIED` |
+| `qualification-Linux-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [artifact 9957402406](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/artifacts/9957402406) | `3578e1f17ec5ad82704c947acc99aa4aebe4954a4f3dd557dd2e45a56363c2ee` | `2026-09-11T22:59:10Z` | `PASS` |
+| `qualification-Windows-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [artifact 9957464948](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/artifacts/9957464948) | `155766be3c10c4a73692dacbb8ab8b13b3dd473eb1f842edd76427eb3ce90785` | `2026-09-11T23:01:57Z` | `PASS` |
+| `qualification-macOS-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [artifact 9957348021](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/artifacts/9957348021) | `e6d2f3fb4299338e81872b2645819683fd20752da2570ec2a4a2db9dfdce3250` | `2026-09-11T22:56:45Z` | `PASS` |
+| `reproducibility-Ubuntu-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462896` | [artifact 9957504760](https://github.com/kalayciburak/stackmate/actions/runs/33927462896/artifacts/9957504760) | `f28edbaabed02a50a250eed27127c733bf07b1698516e6ae9d45588a495e7cef` | `2026-09-11T23:03:39Z` | `PASS` |
+| `codeql-sarif-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462894` | [artifact 9957434975](https://github.com/kalayciburak/stackmate/actions/runs/33927462894/artifacts/9957434975) | `e8c0e1c12eeb129d2cd6f5cfdaab7e3fb32594a5a3bdd5742924ac5d7fe18a87` | `2026-09-11T23:00:38Z` | `PASS` |
+| `dependency-review-357ca1418eb3786e861e4436fe55005c8c6456cd` | `33927462908` | [artifact 9957331600](https://github.com/kalayciburak/stackmate/actions/runs/33927462908/artifacts/9957331600) | `4979ef8ecc939b578ef489e0cdb16ffeec4fdd97c3f99566a56aca1cfd15b4a0` | `2026-09-11T22:56:02Z` | `PASS` |
+| `release-preflight-Windows-<commit>` | no run | no artifact | n/a | n/a | `NOT_RUN`; equivalent Windows PR evidence passed |
 
 ## Main completion rules
 
-Main must fill this ledger only from observed runs for one exact final rc2
-commit. Record job-level conclusions, exact test counts, API and manifest hashes,
-OSV/performance conclusions, artifact checksums and calculated expiry. A
-configured job or uploaded-artifact step is not evidence of a passing run.
+This ledger is filled only from observed runs for one exact final rc2 source
+commit. Job-level conclusions, exact test counts, API/manifest hashes,
+OSV/performance conclusions, artifact checksums and expiry are recorded. A
+configured job was never treated as evidence of a passing run.
 
 No entry in this file authorizes signing, Central deployment, release creation,
 tag push, merge or any other publication action.

@@ -17,26 +17,22 @@ Windows-only executable, CIM and hidden-window assumptions.
 
 ## Hosted platform matrix
 
-The rc2 workflow implements the following scope. The fourth attempt passed the
-complete matrix, but its evidence used GitHub's synthetic PR merge checkout;
-no exact-head final claim is made yet.
+The final exact-head matrix passed the following scope.
 
 | Hosted platform | Full clean verify | Public install | Consumer | API/bundle/evidence | Extra gates | Result |
 |---|---|---|---|---|---|---|
-| Linux / Ubuntu | Configured locally | Configured locally | Configured locally | Configured locally | OSV 2.5.1, bounded performance smoke | `UNVERIFIED` |
-| Windows | Configured locally | Configured locally | Configured locally | Configured locally | None platform-specific | `UNVERIFIED` |
-| macOS | Configured locally | Configured locally | Configured locally | Configured locally | None platform-specific | `UNVERIFIED` |
+| Linux / Ubuntu 24.04 x64 | `PASS` | `PASS` | `PASS` | `PASS` | OSV 2.5.1 zero results; bounded performance smoke passed | `PASS` |
+| Windows Server 2025 x64 | `PASS` | `PASS` | `PASS` | `PASS` | File-repository deploy/consume passed | `PASS` |
+| macOS 26 arm64 | `PASS` | `PASS` | `PASS` | `PASS` | Full qualification, not smoke-only | `PASS` |
 
-“Configured locally” in this table is not remote execution evidence. Each
-platform must pass against the same final rc2 commit before a cross-platform
-qualification claim is made.
+Every row is observed evidence from run `33927462896` at source commit
+`357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
-## Main update after remote execution
+## Recorded remote evidence
 
-For each platform, main must add the exact commit, run/job URL, runner image,
-Java and Maven environment, root and consumer counts, API SHA-256, bundle
-manifest SHA-256, evidence artifact name/checksum/expiry and final conclusion.
-Linux must additionally record OSV and performance-smoke conclusions.
+The exact commit, job URLs, Java/Maven environments, test counts, API and
+bundle hashes, artifact digests/expiry, OSV and performance conclusions are
+recorded in this file and `remote-runs.md`.
 
 This qualification does not publish, sign, tag, merge or release artifacts.
 
@@ -94,3 +90,18 @@ evidence collection; Linux additionally passed OSV/performance and Windows
 passed file-repository deployment/clean consumption. The evidence commit is
 the synthetic PR merge `8b521134...`, so this remains behavior proof rather
 than the final exact-head platform qualification.
+
+## Final platform qualification
+
+Run [33927462896](https://github.com/kalayciburak/stackmate/actions/runs/33927462896)
+passed the complete matrix with all summaries bound to exact source commit
+`357ca1418eb3786e861e4436fe55005c8c6456cd`. Each platform reported
+Temurin 21.0.12.1, Maven 3.9.16, 549 Surefire + 6 Failsafe including the
+external consumer, and zero failures/errors/skips. This establishes only the
+tested hosted environments, not every Linux, Windows or macOS version.
+
+The bounded Ubuntu smoke retained product behavior and recorded HTTP success
+P95 values of 1.98 ms without StackMate, 1.58 ms disabled and 1.25 ms enabled.
+Unhandled-failure P95 values were 5.58 ms, 7.78 ms and 22.64 ms respectively.
+Fresh-JVM startup medians were 2756 ms, 2727 ms and 2848 ms. These short hosted
+measurements are regression smoke evidence, not a performance SLA.

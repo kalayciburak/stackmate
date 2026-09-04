@@ -13,25 +13,26 @@ After recording that result in the bundle, the 26-file local rc2 manifest is
 
 ## Remote evidence
 
-Ubuntu job `101197201404` in run
-[33926362199](https://github.com/kalayciburak/stackmate/actions/runs/33926362199)
+Ubuntu job `101200359697` in run
+[33927462896](https://github.com/kalayciburak/stackmate/actions/runs/33927462896)
 performed two clean public builds and passed 23/23 payload comparisons with
 zero differences. Both manifest SHA-256 values were
 `b283738fd53d886c5b3677366c1d8928de3e4e2ea006aee0e3f5b0e7c8c1ce53`;
 downloaded comparison JSON SHA-256 was
 `cd4df30d714706106a4515b8ba6b20412828d53f6962e58bef75916b4c76a265`.
 GitHub artifact digest was
-`16c938b4cf3bf50b69998a6bd78eef4b7aadef65b5752d5636f2e69f53a93132`
-with expiry `2026-09-11T22:47:37Z`.
+`f28edbaabed02a50a250eed27127c733bf07b1698516e6ae9d45588a495e7cef`
+with expiry `2026-09-11T23:03:39Z`.
 
 | Evidence | First build | Second build | Comparison/result |
 |---|---|---|---|
 | Local clean builds | `bb35cc3b...d71e408` | `bb35cc3b...d71e408` | `PASS`, 23/23 identical |
-| Ubuntu remote clean builds | `b283738f...c8c1ce53` | `b283738f...c8c1ce53` | `PASS`, 23/23 identical on exact checkout; summary identity rerun pending |
+| Ubuntu remote clean builds | `b283738f...c8c1ce53` | `b283738f...c8c1ce53` | `PASS`, 23/23 identical on final exact source commit |
 
-## Main update after completion
+The final job is bound to
+`357ca1418eb3786e861e4436fe55005c8c6456cd`.
 
-Main must record:
+## Recorded completion data
 
 - final rc2 commit SHA and build environment;
 - first and second local manifest hashes plus comparison conclusion;

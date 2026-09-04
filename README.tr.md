@@ -15,11 +15,11 @@ model deneyleri [docs/research/local-llm-findings.md](docs/research/local-llm-fi
 
 ## Alpha durumu
 
-Public API ve davranışlar kararlı sürümden önce değişebilir. RC2 yerel public-release install, 6/6 external-consumer
-contract kontrolü, 1/1 packaged-process kontrolü ve 543 Surefire + 5 Failsafe reactor testini sıfır failure, error ve
-skip ile geçti. Hosted Linux, Windows ve macOS qualification hâlâ bekliyor. RC1 sabit, yalnız yerel bir checkpoint
-olarak kalır ve RC2'nin CI/Central metadata düzeltmeleriyle superseded durumdadır. Maven Central'a artifact
-yayımlanmadı, remote release oluşturulmadı ve GPG imzalama yapılmadı.
+Public API ve davranışlar kararlı sürümden önce değişebilir. RC2 yerel doğrulamayı ve Ubuntu x64, Windows x64 ve
+macOS arm64 üzerindeki exact-commit hosted qualification'ı geçti. Her hosted platform external consumer dahil 549
+Surefire + 6 Failsafe testi sıfır failure, error ve skip ile tamamladı. RC1 sabit, yalnız yerel bir checkpoint olarak
+kalır ve RC2'nin CI/Central metadata düzeltmeleriyle superseded durumdadır. Maven Central'a artifact yayımlanmadı,
+remote release oluşturulmadı, RC tag'i push edilmedi ve GPG imzalama yapılmadı.
 
 ## Neler yapar?
 
@@ -38,8 +38,9 @@ request/response body, query değeri veya header değeri toplamaz, incident uplo
 servisi çağırmaz, model indirmez, LLM çalıştırmaz, kod düzenlemez veya coding agent başlatmaz. Birçok
 `@ExceptionHandler` akışı dahil Spring MVC içinde çözülmüş exception'lar mevcut yakalama sınırından geçmez.
 
-Spring Boot 3, WebFlux, GraalVM native image, production deployment ve Windows dışı platformlar bu alpha için
-doğrulanmamıştır. Ayrıntılar: [compatibility.md](docs/compatibility.md).
+Spring Boot 3, WebFlux, GraalVM native image, production deployment, container'lar ve belgelenen hosted runner'ların
+dışındaki işletim sistemi sürümleri bu alpha için doğrulanmamıştır. Ayrıntılar:
+[compatibility.md](docs/compatibility.md).
 
 ## Gereksinimler
 
@@ -49,8 +50,8 @@ doğrulanmamıştır. Ayrıntılar: [compatibility.md](docs/compatibility.md).
 - Servlet tabanlı Spring MVC
 - Bu checkout build edilirken Maven 3.9.x
 
-Yerelde doğrulanan ortam Windows 11 ve Amazon Corretto 21.0.12.1'dir. Linux, macOS ve container ortamları
-doğrulanmamıştır.
+Yerel ortam Windows 11 ve Amazon Corretto 21.0.12.1'dir. Hosted qualification Temurin 21.0.12.1 ile Ubuntu 24.04
+x64, Windows Server 2025 x64 ve macOS 26 arm64 üzerinde çalıştırılmıştır. Container ortamları doğrulanmamıştır.
 
 ## Starter'ı ekleme
 

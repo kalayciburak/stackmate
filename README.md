@@ -15,11 +15,11 @@ Turkish documentation: [README.tr.md](README.tr.md)
 
 ## Alpha status
 
-The public API and behavior may change before a stable release. RC2 passes the local public-release install, 6/6
-external-consumer contract checks, 1/1 packaged-process check, and 543 Surefire plus 5 Failsafe reactor tests with
-zero failures, errors, or skips. Its hosted Linux, Windows and macOS qualification is still pending. RC1 remains a
-frozen local-only checkpoint and is superseded by RC2's CI and Central-metadata corrections. No artifact has been
-published to Maven Central, no remote release has been created, and no GPG signing has been performed.
+The public API and behavior may change before a stable release. RC2 passed local verification and exact-commit hosted
+qualification on Ubuntu x64, Windows x64, and macOS arm64. Each hosted platform reported 549 Surefire plus 6 Failsafe
+tests including the external consumer, with zero failures, errors, or skips. RC1 remains a frozen local-only
+checkpoint and is superseded by RC2's CI and Central-metadata corrections. No artifact has been published to Maven
+Central, no remote release has been created, no RC tag has been pushed, and no GPG signing has been performed.
 
 ## What it does
 
@@ -38,8 +38,8 @@ request or response bodies, capture query values or header values, upload incide
 services, download models, run an LLM, edit code, or start a coding agent. Exceptions resolved inside Spring MVC,
 including many `@ExceptionHandler` flows, do not cross the current capture boundary.
 
-Spring Boot 3, WebFlux, GraalVM native image, production deployment, and non-Windows platforms are not verified for
-this alpha. See [compatibility.md](docs/compatibility.md).
+Spring Boot 3, WebFlux, GraalVM native image, production deployment, containers, and operating-system versions beyond
+the documented hosted runners are not verified for this alpha. See [compatibility.md](docs/compatibility.md).
 
 ## Requirements
 
@@ -49,8 +49,8 @@ this alpha. See [compatibility.md](docs/compatibility.md).
 - Servlet-based Spring MVC
 - Maven 3.9.x when building this checkout
 
-The locally verified environment is Windows 11 with Amazon Corretto 21.0.12.1. Linux, macOS, and containers remain
-unverified.
+The local environment is Windows 11 with Amazon Corretto 21.0.12.1. Hosted qualification used Temurin 21.0.12.1 on
+Ubuntu 24.04 x64, Windows Server 2025 x64, and macOS 26 arm64. Containers remain unverified.
 
 ## Add the starter
 
