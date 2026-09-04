@@ -2,46 +2,48 @@
 
 ## Supported versions
 
-StackMate has no released, production-supported version yet.
+StackMate `0.1.0-rc.1` is a public alpha, not a production-supported release, security certification, or support
+SLA.
 
-| Version | Status |
+| Version | Security status |
 | --- | --- |
-| `main` / `0.1.0-SNAPSHOT` | Receives best-effort security fixes during development |
-| Published releases | None |
+| `0.1.0-rc.1` source/RC | Best-effort fixes during alpha evaluation |
+| Stable releases | None |
 
-This status is not a security certification, support SLA, or production-readiness claim.
+The RC has not been published to Maven Central and no remote release has been created.
 
 ## Reporting a vulnerability
 
-Use this repository's **Security** tab and choose **Report a vulnerability** to open a private GitHub Security
-Advisory when private vulnerability reporting is enabled. Include the affected revision, impact, reproduction steps,
-and a minimal sanitized proof of concept.
+If this repository's **Security** tab offers **Report a vulnerability**, use GitHub Private Vulnerability Reporting
+and include the affected version/revision, impact, reproduction steps, and a minimal sanitized proof of concept.
 
-If private reporting is not enabled, ask the repository owner for a private reporting channel without including
-vulnerability details. Do not open a public issue containing an exploit, secret, token, personal data, customer data,
-or unredacted incident/stack-trace content.
+If that GitHub feature is unavailable, this repository currently documents no alternative confidential address.
+Open a public issue only to ask maintainers to enable or provide a private reporting route. Do not put vulnerability
+details, exploit code, secrets, tokens, personal/customer data, proprietary code, or unredacted logs in that issue.
 
-Please allow maintainers time to confirm the report and coordinate a fix before public disclosure. There is currently
-no guaranteed response or remediation timeline.
+There is no guaranteed acknowledgement or remediation timeline. Give maintainers a reasonable opportunity to
+confirm and coordinate a fix before public disclosure.
 
-## Scope and handling guidance
+## In scope
 
-Security reports may cover the deterministic diagnostic pipeline, sanitization and privacy boundaries, Spring Boot
-integration, local child-process isolation, output validation, dependency risks, or a reproducible way StackMate
-changes host-application behavior.
+- a reproducible bypass of mandatory sanitization or data-minimization boundaries;
+- unexpected network, telemetry, download, or upload behavior in a public artifact;
+- a way StackMate changes host HTTP/exception behavior;
+- unsafe filesystem export or retention behavior;
+- denial-of-service behavior that escapes documented bounds;
+- dependency or configuration behavior that affects public-artifact confidentiality, integrity, or availability.
 
-Keep the following out of reports and reproductions unless explicitly requested through a trusted private channel:
+Historical model, inference, sample, benchmark, E2E, and research modules are outside the `0.1.0-rc.1` public
+product boundary. A report about those modules should clearly identify itself as repository research rather than a
+public starter vulnerability.
 
-- real credentials, API keys, tokens, personal or customer data;
-- proprietary application code, production logs, and unredacted stack traces;
-- model weights or model files whose license or redistribution rights are unclear;
-- generated machine-specific benchmark and coverage reports containing local paths or environment details.
+## Safe reporting data
 
-StackMate is designed for local, bounded diagnostics, but no sanitizer can guarantee that arbitrary input is safe.
-Treat all diagnostic output as potentially sensitive, review it before sharing, and use synthetic data whenever
-possible. The project does not require remote inference or API keys; unexpected runtime network inference is a
-security-relevant behavior worth reporting privately.
+Prefer a synthetic minimal reproduction. Treat all diagnostic output and incident bundles as potentially sensitive.
+Do not send real credentials, model files, customer data, production logs, machine-local paths, or unreviewed export
+bundles. If a credential was exposed, rotate or revoke it immediately.
 
-Model quality, inaccurate explanations, and unsupported production-readiness claims are not by themselves security
-vulnerabilities. They may become security-relevant when they cause data disclosure, unsafe execution, boundary
-bypass, or a reproducible integrity or availability impact.
+StackMate sanitizes only StackMate-controlled output. In the external-consumer RC `/failure` observation, the
+StackMate block contained no raw synthetic secret, but StackMate then rethrew the original exception and Tomcat
+independently logged it with the raw synthetic secret. Framework and application logs remain outside the security
+boundary. See [docs/privacy-and-threat-model.md](docs/privacy-and-threat-model.md).

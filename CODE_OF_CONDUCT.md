@@ -21,8 +21,8 @@ in a professional setting.
 ## Enforcement responsibilities
 
 Project maintainers are responsible for clarifying and enforcing these standards. They may remove, edit, or reject
-comments, commits, code, issues, and other contributions that do not align with this Code of Conduct, and will explain
-moderation decisions when appropriate.
+comments, commits, code, issues, and other contributions that do not align with this Code of Conduct, and will
+explain moderation decisions when appropriate.
 
 ## Scope
 
@@ -30,15 +30,15 @@ This Code applies in project spaces and when an individual officially represents
 
 ## Reporting and enforcement
 
-Report conduct concerns privately to the maintainers. When a report contains security-sensitive or private incident
-details, use GitHub's private vulnerability reporting flow described in [SECURITY.md](SECURITY.md); do not disclose
-those details in a public issue. Maintainers will review reports promptly, respect the reporter's privacy and safety,
-and apply consequences proportionate to the impact and circumstances.
+This repository currently documents no dedicated confidential conduct-report address. If a report requires privacy,
+open a public issue only to request a private contact route and include no incident details or personal information.
+For security-sensitive content, follow [SECURITY.md](SECURITY.md). Do not disclose private details in a public issue.
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may result in a correction, warning, temporary
-restriction, or permanent ban from project interaction. Retaliation against a reporter or participant in an
-investigation is not tolerated.
+Maintainers will evaluate reports they receive, protect privacy where possible, and apply consequences proportionate
+to impact and circumstances. Consequences may include correction, warning, temporary restriction, or permanent ban.
+Retaliation against a reporter or participant in an investigation is not tolerated. No response-time SLA is offered.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).
+This Code of Conduct is adapted from the
+[Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).

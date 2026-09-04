@@ -1,72 +1,67 @@
 # Contributing to StackMate
 
-Thank you for helping improve StackMate. The project is currently an unreleased `0.1.0-SNAPSHOT`; behavior and APIs
-may change while the initial design is validated.
+Thank you for contributing. StackMate `0.1.0-rc.1` is a public alpha; APIs and behavior may change before a stable
+release.
+
+## Product boundary
+
+Public product work must preserve the deterministic release chain:
+
+```text
+stackmate-core
+  <- stackmate-spring-boot-autoconfigure
+       <- stackmate-spring-boot-starter
+```
+
+Do not introduce inference, LLM/model, downloader, cloud, telemetry, upload, sample, E2E, benchmark, or research
+dependencies into these artifacts. `stackmate-core` must remain JDK-only. Public runtime output must remain bounded,
+deterministic, and sanitized.
 
 ## Development setup
 
-- Use JDK 21. The build enforces Java 21 specifically.
-- Use the checked-in Maven Wrapper, which downloads Apache Maven 3.9.16. A system Maven installation is not needed.
-- Do not add model weights, generated benchmark reports, local paths, credentials, API keys, incident payloads, or
-  other sensitive data to the repository.
+- Use JDK 21 and the checked-in Maven Wrapper (Maven 3.9.x).
+- Keep model weights, native runtimes, generated reports, local paths, credentials, incident payloads, and private
+  data outside Git.
+- Use synthetic data in tests, fixtures, screenshots, and reports.
 
-Run the complete quality gate from the repository root:
+The full local quality gate is:
 
 ```bash
-chmod +x ./mvnw # only needed if the checkout did not preserve the executable bit
 ./mvnw --batch-mode --no-transfer-progress clean verify
 ```
 
-On Windows PowerShell, use the Windows wrapper:
+Windows PowerShell:
 
 ```powershell
 .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
 ```
 
-`verify` runs compilation, unit and integration-test phases, the configured coverage checks, and Spotless checks.
-Normal verification does not require a model, an API key, or network inference. Maven may access configured artifact
-repositories to resolve the wrapper, plugins, and dependencies.
-
-For a focused module test during development, include required reactor dependencies:
-
-```bash
-./mvnw --batch-mode --no-transfer-progress -pl stackmate-core -am test
-```
-
-On Windows PowerShell:
-
-```powershell
-.\mvnw.cmd --batch-mode --no-transfer-progress -pl stackmate-core -am test
-```
-
-Local-model evaluation is optional, requires a user-supplied model outside the repository, and is deliberately not a
-normal CI job. Follow [the benchmark methodology](docs/benchmark.md), label machine-specific results accurately, and
-never present a local observation as a production-readiness claim.
+These commands may resolve Maven dependencies from configured repositories; they do not require a model, API key,
+or inference service. Running a command locally is not a compatibility or release-pass claim unless its environment
+and result are recorded.
 
 ## Changes and pull requests
 
-1. Keep changes focused and explain the behavior and trade-offs in the pull request.
-2. Add or update tests for behavior changes. Cover failure, boundary, concurrency, and privacy cases where relevant.
-3. Preserve deterministic, model-free fallback behavior. Tests must not download weights or call a remote inference
-   service.
-4. Keep outputs bounded and sanitized. Use synthetic incident data; never place real secrets, tokens, personal data,
-   or customer stack traces in tests, fixtures, logs, screenshots, or reports.
-5. Run the complete `clean verify` command for your operating system before requesting review.
-6. Update user-facing documentation and `CHANGELOG.md` when behavior or compatibility changes.
+1. Keep the change focused and explain observable behavior and trade-offs.
+2. Add or update tests when behavior changes, including failure, boundary, concurrency, and privacy cases.
+3. Preserve original exception and HTTP behavior.
+4. Keep all captured and rendered data bounded and sanitized.
+5. Keep the 25-property public configuration contract deliberate; unknown properties must remain fail-fast.
+6. Update English and Turkish README behavior together when user-facing behavior changes.
+7. Update `CHANGELOG.md`, compatibility, security, and notices when their facts change.
+8. Record exactly which checks ran and which remain pending; never promote a narrower check to a full release gate.
 
-Do not commit build output, generated coverage or benchmark reports, model files, IDE state, or credentials. Security
-issues should be reported privately as described in [SECURITY.md](SECURITY.md), not through a public issue.
+Do not commit build output, generated coverage/benchmark reports, model or adapter files, native binaries, IDE state,
+credentials, or unreviewed incident exports.
 
-## Style and design expectations
+## Style and API expectations
 
-- Follow the existing Java style enforced by Spotless; use `spotless:apply` only as an intentional local action and
-  review its diff before committing.
-- Keep the deterministic core independent of Spring and inference runtimes.
-- Treat captured exception text and model output as untrusted input.
-- Avoid unsupported accuracy, performance, compatibility, or production-readiness claims.
+- Follow existing Java and Markdown style; review formatter output before committing it.
+- Treat throwable, request, MDC, filesystem, and extension-provided text as untrusted.
+- Prefer explicit bounds and fail-safe behavior.
+- Do not claim unsupported accuracy, performance, platform compatibility, security, or production readiness.
+- Public API changes during alpha still require rationale, compatibility notes, and consumer coverage.
 
-## License
-
-By submitting a contribution, you agree that it is licensed under the repository's
-[Apache License 2.0](LICENSE). You must have the right to contribute the submitted material and must preserve required
-third-party notices and attribution.
+Security-sensitive issues follow [SECURITY.md](SECURITY.md), not a public detailed report. General help follows
+[SUPPORT.md](SUPPORT.md). By submitting a contribution, you agree that it is licensed under the repository's
+[Apache License 2.0](LICENSE) and that you have the right to contribute it.

@@ -1,440 +1,210 @@
 # StackMate
 
-> Spring Boot uygulamanız kendi hatalarını yerel olarak açıklar.
+> Spring MVC hataları için deterministik, yerel tanılama.
 
-StackMate, Spring Boot servlet uygulamaları için çevrimdışı öncelikli bir tanılama katmanıdır. MVC istek
-zincirinden dışarı taşan istisnayı gözlemler, küçük ve güvenli bir anlık görüntü çıkarır, kanıta dayalı olgular
-üretir ve aynı uygulama loguna kısa bir tanı ekler. Asıl istisna, HTTP durumu, yanıt gövdesi, Spring exception
-handler'ları ve loglama yapılandırması uygulamanın denetiminde kalır.
+StackMate `0.1.0-rc.1`, Java 21 Spring Boot uygulamaları için bir public alpha sürümüdür. Spring MVC servlet
+zincirinden kaçan exception'ları gözlemler; sınırlı ve sanitize edilmiş snapshot üretir; kanıta dayalı tanı çıkarır;
+tekrarlanan incident'ları dedup eder ve uygulama loguna kısa bir İngilizce tanı yazar. İsteğe bağlı export, aynı
+sanitize edilmiş deterministik kanıtı yerel dosya sistemine yazar.
 
-Ürünün çekirdeği deterministik motordur. Yerel model yalnızca isteğe bağlı ve güvenilmeyen bir açıklama katmanıdır;
-kategori, kök hata tipi, kanıt veya kaynak konumu ekleyemez ya da değiştiremez.
-
-StackMate çalışma zamanı tanılarını şu anda İngilizce üretir. Bu dosya Türkçe kullanım ve geliştirme
-dokümantasyonudur; Türkçe çalışma zamanı çıktısı anlamına gelmez.
-
-Güncel durum: **güçlendirilmiş deterministik MVP; Qwen3.5-2B alignment hâlâ EXPERIMENTAL**. Phase 5.1 strict
-abstention sonucunu 1/11'den 11/11'e, generic-fallback yanlış kullanımını dörtten sıfıra indirdi; ancak kilitli V2
-holdout neden/kontrol sonucu yalnız 16/20 oldu ve manuel inceleme bir kabul edilmiş desteklenmeyen iddia daha buldu.
-Prompt çalışması `PARTIAL`dır, readiness sonucu değildir. Phase 5.2 sızıntı denetimli 1.000 satırlık alignment
-verisini ve 30 vakalık yeni challenge setini dondurdu; ancak pinned resmî safetensors checkpoint'i yerelde olmadığı
-ve model indirme açıkça kapsam dışı olduğu için F1/F2 başlamadan training bloke oldu. Adapter, fine-tuned GGUF,
-persistent llama.cpp worker, production adapter veya otomatik provisioning uygulanmadı. StackMate production-ready
-olarak sunulmaz ve Maven Central'da yayımlanmaz.
+Bu sürüm LLM, inference runtime, model, downloader, cloud çağrısı, telemetri veya upload yolu içermez. Tarihsel yerel
+model deneyleri [docs/research/local-llm-findings.md](docs/research/local-llm-findings.md) altında izole edilmiştir ve
+ürün yeteneği değildir.
 
 İngilizce dokümantasyon: [README.md](README.md)
 
-## StackMate neden var?
+## Alpha durumu
 
-Spring Boot stack trace'leri kesindir ancak çoğu zaman gürültülüdür. Yararlı bilgi; wrapper exception'lar,
-framework frame'leri, SQL metadata'sı ve tek bir uygulama konumu arasına dağılabilir. StackMate bu sınırlı çalışma
-zamanı kanıtını cloud API, API anahtarı, Python süreci, Ollama sunucusu, telemetri, kaynak kodu yükleme veya uzak
-incident deposu olmadan anlık bir yanıta dönüştürür.
-
-Kesin ürün iddiası **sıfır harici servis bağımlılığıdır**. StackMate'ın yine yerel Java kütüphane bağımlılıkları;
-inference açıldığında da yerel model ağırlıkları ve inference runtime'ı vardır.
+Public API ve davranışlar kararlı sürümden önce değişebilir. RC public-release install geçti; external consumer 6/6
+contract kontrolünü ve 1/1 packaged-process kontrolünü geçti; full reactor 543 Surefire ve 5 Failsafe testini sıfır
+failure, error ve skip ile tamamladı. Maven Central'a artifact yayımlanmadı, remote release oluşturulmadı ve GPG
+imzalama yapılmadı.
 
 ## Neler yapar?
 
-- Spring MVC servlet istek zincirinden kaçan işlenmemiş istisnaları yutmadan yakalar.
-- Döngüsel, wrapper ve suppressed throwable grafiklerini savunmacı biçimde dolaşır; uygulama frame'lerini öne alır.
-- Çekirdeğe opsiyonel framework bağımlılığı taşımadan yaygın Java, Spring configuration/MVC/security,
-  JDBC/persistence, ağ, TLS, DNS, timeout ve concurrency kalıplarını tanır.
-- Credential kalıplarını, token'ları, bağlantı adreslerindeki parolaları, terminal escape karakterlerini ve isteğe
-  bağlı PII değerlerini maskeler.
-- İngilizce, kutulu ya da compact hızlı tanı basar.
-- Normalize edilmiş SHA-256 fingerprint üretir ve sınırlı TTL deposu içinde yinelenen inference çağrılarını önler.
-- Kullanıcının açıkça sağladığı desteklenen modeli Jlama ile yönetilen Java 21 child process'inde, sınırlı stdio
-  protokolü üzerinden deneysel olarak çalıştırabilir; Phase 2 sonucunda önerilen bir model yoktur.
-- Modelin yalnızca sağlanan evidence/cause/check ID'lerini seçmesine izin verir ve metni göstermeden önce doğrular.
-- İsteğe bağlı olarak dört dosyalı temizlenmiş incident paketini atomik biçimde yerel diske yazar.
+- Spring MVC servlet istek zincirinden kaçan işlenmemiş exception'ları yutmadan veya değiştirmeden yakalar.
+- Sınırlı throwable grafiklerini dolaşır ve uygulamaya ait frame'leri seçer.
+- Deterministik kategori, kanıt gücü, neden ve sonraki kontrol önerileri üretir.
+- StackMate'in yönettiği konsol ve export içeriğini zorunlu secret ve PII kurallarıyla sanitize eder.
+- Kararlı SHA-256 fingerprint üretir ve tekrarları sınırlı, bellek içi TTL deposunda izler.
+- Sınırlı `box` veya `compact` konsol çıktısı üretir.
+- İsteğe bağlı olarak dört dosyalı sanitize edilmiş incident paketini yerel diske yazar.
 
 ## Neler yapmaz?
 
-StackMate uygulamanın ham stack trace'inin yerine geçmez, HTTP yanıtını değiştirmez, `@ExceptionHandler` tarafından
-çözülmüş istisnaları yakalamaz, kaynak kodu incelemez, istek/yanıt gövdesi, header veya query değeri toplamaz,
-incident yüklemez, monitoring/tracing platformu olmaz, kod düzenlemez, coding agent çalıştırmaz ve cloud ya da yerel
-HTTP model sunucusu çağırmaz. WebFlux, Spring Boot 3, native-image inference, IDE eklentileri, log appender
-interception, JFR, JVMTI ve Java agent instrumentation bu sürümün kapsamı dışındadır.
+StackMate HTTP status veya response body değiştirmez, uygulama loglamasının yerini almaz, kaynak kodu incelemez,
+request/response body, query değeri veya header değeri toplamaz, incident upload etmez, telemetri göndermez, cloud
+servisi çağırmaz, model indirmez, LLM çalıştırmaz, kod düzenlemez veya coding agent başlatmaz. Birçok
+`@ExceptionHandler` akışı dahil Spring MVC içinde çözülmüş exception'lar mevcut yakalama sınırından geçmez.
 
-## Mimari
+Spring Boot 3, WebFlux, GraalVM native image, production deployment ve Windows dışı platformlar bu alpha için
+doğrulanmamıştır. Ayrıntılar: [compatibility.md](docs/compatibility.md).
 
-```mermaid
-flowchart TD
-    A["Servlet zincirinden kaçan istisna"] --> B["Sınırlı değişmez snapshot"]
-    B --> C["Sanitizasyon"]
-    C --> D["Deterministik analizörler"]
-    D --> E["Hızlı konsol tanısı"]
-    D --> F["SHA-256 fingerprint ve dedup"]
-    F --> G["Özel sınırlı executor"]
-    G --> H["Yönetilen yerel Java 21 JVM"]
-    H --> I["Şema ve kanıt doğrulayıcı"]
-    I --> J["Doğrulanmış yerel açıklama"]
-    D --> K["İsteğe bağlı atomik incident export"]
-```
-
-Bağımlılık yönü:
-
-```text
-sample -> local starter -> deterministic starter -> Spring auto-configuration -> core
-                      \-> inference JVM adapter -> inference API -> core
-benchmark ---------------------------------------------------------> bu modüller
-```
-
-`stackmate-core` yalnızca JDK kullanır; Spring, servlet, SLF4J, JSON, database, security veya inference runtime
-import etmez. Ayrıntılı sınırlar için [architecture.md](docs/architecture.md) ve [ADR'lere](docs/adrs/) bakın.
-
-## Desteklenen ortam
+## Gereksinimler
 
 - Java 21
-- Spring Boot 4.1.x (bu checkout 4.1.0 kullanır)
-- Spring Framework 7.0.x (Boot 4.1.0, Framework 7.0.8'i yönetir)
-- Servlet/Spring MVC uygulamaları
-- Maven 3.9.x (wrapper: 3.9.16)
+- Spring Boot 4.1.0
+- Spring Framework 7.0.8
+- Servlet tabanlı Spring MVC
+- Bu checkout build edilirken Maven 3.9.x
 
-Spring Boot 3 ve WebFlux bilinçli olarak desteklenmez. Commit edilen CI workflow'u Windows ve Linux doğrulaması ile
-macOS smoke build hedefler; bu checkout'ın workflow'ları henüz uzak GitHub runner'ında çalışmadı. Gerçek model
-child-process davranışı şimdiye kadar yalnızca yerel Windows makinesinde ölçülmüştür.
+Yerelde doğrulanan ortam Windows 11 ve Amazon Corretto 21.0.12.1'dir. Linux, macOS ve container ortamları
+doğrulanmamıştır.
 
-## Bu checkout'u build etme
+## Starter'ı ekleme
 
-Artifact'lar henüz yayımlanmadı. Önce projeyi yerel Maven deposuna kurun:
-
-```bash
-./mvnw clean install
-```
-
-Windows PowerShell:
-
-```powershell
-$env:JAVA_HOME = 'C:\jdk-21\dizini'
-.\mvnw.cmd clean install
-```
-
-## Deterministik hızlı başlangıç
-
-Temel starter'ı ekleyin:
+Public Maven coordinates şöyledir:
 
 ```xml
 <dependency>
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-spring-boot-starter</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0-rc.1</version>
 </dependency>
 ```
 
-İsteğe bağlı açık yapılandırma:
+RC Maven Central'da değildir. Yayıma kadar bu dependency yalnız artifact'lar yerel olarak kurulduğunda veya
+sağlandığında çözülür.
+
+Bu checkout'tan yerel değerlendirme yapmak için önce yalnız public artifact zincirini kurun:
+
+```powershell
+$env:JAVA_HOME = "<jdk-21-yolu>"
+.\mvnw.cmd --batch-mode --no-transfer-progress `
+  -Ppublic-release `
+  -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter `
+  -am clean install
+```
+
+Ardından yukarıdaki dependency'yi ayrı bir Spring MVC uygulamasına ekleyin. Repodaki bağımsız `release/consumer`
+projesi kurulan coordinates'i doğrulamak için kullanılır; reactor modülü değildir.
+
+Starter varsayılan olarak açıktır. Servlet Spring MVC uygulamasında yapılandırma zorunlu değildir. Starter'ı etkisiz
+hâle getirmek için:
 
 ```yaml
 stackmate:
-  enabled: true
-  mode: deterministic
+  enabled: false
+```
+
+Uygulama frame'lerinin bulunmasına yardımcı olmak için:
+
+```yaml
+stackmate:
   application-packages:
     - com.example.uygulamam
 ```
 
-Uygulamayı normal biçimde çalıştırın. Runtime exception servlet zincirinden dışarı çıktığında StackMate hızlı tanıyı
-loglar ve denetimi Spring'in mevcut hata işleme akışına bırakır.
+## Production profil koruması
 
-## Yerel model hızlı başlangıcı
-
-Değerlendirilen hiçbir yerel model ürün kullanımı için önerilmez. Bu hızlı başlangıç korunan Phase 2 Jlama deneyi ve
-entegrasyon testi içindir. Phase 5.1 Qwen3.5-2B prompt'u izole llama.cpp laboratuvar sonucu olarak kaldı ve ürüne
-entegre edilmedi. Base starter yerine local starter'ı ekleyin:
-
-```xml
-<dependency>
-  <groupId>io.github.kalayciburak</groupId>
-  <artifactId>stackmate-spring-boot-starter-local</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
-</dependency>
-```
-
-Apache-2.0 lisanslı resmi Qwen2.5-0.5B-Instruct SafeTensors model dizinini kendiniz hazırlayın. StackMate modeli
-asla indirmez. Yol aşağıdaki öncelik sırasıyla çözülür:
-
-1. `stackmate.inference.model-path`
-2. `STACKMATE_MODEL_PATH`
-3. `~/.stackmate/models/Qwen2.5-0.5B-Instruct`
+Aktif Spring profili `prod` veya `production` ile eşleşirse StackMate varsayılan olarak analizi engeller ve sınırlı
+bir uyarı loglar. Açık opt-in için:
 
 ```yaml
 stackmate:
-  mode: hybrid
-  inference:
-    enabled: true
-    model-path: /mutlak/yol/Qwen2.5-0.5B-Instruct
-    timeout: 10s
+  safety:
+    allow-in-production: true
 ```
 
-Local starter ile de varsayılan mod deterministiktir. Inference için `stackmate.mode=hybrid` değerini açıkça verin.
-Varsayılan `when-enhancement-is-useful` politikası kesin `HIGH` tanıları ve `LOW`/bilinmeyen tanıları atlar; yalnızca
-fallback olmayan `MEDIUM` kanıtı gönderir. Eksik veya geçersiz model deterministik tanıyı açık bırakır ve inference
-ilk istendiğinde en fazla bir kısa kurulum uyarısı üretir.
+Bu koruma yardımcı bir kontroldür; security boundary veya production-readiness iddiası değildir. Opt-in öncesi
+gizlilik, dosya sistemi, loglama ve kapasite politikasını inceleyin.
 
-Model servlet request thread'inin dışında asenkron çalışır. Worker kurulu Java 21 runtime'ını kullanır; preview ve
-vector bayrakları yalnızca child JVM'dedir. İletişim HTTP veya network socket değil, çerçevelenmiş stdin/stdout'tur.
+## Temsili çıktı
 
-## Örnek uygulama
-
-Deterministik demoyu build edip çalıştırın:
-
-```bash
-./mvnw -pl stackmate-sample -am package
-java -jar stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar
-```
-
-Temsili hataları tetikleyin:
-
-```bash
-curl -i http://localhost:8080/demo/null-pointer
-curl -i http://localhost:8080/demo/invalid-number
-curl -i http://localhost:8080/demo/database/duplicate
-curl -i http://localhost:8080/demo/repeated
-curl -i http://localhost:8080/demo/repeated
-curl -i http://localhost:8080/demo/redaction
-curl -i http://localhost:8080/demo/prompt-injection
-curl -i -H 'Content-Type: application/json' -d '{bad json' \
-  http://localhost:8080/demo/malformed-json
-curl -i -H 'Content-Type: application/json' -d '{}' \
-  http://localhost:8080/demo/validation
-```
-
-Önceden hazırlanmış modelle hybrid çıktı:
-
-```bash
-STACKMATE_MODEL_PATH=/mutlak/yol/Qwen2.5-0.5B-Instruct \
-java -jar stackmate-sample/target/stackmate-sample-0.1.0-SNAPSHOT.jar \
-  --spring.profiles.active=hybrid
-```
-
-Tüm yakalama ve analizi `--spring.profiles.active=disabled` veya `--stackmate.enabled=false` ile kapatın.
-
-## Örnek çıktı
+Aşağıdaki değerler deterministik renderer'ın alanlarını gösterir; bir RC test koşusunun gerçek transkripti olduğu
+iddia edilmez:
 
 ```text
-┌─ StackMate · Quick Diagnosis ─────────────────────────────
-│ Incident : STM-7A3C1D2E
-│ Category : DATABASE_CONSTRAINT
-│ Evidence : HIGH
-│
-│ Summary
-│ A database unique constraint rejected the operation.
-│
-│ First check
-│ Check whether the value already exists before retrying.
-│
-│ Application trace
-│ DemoFailureController#databaseDuplicate(DemoFailureController.java:51)
-│
-│ Source  : deterministic StackMate rules
-│ Network : disabled
-└────────────────────────────────────────────────────────────
++--------------------------------------------------------------------------------------------------+
+| StackMate Quick Diagnosis                                                                        |
+| Incident: STM-7A3C1D2E                                                                           |
+| Category: DATABASE_CONSTRAINT                                                                    |
+| Evidence: HIGH                                                                                   |
+| Summary: A database unique constraint was violated                                               |
+| Root: java.sql.SQLException: duplicate key value violates unique constraint                      |
+| First app location: OrderService#create(OrderService.java:42)                                    |
+| Details: The database rejected a value that must be unique.                                      |
+| Request: POST /orders                                                                            |
+| First checks:                                                                                    |
+|   - Check whether the value already exists before retrying.                                      |
+| Application trace:                                                                              |
+|   OrderService#create(OrderService.java:42)                                                      |
+| Source: Deterministic rules                                                                      |
+| Runtime: Java 21.0.12.1 | Spring Boot 4.1.0 | Network disabled                                  |
++--------------------------------------------------------------------------------------------------+
 ```
 
-Gerçek incident ID normalize edilmiş kanıta göre değişir. Uygulamanın normal ham exception logu görünmeye devam
-eder.
+Incident ID ve tanı metni yakalanan kanıta göre değişir. Host uygulamanın normal exception işleme davranışı ve ham
+logları değişmez. Diğer temsili düzenler [console-gallery.md](docs/console-gallery.md) belgesindedir.
 
 ## Yapılandırma
 
-Güvenli varsayılanlar aşağıdadır. `ansi` bu MVP'de rezerve edilmiştir; catch-all startup
-analyzer veya ANSI çıktı henüz yoktur. Request body, query değeri ya da header toplamayı açmaya çalışmak, bu toplama
-yolları uygulanmadığı için configuration binding sırasında reddedilir.
+StackMate bu RC'de tam olarak 25 adet `stackmate.*` property sunar. Bilinmeyen alanlar reddedilir. Kullanıcıya açık
+tek ek redaction alanı `stackmate.privacy.redact-values`'dır; sınırlı literal değer kabul eder, regular expression
+kabul etmez. Public API'de body, query-value veya header-capture switch'i yoktur.
+
+Tüm property, varsayılan ve sınırlar için [configuration.md](docs/configuration.md) belgesine bakın.
+
+## Yerel export
+
+Export varsayılan olarak kapalıdır. Açıldığında ilk görülen her fingerprint için sanitize edilmiş tek paket yazar:
 
 ```yaml
 stackmate:
-  enabled: true
-  mode: deterministic       # deneysel inference için hybrid değerini açıkça verin
-  application-packages: []
-  capture:
-    mvc-unhandled: true
-    selected-mdc-keys: [traceId, spanId, correlationId]
-  diagnostics:
-    maximum-cause-depth: 32
-    maximum-suppressed-exceptions: 8
-    maximum-stack-frames: 120
-    maximum-application-frames: 8
-    maximum-message-length: 2000
-  privacy:
-    include-request-body: false
-    include-query-values: false
-    include-headers: false
-    pii-redaction: true
-    custom-redaction-patterns: []
-  inference:
-    enabled: true
-    engine: auto
-    deployment: auto
-    model-path: ''
-    lazy-load: true
-    temperature: 0.0        # sabit; sıfır dışındaki değerler reddedilir
-    maximum-input-characters: 16000
-    maximum-output-tokens: 256
-    timeout: 10s
-    repair-attempts: 1
-    executor:
-      threads: 1
-      queue-capacity: 8
-    circuit-breaker:
-      failure-threshold: 3
-      cooldown: 5m
-  deduplication:
-    enabled: true
-    ttl: 10m
-    maximum-entries: 512
-  console:
-    enabled: true
-    style: box              # box | compact
-    ansi: auto              # rezerve; mevcut renderer ANSI üretmez
-    maximum-width: 100
-    show-application-trace: true
-    show-technical-details: true
-    show-cause-chain: false
-    debug-logging: false
   export:
-    enabled: false
+    enabled: true
     directory: .stackmate/incidents
-    maximum-incidents: 100
-  safety:
-    allow-in-production: false
-    production-profiles: [prod, production]
 ```
-
-Production profil koruması bir güvenlik yardımcısıdır, security boundary değildir. Production profilinde tanıyı
-açmadan önce gizlilik, yük ve yerel dosya sistemi politikalarını ayrıca inceleyin.
-
-## Genişletme noktaları
-
-Uygulamalar `DiagnosticAnalyzer`, `Sanitizer`, `DeduplicationStore`, `ConsoleRenderer`, `IncidentExporter`,
-`LocalInferenceEngine`, `InferenceOutputValidator` ve `InferenceCircuitBreaker` türlerinde Spring bean sağlayabilir.
-Varsayılan bean'ler Spring Boot condition'larıyla geri çekilir. Özel analizörler kararlı ID ve kanıta bağlı katkı
-döndürmeli, yakalanan incident'ı değiştirmemelidir.
-
-## Gizlilik ve runtime ağ politikası
-
-StackMate body, header, cookie, authorization bilgisi, query değeri, session state, environment değeri, gelişigüzel
-configuration, local variable, bean state veya kaynak dosyası toplamaz. Konsol, inference ve export metni kendi
-sınırlarında sanitize edilir. Model çıktısı şema ve referans doğrulamasından geçene kadar güvenilmezdir.
-
-Hiçbir StackMate runtime kodu model indirmez, uzak inference provider çağırmaz, inference sunucusu açmaz, incident
-yüklemez veya telemetri üretmez. Bu, üçüncü taraf bytecode için işletim sistemi sandbox'ı değildir; ayrıntılar
-[privacy and threat model](docs/privacy-and-threat-model.md) belgesindedir.
-
-## İsteğe bağlı incident export
-
-`stackmate.export.enabled=true` olduğunda bir fingerprint'in ilk örneği atomik biçimde şu dizine yayımlanır:
 
 ```text
 .stackmate/incidents/STM-XXXXXXXX/
-├── incident.json
-├── diagnosis.md
-├── stacktrace.txt
-└── agent-prompt.md
+|-- incident.json
+|-- diagnosis.md
+|-- stacktrace.txt
+`-- agent-prompt.md
 ```
 
-Exporter sembolik bağlantılı yolları reddeder, digest'ten türetilmiş sabit adlar kullanır, kaynak kod kopyalamaz ve
-agent çalıştırmaz. Retention temizliği yalnızca tanınan paketlerle sınırlıdır; bilinmeyen içerikli dizinleri silmez.
+Export yerel ve isteğe bağlıdır. `agent-prompt.md` yalnız pasif bağlamdır; StackMate agent çalıştırmaz. Paylaşmadan
+önce tüm dosyaları inceleyin.
 
-## Benchmark durumu
+## Mimari ve sınırlar
 
-Bağımsız ve dondurulmuş V2 corpus'u 80 vaka içerir: 60 development, 20 holdout ve 54 gerçek runtime/integration.
-Genel amaçlı güçlendirmeden sonra deterministik kategori doğruluğu 74/80 (%92,50), holdout 19/20 (%95), root type
-80/80, bilinmeyen hata ölçülülüğü 8/8, secret leakage 0 ve fingerprint kararlılığı 80/80'dir. Bunlar corpus
-sonuçlarıdır; kusursuz doğruluk iddiası değildir. Ayrıntılar [benchmark-v2-results.md](docs/benchmark-v2-results.md)
-belgesindedir.
+Public artifact zinciri:
 
-Yalnız açıklama yapan schema-v2 sözleşmesinde hem Qwen2.5-0.5B-Instruct hem de Qwen2.5-Coder-0.5B-Instruct,
-İngilizce 0/10 ve Türkçe 0/10 geçerli yapılandırılmış çıktı üretti. Warm medyanlar 17,1-22,0 saniye; ölçülen Coder
-worker tepesi yaklaşık 2,09 GiB oldu. Geçersiz çıktı fallback'i çalıştı ve geçersiz hiçbir sonuç kabul edilmedi;
-ancak güvenli sınırlama model yararlılığını kanıtlamaz. Bu nedenle değerlendirilen yapılandırmalar `NOT_VIABLE`dır.
-
-Phase 3'te official llama.cpp `b10219` ile pinned Qwen3.5 Q4_K_M feasibility artifact'ları test edildi. 2B greedy
-profilinde İngilizce geçerlilik ve seçim 10/10 olurken Türkçe neden seçimi 6/10, kontrol seçimi 7/10 ve yararlı
-Türkçe açıklama 3/10 kaldı. 4B modeli 40 profil/dil vakasının tamamında geçerli JSON üretti; ancak en iyi exact
-neden/kontrol sonucu 8/10 ile zorunlu %85 eşiğinin altında kaldı. Gate A başarısız olduğu için llama.cpp production
-adapter'ı, otomatik model kataloğu, downloader veya provisioning cache'i uygulanmadı. Ayrıntılar
-[Phase 3 tarama raporundadır](docs/phase-3/model-screening-results.md).
-
-Phase 4'te ürünün çalışma zamanı İngilizceyle sınırlandı ve official llama.cpp `b10221` ile bağımsız, dondurulmuş
-20 vakalık bir turnuva yürütüldü. SmolLM2-360M 0/20 yararlı açıklama üretti. Qwen3-0.6B 20/20 geçerli ve 19/20
-yararlı çıktı verdi; ancak holdout check seçimi 8/10 ile zorunlu %85 eşiğinin altında kaldı. Qwen2.5-1.5B 19/20
-geçerli çıktı üretti ve seçim kapılarını kaçırdı. Qwen3.5-2B kontrolü taramayı geçti fakat resmi toplamı
-2.274.069.824 parametre olduğu için sert sınırın dışındadır. Hiçbir uygun model tam V2 benchmark veya persistent
-worker aşamasına geçmedi. Ayrıntılar [Phase 4 tarama raporundadır](docs/phase-4/screening-results.md).
-
-Phase 5 sert parametre sınırını kaldırdı ve aynı Qwen3.5-2B Q4_K_M kontrolünü 80 Benchmark V2 vakası ile yeni,
-dondurulmuş 20 vakalık blind corpus üzerinde çalıştırdı. Model 100/100 geçerli JSON ve 94/100 exact neden/kontrol
-seçimi üretti; holdout ve blind seçimleri ayrı ayrı 19/20 oldu. Manuel inceleme, kabul edilmiş üç desteklenmeyen
-alternatif buldu; bilinmeyen/yetersiz kanıt vakalarının yalnız 1/11'i önceden tanımlanan yapılandırılmış ölçülülük
-kuralını karşıladı. Gate A bu nedenle persistent worker, adapter ve paketlenmiş-model çalışmasından önce başarısız
-oldu. Ayrıntılar [Phase 5 qualification raporundadır](docs/phase-5/full-qualification-results.md).
-
-Phase 5.1 dört dondurulmuş prompt varyantını karşılaştırdı. Kilitli P3 prompt'u 40/40 geçerli çıktı, 16/20 V2
-holdout ve 18/20 blind neden/kontrol doğruluğu ile 3/3 exact kilitli abstention üretti. Holdout kapısı başarısız oldu;
-zorunlu ikinci manuel geçiş ayrıca selection setinde desteklenmeyen bir `high rejection rate` iddiası buldu. Gate C
-atlanarak model `EXPERIMENTAL` kaldı. Ayrıntılar
-[Phase 5.1 kilitli sonuçlarındadır](docs/phase-5-1/locked-final-results.md).
-
-Modelsiz normal doğrulama:
-
-```bash
-./mvnw clean verify
+```text
+stackmate-core
+  <- stackmate-spring-boot-autoconfigure
+       <- stackmate-spring-boot-starter
 ```
 
-Açık araştırma amaçlı A/B/C model benchmark'ı:
+`stackmate-core` yalnız JDK kullanır. Auto-configuration; Servlet/Spring MVC adapter'ı, typed configuration,
+konsol entegrasyonu ve isteğe bağlı yerel exporter'ı içerir. Repodaki research, sample, benchmark, local-inference
+ve E2E modülleri public release'e dahil değildir.
 
-```bash
-./mvnw -pl stackmate-benchmark -am -Pmodel-benchmark \
-  -Dstackmate.model.path=/mutlak/yol/Qwen2.5-0.5B-Instruct \
-  verify
-```
+Bilinen sınırlar:
 
-Makineye özgü raporlar `stackmate-benchmark/target/` altında kalır ve Git tarafından yok sayılır.
+- yalnız servlet filter zincirinden kaçan exception'lar görünür;
+- startup failure ve yalnız loglanan hatalar yakalanmaz;
+- zorunlu sanitization riski azaltır ancak gelişigüzel metnin güvenli olacağını garanti etmez;
+- uygulamanın değişmeyen ham logları veri sızdırabilir;
+- duplicate durumu yerel ve bellek içidir;
+- export retention yalnız tanınan StackMate paketlerine uygulanır.
 
-Açıkça sağlanan bir modelle paketlenmiş gerçek-model lifecycle profilini çalıştırın:
+Daha geniş değerlendirme öncesi [architecture.md](docs/architecture.md),
+[privacy-and-threat-model.md](docs/privacy-and-threat-model.md) ve
+[troubleshooting.md](docs/troubleshooting.md) belgelerini okuyun.
 
-```bash
-./mvnw -pl stackmate-e2e -am -Preal-model-e2e \
-  -Dstackmate.model.path=/mutlak/yol/yerel-model \
-  verify
-```
+## Proje durumu ve katılım
 
-Profil, validator tarafından onaylanan yerel açıklamayı veya sınırlı deterministik fallback'i kabul eder. HTTP'nin
-inference'tan önce döndüğünü ve yönetilen child'ın shutdown sırasında kaldırıldığını doğrular. Normal CI'dan hariçtir
-ve model ağırlığı indirmez.
-
-## Bilinen sınırlamalar
-
-- Yalnızca servlet filter zincirinden kaçan exception'lar görünür; çözülmüş handler ve sadece loglanan hatalar görünmez.
-- Startup failure analizi araştırıldı ancak bilinçli olarak ertelendi.
-- Uygulama, değiştirilmemiş ham loglarında hassas metni yine açığa çıkarabilir.
-- Opsiyonel framework tanıma, derin framework state yerine güvenli class-name/message incelemesi kullanır.
-- Qwen3.5-2B `EXPERIMENTAL`dır; gerçek model koşuları yalnızca Windows'ta yapıldı ve önerilen model yoktur.
-- Phase 3 ile Phase 5.1 arasındaki llama.cpp/GGUF kodu yalnızca açık benchmark laboratuvarıdır; otomatik model veya native runtime
-  provisioning yoktur.
-- İşletim sistemi düzeyinde ağ veya model-process sandbox'ı yoktur.
-- `lazy-load=false` adapter metadata'sını başlangıçta doğrular; Jlama ağırlıkları yine ilk inference'ta yükler.
-
-## Geliştirme
-
-```bash
-./mvnw clean verify
-./mvnw -pl stackmate-sample -am package
-./mvnw -pl stackmate-benchmark -am test
-```
-
-[konsol galerisi](docs/console-gallery.md), [Phase 5.1 sonuçları](docs/phase-5-1/locked-final-results.md),
-[Phase 5.1 manuel incelemesi](docs/phase-5-1/manual-review.md), [CONTRIBUTING.md](CONTRIBUTING.md) ve
-[troubleshooting.md](docs/troubleshooting.md) belgelerine bakın.
-Güvenlik bildirimleri
-[SECURITY.md](SECURITY.md) üzerinden yapılmalıdır.
-
-## Yol haritası
-
-Önerilen sıradaki yerel-model fazı, yeni ve ayrıca yetkilendirilen bir protokol altında task-specific fine-tuning'dir.
-Phase 5.1 bu kontrollü çalışmadan sonra yeni prompt varyantı eklenmesini yasaklar. Deterministik ürün bağımsız ilerleyebilir;
-WebFlux, logging adapter'ları, IDE entegrasyonu, JFR zenginleştirmesi ve agent handoff gelecek adımlarıdır.
+- [Değişiklik günlüğü](CHANGELOG.md)
+- [Uyumluluk](docs/compatibility.md)
+- [Destek](SUPPORT.md)
+- [Güvenlik politikası](SECURITY.md)
+- [Katkı rehberi](CONTRIBUTING.md)
+- [Davranış kuralları](CODE_OF_CONDUCT.md)
+- [Release süreci](docs/release-process.md)
 
 ## Lisans
 
-StackMate Apache License 2.0 ile lisanslanır. Model ağırlıkları StackMate ile dağıtılmaz. Opsiyonel inference
-modülünü açmadan önce [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) belgesini inceleyin.
+StackMate [Apache License 2.0](LICENSE) ile lisanslanır. Public runtime dependency bildirimi için
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) belgesine bakın.

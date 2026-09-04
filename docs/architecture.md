@@ -1,120 +1,83 @@
-# StackMate architecture
+# Architecture
 
-## Architectural intent
+## Public-alpha boundary
 
-StackMate adds bounded, sanitized, evidence-backed diagnostics to a Spring Boot servlet application without
-owning its exception response or logging configuration. Deterministic extraction is authoritative. Local model
-inference is optional, isolated, asynchronous, and allowed to reference only known facts and candidates.
-
-```mermaid
-flowchart TD
-    A["Escaping MVC exception"] --> B["Servlet capture adapter"]
-    B --> C["Immutable incident snapshot"]
-    C --> D["Sanitizer"]
-    D --> E["Deterministic analyzers"]
-    E --> F["Evidence-backed diagnosis"]
-    F --> G["Quick console renderer"]
-    F --> H["Fingerprint and deduplication"]
-    H --> I["Bounded inference executor"]
-    I --> J["Managed local JVM"]
-    J --> K["Output validator"]
-    K --> L["Local explanation renderer"]
-    F --> M["Optional sanitized exporter"]
-```
-
-## Module boundaries
+StackMate `0.1.0-rc.1` is a deterministic diagnostics library for Java 21 servlet-based Spring MVC applications.
+The public release contains four Maven coordinates, with the following dependency direction:
 
 ```text
-stackmate-sample
-  -> stackmate-spring-boot-starter-local
-       -> stackmate-spring-boot-starter
-            -> stackmate-spring-boot-autoconfigure
-                 -> stackmate-core
-                 -> stackmate-inference-api (optional)
-       -> stackmate-inference-api
-       -> stackmate-inference-jvm
-            -> stackmate-inference-api
-                 -> stackmate-core
+io.github.kalayciburak:stackmate-parent
 
-stackmate-benchmark
-  -> stackmate-core
-  -> stackmate-inference-api
-  -> stackmate-inference-jvm
-
-stackmate-e2e
-  -> packaged stackmate-sample artifact
-
-stackmate-startup-baseline
-  -> Spring Boot WebMVC control
-  -> deterministic or local starter only through explicit build profiles
+io.github.kalayciburak:stackmate-core
+  <- io.github.kalayciburak:stackmate-spring-boot-autoconfigure
+       <- io.github.kalayciburak:stackmate-spring-boot-starter
 ```
+
+Only the starter is needed by a consumer. Repository modules for inference, local starters, samples, E2E tests,
+benchmarks, startup measurement, and research are not public-release artifacts.
+
+## Runtime flow
+
+```mermaid
+flowchart LR
+    A["Exception escapes Spring MVC"] --> B["Servlet capture filter"]
+    B --> C["Bounded throwable and request-metadata snapshot"]
+    C --> D["Mandatory sanitization"]
+    D --> E["Deterministic analyzers"]
+    E --> F["Evidence-backed diagnosis"]
+    F --> G["SHA-256 fingerprint and bounded dedup"]
+    G --> H["Sanitized console output"]
+    G --> I["Optional sanitized local export"]
+    B --> J["Rethrow original exception"]
+```
+
+The filter observes only an exception that escapes the servlet chain. It does not write the HTTP response, select a
+status, or replace the throwable. Analysis failures are contained at the StackMate boundary so the original
+application flow can continue.
+
+## Module responsibilities
 
 ### `stackmate-core`
 
-JDK-only immutable incident data, defensive throwable traversal, privacy sanitization, application-frame
-selection, evidence and analyzers, diagnosis aggregation, fingerprinting, bounded deduplication, and
-renderer-neutral results. It imports no Spring, servlet, SLF4J, JSON, database, security, or inference runtime.
-
-### `stackmate-inference-api`
-
-Stable engine-neutral request/result, availability, model descriptor/capability, failure, validation, and circuit
-breaker contracts. It may use core domain types but exposes no Jlama type or raw engine JSON.
-
-### `stackmate-inference-jvm`
-
-The Jlama research adapter and versioned, length-prefixed managed Java 21 worker protocol. Jlama is runtime-scoped
-here and absent from the deterministic starter. Local files only; no model downloader, HTTP client, server, or
-telemetry. Evaluated Phase 2 model configurations are `NOT_VIABLE`; retaining this boundary does not make a model a
-diagnostic authority.
+JDK-only immutable snapshots, throwable traversal, sanitization, application-frame selection, analyzers, diagnosis
+aggregation, fingerprinting, bounded deduplication, and export contracts. It has no Spring, Servlet, logging,
+database-driver, JSON, model, or inference-runtime dependency.
 
 ### `stackmate-spring-boot-autoconfigure`
 
-Typed properties, conditions, servlet capture, Spring runtime context, SLF4J console output, safe production
-profile guard, application custom analyzer discovery, and optional inference orchestration. Optional dependencies
-are isolated behind class-presence conditions. Startup failure analysis remains outside the implemented boundary.
+Strict typed `stackmate.*` properties, Servlet/Spring MVC capture, runtime metadata extraction, production-profile
+guard, SLF4J console delivery, and optional filesystem export. Its deterministic analyzers recognize evidence from
+common Java, Spring, web, persistence, security, connectivity, timeout, and concurrency failures without adding the
+optional frameworks as product requirements.
 
-### Starters
+### `stackmate-spring-boot-starter`
 
-The base starter aggregates deterministic auto-configuration only. The local starter explicitly adds the
-inference API and Jlama adapter. Neither contains model weights.
+Dependency-only entry point for consumers. It activates auto-configuration by default when the application is a
+Servlet web application with Spring MVC classes present. `stackmate.enabled=false` opts out.
 
-### Samples, packaged E2E, and benchmark
+## Data boundaries
 
-The sample is intentionally faulty demonstration code only. The benchmark owns controlled ground truth,
-deterministic evaluation, raw-versus-structured inference comparison, schema/leakage/injection checks, and JMH
-microbenchmarks. Generated machine-specific reports remain under `target/`.
+Captured request metadata is deliberately narrow: method, path, handler identity when available, and values for an
+explicit bounded list of MDC keys. StackMate has no public control or implementation path for request bodies, query
+values, or header values. It does not inspect source files, local variables, bean state, database contents,
+environment variables, or arbitrary configuration values.
 
-`stackmate-e2e` uses Maven Failsafe to launch the executable sample JAR with `ProcessBuilder`, issue real HTTP
-requests, inspect stdout/stderr, shut down the parent, and assert that no observed managed child remains. Its fake
-worker uses the real protocol and process lifecycle without model weights. `stackmate-startup-baseline` holds one
-minimal WebMVC graph that is packaged with no StackMate, the deterministic starter, and the local starter so startup
-deltas are not compared against different applications.
-
-## Runtime invariants
-
-- Capture performs no unbounded recursion, collection, string copy, or queueing.
-- StackMate catches failures only at its own boundaries and always rethrows/preserves the application exception.
-- Every printable or exportable runtime string is sanitized; model output is sanitized again.
-- Model work never runs on the request thread, event dispatcher, or common ForkJoinPool.
-- Duplicate incidents reserve at most one inference within the TTL window.
-- No runtime component downloads models, calls a cloud provider, opens a network listener, or uploads incidents.
-- Severe JVM errors receive only a minimal best-effort message and never trigger inference.
+Every StackMate-controlled printable or exportable runtime string passes through sanitization. The application's own
+logs remain outside this boundary.
 
 ## Extension points
 
-Interfaces exist only at real boundaries: diagnostic analyzers, sanitizer, deduplication store, console renderer,
-local inference engine, circuit breaker, and incident exporter. Concrete internal algorithms remain concrete.
-Application Spring beans override defaults through conditional auto-configuration without a service locator.
+Application beans may replace supported boundaries such as `DiagnosticAnalyzer`, `Sanitizer`,
+`DeduplicationStore`, `ConsoleRenderer`, or `IncidentExporter`. Extensions must preserve bounded processing,
+sanitization, deterministic evidence, and original-exception behavior. Internal implementation classes are not an
+API stability promise during the alpha.
 
-## Exception visibility
+## Non-goals for this release
 
-The servlet filter sees exceptions escaping the filter chain and reads handler metadata from standard request
-attributes when available. It does not see every exception that an application logs and does not intercept
-resolved `@ExceptionHandler` flows. See ADR 0009 for the explicit visibility contract.
+The public release contains no LLM, inference SPI, Jlama adapter, local starter, model, prompt, downloader, native
+runtime, network client, telemetry publisher, upload path, sample, E2E harness, or benchmark corpus. Historical
+experiments remain in the repository for research traceability only; see
+[research/local-llm-findings.md](research/local-llm-findings.md).
 
-## Startup failures
-
-Spring Boot's `FailureAnalyzer` mechanism was investigated, but a catch-all analyzer was intentionally not
-registered in this MVP. A broad analyzer would compete with Boot's specific built-in startup analyses and cannot
-reuse servlet runtime context safely. Runtime MVC completion does not depend on startup analysis; the related
-configuration switch is reserved and currently has no effect.
+WebFlux, startup-failure analysis, arbitrary log interception, Java agents, JFR/JVMTI instrumentation, IDE plugins,
+and GraalVM native image are outside the implemented public-alpha boundary.
