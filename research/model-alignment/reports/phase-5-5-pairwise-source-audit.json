@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "1",
+  "auditId": "stackmate-pairwise-source-audit-v1",
+  "status": "FAIL_CONTRADICTED_CLASS_ABSENT",
+  "threeClassFeasible": false,
+  "methodology": {
+    "canonicalVariant": 0,
+    "nativeLabelPolicy": {
+      "expectedStableId": "SUPPORTED",
+      "otherNativeCandidate": "UNKNOWN",
+      "contradictedRequirement": "explicit candidate-targeted negative evidence or polarity"
+    },
+    "contradictedClassInferredFromListwiseNonSelection": false,
+    "pairUnit": "one canonical pair per native cause candidate and check candidate"
+  },
+  "sources": {
+    "trainSha256": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+    "validationSha256": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+    "datasetManifestSha256": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+    "inventorySha256": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3"
+  },
+  "splits": {
+    "TRAIN": {
+      "families": 70,
+      "rows": 140,
+      "canonicalVariant": 0,
+      "pairCounts": {
+        "cause": 103,
+        "check": 103,
+        "total": 206
+      },
+      "labelCounts": {
+        "SUPPORTED": 102,
+        "UNKNOWN": 104,
+        "CONTRADICTED": 0
+      },
+      "labelCountsByKind": {
+        "cause": {
+          "SUPPORTED": 51,
+          "UNKNOWN": 52,
+          "CONTRADICTED": 0
+        },
+        "check": {
+          "SUPPORTED": 51,
+          "UNKNOWN": 52,
+          "CONTRADICTED": 0
+        }
+      },
+      "dispositionFamilyCounts": {
+        "DIAGNOSE": 50,
+        "RESTRAIN": 20
+      },
+      "familySetSha256": "5babe3ba3a27254f1d6a7d9083d7d21bcbbbf9f07ee101ebfa0037823c43b9ae",
+      "listwiseSelectionAmbiguity": {
+        "unselectedCandidatesWithResolvedEvidence": {
+          "cause": 52,
+          "check": 52,
+          "total": 104
+        },
+        "familiesWithSuchCandidates": {
+          "cause": 49,
+          "check": 49,
+          "either": 50
+        },
+        "interpretation": "AMBIGUOUS_NOT_CONTRADICTED"
+      }
+    },
+    "VALIDATION": {
+      "families": 20,
+      "rows": 40,
+      "canonicalVariant": 0,
+      "pairCounts": {
+        "cause": 27,
+        "check": 27,
+        "total": 54
+      },
+      "labelCounts": {
+        "SUPPORTED": 18,
+        "UNKNOWN": 36,
+        "CONTRADICTED": 0
+      },
+      "labelCountsByKind": {
+        "cause": {
+          "SUPPORTED": 9,
+          "UNKNOWN": 18,
+          "CONTRADICTED": 0
+        },
+        "check": {
+          "SUPPORTED": 9,
+          "UNKNOWN": 18,
+          "CONTRADICTED": 0
+        }
+      },
+      "dispositionFamilyCounts": {
+        "DIAGNOSE": 9,
+        "RESTRAIN": 11
+      },
+      "familySetSha256": "b521d352327c66fac547ef46e1bb0e8f26d6ba9bd73dc41b15a4e4d571a6d5c6",
+      "listwiseSelectionAmbiguity": {
+        "unselectedCandidatesWithResolvedEvidence": {
+          "cause": 18,
+          "check": 18,
+          "total": 36
+        },
+        "familiesWithSuchCandidates": {
+          "cause": 17,
+          "check": 17,
+          "either": 17
+        },
+        "interpretation": "AMBIGUOUS_NOT_CONTRADICTED"
+      }
+    }
+  },
+  "crossSplit": {
+    "familyOverlapCount": 0,
+    "signatureOverlaps": {
+      "rawPairSignatures": {
+        "trainUnique": 174,
+        "validationUnique": 54,
+        "overlap": 2
+      },
+      "normalizedPairSignatures": {
+        "trainUnique": 146,
+        "validationUnique": 52,
+        "overlap": 8
+      },
+      "candidateTextSignatures": {
+        "trainUnique": 59,
+        "validationUnique": 17,
+        "overlap": 14
+      },
+      "candidateSemanticSignatures": {
+        "trainUnique": 146,
+        "validationUnique": 52,
+        "overlap": 8
+      },
+      "evidenceSignatures": {
+        "trainUnique": 68,
+        "validationUnique": 26,
+        "overlap": 6
+      }
+    }
+  },
+  "exposedDiagnosticOverlap": {
+    "policy": {
+      "excluded": "same real-world-v1 TRAINING and VALIDATION records",
+      "included": "real-world-v1 LOCKED_FINAL and all other catalogs/exposures"
+    },
+    "eligibleRecords": 228,
+    "eligibleCatalogCounts": {
+      "benchmark-v2": 80,
+      "phase4-screening-alias": 20,
+      "phase5-blind": 20,
+      "phase51-adversarial-prompt": 8,
+      "phase52-synthetic-sft": 40,
+      "post-training-challenge": 30,
+      "real-world-v1": 30
+    },
+    "eligibleExposureCounts": {
+      "BLIND_QUALIFICATION": 20,
+      "HISTORICAL_LOCKED_FINAL_DESCRIPTOR": 30,
+      "MODEL_EVALUATION": 158,
+      "PHASE51_LOCKEDFINAL": 40,
+      "PHASE51_PROMPTDEVELOPMENT": 40,
+      "PHASE51_SELECTIONVALIDATION": 20,
+      "POST_TRAINING_CHALLENGE": 30,
+      "PROMPT_SECURITY": 8,
+      "SCREENING": 20,
+      "SFT_TRAINING": 32,
+      "SFT_VALIDATION": 8,
+      "V2_DEVELOPMENT": 60,
+      "V2_HOLDOUT": 20
+    },
+    "overlapCounts": {
+      "familyIds": 0,
+      "expectedCauseSignatures": 11,
+      "expectedCheckSignatures": 11
+    },
+    "individualExposedLabelsIncluded": false
+  },
+  "privacy": {
+    "privateAbsolutePathsIncluded": false,
+    "individualExposedLabelsIncluded": false
+  }
+}
