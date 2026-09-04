@@ -1,0 +1,1064 @@
+{
+  "gateB": {
+    "checks": [
+      {
+        "check": "ontology.counts",
+        "expected": {
+          "causes": 15,
+          "checks": 45,
+          "total": 60
+        },
+        "observed": {
+          "causes": 15,
+          "checks": 45,
+          "total": 60
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "ontology.canonical_text_unique",
+        "expected": 60,
+        "observed": 60,
+        "status": "PASS"
+      },
+      {
+        "check": "ontology_review.ontology_hash",
+        "expected": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+        "observed": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+        "status": "PASS"
+      },
+      {
+        "check": "ontology_review.counts",
+        "expected": {
+          "causes": 15,
+          "checks": 45,
+          "total": 60
+        },
+        "observed": {
+          "causes": 15,
+          "checks": 45,
+          "total": 60
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "ontology_review.checks",
+        "expected": {
+          "atomicity": "PASS",
+          "canonicalTextUniqueness": "PASS",
+          "checkCauseLinks": "PASS",
+          "hedging": "PASS",
+          "idDependence": "PASS",
+          "predicateReferences": "PASS",
+          "unresolvedDisputes": 0
+        },
+        "observed": {
+          "atomicity": "PASS",
+          "canonicalTextUniqueness": "PASS",
+          "checkCauseLinks": "PASS",
+          "hedging": "PASS",
+          "idDependence": "PASS",
+          "predicateReferences": "PASS",
+          "unresolvedDisputes": 0
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "ontology_review.two_passes",
+        "expected": 2,
+        "observed": 2,
+        "status": "PASS"
+      },
+      {
+        "check": "ontology_review.source_hashes",
+        "expected": {
+          "bound": 7,
+          "matched": 7
+        },
+        "observed": {
+          "bound": 7,
+          "matched": 7
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "independent_review.artifact_hashes",
+        "expected": "all current artifacts bound",
+        "observed": {
+          "datasetManifestSha256": true,
+          "familiesSha256": true,
+          "generatorSha256": true,
+          "ontologyReviewSha256": true,
+          "ontologySha256": true,
+          "pairReviewReportSha256": true,
+          "pairReviewsSha256": true,
+          "trainSha256": true,
+          "validationSha256": true
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "independent_review.two_semantic_passes",
+        "expected": 2,
+        "observed": 2,
+        "status": "PASS"
+      },
+      {
+        "check": "independent_review.status_and_recommendations",
+        "expected": {
+          "recommendations": {
+            "gateBAtomicOntology": "PASS",
+            "gateCBinaryDataset": "PASS",
+            "gateDShortcutAudit": "PASS"
+          },
+          "status": "PASS"
+        },
+        "observed": {
+          "recommendations": {
+            "gateBAtomicOntology": "PASS",
+            "gateCBinaryDataset": "PASS",
+            "gateDShortcutAudit": "PASS"
+          },
+          "status": "PASS"
+        },
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "gateC": {
+    "checks": [
+      {
+        "check": "manifest.status",
+        "expected": "PASS",
+        "observed": "PASS",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.publication_mode",
+        "expected": "CREATE_NEW",
+        "observed": "CREATE_NEW",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_hash.families",
+        "expected": "49a1fca8c42781be3d472f45edb8ef7a195b815a7c855bbbfdff0c66dd1816a4",
+        "observed": "49a1fca8c42781be3d472f45edb8ef7a195b815a7c855bbbfdff0c66dd1816a4",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_name.families",
+        "expected": "families.jsonl",
+        "observed": "families.jsonl",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_records.families",
+        "expected": 85,
+        "observed": 85,
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_hash.train",
+        "expected": "cb5f1ef1611b4f4383226dcc0fb10729cb2bac1aafacfb374cc29141f1769313",
+        "observed": "cb5f1ef1611b4f4383226dcc0fb10729cb2bac1aafacfb374cc29141f1769313",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_name.train",
+        "expected": "train.jsonl",
+        "observed": "train.jsonl",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_records.train",
+        "expected": 426,
+        "observed": 426,
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_hash.validation",
+        "expected": "d6496481d7073a76605c744f11dd03e0d8a3fcc79ff9e8418bba187391373701",
+        "observed": "d6496481d7073a76605c744f11dd03e0d8a3fcc79ff9e8418bba187391373701",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_name.validation",
+        "expected": "validation.jsonl",
+        "observed": "validation.jsonl",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_records.validation",
+        "expected": 186,
+        "observed": 186,
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_hash.pairReviews",
+        "expected": "5d6d94a3cf62b962c2a54f39e9a6f5a73c12dd13452b77f9270cf8c77ae28622",
+        "observed": "5d6d94a3cf62b962c2a54f39e9a6f5a73c12dd13452b77f9270cf8c77ae28622",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_name.pairReviews",
+        "expected": "pair-reviews.jsonl",
+        "observed": "pair-reviews.jsonl",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_records.pairReviews",
+        "expected": 1224,
+        "observed": 1224,
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_hash.reviewReport",
+        "expected": "f6fc16e9f4a0b29ea6d223d8ccbb56af46ccfcf2bd4594d9ae8fff3eec9901d7",
+        "observed": "f6fc16e9f4a0b29ea6d223d8ccbb56af46ccfcf2bd4594d9ae8fff3eec9901d7",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_name.reviewReport",
+        "expected": "phase-5-5-2-pair-review.json",
+        "observed": "phase-5-5-2-pair-review.json",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.file_records.reviewReport",
+        "expected": 1,
+        "observed": 1,
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash_keys",
+        "expected": [
+          "builderSha256",
+          "generatorSha256",
+          "inventorySha256",
+          "ontologySha256",
+          "promptSha256",
+          "sourceManifestSha256",
+          "trainSha256",
+          "validationSha256"
+        ],
+        "observed": [
+          "builderSha256",
+          "generatorSha256",
+          "inventorySha256",
+          "ontologySha256",
+          "promptSha256",
+          "sourceManifestSha256",
+          "trainSha256",
+          "validationSha256"
+        ],
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.trainSha256",
+        "expected": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+        "observed": "ee52ae93457b9dc7f663f83b1acea37df6c25f437ac84261c951844a5965ba93",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.validationSha256",
+        "expected": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+        "observed": "bc8e2b5573c57f6927f0e8547968e29fa3bf0f24b221d7bb402b13ba04680789",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.sourceManifestSha256",
+        "expected": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+        "observed": "0e2e23241b582fb4f7c5fb25b87a5f08016f28f8be0c7525595e170467f5d2b2",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.ontologySha256",
+        "expected": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+        "observed": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.promptSha256",
+        "expected": "fc4c3569a17ab5b902b88c6105f5b0d7587087eabd129b779395c7400ce01ddb",
+        "observed": "fc4c3569a17ab5b902b88c6105f5b0d7587087eabd129b779395c7400ce01ddb",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.inventorySha256",
+        "expected": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
+        "observed": "cb4c52669c5369b8443482400311bc0fb578d2f9640ef9bfdb6cca39705467a3",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.generatorSha256",
+        "expected": "9878e0160380b2e8321fd8beae1725bb732985f8f8334cccf5175c98fe35d39c",
+        "observed": "9878e0160380b2e8321fd8beae1725bb732985f8f8334cccf5175c98fe35d39c",
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.source_hash.builderSha256",
+        "expected": "0d03c4a90c0b5568ff7d702e6156edfca995d1e90ecc5553b4054e7dd7b422e8",
+        "observed": "0d03c4a90c0b5568ff7d702e6156edfca995d1e90ecc5553b4054e7dd7b422e8",
+        "status": "PASS"
+      },
+      {
+        "check": "rows.message_and_label_contract",
+        "status": "PASS"
+      },
+      {
+        "check": "rows.input_sha256",
+        "status": "PASS"
+      },
+      {
+        "check": "rows.negative_evidence_flag",
+        "status": "PASS"
+      },
+      {
+        "check": "privacy.metadata_label_ids_category_rationale_absent",
+        "status": "PASS"
+      },
+      {
+        "check": "privacy.private_paths_and_actual_secrets_absent",
+        "status": "PASS"
+      },
+      {
+        "check": "privacy.truncation_markers_absent",
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.families",
+        "expected": 60,
+        "observed": 60,
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.pairs",
+        "expected": 426,
+        "observed": 426,
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.labels",
+        "expected": {
+          "NOT_SUPPORTED": 237,
+          "SUPPORTED": 189
+        },
+        "observed": {
+          "NOT_SUPPORTED": 237,
+          "SUPPORTED": 189
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.candidate_types",
+        "expected": {
+          "CAUSE": 110,
+          "CHECK": 316
+        },
+        "observed": {
+          "CAUSE": 110,
+          "CHECK": 316
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.non_security_candidate_types",
+        "expected": {
+          "CAUSE": 100,
+          "CHECK": 300
+        },
+        "observed": {
+          "CAUSE": 100,
+          "CHECK": 300
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.class_ratios",
+        "expected": "each label ratio in [0.40, 0.60]",
+        "observed": {
+          "NOT_SUPPORTED": 0.5563380281690141,
+          "SUPPORTED": 0.44366197183098594
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.train.validation_label_floor",
+        "expected": "NOT_APPLICABLE",
+        "observed": "NOT_APPLICABLE",
+        "status": "PASS"
+      },
+      {
+        "check": "difficulty.train.hard_negative_ratio",
+        "expected": ">=0.50",
+        "observed": 1.0,
+        "status": "PASS"
+      },
+      {
+        "check": "difficulty.train.easy_negative_ratio",
+        "expected": "<=0.25",
+        "observed": 0.0,
+        "status": "PASS"
+      },
+      {
+        "check": "negative_evidence.train.presence_count_length_by_label",
+        "expected": "both labels, balanced presence, one bounded item per present row",
+        "observed": {
+          "NOT_SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 237,
+            "serializedCharacterLengths": [
+              [
+                74,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                35,
+                1
+              ]
+            ]
+          },
+          "SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 189,
+            "serializedCharacterLengths": [
+              [
+                58,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                19,
+                1
+              ]
+            ]
+          }
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.train.duplicate_model_inputs",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.train.duplicate_normalized_model_inputs",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.families",
+        "expected": 25,
+        "observed": 25,
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.pairs",
+        "expected": 186,
+        "observed": 186,
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.labels",
+        "expected": {
+          "NOT_SUPPORTED": 93,
+          "SUPPORTED": 93
+        },
+        "observed": {
+          "NOT_SUPPORTED": 93,
+          "SUPPORTED": 93
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.candidate_types",
+        "expected": {
+          "CAUSE": 44,
+          "CHECK": 142
+        },
+        "observed": {
+          "CAUSE": 44,
+          "CHECK": 142
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.non_security_candidate_types",
+        "expected": {
+          "CAUSE": 40,
+          "CHECK": 120
+        },
+        "observed": {
+          "CAUSE": 40,
+          "CHECK": 120
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.class_ratios",
+        "expected": "each label ratio in [0.40, 0.60]",
+        "observed": {
+          "NOT_SUPPORTED": 0.5,
+          "SUPPORTED": 0.5
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "counts.validation.validation_label_floor",
+        "expected": {
+          "NOT_SUPPORTED": ">=40",
+          "SUPPORTED": ">=40"
+        },
+        "observed": {
+          "NOT_SUPPORTED": 93,
+          "SUPPORTED": 93
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "difficulty.validation.hard_negative_ratio",
+        "expected": ">=0.50",
+        "observed": 1.0,
+        "status": "PASS"
+      },
+      {
+        "check": "difficulty.validation.easy_negative_ratio",
+        "expected": "<=0.25",
+        "observed": 0.0,
+        "status": "PASS"
+      },
+      {
+        "check": "negative_evidence.validation.presence_count_length_by_label",
+        "expected": "both labels, balanced presence, one bounded item per present row",
+        "observed": {
+          "NOT_SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 93,
+            "serializedCharacterLengths": [
+              [
+                104,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                65,
+                1
+              ]
+            ]
+          },
+          "SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 93,
+            "serializedCharacterLengths": [
+              [
+                58,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                19,
+                1
+              ]
+            ]
+          }
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.validation.duplicate_model_inputs",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.validation.duplicate_normalized_model_inputs",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "families.represented_exactly",
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.family_overlap",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.full_model_input_overlap",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.normalized_model_input_overlap",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "leakage.same_input_conflicting_labels",
+        "expected": 0,
+        "observed": 0,
+        "status": "PASS"
+      },
+      {
+        "check": "rows.unique_pair_ids",
+        "expected": 612,
+        "observed": 612,
+        "status": "PASS"
+      },
+      {
+        "check": "ontology.dataset_binding",
+        "status": "PASS"
+      },
+      {
+        "check": "coverage.train.all_60_semantics_dual_label",
+        "expected": 60,
+        "observed": 60,
+        "status": "PASS"
+      },
+      {
+        "check": "coverage.validation.all_60_semantics_dual_label",
+        "expected": 60,
+        "observed": 60,
+        "status": "PASS"
+      },
+      {
+        "check": "coverage.two_family_contexts_each_label_overall",
+        "expected": ">=2",
+        "observed": 2,
+        "status": "PASS"
+      },
+      {
+        "check": "security.train.thirteen_patterns_dual_label",
+        "expected": {
+          "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+          "patterns": 13,
+          "rows": 26
+        },
+        "observed": {
+          "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+          "patterns": 13,
+          "rows": 26
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "security.validation.thirteen_patterns_dual_label",
+        "expected": {
+          "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+          "patterns": 13,
+          "rows": 26
+        },
+        "observed": {
+          "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+          "patterns": 13,
+          "rows": 26
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "manifest.aggregate_counts",
+        "expected": {
+          "families": {
+            "TRAIN": 60,
+            "VALIDATION": 25
+          },
+          "labels": {
+            "TRAIN": {
+              "NOT_SUPPORTED": 237,
+              "SUPPORTED": 189
+            },
+            "VALIDATION": {
+              "NOT_SUPPORTED": 93,
+              "SUPPORTED": 93
+            }
+          },
+          "pairs": {
+            "TRAIN": 426,
+            "VALIDATION": 186
+          },
+          "reviewDisputes": 0,
+          "reviewRows": 1224,
+          "securityPatternsPerSplit": 13
+        },
+        "observed": {
+          "families": {
+            "TRAIN": 60,
+            "VALIDATION": 25
+          },
+          "hardNegativeBundles": {
+            "TRAIN": 56,
+            "VALIDATION": 20
+          },
+          "labels": {
+            "TRAIN": {
+              "NOT_SUPPORTED": 237,
+              "SUPPORTED": 189
+            },
+            "VALIDATION": {
+              "NOT_SUPPORTED": 93,
+              "SUPPORTED": 93
+            }
+          },
+          "pairs": {
+            "TRAIN": 426,
+            "VALIDATION": 186
+          },
+          "reviewDisputes": 0,
+          "reviewRows": 1224,
+          "securityPatternsPerSplit": 13,
+          "sourceSupportBundles": {
+            "TRAIN": 29,
+            "VALIDATION": 5
+          },
+          "supportBundles": {
+            "TRAIN": 44,
+            "VALIDATION": 20
+          }
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "pair_review.exactly_two_accept_rows_per_pair",
+        "expected": {
+          "pairs": 612,
+          "rows": 1224
+        },
+        "observed": {
+          "pairs": 612,
+          "rows": 1224
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "pair_review.unique_review_ids",
+        "expected": 1224,
+        "observed": 1224,
+        "status": "PASS"
+      },
+      {
+        "check": "pair_review.zero_disputes",
+        "expected": {
+          "report": 0,
+          "rows": 0
+        },
+        "observed": {
+          "report": 0,
+          "rows": 0
+        },
+        "status": "PASS"
+      },
+      {
+        "check": "pair_review.report_status",
+        "expected": "PASS",
+        "observed": "PASS",
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "gateD": {
+    "checks": [
+      {
+        "check": "shortcut.s0.validation_accuracy",
+        "expected": "<=0.65",
+        "observed": 0.43548387096774194,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.s1.validation_accuracy",
+        "expected": "<=0.65",
+        "observed": 0.43548387096774194,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.s2.validation_accuracy",
+        "expected": "<=0.60",
+        "observed": 0.5,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.s3.validation_accuracy",
+        "expected": "<=0.60",
+        "observed": 0.42473118279569894,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.s4.validation_accuracy",
+        "expected": "<=0.60",
+        "observed": 0.5,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.e0.validation_accuracy",
+        "expected": "<=0.60",
+        "observed": 0.5161290322580645,
+        "status": "PASS"
+      },
+      {
+        "check": "shortcut.e1.validation_accuracy",
+        "expected": "<=0.60",
+        "observed": 0.43010752688172044,
+        "status": "PASS"
+      },
+      {
+        "check": "ground_truth.independent_semantic_review",
+        "expected": "PASS",
+        "observed": "PASS",
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "independentSemanticReview": {
+    "limitations": [
+      "LEXICAL and HASH pair-review rows are deterministic predicate-consistency checks and are not represented as independent semantic reviewers.",
+      "The additional controlled families are development-only synthetic contexts rather than production incidents.",
+      "Candidate semantic and exact text overlap across splits is intentional; exact and normalized full model-input overlap is zero.",
+      "This review is not model evaluation or production qualification."
+    ],
+    "passes": 2,
+    "resolvedFindings": 5,
+    "status": "PASS"
+  },
+  "inventory": {
+    "coverage": {
+      "minimumFamilyContextsPerSemanticLabelOverall": 2,
+      "semanticIds": 60
+    },
+    "crossSplit": {
+      "familyOverlap": 0,
+      "fullModelInputOverlap": 0,
+      "normalizedModelInputOverlap": 0,
+      "sameInputConflictingLabels": 0
+    },
+    "security": {
+      "TRAIN": {
+        "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+        "patterns": 13,
+        "rows": 26
+      },
+      "VALIDATION": {
+        "labelsPerPattern": "SUPPORTED_AND_NOT_SUPPORTED",
+        "patterns": 13,
+        "rows": 26
+      }
+    },
+    "splits": {
+      "TRAIN": {
+        "candidateTypes": {
+          "CAUSE": 110,
+          "CHECK": 316
+        },
+        "classRatios": {
+          "NOT_SUPPORTED": 0.5563380281690141,
+          "SUPPORTED": 0.44366197183098594
+        },
+        "families": 60,
+        "labels": {
+          "NOT_SUPPORTED": 237,
+          "SUPPORTED": 189
+        },
+        "negativeDifficulty": {
+          "easy": 0,
+          "easyRatio": 0.0,
+          "hard": 237,
+          "hardRatio": 1.0
+        },
+        "negativeEvidence": {
+          "NOT_SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 237,
+            "serializedCharacterLengths": [
+              [
+                74,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                35,
+                1
+              ]
+            ]
+          },
+          "SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 189,
+            "serializedCharacterLengths": [
+              [
+                58,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                19,
+                1
+              ]
+            ]
+          }
+        },
+        "nonSecurityCandidateTypes": {
+          "CAUSE": 100,
+          "CHECK": 300
+        },
+        "pairs": 426,
+        "representedFamilies": 60
+      },
+      "VALIDATION": {
+        "candidateTypes": {
+          "CAUSE": 44,
+          "CHECK": 142
+        },
+        "classRatios": {
+          "NOT_SUPPORTED": 0.5,
+          "SUPPORTED": 0.5
+        },
+        "families": 25,
+        "labels": {
+          "NOT_SUPPORTED": 93,
+          "SUPPORTED": 93
+        },
+        "negativeDifficulty": {
+          "easy": 0,
+          "easyRatio": 0.0,
+          "hard": 93,
+          "hardRatio": 1.0
+        },
+        "negativeEvidence": {
+          "NOT_SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 93,
+            "serializedCharacterLengths": [
+              [
+                104,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                65,
+                1
+              ]
+            ]
+          },
+          "SUPPORTED": {
+            "itemCounts": [
+              [
+                1,
+                1
+              ]
+            ],
+            "presentRows": 1,
+            "rows": 93,
+            "serializedCharacterLengths": [
+              [
+                58,
+                1
+              ]
+            ],
+            "totalItems": 1,
+            "valueCharacterLengths": [
+              [
+                19,
+                1
+              ]
+            ]
+          }
+        },
+        "nonSecurityCandidateTypes": {
+          "CAUSE": 40,
+          "CHECK": 120
+        },
+        "pairs": 186,
+        "representedFamilies": 25
+      }
+    }
+  },
+  "methodology": {
+    "externalPackagesUsed": false,
+    "labelsReadFromAssistantForMetricsOnly": true,
+    "modelInputDefinition": "canonical JSON object containing system and user content only",
+    "modelWeightsLoaded": false,
+    "normalizedModelInputDefinition": "Unicode NFKC, casefold, whitespace collapse"
+  },
+  "pairReview": {
+    "disputes": 0,
+    "pairs": 612,
+    "reviewRows": 1224
+  },
+  "publicationMode": "CREATE_NEW",
+  "reportId": "stackmate-phase-5-5-2-dataset-audit-v1",
+  "schemaVersion": "1",
+  "sources": {
+    "dataset": "datasets/atomic-contrastive-v1",
+    "independentSemanticReview": "reports/phase-5-5-2-independent-semantic-review.json",
+    "manifest": "datasets/atomic-contrastive-v1/manifest.json",
+    "ontology": "ontology/atomic-candidates-v1.json",
+    "ontologyReview": "reports/phase-5-5-2-ontology-review.json",
+    "pairReview": "reports/phase-5-5-2-pair-review.json"
+  },
+  "status": "PASS"
+}

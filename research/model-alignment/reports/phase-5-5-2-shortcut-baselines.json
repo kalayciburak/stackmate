@@ -1,0 +1,277 @@
+{
+  "baselines": {
+    "S0": {
+      "description": "exact candidate model-text majority lookup",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 70,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 20
+      },
+      "validationMetrics": {
+        "accuracy": 0.43548387096774194,
+        "examples": 186,
+        "macroF1": 0.42141904902977334,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.5116279069767441,
+            "precision": 0.45081967213114754,
+            "recall": 0.5913978494623656,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.33121019108280253,
+            "precision": 0.40625,
+            "recall": 0.27956989247311825,
+            "support": 93
+          }
+        }
+      }
+    },
+    "S1": {
+      "description": "semantic-ID majority lookup",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 60,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 0
+      },
+      "validationMetrics": {
+        "accuracy": 0.43548387096774194,
+        "examples": 186,
+        "macroF1": 0.4233324475152804,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.5070422535211268,
+            "precision": 0.45,
+            "recall": 0.5806451612903226,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.339622641509434,
+            "precision": 0.4090909090909091,
+            "recall": 0.2903225806451613,
+            "support": 93
+          }
+        }
+      }
+    },
+    "S2": {
+      "description": "candidate type prior",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 2,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 0
+      },
+      "validationMetrics": {
+        "accuracy": 0.5,
+        "examples": 186,
+        "macroF1": 0.3333333333333333,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.6666666666666666,
+            "precision": 0.5,
+            "recall": 1.0,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 93
+          }
+        }
+      }
+    },
+    "S3": {
+      "description": "optimal character-input-length threshold and direction selected on TRAIN only",
+      "feature": "len(system content) + len(user content), Unicode code points",
+      "training": {
+        "direction": "SUPPORTED_IF_LE",
+        "selectionMetrics": {
+          "accuracy": 0.6220657276995305,
+          "examples": 426,
+          "macroF1": 0.5725423961209342,
+          "perLabel": {
+            "NOT_SUPPORTED": {
+              "f1": 0.7180385288966725,
+              "precision": 0.6137724550898204,
+              "recall": 0.8649789029535865,
+              "support": 237
+            },
+            "SUPPORTED": {
+              "f1": 0.4270462633451957,
+              "precision": 0.6521739130434783,
+              "recall": 0.31746031746031744,
+              "support": 189
+            }
+          }
+        },
+        "selectionSplit": "TRAIN",
+        "threshold": 1153,
+        "tieBreak": "accuracy, macro F1, smaller threshold, SUPPORTED_IF_LE"
+      },
+      "validationMetrics": {
+        "accuracy": 0.42473118279569894,
+        "examples": 186,
+        "macroF1": 0.35540080971659915,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.5668016194331983,
+            "precision": 0.45454545454545453,
+            "recall": 0.7526881720430108,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.144,
+            "precision": 0.28125,
+            "recall": 0.0967741935483871,
+            "support": 93
+          }
+        }
+      }
+    },
+    "S4": {
+      "description": "negative-evidence-presence prior",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 2,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 0
+      },
+      "validationMetrics": {
+        "accuracy": 0.5,
+        "examples": 186,
+        "macroF1": 0.3333333333333333,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.6666666666666666,
+            "precision": 0.5,
+            "recall": 1.0,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 93
+          }
+        }
+      }
+    }
+  },
+  "checks": [
+    {
+      "check": "shortcut.s0.validation_accuracy",
+      "expected": "<=0.65",
+      "observed": 0.43548387096774194,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.s1.validation_accuracy",
+      "expected": "<=0.65",
+      "observed": 0.43548387096774194,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.s2.validation_accuracy",
+      "expected": "<=0.60",
+      "observed": 0.5,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.s3.validation_accuracy",
+      "expected": "<=0.60",
+      "observed": 0.42473118279569894,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.s4.validation_accuracy",
+      "expected": "<=0.60",
+      "observed": 0.5,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.e0.validation_accuracy",
+      "expected": "<=0.60",
+      "observed": 0.5161290322580645,
+      "status": "PASS"
+    },
+    {
+      "check": "shortcut.e1.validation_accuracy",
+      "expected": "<=0.60",
+      "observed": 0.43010752688172044,
+      "status": "PASS"
+    },
+    {
+      "check": "ground_truth.independent_semantic_review",
+      "expected": "PASS",
+      "observed": "PASS",
+      "status": "PASS"
+    }
+  ],
+  "reportId": "stackmate-phase-5-5-2-shortcut-baselines-v1",
+  "schemaVersion": "1",
+  "selectionPolicy": "all fitted parameters use TRAIN only; VALIDATION is scoring only",
+  "status": "PASS",
+  "structuralBaselines": {
+    "E0": {
+      "description": "trusted-evidence type-multiset majority lookup",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 21,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 7
+      },
+      "validationMetrics": {
+        "accuracy": 0.5161290322580645,
+        "examples": 186,
+        "macroF1": 0.5092636022514071,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.4512195121951219,
+            "precision": 0.5211267605633803,
+            "recall": 0.3978494623655914,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.5673076923076923,
+            "precision": 0.5130434782608696,
+            "recall": 0.6344086021505376,
+            "support": 93
+          }
+        }
+      }
+    },
+    "E1": {
+      "description": "trusted-evidence count majority lookup",
+      "training": {
+        "fallback": "NOT_SUPPORTED",
+        "lookupKeys": 5,
+        "tiePolicy": "NOT_SUPPORTED",
+        "unseenValidationKeys": 0
+      },
+      "validationMetrics": {
+        "accuracy": 0.43010752688172044,
+        "examples": 186,
+        "macroF1": 0.3639179248935347,
+        "perLabel": {
+          "NOT_SUPPORTED": {
+            "f1": 0.5691056910569107,
+            "precision": 0.45751633986928103,
+            "recall": 0.7526881720430108,
+            "support": 93
+          },
+          "SUPPORTED": {
+            "f1": 0.15873015873015875,
+            "precision": 0.30303030303030304,
+            "recall": 0.10752688172043011,
+            "support": 93
+          }
+        }
+      }
+    }
+  },
+  "tiePolicy": "majority ties predict NOT_SUPPORTED"
+}

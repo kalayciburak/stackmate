@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "1",
+  "status": "PASS",
+  "baseRevision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "tokenizerClass": "Qwen2Tokenizer",
+  "chatTemplateSha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+  "inputHashes": {
+    "prompt": "fc4c3569a17ab5b902b88c6105f5b0d7587087eabd129b779395c7400ce01ddb",
+    "labelAudit": "da03c29aba32416ad81fa14413861751ea58f1a5c9b7d2d9c1dab150128a962e",
+    "ontology": "f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793",
+    "manifest": "3a48c4e4721b5b7cb590ff16f7b95ef1afaa557a439f12dc6002065df260f67a"
+  },
+  "datasetFiles": {
+    "families": {
+      "name": "families.jsonl",
+      "records": 85,
+      "sha256": "49a1fca8c42781be3d472f45edb8ef7a195b815a7c855bbbfdff0c66dd1816a4"
+    },
+    "pairReviews": {
+      "name": "pair-reviews.jsonl",
+      "records": 1224,
+      "sha256": "5d6d94a3cf62b962c2a54f39e9a6f5a73c12dd13452b77f9270cf8c77ae28622"
+    },
+    "reviewReport": {
+      "name": "phase-5-5-2-pair-review.json",
+      "records": 1,
+      "sha256": "f6fc16e9f4a0b29ea6d223d8ccbb56af46ccfcf2bd4594d9ae8fff3eec9901d7"
+    },
+    "train": {
+      "name": "train.jsonl",
+      "records": 426,
+      "sha256": "cb5f1ef1611b4f4383226dcc0fb10729cb2bac1aafacfb374cc29141f1769313"
+    },
+    "validation": {
+      "name": "validation.jsonl",
+      "records": 186,
+      "sha256": "d6496481d7073a76605c744f11dd03e0d8a3fcc79ff9e8418bba187391373701"
+    }
+  },
+  "labelMapping": {
+    "0": {
+      "semantic": "NOT_SUPPORTED",
+      "tokenId": 15
+    },
+    "1": {
+      "semantic": "SUPPORTED",
+      "tokenId": 16
+    }
+  },
+  "splits": {
+    "TRAIN": {
+      "rows": 426,
+      "inputPromptTokens": {
+        "count": 426,
+        "minimum": 252,
+        "average": 298.984,
+        "p95": 347,
+        "maximum": 486
+      },
+      "fullTrainingTokens": {
+        "count": 426,
+        "minimum": 255,
+        "average": 301.984,
+        "p95": 350,
+        "maximum": 489
+      },
+      "assistantGenerationPositions": {
+        "count": 426,
+        "minimum": 251,
+        "average": 297.984,
+        "p95": 346,
+        "maximum": 485
+      },
+      "unknownTokens": 0,
+      "targetTokenLength": 1,
+      "assistantTerminationTokensMasked": 2
+    },
+    "VALIDATION": {
+      "rows": 186,
+      "inputPromptTokens": {
+        "count": 186,
+        "minimum": 268,
+        "average": 294.086,
+        "p95": 333,
+        "maximum": 364
+      },
+      "fullTrainingTokens": {
+        "count": 186,
+        "minimum": 271,
+        "average": 297.086,
+        "p95": 336,
+        "maximum": 367
+      },
+      "assistantGenerationPositions": {
+        "count": 186,
+        "minimum": 267,
+        "average": 293.086,
+        "p95": 332,
+        "maximum": 363
+      },
+      "unknownTokens": 0,
+      "targetTokenLength": 1,
+      "assistantTerminationTokensMasked": 2
+    }
+  },
+  "maximumFullSequenceTokens": 489,
+  "minimumWithTenPercentMargin": 538,
+  "selectedMaximumSequence": 1024,
+  "checks": {
+    "labelTokensExactlyOne": true,
+    "assistantSuffixStable": true,
+    "truncations": 0,
+    "duplicatedSpecialTokens": 0,
+    "unknownTokens": 0,
+    "maximumAtOrBelow2048": true,
+    "tenPercentMarginAvailable": true
+  },
+  "bosEosHandling": {
+    "bosToken": null,
+    "bosTokenId": null,
+    "eosToken": "<|im_end|>",
+    "eosTokenId": 248046,
+    "padToken": "<|endoftext|>",
+    "padTokenId": 248044,
+    "assistantSuffixIds": [
+      "LABEL_15_OR_16",
+      248046,
+      198
+    ]
+  },
+  "assistantTargetPolicy": "train on exactly one frozen label token; mask every prompt and assistant-termination token",
+  "localFilesOnly": true,
+  "trustRemoteCode": false,
+  "networkAccess": false,
+  "modelWeightsLoaded": false
+}

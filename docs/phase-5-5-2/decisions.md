@@ -19,3 +19,11 @@
   failed gate by relaxing thresholds or changing text after model results.
 - Keep all implementation in research scope; no production worker, Spring
   integration, provisioning, model artifact, remote push or publication.
+- Freeze ontology SHA-256 f24f0128fbcba5754888f1abd7484f4b5530f2219da431d60923cafe16a1e793
+  and dataset-manifest SHA-256
+  3a48c4e4721b5b7cb590ff16f7b95ef1afaa557a439f12dc6002065df260f67a
+  before Gate E.
+- Treat lexical/hash pair review as deterministic self-consistency only; bind
+  the separate independent semantic review before declaring Gates B-D passed.
+- Freeze maximum sequence 1024 from the measured 489-token maximum and required
+  538-token safety margin.
