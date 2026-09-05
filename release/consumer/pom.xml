@@ -11,7 +11,7 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring-boot.version>4.1.0</spring-boot.version>
-    <stackmate.version>0.1.0-rc.2</stackmate.version>
+    <stackmate.version>0.1.0-rc.3</stackmate.version>
     <maven.compiler.version>3.15.0</maven.compiler.version>
     <maven.surefire.version>3.5.6</maven.surefire.version>
     <maven.failsafe.version>3.5.6</maven.failsafe.version>

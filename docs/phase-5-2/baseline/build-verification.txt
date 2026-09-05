@@ -1,5 +1,5 @@
 Date: 2026-08-02
-Command: $env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'; .\mvnw clean verify
+Command: $env:JAVA_HOME='<jdk-21-home>'; .\mvnw clean verify
 Result: BUILD SUCCESS
 Maven time: 01:26
 Reactor modules: 11/11

@@ -63,7 +63,7 @@ Get-FileHash -Algorithm SHA256 `
 Structure and all 54 executable recipes:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw.cmd -pl stackmate-benchmark -am `
   '-Dtest=CorpusV2ManifestTest,CorpusV2RuntimeRecipeTest' `
   '-Dsurefire.failIfNoSpecifiedTests=false' test

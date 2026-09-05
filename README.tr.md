@@ -2,7 +2,7 @@
 
 > Spring MVC hataları için deterministik, yerel tanılama.
 
-StackMate `0.1.0-rc.2`, Java 21 Spring Boot uygulamaları için bir public alpha sürümüdür. Spring MVC servlet
+StackMate `0.1.0-rc.3`, Java 21 Spring Boot uygulamaları için bir public alpha sürümüdür. Spring MVC servlet
 zincirinden kaçan exception'ları gözlemler; sınırlı ve sanitize edilmiş snapshot üretir; kanıta dayalı tanı çıkarır;
 tekrarlanan incident'ları dedup eder ve uygulama loguna kısa bir İngilizce tanı yazar. İsteğe bağlı export, aynı
 sanitize edilmiş deterministik kanıtı yerel dosya sistemine yazar.
@@ -61,7 +61,7 @@ Public Maven coordinates şöyledir:
 <dependency>
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-spring-boot-starter</artifactId>
-  <version>0.1.0-rc.2</version>
+  <version>0.1.0-rc.3</version>
 </dependency>
 ```
 

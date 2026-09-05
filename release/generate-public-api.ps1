@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "0.1.0-rc.2",
+    [string]$Version = "0.1.0-rc.3",
     [string]$SignatureOutput = "release/public-api-baseline.txt",
     [string]$InventoryOutput = "release/public-api-inventory.json"
 )

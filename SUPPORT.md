@@ -1,6 +1,6 @@
 # Support
 
-StackMate `0.1.0-rc.1` is a public alpha with best-effort community support. There is no production support, response
+StackMate `0.1.0-rc.3` is a public alpha candidate with best-effort community support. There is no production support, response
 time, remediation time, compatibility guarantee, or SLA.
 
 ## Before asking for help
@@ -21,8 +21,10 @@ Use the repository's GitHub Issues page for reproducible, non-sensitive usage qu
 - expected and observed behavior;
 - whether `stackmate.enabled=false` changes the result.
 
-Do not present success on an unverified platform as a support claim. The currently verified local baseline is Windows
-11 with Amazon Corretto 21.0.12.1, Spring Boot 4.1.0, Spring Framework 7.0.8, and Spring MVC.
+Do not present success on an unverified platform as a support claim. The verified local baseline is Windows11 with
+Amazon Corretto21.0.12.1, Spring Boot4.1.0, Spring Framework7.0.8, and Spring MVC. Exact-source hosted Ubuntu,
+Windows and macOS qualification is recorded in [Phase7 RC identity](docs/phase-7/rc-identity.md); it does not imply
+support for every OS version, architecture or JVM. Human dogfood acceptance remains required before final release.
 
 ## Sensitive reports
 
@@ -34,7 +36,7 @@ in a public issue. The repository documents no email or other secret support cha
 
 - production deployment and incident-response operations;
 - Spring Boot 3, WebFlux, and GraalVM native image;
-- Linux, macOS, containers, or other Java distributions as verified platforms;
+- containers, untested OS versions/architectures and unqualified Java distributions as verified platforms;
 - LLM, inference, Jlama, llama.cpp, models, local starters, adapters, and research experiments;
 - application-specific debugging that requires private source or production data.
 

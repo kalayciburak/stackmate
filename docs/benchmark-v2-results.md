@@ -84,7 +84,7 @@ changes for all cases and UUID/numeric-message variation for the explicit volati
 ## Command
 
 ```powershell
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw.cmd -pl stackmate-benchmark -am `
   '-Dtest=CorpusV2DeterministicEvaluationTest' `
   '-Dsurefire.failIfNoSpecifiedTests=false' test

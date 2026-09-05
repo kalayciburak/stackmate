@@ -4,7 +4,7 @@
 
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-parent</artifactId>
-  <version>0.1.0-rc.2</version>
+  <version>0.1.0-rc.3</version>
   <packaging>pom</packaging>
 
   <name>StackMate</name>
@@ -44,7 +44,7 @@
   <scm>
     <connection>scm:git:https://github.com/kalayciburak/stackmate.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/kalayciburak/stackmate.git</developerConnection>
-    <tag>v0.1.0-rc.2</tag>
+    <tag>v0.1.0-rc.3</tag>
     <url>https://github.com/kalayciburak/stackmate</url>
   </scm>
 

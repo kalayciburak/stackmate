@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "candidate": "0.1.0-rc.3",
+  "baseSource": "8b40bac6dfb940324db638195766a67d5cdf7415",
+  "files": [
+    {
+      "path": "artifacts/quickstart-installed.jar",
+      "size": 20102608,
+      "sha256": "435bfef5c9f2f9f986ad55537dfec80fa1d8f12801e0ed5ae9eddb8d45c127cb"
+    },
+    {
+      "path": "artifacts/quickstart-uninstalled.jar",
+      "size": 19870941,
+      "sha256": "b0d539c401466b5bf907adaaaab7290c5ab969feeb22f7a5133dde1a383e3bae"
+    },
+    {
+      "path": "artifacts/service-consumer-installed.jar",
+      "size": 24142220,
+      "sha256": "e555e7e1a2dc1062368f8f57de0eda8a133cf9297a7918f0548aa8a0f8db1f5c"
+    },
+    {
+      "path": "artifacts/service-consumer-metrics.jar",
+      "size": 24145410,
+      "sha256": "201f32cfdf363ff67736b8b0a3bac45bd400f43b13d88c29a371f5e2a85551d2"
+    },
+    {
+      "path": "artifacts/service-consumer-uninstalled.jar",
+      "size": 23910553,
+      "sha256": "d7de10bfa72684f3376b70336ee94fc4bf1036809efd87a9055d09ff7ac51a49"
+    },
+    {
+      "path": "quickstart/pom.xml",
+      "size": 1679,
+      "sha256": "5203661c17f95dbbdbb44620d4d4f1ca7f83d3552ed0af7ea31acb9edeff08ae"
+    },
+    {
+      "path": "quickstart/scenarios.json",
+      "size": 874,
+      "sha256": "bba223c67133eb70490ec3b6fc93c9d48f42657440ce50b8c21842ddf83661f2"
+    },
+    {
+      "path": "quickstart/src/main/java/dogfood/quickstart/QuickstartApplication.java",
+      "size": 2410,
+      "sha256": "c7d4711f19acfb4fe80c589d40a1bff33e165c4816408a7a0c7c8908d9a00e38"
+    },
+    {
+      "path": "quickstart/src/main/resources/application.properties",
+      "size": 110,
+      "sha256": "4468df55140e7fba7ad2808c71dcdd8783051f384fd32ce1c348d52ae8302fcd"
+    },
+    {
+      "path": "quickstart/src/main/resources/logback-spring.xml",
+      "size": 570,
+      "sha256": "c51c9239431d59f8d1e7fa834db7fce458f2e192d409ee8bae4288ddc55fa82f"
+    },
+    {
+      "path": "run-dogfood.ps1",
+      "size": 10277,
+      "sha256": "b3ccafd625ac13bf252eadff6892cc4ec5aa58febf433453dbfe0ad377e24c96"
+    },
+    {
+      "path": "service-consumer/pom.xml",
+      "size": 3363,
+      "sha256": "3dcf31e7640992be19074e8fa14ed55d5b6e8e4b606a0a603b2b7ad388cef62c"
+    },
+    {
+      "path": "service-consumer/scenarios.json",
+      "size": 4405,
+      "sha256": "b8342779d47a801cbe56b500a9749c79765e57dcc1c36863065102c3f53442a3"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/CreateOrderRequest.java",
+      "size": 427,
+      "sha256": "c5a14ca29b8dbc36479b34dd854ae504e7f06c3c05f604753e745a331bc189e9"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/DogfoodLifecycleController.java",
+      "size": 1891,
+      "sha256": "4050481194983d8d3879ddc3562e1f9f85c4d5550e308821700b4865c3bf49a5"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/DogfoodMetricsConfiguration.java",
+      "size": 2391,
+      "sha256": "00d4f5675aeb502fde84581bf8676a2a4ba78897100a081bb3707f60d4731514"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/FailureController.java",
+      "size": 5558,
+      "sha256": "daf7156ce314f6a226090c6c1b410f164a98f1250242b35cbd1778a1ef1bebbb"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderAdvice.java",
+      "size": 1608,
+      "sha256": "8fd751515b334cca91d4190c8b30f9d323188f08b444a1790813885a8d57d96d"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderApplication.java",
+      "size": 327,
+      "sha256": "dc8aed49a6cd20861e8a3c11a1193eeb5f714689bc5879e3af88379bf9dc9708"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderController.java",
+      "size": 1271,
+      "sha256": "a506a5b313a5a29b01eb7374eb3c0a6a6ab2c4da648dc3f86caf664b89868dd5"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderNotFoundException.java",
+      "size": 212,
+      "sha256": "cea32dbcb45044604843a4992dafae77a59f38602de20063b111796190537d99"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderResponse.java",
+      "size": 248,
+      "sha256": "e08ae827de2984e4cdf26a9357864fa81389da467d1e5ef96392519e736ba7cf"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/OrderService.java",
+      "size": 3178,
+      "sha256": "3efc5d1eaf06d0d3619e827dcd4dd911ad7434da10b4a0a193a096c21216f136"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/StableErrorController.java",
+      "size": 1573,
+      "sha256": "2c1491ca074879214177b7aebc19b9eaacc2eabf07f9f26bf7dc67ae2b78686c"
+    },
+    {
+      "path": "service-consumer/src/main/java/com/example/dogfood/order/UnknownOrderFailureException.java",
+      "size": 196,
+      "sha256": "bd0d6a18c25f74b9bb33ba646941bff3b4b73549db37a0c147af00af8c9442aa"
+    },
+    {
+      "path": "service-consumer/src/main/resources/application.yml",
+      "size": 336,
+      "sha256": "7d236f90730b2c15f84f99801bebdfafd04b5bfc7c66bafe0d7e6559df365417"
+    },
+    {
+      "path": "service-consumer/src/main/resources/data.sql",
+      "size": 822,
+      "sha256": "a7b77aafe41a65b04e519515ed87b4bad7504ee5db7190d8dd977eca0e6a6309"
+    },
+    {
+      "path": "service-consumer/src/main/resources/logback-spring.xml",
+      "size": 931,
+      "sha256": "079e7c7538ac4eaa46d16ae9026dad155bf82adeb68bf473daf28f03c8a89285"
+    },
+    {
+      "path": "service-consumer/src/main/resources/schema.sql",
+      "size": 707,
+      "sha256": "124c462730d5d2fd71425c9dbb4f6f9af48adc6916cdfe9379159dda0ae14325"
+    },
+    {
+      "path": "start-service.ps1",
+      "size": 1631,
+      "sha256": "53412a06d11364c77a33045b5f27955bd8829c3a310e400d8fe3f5806adda36f"
+    },
+    {
+      "path": "summarize-dogfood.ps1",
+      "size": 8299,
+      "sha256": "e4733d67685919fb4c0cd00bd70db933e001fe90c9a107054f29ef691c71b3f9"
+    },
+    {
+      "path": "write-source-manifest.ps1",
+      "size": 1467,
+      "sha256": "63d9ef54c7dd2a5f7a5d17c7e1bf29be60d403448043e5a3f37cb3f15ec64374"
+    }
+  ],
+  "notes": [
+    "All files remain outside StackMate Git; only this relative-name hash inventory is committed.",
+    "Parity JARs were built before the optional DogfoodMetricsConfiguration was added. Its profile is separate and only the metrics JAR activates it.",
+    "Minimal default smoke precedes the three-mode run. Standard application classes have no StackMate imports; optional metrics use published interfaces through reflection, never private fields."
+  ],
+  "publicationPerformed": false
+}

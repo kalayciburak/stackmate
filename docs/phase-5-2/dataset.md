@@ -65,7 +65,7 @@ Results: generation `PASS` with 800/200 rows; leakage audit `PASS` with zero
 prohibited overlap; five Python contract tests passed.
 
 ```powershell
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw -pl stackmate-benchmark -am "-Dtest=AlignmentDatasetManifestTest" "-Dsurefire.failIfNoSpecifiedTests=false" test
 ```
 

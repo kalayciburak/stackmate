@@ -17,7 +17,7 @@ Date: 2026-08-02
 
 The shell initially resolved Java 17 and an invalid `JAVA_HOME`; that command
 stopped before Maven ran. The authoritative commands set only the command-local
-`JAVA_HOME` to `C:\Users\Burak\.jdks\corretto-21.0.12`.
+`JAVA_HOME` to `<jdk-21-home>`.
 
 ## Normal verification
 

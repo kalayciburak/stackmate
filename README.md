@@ -2,7 +2,7 @@
 
 > Deterministic, local diagnostics for Spring MVC failures.
 
-StackMate `0.1.0-rc.2` is a public alpha for Java 21 Spring Boot applications. It observes exceptions that escape
+StackMate `0.1.0-rc.3` is a public alpha for Java 21 Spring Boot applications. It observes exceptions that escape
 the Spring MVC servlet chain, creates a bounded and sanitized snapshot, derives evidence-backed diagnostics,
 deduplicates repeated incidents, and writes a concise English diagnosis to the application log. Optional export
 writes the same sanitized deterministic evidence to the local filesystem.
@@ -60,7 +60,7 @@ The public Maven coordinates are:
 <dependency>
   <groupId>io.github.kalayciburak</groupId>
   <artifactId>stackmate-spring-boot-starter</artifactId>
-  <version>0.1.0-rc.2</version>
+  <version>0.1.0-rc.3</version>
 </dependency>
 ```
 

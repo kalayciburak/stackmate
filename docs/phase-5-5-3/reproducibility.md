@@ -22,7 +22,7 @@ The successful Maven verification used the existing Corretto 21.0.12 only for
 that PowerShell process:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Amazon Corretto\jdk21.0.12_9'
+$env:JAVA_HOME = '<jdk-21-home>'
 $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 & "$env:JAVA_HOME\bin\java.exe" -version
 .\mvnw.cmd clean verify
