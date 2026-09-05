@@ -13,7 +13,7 @@ entries are append-only snapshots: later entries supersede earlier `not implemen
 - Verified the host toolchain:
   - Git 2.55.0.windows.3 is available.
   - The default `java` command resolves to Amazon Corretto 17.0.20.
-  - Amazon Corretto 21.0.12 is installed at `C:\Users\Burak\.jdks\corretto-21.0.12`.
+  - Amazon Corretto 21.0.12 is installed at `<jdk-21-home>`.
   - No system `mvn` command is installed, so the Maven Wrapper is required for all builds.
 - Verified from the current official Spring Boot documentation that:
   - Spring Boot 4.1.0 is the latest stable 4.1.x release visible on 2026-08-01.
@@ -55,7 +55,7 @@ Result: git version 2.55.0.windows.3
 java -version
 Result: openjdk version "17.0.20" (default PATH; not suitable for this build)
 
-C:\Users\Burak\.jdks\corretto-21.0.12\bin\java.exe -version
+<jdk-21-home>\bin\java.exe -version
 Result: openjdk version "21.0.12" 2026-07-21 LTS
 
 mvn -version
@@ -461,7 +461,7 @@ findings are appended after the last verification pass.
 ### Final verification and four reviews
 
 ```text
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw.cmd --batch-mode --no-transfer-progress spotless:apply
 Result: BUILD SUCCESS in 1.361 s.
 

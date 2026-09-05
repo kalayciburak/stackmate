@@ -37,7 +37,7 @@ VALIDATION class coverage is insufficient.
 Authoritative source-audit command:
 
 ```bash
-UV_PROJECT_ENVIRONMENT=/home/torukobyte/.cache/stackmate/environments/phase-5-2 \
+UV_PROJECT_ENVIRONMENT='<external-training-cache>/<phase-subdir>' \
 uv run --frozen python scripts/audit_binary_source.py \
   --report reports/phase-5-5-1-binary-source-audit.json
 ```

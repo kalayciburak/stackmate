@@ -22,7 +22,7 @@ Authoritative source audit command, run in WSL Ubuntu with the existing frozen
 environment:
 
 ```bash
-UV_PROJECT_ENVIRONMENT=/home/torukobyte/.cache/stackmate/environments/phase-5-2 \
+UV_PROJECT_ENVIRONMENT='<external-training-cache>/<phase-subdir>' \
 uv run --frozen python scripts/audit_pairwise_source.py \
   --report reports/phase-5-5-pairwise-source-audit.json
 ```
@@ -34,7 +34,7 @@ frozen manifest hashes, validates both order variants, and emits only aggregate
 exposed-overlap counts.
 
 A prior PowerShell command accidentally resolved `$HOME` to the Windows profile
-and created `C:\Users\Burak\.cache\stackmate\environments\phase-5-2` with the
+and created `<external-training-cache>/<phase-subdir>` with the
 same frozen project dependencies. Its audit report was removed and regenerated
 under WSL; the Windows environment is not authoritative, contains no model or
 dataset copy, and remains only because recursive cleanup was policy-rejected. At
@@ -54,5 +54,5 @@ JaCoCo/Enforcer gates                  PASS
 The first final Maven invocation exited before project execution because the
 profile-free PowerShell process had no `JAVA_HOME`. The identical command was
 rerun with process-local `JAVA_HOME` pointing to
-`C:\Program Files\Amazon Corretto\jdk21.0.12_9`; no persistent environment
+`<jdk-21-home>`; no persistent environment
 setting changed.

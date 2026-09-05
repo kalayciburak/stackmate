@@ -27,7 +27,7 @@ uv run --frozen python -m unittest discover -s tests -v
 Normal product validation is Windows-local and model-free:
 
 ```powershell
-$env:JAVA_HOME='C:\Program Files\Amazon Corretto\jdk21.0.12_9'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw.cmd clean verify
 ```
 

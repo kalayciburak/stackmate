@@ -1,0 +1,122 @@
+[
+  {
+    "path": "artifacts/stackmate-core-0.1.0-rc.3-javadoc.jar",
+    "size": 421755,
+    "sha256": "d5c536bc8c13699409ddfe5ac3b9bb05f45e4ea0bad853f80c58f8fc67e1da20"
+  },
+  {
+    "path": "artifacts/stackmate-core-0.1.0-rc.3-sources.jar",
+    "size": 70746,
+    "sha256": "2859ec7406d374726e24ffb1fb257958179b0274d06c03ce1dc069d1c02854c3"
+  },
+  {
+    "path": "artifacts/stackmate-core-0.1.0-rc.3.jar",
+    "size": 156488,
+    "sha256": "b66b87bbd9ae3cbea143ef58a122c66ca5331d35f0ea64d3113e5c65e295b789"
+  },
+  {
+    "path": "artifacts/stackmate-core-0.1.0-rc.3.pom",
+    "size": 2304,
+    "sha256": "fa1669a97f9e2fe5dcfc41b1c9c4cbf0a3ea5bb7f2930c0e701a111aa136c535"
+  },
+  {
+    "path": "artifacts/stackmate-parent-0.1.0-rc.3.pom",
+    "size": 16503,
+    "sha256": "986dd1253a46b9bc4083dc0b7b2f3a4100e28c30dd0ca23691b69009b87d9fcb"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-autoconfigure-0.1.0-rc.3-javadoc.jar",
+    "size": 249006,
+    "sha256": "1a8f55adea6a49426307646f64ee20985188c0df8996240b86a990b7c45f2142"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-autoconfigure-0.1.0-rc.3-sources.jar",
+    "size": 34770,
+    "sha256": "5a2a1d6566444faca8148d769c95add6f5d821dd3efa8c28c6192d4f2bb5f5cd"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-autoconfigure-0.1.0-rc.3.jar",
+    "size": 68335,
+    "sha256": "82b71a3f93d564352d021cc4d4c19685b3642d11ebee7eb75208b38a43b47e29"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-autoconfigure-0.1.0-rc.3.pom",
+    "size": 3165,
+    "sha256": "856f985e78ec3d96d434bbd01625494b5ff7c121d86a76b64534071a6f3c8802"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-starter-0.1.0-rc.3-javadoc.jar",
+    "size": 2307,
+    "sha256": "e6d3f292246663098756707f4b961d5fb1ceb6ec85b5b94500aba5c95e58e700"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-starter-0.1.0-rc.3-sources.jar",
+    "size": 2336,
+    "sha256": "886e943005950129e580538553785547b4f6b2e3cc1b22ddcd69f4c72a1376d3"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-starter-0.1.0-rc.3.jar",
+    "size": 6263,
+    "sha256": "85cc51b4166420529e3253ba62854fefc6034d85c13015ae899ae5e1e19eff52"
+  },
+  {
+    "path": "artifacts/stackmate-spring-boot-starter-0.1.0-rc.3.pom",
+    "size": 2285,
+    "sha256": "5cc5910daacdc199fc9bc05ed5730039188890e64c03262cafebedadea8ddce9"
+  },
+  {
+    "path": "LICENSE",
+    "size": 11345,
+    "sha256": "2c25806118e27ffd788bbdbdc7cb7160c489c75dc48675473248058205099dd1"
+  },
+  {
+    "path": "NOTICE",
+    "size": 106,
+    "sha256": "061579a4d5cdc3c5738bbed0791f5b3de0048ffd496d23700870ff3a3cd5847d"
+  },
+  {
+    "path": "release-notes.md",
+    "size": 1196,
+    "sha256": "0cfe1de4182c8811f76b6583e59732c103424bc31c01e56283f625fe51ecfd08"
+  },
+  {
+    "path": "reports/public-api-inventory.json",
+    "size": 14902,
+    "sha256": "531c8961f50ba2b4bfc29b6c8d6b44a010621d4712994d1f63fd3c4a38345cf7"
+  },
+  {
+    "path": "reports/release-artifacts.json",
+    "size": 2230,
+    "sha256": "4bc2f12a279f45dc14ab873c7b4dafe29b073d226e4769f21dbd845a50d5e862"
+  },
+  {
+    "path": "reports/release-audit.json",
+    "size": 1015,
+    "sha256": "96a2665b18ec69e380b1e5efb283482759f05b13c29d42ee415d22ff4a203b49"
+  },
+  {
+    "path": "reports/reproducibility-result.json",
+    "size": 635,
+    "sha256": "83939057d88db66780a17315b0683bb6fcbba797ce0f5e2fd71a148bfa2aedfb"
+  },
+  {
+    "path": "sbom/stackmate-core-0.1.0-rc.3-bom.json",
+    "size": 3362,
+    "sha256": "d307db5a4b32f39226fec94fae9aaa6b3d10511e02ec1c9a9fd50b839298af58"
+  },
+  {
+    "path": "sbom/stackmate-spring-boot-autoconfigure-0.1.0-rc.3-bom.json",
+    "size": 49648,
+    "sha256": "2bc0f5c92faa32880f4ecb1796532d102b4eb37b62cbfdf3619068316140e2a7"
+  },
+  {
+    "path": "sbom/stackmate-spring-boot-starter-0.1.0-rc.3-bom.json",
+    "size": 38503,
+    "sha256": "fd62e56ecc7b23a72b29d4c4b73258855f3d8b82fa1a9c3d2dc0942203f4de5e"
+  },
+  {
+    "path": "verification-commands.md",
+    "size": 1009,
+    "sha256": "3bd7775f76b537b36050998d9fbab3ab1e32b77f66f5a616ed3037242c6d82f4"
+  }
+]

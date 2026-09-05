@@ -51,7 +51,7 @@ No adapter output was generated or inspected during these corrections.
 ## Verification
 
 ```powershell
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw -pl stackmate-benchmark -am "-Dtest=PostTrainingChallengeManifestTest,PostTrainingChallengeRuntimeRecipeTest" "-Dsurefire.failIfNoSpecifiedTests=false" test
 ```
 

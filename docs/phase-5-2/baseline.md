@@ -21,7 +21,7 @@ history was rewritten and no remote operation was performed.
 The command-local Java 21 invocation was:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\Burak\.jdks\corretto-21.0.12'
+$env:JAVA_HOME='<jdk-21-home>'
 .\mvnw clean verify
 ```
 

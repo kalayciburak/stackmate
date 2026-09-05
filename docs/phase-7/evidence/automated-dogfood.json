@@ -1,0 +1,1271 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "candidate": "0.1.0-rc.3",
+  "candidateSource": "8b40bac6dfb940324db638195766a67d5cdf7415",
+  "runId": "20260905-140506-295",
+  "metricsRunId": "20260905-140730-847",
+  "applications": 2,
+  "distinctScenarios": 20,
+  "threeModeExecutions": 60,
+  "inScope": 16,
+  "capturedInScope": 16,
+  "correctCategoryAndRoot": 16,
+  "usefulFrames": 16,
+  "documentedBoundaries": 4,
+  "unknownFalsePositives": 0,
+  "sensitiveMatches": 0,
+  "sensitiveFilesScanned": 70,
+  "httpParityFailures": 0,
+  "disabledOrUninstalledCaptures": 0,
+  "lifecycleFailures": 0,
+  "duplicateFailures": 0,
+  "normalParity": [
+    {
+      "application": "quickstart",
+      "normalResponseIdentical": true
+    },
+    {
+      "application": "service-consumer",
+      "normalResponseIdentical": true
+    }
+  ],
+  "incidents": [
+    {
+      "application": "quickstart",
+      "id": "Q-01",
+      "trigger": "GET /failure",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "0b520a8a3350c32a9192eaffe8b8bea55873be59b01ed66401f516bd5f6e8a40",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalStateException",
+      "observedRoot": "java.lang.IllegalStateException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "QuickstartApplication#failure(QuickstartApplication.java:21)",
+      "usefulFrame": true,
+      "firstChecks": "- Check lifecycle and state transitions before the first application frame. (`check.java.invalid-state`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 103.2937,
+      "incidentEvidence": "quickstart-enabled\\incidents\\STM-E20DDCE1"
+    },
+    {
+      "application": "quickstart",
+      "id": "Q-02",
+      "trigger": "GET /argument",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "87485fff6e4c82626f0aed188d89fd0283b1903a092c304462e1629c4a6bc3d3",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalArgumentException",
+      "observedRoot": "java.lang.IllegalArgumentException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "QuickstartApplication#argument(QuickstartApplication.java:22)",
+      "usefulFrame": true,
+      "firstChecks": "- Check the caller contract and the argument values at the first application frame. (`check.java.invalid-argument`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 15.5609,
+      "incidentEvidence": "quickstart-enabled\\incidents\\STM-B5A06BC2"
+    },
+    {
+      "application": "quickstart",
+      "id": "Q-03",
+      "trigger": "GET /null",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "6418f534a910e3bae3ed54a67d744f9569919599d3b17b7c8a9627e83401bb66",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.NullPointerException",
+      "observedRoot": "java.lang.NullPointerException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "QuickstartApplication#nullFailure(QuickstartApplication.java:23)",
+      "usefulFrame": true,
+      "firstChecks": "- Inspect the first application frame and the values dereferenced there. (`check.java.null-reference`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 14.3238,
+      "incidentEvidence": "quickstart-enabled\\incidents\\STM-0E491838"
+    },
+    {
+      "application": "quickstart",
+      "id": "Q-04",
+      "trigger": "GET /unknown",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "133dee3587d05e8be95ac88e179a1c0f036878333cdd4fc7e2c60b6f0eafef53",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "dogfood.quickstart.QuickstartApplication$UnmappedOrderException",
+      "observedRoot": "dogfood.quickstart.QuickstartApplication$UnmappedOrderException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "UNKNOWN",
+      "evidenceStrength": "UNKNOWN",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "QuickstartApplication#unknown(QuickstartApplication.java:24)",
+      "usefulFrame": true,
+      "firstChecks": "- Inspect the deepest captured cause and its application frames. (`check.inspect-root-cause`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 14.0251,
+      "incidentEvidence": "quickstart-enabled\\incidents\\STM-285007DA"
+    },
+    {
+      "application": "quickstart",
+      "id": "Q-05",
+      "trigger": "GET /sensitive",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "9b5ea4d8ef39e76e128c110574d652b1e5266c1a8e2a239d6721dae66d5e1b81",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalStateException",
+      "observedRoot": "java.lang.IllegalStateException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "QuickstartApplication#sensitive(QuickstartApplication.java:25)",
+      "usefulFrame": true,
+      "firstChecks": "- Check lifecycle and state transitions before the first application frame. (`check.java.invalid-state`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 15.1433,
+      "incidentEvidence": "quickstart-enabled\\incidents\\STM-303348DE"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S01",
+      "trigger": "GET /api/failures/sql/unique",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "2a9ae970df5a0b85c90088ea56f34af56b8179e937cd351395dec0d40164aadc",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.postgresql.util.PSQLException",
+      "observedRoot": "org.postgresql.util.PSQLException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "DATABASE_CONSTRAINT",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "OrderService#createDuplicateCustomer(OrderService.java:56)",
+      "usefulFrame": true,
+      "firstChecks": "- Check the conflicting key and whether the operation should insert or update. (`check.database.unique-constraint`)\n- Check the SQL state, vendor code, database logs, and the operation at the first application frame. (`check.database.driver-error`)\n- Check the conflicting key and the database constraint named by the driver. (`check.database.unique-constraint-message`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 107.5857,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-38FD4098"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S02",
+      "trigger": "GET /api/failures/sql/foreign-key",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "3ee0b1b786c79e190279bbc94f4631c6c6d2ff60e7e3fab83b69304b361fa17f",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.postgresql.util.PSQLException",
+      "observedRoot": "org.postgresql.util.PSQLException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "DATABASE_CONSTRAINT",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "OrderService#createOrderWithMissingCustomer(OrderService.java:63)",
+      "usefulFrame": true,
+      "firstChecks": "- Check referenced rows and the order of related inserts, updates, or deletes. (`check.database.foreign-key-constraint`)\n- Check the SQL state, vendor code, database logs, and the operation at the first application frame. (`check.database.driver-error`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 22.579,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-C8053FFA"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S03",
+      "trigger": "GET /api/failures/sql/not-null",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "802fe05e02fa6ae896d5a19762189cc54898b9e00a4e60dafad22b19a3acd3c1",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.postgresql.util.PSQLException",
+      "observedRoot": "org.postgresql.util.PSQLException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "DATABASE_CONSTRAINT",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "OrderService#createOrderWithoutStatus(OrderService.java:75)",
+      "usefulFrame": true,
+      "firstChecks": "- Check the mapped field and the value supplied before persistence. (`check.database.not-null-constraint`)\n- Check the SQL state, vendor code, database logs, and the operation at the first application frame. (`check.database.driver-error`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 23.821,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-0437BB74"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S04",
+      "trigger": "GET /api/failures/nested-wrapper",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "ae1b17ac894799f20dbf6523ade6bcf5353f4300f5d17290e592b8b2a19b6c5d",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalStateException",
+      "observedRoot": "java.lang.IllegalStateException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#nestedWrapper(FailureController.java:51)",
+      "usefulFrame": true,
+      "firstChecks": "- Check lifecycle and state transitions before the first application frame. (`check.java.invalid-state`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 18.7509,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-57D28709"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S05",
+      "trigger": "GET /api/failures/illegal-state",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "8cfc1faad04e2538b7dd6964a1ca190827917d5b5174df2a3a1f26c7e1763129",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalStateException",
+      "observedRoot": "java.lang.IllegalStateException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#illegalState(FailureController.java:60)",
+      "usefulFrame": true,
+      "firstChecks": "- Check lifecycle and state transitions before the first application frame. (`check.java.invalid-state`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 13.4932,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-CF75A2A3"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S06",
+      "trigger": "GET /api/failures/illegal-argument",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "977f95e5cead8fbcf6b648a751383503df69dd3a0814e84c0dea151def453a79",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IllegalArgumentException",
+      "observedRoot": "java.lang.IllegalArgumentException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#illegalArgument(FailureController.java:65)",
+      "usefulFrame": true,
+      "firstChecks": "- Check the caller contract and the argument values at the first application frame. (`check.java.invalid-argument`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 11.9902,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-AAAE8A97"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S07",
+      "trigger": "GET /api/failures/unknown-custom",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "5188120b9d2f6a46bc51a6d5a9284b56e1b8db988232613118143ed07b5c8889",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "com.example.dogfood.order.UnknownOrderFailureException",
+      "observedRoot": "com.example.dogfood.order.UnknownOrderFailureException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "UNKNOWN",
+      "evidenceStrength": "UNKNOWN",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#unknownCustom(FailureController.java:70)",
+      "usefulFrame": true,
+      "firstChecks": "- Inspect the deepest captured cause and its application frames. (`check.inspect-root-cause`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 13.3161,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-DA6D8E6D"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S08",
+      "trigger": "GET /api/failures/null-reference",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "639e25220ff2125882f96f1927839f17d005f01104a243b22c5e8c956e9e1f95",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.NullPointerException",
+      "observedRoot": "java.lang.NullPointerException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#nullReference(FailureController.java:76)",
+      "usefulFrame": true,
+      "firstChecks": "- Inspect the first application frame and the values dereferenced there. (`check.java.null-reference`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 11.6914,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-B6D53BEC"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S09",
+      "trigger": "GET /api/failures/index-out-of-bounds",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "7a7e5ab2cd7b2c5f51d6e512954f5257a64402af2d2d9e7eaa310d928af32b01",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.lang.IndexOutOfBoundsException",
+      "observedRoot": "java.lang.IndexOutOfBoundsException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "GENERAL_JAVA",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#indexOutOfBounds(FailureController.java:81)",
+      "usefulFrame": true,
+      "firstChecks": "- Check collection or array size and the computed index. (`check.java.index-range`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 11.6785,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-694E3DC6"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S10",
+      "trigger": "GET /api/failures/network/connect-refused",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "49a1224fb8e9d66abce01f0c9412cce8163952d6f20d754c850c3ef804572443",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.net.ConnectException",
+      "observedRoot": "java.net.ConnectException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "NETWORK_CONNECTION",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#connectRefused(FailureController.java:92)",
+      "usefulFrame": true,
+      "firstChecks": "- Check the destination host and port, listener, firewall, and routing. (`check.infrastructure.connection-failed`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 10.9864,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-9A06CC02"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S11",
+      "trigger": "GET /api/failures/network/read-timeout",
+      "inScope": true,
+      "httpStatus": 500,
+      "httpBodySha256": "d0e1840f948c43ce1be7085e5345e171eda389d57c6f8c902e4769823939eee4",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "java.net.SocketTimeoutException",
+      "observedRoot": "java.net.SocketTimeoutException",
+      "hostOriginalRootAvailable": true,
+      "captured": true,
+      "category": "TIMEOUT",
+      "evidenceStrength": "HIGH",
+      "categoryCorrect": true,
+      "rootCorrect": true,
+      "applicationFrame": "FailureController#readTimeout(FailureController.java:117)",
+      "usefulFrame": true,
+      "firstChecks": "- Check upstream latency and the configured connect or read timeout. (`check.infrastructure.socket-timeout`)",
+      "outcome": "OBJECTIVELY_USEFUL",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 268.7484,
+      "incidentEvidence": "service-consumer-enabled\\incidents\\STM-DBB60565"
+    },
+    {
+      "application": "service-consumer",
+      "id": "S12",
+      "trigger": "POST /api/orders",
+      "inScope": false,
+      "httpStatus": 400,
+      "httpBodySha256": "a4dbb5c749cf61fbec91491193fb097bb7b1fe922661630c6b1eedec76f82aa4",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.springframework.http.converter.HttpMessageNotReadableException",
+      "observedRoot": null,
+      "hostOriginalRootAvailable": false,
+      "captured": false,
+      "category": null,
+      "evidenceStrength": null,
+      "categoryCorrect": false,
+      "rootCorrect": false,
+      "applicationFrame": "",
+      "usefulFrame": false,
+      "firstChecks": "",
+      "outcome": "NOT_CAPTURED_DOCUMENTED_BOUNDARY",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 28.8462,
+      "incidentEvidence": null
+    },
+    {
+      "application": "service-consumer",
+      "id": "S13",
+      "trigger": "POST /api/orders",
+      "inScope": false,
+      "httpStatus": 400,
+      "httpBodySha256": "a4dbb5c749cf61fbec91491193fb097bb7b1fe922661630c6b1eedec76f82aa4",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.springframework.web.bind.MethodArgumentNotValidException",
+      "observedRoot": null,
+      "hostOriginalRootAvailable": false,
+      "captured": false,
+      "category": null,
+      "evidenceStrength": null,
+      "categoryCorrect": false,
+      "rootCorrect": false,
+      "applicationFrame": "",
+      "usefulFrame": false,
+      "firstChecks": "",
+      "outcome": "NOT_CAPTURED_DOCUMENTED_BOUNDARY",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 56.962,
+      "incidentEvidence": null
+    },
+    {
+      "application": "service-consumer",
+      "id": "S14",
+      "trigger": "GET /api/orders/not-a-number",
+      "inScope": false,
+      "httpStatus": 400,
+      "httpBodySha256": "a7992356feedd05e78e92fda13e27565e7c617eab4a23174acbcf09ef1fb709b",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "org.springframework.web.method.annotation.MethodArgumentTypeMismatchException",
+      "observedRoot": null,
+      "hostOriginalRootAvailable": false,
+      "captured": false,
+      "category": null,
+      "evidenceStrength": null,
+      "categoryCorrect": false,
+      "rootCorrect": false,
+      "applicationFrame": "",
+      "usefulFrame": false,
+      "firstChecks": "",
+      "outcome": "NOT_CAPTURED_DOCUMENTED_BOUNDARY",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 3.343,
+      "incidentEvidence": null
+    },
+    {
+      "application": "service-consumer",
+      "id": "S15",
+      "trigger": "GET /api/orders/999999",
+      "inScope": false,
+      "httpStatus": 404,
+      "httpBodySha256": "5c781e4e4aa912743f2fd869840846e67490c8e979af8b7bf8ac01b6fcf37ea7",
+      "allThreeModesBodyIdentical": true,
+      "allThreeModesStatusIdentical": true,
+      "expectedStatusObserved": true,
+      "expectedRoot": "com.example.dogfood.order.OrderNotFoundException",
+      "observedRoot": null,
+      "hostOriginalRootAvailable": false,
+      "captured": false,
+      "category": null,
+      "evidenceStrength": null,
+      "categoryCorrect": false,
+      "rootCorrect": false,
+      "applicationFrame": "",
+      "usefulFrame": false,
+      "firstChecks": "",
+      "outcome": "NOT_CAPTURED_DOCUMENTED_BOUNDARY",
+      "sanitizedLiteralCanaryScanPassed": true,
+      "failureLatencyMs": 5.8777,
+      "incidentEvidence": null
+    }
+  ],
+  "performance": [
+    {
+      "application": "quickstart",
+      "mode": "disabled",
+      "startupMs": 1620.2321,
+      "normalSamples": 20,
+      "normalMedianMs": 1.037,
+      "normalP95Ms": 1.2253,
+      "failureSamples": 5,
+      "failureMedianMs": 2.6658,
+      "failureP95Ms": 34.8884,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 2.1793,
+      "workingSetBytes": 212373504,
+      "shutdownMs": 233.638,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "53ae73c9aab1589f068950d42785f48bf3045a928d19ef03d0dc8e795dd35793",
+      "duplicateBundleCountBefore": 0,
+      "duplicateBundleCountAfter": 0,
+      "duplicateLogMessages": 0,
+      "socketSnapshot": [
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53817,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        },
+        {
+          "State": 9,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53817,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 53845
+        },
+        {
+          "State": 9,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53817,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 53841
+        },
+        {
+          "State": 9,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53817,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 53839
+        }
+      ],
+      "jarSha256": "435bfef5c9f2f9f986ad55537dfec80fa1d8f12801e0ed5ae9eddb8d45c127cb"
+    },
+    {
+      "application": "quickstart",
+      "mode": "enabled",
+      "startupMs": 1695.9267,
+      "normalSamples": 20,
+      "normalMedianMs": 1.0193,
+      "normalP95Ms": 1.6541,
+      "failureSamples": 5,
+      "failureMedianMs": 15.1433,
+      "failureP95Ms": 103.2937,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 5.0129,
+      "workingSetBytes": 219639808,
+      "shutdownMs": 230.5709,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "53ae73c9aab1589f068950d42785f48bf3045a928d19ef03d0dc8e795dd35793",
+      "duplicateBundleCountBefore": 5,
+      "duplicateBundleCountAfter": 5,
+      "duplicateLogMessages": 3,
+      "socketSnapshot": [
+        {
+          "State": 9,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53785,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 53814
+        },
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53785,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        }
+      ],
+      "jarSha256": "435bfef5c9f2f9f986ad55537dfec80fa1d8f12801e0ed5ae9eddb8d45c127cb"
+    },
+    {
+      "application": "quickstart",
+      "mode": "uninstalled",
+      "startupMs": 1615.8465,
+      "normalSamples": 20,
+      "normalMedianMs": 0.8656,
+      "normalP95Ms": 1.0523,
+      "failureSamples": 5,
+      "failureMedianMs": 2.2434,
+      "failureP95Ms": 35.1912,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 1.7478,
+      "workingSetBytes": 206536704,
+      "shutdownMs": 230.3678,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "53ae73c9aab1589f068950d42785f48bf3045a928d19ef03d0dc8e795dd35793",
+      "duplicateBundleCountBefore": 0,
+      "duplicateBundleCountAfter": 0,
+      "duplicateLogMessages": 0,
+      "socketSnapshot": [
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53849,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        }
+      ],
+      "jarSha256": "b0d539c401466b5bf907adaaaab7290c5ab969feeb22f7a5133dde1a383e3bae"
+    },
+    {
+      "application": "service-consumer",
+      "mode": "disabled",
+      "startupMs": 2446.5407,
+      "normalSamples": 20,
+      "normalMedianMs": 2.3267,
+      "normalP95Ms": 3.0829,
+      "failureSamples": 15,
+      "failureMedianMs": 3.2704,
+      "failureP95Ms": 268.848,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 4.5231,
+      "workingSetBytes": 285904896,
+      "shutdownMs": 289.6248,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "4fdceab71f15bb6c0c1e6fef6441351a177b7566cf00d2cda0e82a56e68c7634",
+      "duplicateBundleCountBefore": 0,
+      "duplicateBundleCountAfter": 0,
+      "duplicateLogMessages": 0,
+      "socketSnapshot": [
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53950,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53949,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53948,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53947,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53945,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53944,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53943,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53942,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53941,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53940,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53950,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53949,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53948,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53947,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53946,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53945,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53944,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53943,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53942,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53941,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53940,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        }
+      ],
+      "jarSha256": "e555e7e1a2dc1062368f8f57de0eda8a133cf9297a7918f0548aa8a0f8db1f5c"
+    },
+    {
+      "application": "service-consumer",
+      "mode": "enabled",
+      "startupMs": 2496.7691,
+      "normalSamples": 20,
+      "normalMedianMs": 1.9286,
+      "normalP95Ms": 3.0629,
+      "failureSamples": 15,
+      "failureMedianMs": 13.4932,
+      "failureP95Ms": 268.7484,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 10.693,
+      "workingSetBytes": 274259968,
+      "shutdownMs": 299.3077,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "4fdceab71f15bb6c0c1e6fef6441351a177b7566cf00d2cda0e82a56e68c7634",
+      "duplicateBundleCountBefore": 11,
+      "duplicateBundleCountAfter": 11,
+      "duplicateLogMessages": 3,
+      "socketSnapshot": [
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53892,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53890,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53888,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53887,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53886,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53885,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53884,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53883,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53882,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53881,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53892,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53890,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53889,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53888,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53887,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53886,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53885,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53884,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53883,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53882,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53881,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        }
+      ],
+      "jarSha256": "e555e7e1a2dc1062368f8f57de0eda8a133cf9297a7918f0548aa8a0f8db1f5c"
+    },
+    {
+      "application": "service-consumer",
+      "mode": "uninstalled",
+      "startupMs": 2422.6402,
+      "normalSamples": 20,
+      "normalMedianMs": 1.7753,
+      "normalP95Ms": 2.2,
+      "failureSamples": 15,
+      "failureMedianMs": 3.0838,
+      "failureP95Ms": 257.9584,
+      "duplicateSamples": 3,
+      "duplicateMedianMs": 3.5687,
+      "workingSetBytes": 259342336,
+      "shutdownMs": 278.2746,
+      "exitCode": 0,
+      "forcedTermination": false,
+      "remainingSockets": 0,
+      "normalBodySha256": "4fdceab71f15bb6c0c1e6fef6441351a177b7566cf00d2cda0e82a56e68c7634",
+      "duplicateBundleCountBefore": 0,
+      "duplicateBundleCountAfter": 0,
+      "duplicateLogMessages": 0,
+      "socketSnapshot": [
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54007,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54006,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54005,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54004,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54002,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54001,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 54000,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53999,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53998,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 100,
+          "LocalAddress": "::",
+          "LocalPort": 53997,
+          "RemoteAddress": "::",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54007,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54006,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54005,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54004,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 2,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54003,
+          "RemoteAddress": "0.0.0.0",
+          "RemotePort": 0
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54002,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54001,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 54000,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53999,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53998,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        },
+        {
+          "State": 5,
+          "LocalAddress": "127.0.0.1",
+          "LocalPort": 53997,
+          "RemoteAddress": "127.0.0.1",
+          "RemotePort": 63092
+        }
+      ],
+      "jarSha256": "d7de10bfa72684f3376b70336ee94fc4bf1036809efd87a9055d09ff7ac51a49"
+    }
+  ],
+  "captureObservation": {
+    "method": "Separate opt-in dogfood-metrics profile; timed delegation to the published ServletExceptionCaptureHandler.capture interface; public DeduplicationStore.size accessor; no private-field access or engine replacement",
+    "includes": "Snapshot, deterministic analysis, rendering, deduplication and optional local export; excludes original handler business time. Observer overhead and cold JIT apply. Not pure engine-only timing.",
+    "firstSeenSamples": [
+      {
+        "milliseconds": 57.5529,
+        "cacheSize": 1
+      },
+      {
+        "milliseconds": 15.7221,
+        "cacheSize": 2
+      },
+      {
+        "milliseconds": 14.011,
+        "cacheSize": 3
+      },
+      {
+        "milliseconds": 16.1244,
+        "cacheSize": 4
+      },
+      {
+        "milliseconds": 8.134,
+        "cacheSize": 5
+      },
+      {
+        "milliseconds": 8.8203,
+        "cacheSize": 6
+      },
+      {
+        "milliseconds": 9.3312,
+        "cacheSize": 7
+      },
+      {
+        "milliseconds": 7.9954,
+        "cacheSize": 8
+      },
+      {
+        "milliseconds": 7.9938,
+        "cacheSize": 9
+      },
+      {
+        "milliseconds": 6.7378,
+        "cacheSize": 10
+      },
+      {
+        "milliseconds": 11.2064,
+        "cacheSize": 11
+      }
+    ],
+    "duplicateSamples": [
+      {
+        "milliseconds": 6.7947,
+        "cacheSize": 11
+      },
+      {
+        "milliseconds": 6.7256,
+        "cacheSize": 11
+      },
+      {
+        "milliseconds": 7.2648,
+        "cacheSize": 11
+      }
+    ],
+    "maximumObservedCacheSize": 11.0,
+    "configuredCacheBound": 512
+  },
+  "limitations": [
+    "Synthetic automated incidents are not organic dogfood or subjective usefulness.",
+    "One startup per app/mode and small latency samples; no SLA or statistically controlled performance claim.",
+    "Socket/thread snapshots and process exit support tested-flow lifecycle evidence, not exhaustive packet-level non-egress proof.",
+    "Host application raw logs retain the synthetic canary by design; only StackMate-controlled output is sanitized.",
+    "Out-of-scope exceptions resolved by Spring or ControllerAdvice are not capture failures."
+  ],
+  "publicationPerformed": false
+}

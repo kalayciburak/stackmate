@@ -28,7 +28,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
 TOKENIZERS_PARALLELISM=false \
 CUDA_VISIBLE_DEVICES=0 \
 uv run --frozen python scripts/evaluate_atomic_binary_base.py \
-  --base-model /home/torukobyte/.cache/stackmate/models/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc \
+  --base-model '<external-training-cache>/<phase-subdir>/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc' \
   --batch-size 8 \
   --maximum-sequence 1024 \
   --report reports/phase-5-5-2-base-feasibility.json
