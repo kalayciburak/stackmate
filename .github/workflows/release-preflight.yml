@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 env:
-  STACKMATE_VERSION: 0.1.0-rc.2
+  STACKMATE_VERSION: 0.1.0-rc.3
 
 jobs:
   local-artifact-verification:
@@ -25,9 +25,16 @@ jobs:
           cache: maven
           cache-dependency-path: "**/pom.xml"
 
-      - name: Verify and install the local RC
+      - name: Verify the complete reactor
         shell: pwsh
-        run: .\mvnw.cmd --batch-mode --no-transfer-progress -Ppublic-release clean install
+        run: .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
+
+      - name: Install only public release artifacts
+        shell: pwsh
+        run: >-
+          .\mvnw.cmd --batch-mode --no-transfer-progress -Ppublic-release
+          -pl stackmate-core,stackmate-spring-boot-autoconfigure,stackmate-spring-boot-starter
+          -am install
 
       - name: Verify the external consumer
         shell: pwsh

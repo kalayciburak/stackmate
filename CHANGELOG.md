@@ -6,6 +6,16 @@ All notable public product changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed for 0.1.0-rc.3 dogfood qualification
+
+- Split manual release preflight into full-reactor verification and public-only artifact installation. The empty
+  internal E2E module is verified but is not a publishable artifact.
+- Advanced active candidate coordinates to RC3 without changing deterministic runtime code, dependency versions,
+  the public API baseline, historical tests or the four-coordinate publication allowlist.
+- Normalized the canonical GitHub default branch to `main`; preserved historical branches and immutable RC tags.
+- Track external application and human acceptance gates in [Phase 7](docs/phase-7/progress.md). No final release or
+  publication follows automatically from automated qualification.
+
 ### Changed for 0.1.0-rc.2 qualification
 
 - Kept deterministic runtime behavior and the four-coordinate public allowlist unchanged.

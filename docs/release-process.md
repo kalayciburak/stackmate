@@ -1,16 +1,16 @@
 # Release process
 
-This is the public-alpha release contract for `0.1.0-rc.2`. It documents the intended maintainer procedure; it does
+This is the public-alpha release contract for `0.1.0-rc.3`. It documents the intended maintainer procedure; it does
 not assert that a remote release or publication occurred.
 
 ## Public coordinates
 
 The release allowlist is limited to:
 
-- `io.github.kalayciburak:stackmate-parent:0.1.0-rc.2`
-- `io.github.kalayciburak:stackmate-core:0.1.0-rc.2`
-- `io.github.kalayciburak:stackmate-spring-boot-autoconfigure:0.1.0-rc.2`
-- `io.github.kalayciburak:stackmate-spring-boot-starter:0.1.0-rc.2`
+- `io.github.kalayciburak:stackmate-parent:0.1.0-rc.3`
+- `io.github.kalayciburak:stackmate-core:0.1.0-rc.3`
+- `io.github.kalayciburak:stackmate-spring-boot-autoconfigure:0.1.0-rc.3`
+- `io.github.kalayciburak:stackmate-spring-boot-starter:0.1.0-rc.3`
 
 Reactor membership is not publication authorization. Inference, local starter, sample, E2E, startup-baseline,
 benchmark, and research modules must not enter the public bundle or published dependency graph.
@@ -31,6 +31,11 @@ The preflight workflow is a dry run. Its presence does not prove that CI ran, th
 artifact reached a repository.
 
 ## Current handoff status
+
+Active work: [Phase 7](phase-7/progress.md). A release-preflight invocation defect requires RC3; the workflow now
+verifies the complete reactor and installs only the public artifact chain. RC1 and RC2 remain immutable.
+Human organic dogfood and separate publication authorization are mandatory before a final release.
+The following list is preserved RC2 evidence, not an RC3 or final-release claim.
 
 - RC1: frozen local-only at `248476f68ed3a3aa49e9fa1cba33d68a746a5469`; superseded and not pushed.
 - Public-release install: passed locally for `0.1.0-rc.2`.

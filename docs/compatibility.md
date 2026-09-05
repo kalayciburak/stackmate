@@ -1,6 +1,8 @@
 # Compatibility
 
-This matrix describes `0.1.0-rc.2` public-alpha qualification. "Verified" means exercised in the stated environment;
+This matrix preserves `0.1.0-rc.2` public-alpha qualification. RC3 requalification and external dogfood are tracked
+in [Phase 7](phase-7/progress.md); RC2 evidence is not automatically attributed to RC3.
+"Verified" means exercised in the stated environment;
 it is not a production-support or SLA statement.
 
 | Surface | Status | Evidence or boundary |

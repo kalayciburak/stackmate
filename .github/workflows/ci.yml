@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  STACKMATE_VERSION: 0.1.0-rc.2
+  STACKMATE_VERSION: 0.1.0-rc.3
 
 jobs:
   qualify:
